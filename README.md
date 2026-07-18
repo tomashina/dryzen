@@ -20,6 +20,19 @@ eventualne integracije te uklonite nastavak `.example` iz imena.
 Nakon uvoza baze u administraciji otvorite **Extensions > Modifications** i
 kliknite gumb za osvježavanje kako bi se ponovno generirao OCMOD cache.
 
+## OTP sadržaj i zahtjevi kartičnog plaćanja
+
+Nakon uvoza postojeće baze pokrenite migraciju sadržaja:
+
+```bash
+php scripts/apply-otp-compliance.php
+```
+
+Skripta ažurira podatke o trgovcu, Opće uvjete kupnje, načine plaćanja i
+dostavu, sigurnost plaćanja te povrate i reklamacije. Može se sigurno pokrenuti
+više puta. Nakon njezina pokretanja ponovno osvježite OCMOD cache u
+administraciji.
+
 ## Git remote
 
 Nakon izrade praznog udaljenog repozitorija:
@@ -27,6 +40,7 @@ Nakon izrade praznog udaljenog repozitorija:
 ```bash
 git remote add origin URL_NOVOG_REPOZITORIJA
 git push -u origin main
+git push -u origin codex/otp-compliance
 ```
 
 SQL dumpovi, produkcijske vjerodajnice, lokalne konfiguracije, logovi, sessioni,

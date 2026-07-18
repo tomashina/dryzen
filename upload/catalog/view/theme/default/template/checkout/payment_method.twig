@@ -22,9 +22,36 @@
 <p>
   <textarea name="comment" rows="8" class="form-control">{{ comment }}</textarea>
 </p>
+{% include 'basel/template/common/payment-security.twig' %}
+{% if terms_description %}
+<section class="otp-checkout-terms" aria-labelledby="otp-standard-terms-title">
+  <div class="otp-terms-heading">
+    <h4 id="otp-standard-terms-title">{{ terms_title }}</h4>
+    <button type="button" class="btn btn-link otp-terms-open" data-toggle="modal" data-target="#otp-standard-terms-modal">
+      <i class="fa fa-expand" aria-hidden="true"></i> Otvori u većem prikazu
+    </button>
+  </div>
+  <div class="otp-terms-box" tabindex="0">{{ terms_description }}</div>
+</section>
+<div class="modal fade otp-terms-modal" id="otp-standard-terms-modal" tabindex="-1" role="dialog" aria-labelledby="otp-standard-terms-modal-title">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Zatvori"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="otp-standard-terms-modal-title">{{ terms_title }}</h4>
+      </div>
+      <div class="modal-body otp-terms-modal-body">{{ terms_description }}</div>
+      <div class="modal-footer">
+        <a class="btn btn-default" href="{{ terms_url }}" target="_blank" rel="noopener">Otvori zasebnu stranicu</a>
+        <button type="button" class="btn btn-primary" data-dismiss="modal">Zatvori</button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endif %}
 {% if text_agree %}
 <div class="buttons">
-  <div class="pull-right">{{ text_agree }}
+  <div class="pull-right otp-standard-agree">{{ text_agree }}
     {% if agree %}
     <input type="checkbox" name="agree" value="1" checked="checked" />
     {% else %}
@@ -40,4 +67,4 @@
     <input type="button" value="{{ button_continue }}" id="button-payment-method" data-loading-text="{{ text_loading }}" class="btn btn-primary" />
   </div>
 </div>
-{% endif %} 
+{% endif %}

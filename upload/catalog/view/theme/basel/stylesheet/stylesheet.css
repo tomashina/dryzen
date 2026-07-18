@@ -9395,3 +9395,214 @@ ul.sitemap > li > ul > li > ul > li > a {margin-left:28px;opacity:0.8;}
 .information-information-13 #content h2 {
 	font-size: 30px;
 }
+
+/* OTP card-payment and checkout compliance */
+.cards-holder {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: center;
+	gap: 10px;
+	padding-top: 14px;
+}
+
+.otp-footer-compliance-links {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	gap: 8px 18px;
+	margin-top: 18px;
+}
+
+.otp-footer-compliance-links a {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.cards-holder a {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-height: 36px;
+}
+
+.cards-holder .cards-img {
+	display: block;
+	object-fit: contain;
+}
+
+.otp-payment-security,
+.otp-checkout-terms,
+.otp-shipping-notice {
+	margin: 18px 0;
+	padding: 18px;
+	border: 1px solid #dfe5e8;
+	border-radius: 6px;
+	background: #f8fafb;
+	color: #333;
+}
+
+.otp-payment-security h4,
+.otp-checkout-terms h4 {
+	margin: 0 0 12px;
+	font-size: 18px;
+	text-transform: none;
+}
+
+.otp-card-logos,
+.otp-security-logos {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 12px;
+	margin: 14px 0;
+}
+
+.otp-card-logos a,
+.otp-security-logos a {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	padding: 6px 9px;
+	border: 1px solid #e0e4e7;
+	border-radius: 5px;
+	background: #fff;
+}
+
+.otp-card-logos img {
+	width: auto;
+	height: 36px;
+	max-width: 78px;
+	object-fit: contain;
+}
+
+.otp-security-logos img {
+	width: auto;
+	height: 66px;
+	max-width: 105px;
+	object-fit: contain;
+}
+
+.otp-currency-note {
+	margin-bottom: 0;
+	padding: 12px;
+	border-left: 3px solid #62a744;
+	background: #fff;
+}
+
+.otp-terms-heading {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 12px;
+}
+
+.otp-terms-heading h4 {
+	margin-bottom: 0;
+}
+
+.otp-terms-open {
+	padding: 0;
+	white-space: normal;
+}
+
+.otp-terms-box {
+	max-height: 250px;
+	margin-top: 14px;
+	padding: 16px;
+	overflow-y: auto;
+	border: 1px solid #cfd6da;
+	border-radius: 4px;
+	background: #fff;
+	box-shadow: inset 0 1px 2px rgba(0, 0, 0, .04);
+}
+
+.otp-terms-box h2,
+.otp-terms-modal-body h2 {
+	margin: 22px 0 8px;
+	font-size: 18px;
+	text-transform: none;
+}
+
+.otp-terms-box h2:first-child,
+.otp-terms-modal-body h2:first-child {
+	margin-top: 0;
+}
+
+.otp-terms-box h3,
+.otp-terms-modal-body h3 {
+	margin: 18px 0 8px;
+	font-size: 16px;
+	text-transform: none;
+}
+
+.otp-terms-box p,
+.otp-terms-modal-body p {
+	margin-bottom: 10px;
+}
+
+.otp-terms-modal-body {
+	max-height: calc(100vh - 190px);
+	overflow-y: auto;
+}
+
+.otp-agree-label {
+	display: flex;
+	align-items: flex-start;
+	gap: 9px;
+	margin: 16px 0;
+	font-weight: 600;
+}
+
+.otp-agree-label input {
+	flex: 0 0 auto;
+	margin-top: 4px;
+}
+
+.otp-standard-agree {
+	max-width: 100%;
+	text-align: right;
+}
+
+.otp-order-rights-note {
+	padding: 12px 14px;
+	border-left: 3px solid #62a744;
+	background: #f8fafb;
+	font-size: 13px;
+}
+
+.otp-shipping-notice {
+	font-size: 13px;
+	line-height: 1.55;
+}
+
+.otp-legal-content .otp-card-logos img {
+	height: 42px;
+}
+
+.otp-legal-content .otp-security-logos img {
+	height: 76px;
+}
+
+@media (max-width: 767px) {
+	.otp-payment-security,
+	.otp-checkout-terms,
+	.otp-shipping-notice {
+		padding: 14px;
+	}
+
+	.otp-terms-heading {
+		align-items: flex-start;
+		flex-direction: column;
+	}
+
+	.otp-card-logos img {
+		height: 30px;
+		max-width: 64px;
+	}
+
+	.otp-security-logos img {
+		height: 56px;
+		max-width: 90px;
+	}
+}

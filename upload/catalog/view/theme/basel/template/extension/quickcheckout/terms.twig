@@ -1,8 +1,38 @@
 <div id="payment" class="text-left" style="display:none;"></div>
 <div class="terms">
-  <label>{% if text_agree %}
-    {{ text_agree }}
+  {% if terms_description %}
+  <section class="otp-checkout-terms" aria-labelledby="otp-terms-title">
+    <div class="otp-terms-heading">
+      <h4 id="otp-terms-title">{{ terms_title }}</h4>
+      <button type="button" class="btn btn-link otp-terms-open" data-toggle="modal" data-target="#otp-terms-modal">
+        <i class="fa fa-expand" aria-hidden="true"></i> Otvori u većem prikazu
+      </button>
+    </div>
+    <div class="otp-terms-box" tabindex="0">{{ terms_description }}</div>
+  </section>
+
+  <div class="modal fade otp-terms-modal" id="otp-terms-modal" tabindex="-1" role="dialog" aria-labelledby="otp-terms-modal-title">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Zatvori"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" id="otp-terms-modal-title">{{ terms_title }}</h4>
+        </div>
+        <div class="modal-body otp-terms-modal-body">{{ terms_description }}</div>
+        <div class="modal-footer">
+          <a class="btn btn-default" href="{{ terms_url }}" target="_blank" rel="noopener">Otvori zasebnu stranicu</a>
+          <button type="button" class="btn btn-primary" data-dismiss="modal">Zatvori</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+
+  {% if text_agree %}
+  <label class="otp-agree-label">
     <input type="checkbox" name="agree" value="1" />
-  {% endif %}</label>
+    <span>{{ text_agree }}</span>
+  </label>
+  {% endif %}
   <button type="button" id="button-payment-method" class="btn btn-primary" data-loading-text="{{ text_loading }}">{{ button_continue }}</button>
 </div>

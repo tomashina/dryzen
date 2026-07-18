@@ -67,6 +67,8 @@
 <textarea name="comment" class="hide"></textarea>
 {% endif %}
 
+{% include 'basel/template/common/payment-security.twig' %}
+
 <script type="text/javascript"><!--
 $('#payment-method input[name=\'payment_method\'], #payment-method select[name=\'payment_method\']').on('change', function() {
 	{% if not logged %}

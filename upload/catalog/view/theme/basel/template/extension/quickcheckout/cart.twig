@@ -17,6 +17,7 @@
             {% endif %}</td>
           <td class="name"><a href="{{ product.href }}">{{ product.name }}</a>
             <div>
+              <small>{{ column_model }}: {{ product.model }}</small><br />
               {% for option in product.option %} 
               <small>{{ option.name }}: {{ option.value }}</small><br />
 			  {% endfor %}

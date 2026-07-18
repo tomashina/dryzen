@@ -11,11 +11,20 @@ class ControllerExtensionQuickCheckoutTerms extends Controller {
 			
 			if ($information_info) {
 				$data['text_agree'] = sprintf($this->language->get('text_agree'), $this->url->link('information/information/agree', 'information_id=' . $this->config->get('config_checkout_id'), true), $information_info['title'], $information_info['title']);
+				$data['terms_title'] = $information_info['title'];
+				$data['terms_url'] = $this->url->link('information/information', 'information_id=' . $this->config->get('config_checkout_id'), true);
+				$data['terms_description'] = html_entity_decode($information_info['description'], ENT_QUOTES, 'UTF-8');
 			} else {
 				$data['text_agree'] = '';
+				$data['terms_title'] = '';
+				$data['terms_url'] = '';
+				$data['terms_description'] = '';
 			}
 		} else {
 			$data['text_agree'] = '';
+			$data['terms_title'] = '';
+			$data['terms_url'] = '';
+			$data['terms_description'] = '';
 		}
 		
 		// All variables
