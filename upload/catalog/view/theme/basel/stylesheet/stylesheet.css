@@ -9442,6 +9442,13 @@ ul.sitemap > li > ul > li > ul > li > a {margin-left:28px;opacity:0.8;}
 	color: #333;
 }
 
+.otp-checkout-terms,
+.otp-terms-box,
+.otp-terms-modal-body,
+.otp-agree-label {
+	text-align: left;
+}
+
 .otp-payment-security h4,
 .otp-checkout-terms h4 {
 	margin: 0 0 12px;
