@@ -1,0 +1,32 @@
+{% if not error %}
+<div>
+<script src="catalog/view/javascript/revolut_helper.js" id="revolut-helper-js"></script>
+<script src="https://{{ js_domain_source }}.revolut.com/embed.js" id="revolut-core-js"></script>
+{% if testmode %}
+<div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i> {{ text_testmode }}</div>
+{% endif %} 
+
+{% if widget_type != "popup" %}
+<h4>{{ text_card_details }}</h4>
+<div class="well" style="background-color:{{ payment_revolut_card_background_colour }};">
+  <div id="revolut-card-field"></div>
+  {{ svg_logo }}
+  <div id="revolut-card-error" class="text-danger text-center"></div>
+</div>
+<div id="revolut-upsell-banner"></div>
+
+{% endif %}
+<div class="text-center">
+  <button type="button" id="button-confirm" class="btn btn-primary">{{ button_confirm }}</button>
+  {% if widget_type == "popup" %}
+  <br />
+  {{ svg_logo }}
+  {% endif %}
+</div>
+</div>
+
+<script src="catalog/view/javascript/revolut_card.js" id="revolut-pay-js"></script>
+
+{% else %}
+<div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i> {{ error }}</div>
+{% endif %}

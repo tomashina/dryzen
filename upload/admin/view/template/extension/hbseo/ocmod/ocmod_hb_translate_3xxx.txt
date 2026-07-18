@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="utf-8"?>
+<modification>
+    <name>SEO - BulkTranslate PRO [3xxx]</name>
+    <version>{huntbee_version}</version>
+    <author>HuntBee OpenCart Services</author>
+    <link>https://www.huntbee.com</link>
+	<code>hb_translate_ocmod</code>
+	
+	<file path="admin/controller/catalog/{product,category,information,manufacturer}.php">		
+	    <operation error="skip">
+            <search><![CDATA[$this->error['name'][$language_id] = $this->language->get('error_name');]]></search>
+            <add position="replace"><![CDATA[//$this->error['name'][$language_id] = $this->language->get('error_name');]]></add>
+        </operation>
+
+        <operation error="skip">
+            <search><![CDATA[$this->error['meta_title'][$language_id] = $this->language->get('error_meta_title');]]></search>
+            <add position="replace"><![CDATA[//$this->error['meta_title'][$language_id] = $this->language->get('error_meta_title');]]></add>
+        </operation>
+
+        <operation error="skip">
+            <search><![CDATA[$this->error['title'][$language_id] = $this->language->get('error_title');]]></search>
+            <add position="replace"><![CDATA[//$this->error['title'][$language_id] = $this->language->get('error_title');]]></add>
+        </operation>
+        
+        <operation error="skip">
+            <search><![CDATA[$data['text_form']]]></search>
+            <add position="before"><![CDATA[
+                $data['master_language_id'] = $this->config->get('hb_translate_master_language');
+                $data['user_token'] = $this->session->data['user_token'];
+            ]]></add>
+        </operation>
+    </file>	
+
+    <!--HTML Module Translate--> 
+    <file path="admin/controller/extension/module/html.php">
+        <operation>
+            <search><![CDATA[if (isset($this->request->post['status'])) {]]></search>
+            <add position="before"><![CDATA[
+                $data['user_token'] = $this->session->data['user_token'];
+               $data['master_language_id'] = $this->config->get('hb_translate_master_language');
+            ]]></add>
+        </operation>
+    </file>
+    
+    <file path="admin/view/template/catalog/{product_form,category_form,information_form,manufacturer_form}.twig|admin/view/template/extension/module/html.twig">
+        <operation error="skip">
+            <search><![CDATA[<a href="{{ cancel }}" data-toggle="tooltip" title="{{ button_cancel }}" class="btn btn-default"><i class="fa fa-reply"></i></a>]]></search>
+            <add position="before"><![CDATA[
+                <a id="button-translate" data-toggle="tooltip" title="Translate" class="btn btn-success"><i class="fa fa-language"></i></a>
+            ]]></add>
+        </operation>
+
+        <operation error="skip">
+            <search><![CDATA[{{ footer }}]]></search>
+            <add position="before"><![CDATA[
+<script type="text/javascript" src="view/javascript/bootstrap-notify.min.js"></script>
+
+<script type="text/javascript">
+$('#button-translate').on('click', function() {
+    console.log('Universal translation initiated (OC3)');
+    
+    // Detect form type and field prefix
+    let formType, fieldPrefix;
+    if ($('input[name^="product_description["]').length) {
+        formType = 'product';
+        fieldPrefix = 'product_description';
+    } else if ($('input[name^="category_description["]').length) {
+        formType = 'category';
+        fieldPrefix = 'category_description';
+    } else if ($('input[name^="information_description["]').length) {
+        formType = 'information';
+        fieldPrefix = 'information_description';
+    } else if ($('input[name^="manufacturer_description["]').length) {
+        formType = 'manufacturer';
+        fieldPrefix = 'manufacturer_description';
+    } else if ($('input[name^="module_description["]').length) {
+        formType = 'module';
+        fieldPrefix = 'module_description';
+    } else {
+        console.error('Unknown form type');
+        $.notify({ 
+            icon: "fa fa-exclamation", 
+            message: "Could not detect form type" 
+        }, { 
+            type: "danger" 
+        });
+        return;
+    }
+    
+    console.log(`Detected ${formType} form`);
+    
+    const masterLanguageId = '{{ master_language_id }}';
+    const commonFields = {
+        'description': `textarea[name="${fieldPrefix}[${masterLanguageId}][description]"]`,
+        'meta_title': `input[name="${fieldPrefix}[${masterLanguageId}][meta_title]"]`,
+        'meta_description': `textarea[name="${fieldPrefix}[${masterLanguageId}][meta_description]"]`,
+        'meta_keyword': `input[name="${fieldPrefix}[${masterLanguageId}][meta_keyword]"]`,
+        'title': `input[name="${fieldPrefix}[${masterLanguageId}][title]"]` // For modules
+    };
+    
+    // Special fields per form type
+    const specialFields = {
+        product: {
+            'name': `input[name="${fieldPrefix}[${masterLanguageId}][name]"]`,
+            'tag': `input[name="${fieldPrefix}[${masterLanguageId}][tag]"]`,
+            'h1': `input[name="${fieldPrefix}[${masterLanguageId}][h1]"]`,
+            'h2': `input[name="${fieldPrefix}[${masterLanguageId}][h2]"]`,
+            'image_alt': `input[name="${fieldPrefix}[${masterLanguageId}][image_alt]"]`,
+            'image_title': `input[name="${fieldPrefix}[${masterLanguageId}][image_title]"]`
+        },
+        category: {
+            'name': `input[name="${fieldPrefix}[${masterLanguageId}][name]"]`,
+            'h1': `input[name="${fieldPrefix}[${masterLanguageId}][h1]"]`,
+            'h2': `input[name="${fieldPrefix}[${masterLanguageId}][h2]"]`,
+            'image_alt': `input[name="${fieldPrefix}[${masterLanguageId}][image_alt]"]`,
+            'image_title': `input[name="${fieldPrefix}[${masterLanguageId}][image_title]"]`
+        },
+        information: {
+            'title': `input[name="${fieldPrefix}[${masterLanguageId}][title]"]`,
+        },
+        manufacturer: {
+            'name': `input[name="${fieldPrefix}[${masterLanguageId}][name]"]`,
+            'h1': `input[name="${fieldPrefix}[${masterLanguageId}][h1]"]`,
+            'h2': `input[name="${fieldPrefix}[${masterLanguageId}][h2]"]`,
+            'image_alt': `input[name="${fieldPrefix}[${masterLanguageId}][image_alt]"]`,
+            'image_title': `input[name="${fieldPrefix}[${masterLanguageId}][image_title]"]`
+        },
+        module: {
+            'title': `input[name="${fieldPrefix}[${masterLanguageId}][title]"]`
+        }
+    };
+    
+    // Combine all relevant fields
+    const fieldsToTranslate = {...commonFields, ...specialFields[formType]};
+    
+    // Collect values
+    const sourceValues = {};
+    Object.entries(fieldsToTranslate).forEach(([field, selector]) => {
+        const $element = $(selector);
+        if ($element.length) {
+            sourceValues[field] = $element.val();
+        }
+    });
+    
+    console.log(`Source content for ${formType}:`, sourceValues);
+
+    // Get languages from template loop
+    const languages = [
+        {% for language in languages %}
+        {
+            id: '{{ language.language_id }}',
+            name: '{{ language.name }}',
+            code: '{{ language.code }}'
+        },
+        {% endfor %}
+    ];
+    
+    console.log('Target languages:', languages.map(l => l.name).join(', '));
+
+    // Translation function
+    const translateField = (language, field, value) => {
+        if (!value || value.trim() === '') return;
+
+        console.log(`Translating ${field} to ${language.name}`);
+        
+        $.ajax({
+            url: 'index.php?route=extension/hbseo/hb_translate/translate&user_token={{ user_token }}',
+            type: 'post',
+            dataType: 'json',
+            data: {
+                text: value,
+                target_language_id: language.id
+            },
+            success: function(json) {
+                if (json.success) {
+                    const selector = `[name="${fieldPrefix}[${language.id}][${field}]"]`;
+                    const $target = $(selector);
+                    
+                    if ($target.is('textarea')) {
+                        // Handle Summernote editor
+                        if (typeof $target.summernote === 'function') {
+                            $target.summernote('code', json.success);
+                        } else {
+                            $target.val(json.success);
+                        }
+                    } else {
+                        $target.val(json.success);
+                    }
+
+                    $.notify({icon: "fa fa-check", message: `Translated ${field} to ${language.name}` }, { type: "success" });
+                } else if (json.error) {
+                    console.error(`Error (${field}):`, json.error);
+                    $.notify({icon: "fa fa-exclamation", message: json.error }, { type: "danger" });
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error(`AJAX Error (${field}):`, status, error);
+                $.notify({icon: "fa fa-exclamation", message: `Failed to translate ${field} to ${language.name}`}, { type: "danger" });
+            }
+        });
+    };
+
+    // Process translations
+    languages.forEach(language => {
+        if (language.id === masterLanguageId) return;
+        
+        Object.entries(sourceValues).forEach(([field, value]) => {
+            translateField(language, field, value);
+        });
+    });
+});
+</script>
+            ]]></add>
+        </operation>
+    </file>
+		
+</modification>

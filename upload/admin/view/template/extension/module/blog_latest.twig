@@ -1,0 +1,360 @@
+{{ header }}{{ column_left }}
+<div id="content">
+  <div class="page-header">
+    <div class="container-fluid">
+      <div class="pull-right">
+        <button type="submit" form="form-blog_latest" data-toggle="tooltip" title="{{ button_save }}" class="btn btn-primary"><i class="fa fa-save"></i></button>
+        <a href="{{ cancel }}" data-toggle="tooltip" title="{{ button_cancel }}" class="btn btn-default"><i class="fa fa-reply"></i></a></div>
+      <h1>{{ heading_title }}</h1>
+      <ul class="breadcrumb">
+        {% for breadcrumb in breadcrumbs %}
+        <li><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+  <div class="container-fluid">
+    {% if error_warning %}
+    <div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i> {{ error_warning }}
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+    </div>
+    {% endif %}
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title"><i class="fa fa-pencil"></i> {{ text_edit }}</h3>
+      </div>
+      <div class="panel-body">
+        <form action="{{ action }}" method="post" enctype="multipart/form-data" id="form-blog_latest" class="form-horizontal">
+          <div class="form-group">
+            <label class="col-sm-2 control-label" for="input-name">{{ entry_name }}</label>
+            <div class="col-sm-10">
+              <input type="text" name="name" value="{{ name }}" placeholder="{{ entry_name }}" id="input-name" class="form-control" />
+              {% if error_name %}
+              <div class="text-danger">{{ error_name }}</div>
+              {% endif %}
+            </div>
+          </div>
+          
+            <div class="form-group">
+            <label class="col-sm-2 control-label">{{ entry_status }}</label>
+            <div class="col-sm-10 toggle-btn">
+            {% if status %}
+            <label><input type="radio" name="status" value="0" /><span>{{ text_disabled }}</span></label>
+            <label><input type="radio" name="status" value="1" checked="checked" /><span>{{ text_enabled }}</span></label>
+            {% else %}
+            <label><input type="radio" name="status" value="0" checked="checked" /><span>{{ text_disabled }}</span></label>
+            <label><input type="radio" name="status" value="1" /><span>{{ text_enabled }}</span></label>
+            {% endif %}
+            </div>                   
+            </div>
+            
+            <div class="form-group">
+            <label class="col-sm-2 control-label">{{ entry_contrast }}</label>
+            <div class="col-sm-10 toggle-btn">
+            {% if contrast %}
+            <label><input type="radio" name="contrast" value="0" /><span>{{ text_disabled }}</span></label>
+            <label><input type="radio" name="contrast" value="1" checked="checked" /><span>{{ text_enabled }}</span></label>
+            {% else %}
+            <label><input type="radio" name="contrast" value="0" checked="checked" /><span>{{ text_disabled }}</span></label>
+            <label><input type="radio" name="contrast" value="1" /><span>{{ text_enabled }}</span></label>
+            {% endif %}
+            </div>                   
+            </div>
+            
+            <div class="form-group">
+            <label class="col-sm-2 control-label">{{ text_use_block_title }}</label>
+            <div class="col-sm-10 toggle-btn">
+            {% if use_title %}
+            <label><input type="radio" class="title_select" name="use_title" value="0" /><span>{{ text_disabled }}</span></label>
+            <label><input type="radio" class="title_select" name="use_title" value="1" checked="checked" /><span>{{ text_enabled }}</span></label>
+            {% else %}
+            <label><input type="radio" class="title_select" name="use_title" value="0" checked="checked" /><span>{{ text_disabled }}</span></label>
+            <label><input type="radio" class="title_select" name="use_title" value="1" /><span>{{ text_enabled }}</span></label>
+            {% endif %}
+            </div>                   
+            </div>
+            
+            <div class="form-group title_field" style="display:{% if use_title %}block{% else %}none{% endif %}">
+            <label class="col-sm-2 control-label">{{ text_block_pre_line }}</label>
+            <div class="col-sm-10">
+            {% for language in languages %}
+            <div class="input-group">
+            <span class="input-group-addon"><img src="language/{{ language.code }}/{{ language.code }}.png" title="{{ language.name }}" /></span>
+            <input type="text" name="title_pl[{{ language.language_id }}]" value="{{ title_pl[language.language_id] ? title_pl[language.language_id] }}" class="form-control" />
+            </div>
+            {% endfor %}
+            </div>
+            </div>
+            
+            <div class="form-group title_field" style="display:{% if use_title %}block{% else %}none{% endif %}">
+            <label class="col-sm-2 control-label">{{ text_block_title }}</label>
+            <div class="col-sm-10">
+            {% for language in languages %}
+            <div class="input-group">
+            <span class="input-group-addon"><img src="language/{{ language.code }}/{{ language.code }}.png" title="{{ language.name }}" /></span>
+            <input type="text" name="title_m[{{ language.language_id }}]" value="{{ title_m[language.language_id] ? title_m[language.language_id] }}" class="form-control" />
+            </div>
+            {% endfor %}
+            </div>
+            </div>
+            
+            <div class="form-group title_field" style="display:{% if use_title %}block{% else %}none{% endif %}">
+            <label class="col-sm-2 control-label">{{ text_block_sub_line }}</label>
+            <div class="col-sm-10">
+            {% for language in languages %}
+            <div class="input-group">
+            <span class="input-group-addon"><img src="language/{{ language.code }}/{{ language.code }}.png" title="{{ language.name }}" /></span>
+            <textarea type="text" name="title_b[{{ language.language_id }}]" class="form-control">{{ title_b[language.language_id] ? title_b[language.language_id] }}</textarea>
+            </div>
+            {% endfor %}
+            </div>
+            </div>
+            
+            <div class="form-group">
+            <label class="col-sm-2 control-label">
+            <span data-toggle="tooltip" title="{{ entry_characters_h }}">{{ entry_characters }}</span></label>
+            <div class="col-sm-10">
+              <input type="text" name="characters" value="{{ characters }}" placeholder="{{ entry_characters }}" id="input-limit" class="form-control" />
+            </div>
+          </div>
+          
+          
+          <div class="form-group">
+            <label class="col-sm-2 control-label">{{ entry_thumb }}</label>
+            <div class="col-sm-10 toggle-btn">
+            {% if use_thumb %}
+            <label><input type="radio" class="thumb_select" name="use_thumb" value="0" /><span>{{ text_disabled }}</span></label>
+            <label><input type="radio" class="thumb_select" name="use_thumb" value="1" checked="checked" /><span>{{ text_enabled }}</span></label>
+            {% else %}
+            <label><input type="radio" class="thumb_select" name="use_thumb" value="0" checked="checked" /><span>{{ text_disabled }}</span></label>
+            <label><input type="radio" class="thumb_select" name="use_thumb" value="1" /><span>{{ text_enabled }}</span></label>
+            {% endif %}
+            </div>                   
+            </div>
+          
+          
+          <div class="form-group thumb_field" style="display:{% if use_thumb %}block{% else %}none{% endif %}">
+            <label class="col-sm-2 control-label" for="input-height">{{ entry_thumb_size }}</label>
+            <div class="col-sm-5">
+            <input type="text" name="width" value="{{ width }}" id="input-width" class="form-control" />
+            </div>
+            <div class="col-sm-5">
+            <input type="text" name="height" value="{{ height }}" id="input-height" class="form-control" />
+            </div>
+          </div>
+            
+            
+           <div class="form-group">
+            <label class="col-sm-2 control-label">{{ entry_limit }}</label>
+            <div class="col-sm-10">
+              <input type="text" name="limit" value="{{ limit }}" placeholder="{{ entry_limit }}" id="input-limit" class="form-control" />
+            </div>
+          </div>
+            
+
+          <div class="form-group">
+            <label class="col-sm-2 control-label" for="input-width">{{ entry_columns }}</label>
+            <div class="col-sm-10">
+            <select name="columns" id="input-columns" class="form-control">
+            {% if columns == '4' %}
+            <option value="4" selected="selected">{{ text_4 }}</option>
+            {% else %}
+            <option value="4">{{ text_4 }}</option>
+            {% endif %}
+            {% if columns == '3' %}
+            <option value="3" selected="selected">{{ text_3 }}</option>
+            {% else %}
+            <option value="3">{{ text_3 }}</option>
+            {% endif %}
+            {% if columns == '2' %}
+            <option value="2" selected="selected">{{ text_2 }}</option>
+            {% else %}
+            <option value="2">{{ text_2 }}</option>
+            {% endif %}
+            {% if columns == '1' %}
+            <option value="1" selected="selected">{{ text_1 }}</option>
+            {% else %}
+            <option value="1">{{ text_1 }}</option>
+            {% endif %}
+            {% if columns == 'list' %}
+            <option value="list" selected="selected">{{ text_list }}</option>
+            {% else %}
+            <option value="list">{{ text_list }}</option>
+            {% endif %}
+             </select>
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label class="col-sm-2 control-label">{{ entry_carousel }}</label>
+            <div class="col-sm-10 toggle-btn">
+            {% if carousel %}
+            <label><input type="radio" class="carousel_select" name="carousel" value="0" /><span>{{ text_disabled }}</span></label>
+            <label><input type="radio" class="carousel_select" name="carousel" value="1" checked="checked" /><span>{{ text_enabled }}</span></label>
+            {% else %}
+            <label><input type="radio" class="carousel_select" name="carousel" value="0" checked="checked" /><span>{{ text_disabled }}</span></label>
+            <label><input type="radio" class="carousel_select" name="carousel" value="1" /><span>{{ text_enabled }}</span></label>
+            {% endif %}
+            </div>                   
+            </div>
+          
+           <div class="form-group carousel_field" style="display:{% if carousel %}block{% else %}none{% endif %}">
+            <label class="col-sm-2 control-label" for="input-carousel">{{ entry_rows }}</label>
+            <div class="col-sm-10">
+              <input type="text" name="rows" value="{{ rows }}"  id="input-rows" class="form-control" />
+            </div>
+          </div>
+          
+          
+          	<div class="form-group carousel_field" style="display:{% if carousel %}block{% else %}none{% endif %}">
+            <label class="col-sm-2 control-label">{{ entry_carousel_a }}</label>
+            <div class="col-sm-10 toggle-btn">
+            {% if carousel_a %}
+            <label><input type="radio" name="carousel_a" value="0" /><span>{{ text_disabled }}</span></label>
+            <label><input type="radio" name="carousel_a" value="1" checked="checked" /><span>{{ text_enabled }}</span></label>
+            {% else %}
+            <label><input type="radio" name="carousel_a" value="0" checked="checked" /><span>{{ text_disabled }}</span></label>
+            <label><input type="radio" name="carousel_a" value="1" /><span>{{ text_enabled }}</span></label>
+            {% endif %}
+            </div>                   
+            </div>
+          
+            <div class="form-group carousel_field" style="display:{% if carousel %}block{% else %}none{% endif %}">
+            <label class="col-sm-2 control-label">{{ entry_carousel_b }}</label>
+            <div class="col-sm-10 toggle-btn">
+            {% if carousel_b %}
+            <label><input type="radio" name="carousel_b" value="0" /><span>{{ text_disabled }}</span></label>
+            <label><input type="radio" name="carousel_b" value="1" checked="checked" /><span>{{ text_enabled }}</span></label>
+            {% else %}
+            <label><input type="radio" name="carousel_b" value="0" checked="checked" /><span>{{ text_disabled }}</span></label>
+            <label><input type="radio" name="carousel_b" value="1" /><span>{{ text_enabled }}</span></label>
+            {% endif %}
+            </div>                   
+            </div>
+          
+          
+          <div class="form-group">
+            <label class="col-sm-2 control-label">{{ text_use_button }}</label>
+            <div class="col-sm-10 toggle-btn">
+            {% if use_button %}
+            <label><input type="radio" class="button_select" name="use_button" value="0" /><span>{{ text_disabled }}</span></label>
+            <label><input type="radio" class="button_select" name="use_button" value="1" checked="checked" /><span>{{ text_enabled }}</span></label>
+            {% else %}
+            <label><input type="radio" class="button_select" name="use_button" value="0" checked="checked" /><span>{{ text_disabled }}</span></label>
+            <label><input type="radio" class="button_select" name="use_button" value="1" /><span>{{ text_enabled }}</span></label>
+            {% endif %}
+            </div>                   
+            </div>
+            
+            <div class="form-group">
+            <label class="col-sm-2 control-label">{{ text_use_margin }}</label>
+            <div class="col-sm-10 toggle-btn">
+            {% if use_margin %}
+            <label><input type="radio" class="margin_select" name="use_margin" value="0" /><span>{{ text_disabled }}</span></label>
+            <label><input type="radio" class="margin_select" name="use_margin" value="1" checked="checked" /><span>{{ text_enabled }}</span></label>
+            {% else %}
+            <label><input type="radio" class="margin_select" name="use_margin" value="0" checked="checked" /><span>{{ text_disabled }}</span></label>
+            <label><input type="radio" class="margin_select" name="use_margin" value="1" /><span>{{ text_enabled }}</span></label>
+            {% endif %}
+            </div>                   
+            </div>
+          
+          <div class="form-group margin_field" style="display:{% if use_margin %}block{% else %}none{% endif %}">
+            <label class="col-sm-2 control-label">{{ text_margin }}</label>
+            <div class="col-sm-10">
+              <input type="text" name="margin" value="{{ margin }}" class="form-control" />
+            </div>
+          </div>
+                    
+        </form>
+      </div>
+    </div>
+  </div>
+<script type="text/javascript">
+$('.title_select').on('change', function() {
+  	if ($(this).val() == '1') {
+		$('.title_field').css('display', 'block');
+	} else {
+		$('.title_field').css('display', 'none');
+	}
+});
+$('.carousel_select').on('change', function() {
+  	if ($(this).val() == '1') {
+		$('.carousel_field').css('display', 'block');
+	} else {
+		$('.carousel_field').css('display', 'none');
+	}
+});
+$('.button_select').on('change', function() {
+  	if ($(this).val() == '1') {
+		$('.button_field').css('display', 'block');
+	} else {
+		$('.button_field').css('display', 'none');
+	}
+});
+$('.margin_select').on('change', function() {
+  	if ($(this).val() == '1') {
+		$('.margin_field').css('display', 'block');
+	} else {
+		$('.margin_field').css('display', 'none');
+	}
+});
+$('.thumb_select').on('change', function() {
+  	if ($(this).val() == '1') {
+		$('.thumb_field').css('display', 'block');
+	} else {
+		$('.thumb_field').css('display', 'none');
+	}
+});
+</script>
+<style>
+.toggle-btn {
+	font-size:0;
+}
+.toggle-btn label {
+	margin-bottom:0px;
+}
+.toggle-btn input[type="radio"] {
+	display:none;
+}
+.toggle-btn span {
+	font-size:12px;
+	background:#f5f5f5;
+	font-weight:normal;
+	cursor:pointer;
+	padding:8px 12px;
+	display:inline-block;
+	background:#fafafa;
+   color:#666666;
+    -webkit-box-shadow: inset 0 1px 4px rgba(41, 41, 41, 0.15);
+    -moz-box-shadow: inset 0 1px 4px 0 rgba(41, 41, 41, 0.15);
+    box-shadow: inset 0 1px 4px rgba(41, 41, 41, 0.15);
+	-webkit-text-shadow:1px 1px 0 #ffffff;
+	-moz-text-shadow:1px 1px 0 #ffffff;
+	text-shadow:1px 1px 0 #ffffff;
+}
+.toggle-btn label:first-child span {
+	border-radius:3px 0 0 3px
+}
+.toggle-btn label:last-child span {
+	border-radius:0 3px 3px 0;
+}
+.toggle-btn input[type="radio"]:checked + span {
+   background:#1e91cf;
+   color:#ffffff;
+    -webkit-box-shadow: 0 1px 2px rgba(0,0,0,0.15);
+    -moz-box-shadow: 0 1px 2px rgba(0,0,0,0.15);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+	-webkit-text-shadow:1px 1px 0 rgba(0, 0, 0, 0.3);
+	-moz-text-shadow:1px 1px 0 rgba(0, 0, 0, 0.3);
+	text-shadow:1px 1px 0 rgba(0, 0, 0, 0.3);
+}
+.toggle-btn label:first-child input[type="radio"]:checked + span {
+   background:#9f9f9f;
+}
+.title_field, .carousel_field, .button_field, .margin_field, .thumb_field {
+	background:#fafafa;
+}
+</style>
+</div>
+{{ footer }}

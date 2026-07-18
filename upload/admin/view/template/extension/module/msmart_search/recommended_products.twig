@@ -1,0 +1,139 @@
+{% include 'extension/module/msmart_search/_header.twig' %}
+
+<div id="settings">
+	<div style="padding: 10px; border-radius: 3px; border-left: 1px solid #1e91cf; border-bottom: 1px solid #e9dddd; border-left-width: 5px; background: #ffffdf;">
+		{{ text_recommended_products_guide }} 
+	</div>
+	
+	<div class="form-group">
+		<label class="col-sm-2 control-label" for="input-status">{{ text_show_recommended_in_live_search }} 
+		</label>
+		<div class="col-sm-10">
+			<div class="btn-group" data-toggle="fm-buttons" style="margin-top: 5px">
+				<label class="btn btn-primary btn-xs {{ data['recommended_in_live_search'] is defined and data['recommended_in_live_search'] == 1 ? 'active' : '' }}">
+					<input type="radio" style="display:none" value="1" name="data[recommended_in_live_search]"  {{ data['recommended_in_live_search'] is defined and data['recommended_in_live_search'] == 1 ? 'checked="checked"' : '' }} >
+					{{ text_enabled }} <i class="fa fa-check"></i>
+				</label>
+				<label class="btn btn-primary btn-xs {{ data['recommended_in_live_search'] is empty or data['recommended_in_live_search'] == 0 ? 'active' : '' }}">
+					<input type="radio" style="display:none" value="0" name="data[recommended_in_live_search]" {{ data['recommended_in_live_search'] is empty or data['recommended_in_live_search'] == 0 ? 'checked="checked"' : '' }} >
+					{{ text_disabled }} <i class="fa fa-close"></i>
+				</label>
+			</div>
+			<div class="clearfix"></div>
+			<div style="padding: 10px; border-radius: 3px; border-left: 1px solid #1e91cf; border-bottom: 1px solid #e9dddd; border-left-width: 5px; background: #ffffdf; margin-top: 10px; display: inline-block;">
+				{{ text_recommended_in_live_search }} 
+			</div>
+		</div>
+	</div>
+	
+	<div class="form-group">
+		<label class="col-sm-2 control-label" for="input-status">{{ text_show_recommended_in_search_page }} 
+		</label>
+		<div class="col-sm-10">
+			<div class="btn-group" data-toggle="fm-buttons" style="margin-top: 5px">
+				<label class="btn btn-primary btn-xs {{ data['recommended_in_search_page'] is defined and data['recommended_in_search_page'] == 1 ? 'active' : '' }}">
+					<input type="radio" style="display:none" value="1" name="data[recommended_in_search_page]"  {{ data['recommended_in_search_page'] is defined and data['recommended_in_search_page'] == 1 ? 'checked="checked"' : '' }} >
+					{{ text_enabled }} <i class="fa fa-check"></i>
+				</label>
+				<label class="btn btn-primary btn-xs {{ data['recommended_in_search_page'] is empty or data['recommended_in_search_page'] == 0 ? 'active' : '' }}">
+					<input type="radio" style="display:none" value="0" name="data[recommended_in_search_page]" {{ data['recommended_in_search_page'] is empty or data['recommended_in_search_page'] == 0 ? 'checked="checked"' : '' }} >
+					{{ text_disabled }} <i class="fa fa-close"></i>
+				</label>
+			</div>
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label class="col-sm-2 control-label" for="input-product">{{ text_recommended_products }} 
+		</label>
+		<div class="col-sm-10">
+			<input type="text" id="find_product" value="" placeholder="{{ text_recommended_products }}" id="input-product" class="form-control" />
+			<div id="recommended_products" class="well well-sm" style="height: 150px; overflow: auto;">
+				{% if (data['products'] is not empty) %} 
+					{% for product in data['products'] %} 
+					<div id="recommended_products{{ product['product_id'] }}"><i class="fa fa-minus-circle"></i> {{ product['name'] }} 
+						<input type="hidden" name="data[recommended_products][]" value="{{ product['product_id'] }}" />
+					</div>
+					{% endfor %} 
+				{% endif %} 
+			</div>
+			{% if ( error_product is not empty) %} 
+				<div class="text-danger">{{ error_product }}</div>
+			{% endif %} 
+			<div class="clearfix"></div>
+			<div style="padding: 10px; border-radius: 3px; border-left: 1px solid #1e91cf; border-bottom: 1px solid #e9dddd; border-left-width: 5px; background: #ffffdf;">
+				{{ text_recommended_info }} 
+			</div>
+		</div>
+		<div class="clearfix"></div>
+	</div>
+
+	<div class="form-group">
+		<label class="col-sm-2 control-label"><i style="font-size: 12px" class="fa fa-list-alt"></i> &nbsp; {{ text_if_no_results }} 
+		</label>
+		<div class="col-sm-10">
+			<ul class="nav nav-tabs languages_tabs" style="margin-bottom: -1px;">
+				{% for language in languages %} 
+					<li><a href="#language{{ language['language_id'] }}" data-toggle="tab"><img src="language/{{ language['code'] }}/{{ language['code'] }}.png" title="{{ language['name'] }}" /> {{ language['name'] }}</a></li>
+				{% endfor %} 
+			</ul>
+			<div class="tab-content well" style="border-top-left-radius: 0; border-top-right-radius: 0; background: #f7f7f7">
+				{% for language in languages %} 
+					<div class="tab-pane" id="language{{ language['language_id'] }}">
+						<input class="form-control" type="text" name="data[description][{{ language['language_id'] }}][content]" value="{{ data['description'][language['language_id']]['content'] is defined ? data['description'][language['language_id']]['content'] : '' }}" />
+					</div>
+				{% endfor %} 
+			</div>
+			<div style="padding: 10px; border-radius: 3px; border-left: 1px solid #1e91cf; border-bottom: 1px solid #e9dddd; border-left-width: 5px; background: #ffffdf;">
+				{{ text_if_no_results_info }} 
+			</div>
+		</div>
+	</div>
+	
+</div>
+<style>
+	.btn-group .btn.active {
+		opacity: 1;
+	}
+	.btn-group .btn {
+	  opacity: 0.5;
+	}
+	.form-group label{
+		font-weight: bold;
+	}
+</style>
+<script type="text/javascript">
+	(function(){
+
+		$('#find_product').autocomplete({
+			source: function(request, response) {
+				$.ajax({
+					url: 'index.php?route=catalog/product/autocomplete&user_token={{ user_token }}&filter_name=' +  encodeURIComponent(request),
+					dataType: 'json',
+					success: function(json) {
+						response($.map(json, function(item) {
+							return {
+								label: item['name'],
+								value: item['product_id']
+							}
+						}));
+					}
+				});
+			},
+			select: function(item) {
+				$('input[name=\'product\']').val('');
+				$('#recommended_products' + item['value']).remove();
+				$('#recommended_products').append('<div id="recommended_products' + item['value'] + '"><i class="fa fa-minus-circle"></i> ' + item['label'] + '<input type="hidden" name="data[recommended_products][]" value="' + item['value'] + '" /></div>');	
+			}
+		});
+		$('#recommended_products').delegate('.fa-minus-circle', 'click', function() {
+			$(this).parent().remove();
+		});
+		$('.languages_tabs a:first').tab('show');
+		$('.btn-group').on('click', 'label.btn', function(){
+			$(this).siblings().removeClass('active');
+			$(this).addClass('active');
+		});
+	})( jQuery );
+</script>			
+{% include 'extension/module/msmart_search/_footer.twig' %}

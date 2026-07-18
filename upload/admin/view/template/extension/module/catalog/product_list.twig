@@ -1,0 +1,756 @@
+{% macro alert_icon(type) %}{% spaceless %}
+		{% if type == 'error' %}
+			fa-times-circle
+		{% elseif type == 'warning' %}
+			fa-exclamation-triangle
+		{% elseif type == 'success' %}
+			fa-check-circle
+		{% elseif type == 'info' %}
+			fa-info-circle
+		{% else %}
+		{% endif %}
+{% endspaceless %}{% endmacro %}
+{{ header }}
+<!-- display length configuration -->
+<div class="modal fade" id="displayLengthModal" tabindex="-1" role="dialog" aria-labelledby="displayLengthModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h4 class="modal-title" id="displayLengthModalLabel">{{ text_items_per_page }}</h4>
+			</div>
+			<div class="modal-body bull5i-container">
+				<div class="notice">
+				</div>
+				<form method="post" action="{{ settings }}" class="form-horizontal ajax-form" role="form" id="displayLengthForm">
+					<fieldset>
+						<div class="form-group" data-bind="css: {'has-error': module_product_quick_edit_items_per_page.hasError}">
+							<label for="displayLength" class="col-sm-4 control-label">{{ entry_products_per_page }}</label>
+							<div class="col-sm-2">
+								<input type="text" class="form-control" name="module_product_quick_edit_items_per_page" id="displayLength" data-bind="value: module_product_quick_edit_items_per_page">
+							</div>
+							<div class="col-sm-offset-4 col-sm-8 error-container" data-bind="visible: module_product_quick_edit_items_per_page.hasError && module_product_quick_edit_items_per_page.errorMsg">
+								<span class="help-block error-text" data-bind="text: module_product_quick_edit_items_per_page.errorMsg"></span>
+							</div>
+						</div>
+						<span class="help-block">{{ help_items_per_page }}</span>
+					</fieldset>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default cancel" data-dismiss="modal"><i class="fa fa-times"></i> {{ button_close }}</button>
+				<button type="button" class="btn btn-primary submit" data-form="#displayLengthForm" data-context="#displayLengthModal" data-vm="displayLengthVM" data-loading-text="<i class='fa fa-spinner fa-spin'></i> {{ text_saving }}"><i class="fa fa-save"></i> {{ button_save }}</button>
+			</div>
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<!-- confirm deletion -->
+<div class="modal fade" id="confirmDelete" tabindex="-1" role="dialog" aria-labelledby="confirmDeleteLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h4 class="modal-title" id="confirmDeleteLabel">{{ text_confirm_delete }}</h4>
+			</div>
+			<div class="modal-body">
+				<p>{{ text_are_you_sure }}</p>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-ban"></i> {{ button_cancel }}</button>
+				<button type="button" class="btn btn-danger delete"><i class="fa fa-trash-o"></i> {{ button_delete }}</button>
+			</div>
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<!-- column settings -->
+<div class="modal fade" id="pageColumnsModal" tabindex="-1" role="dialog" aria-labelledby="pageColumnsModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h4 class="modal-title" id="pageColumnsModalLabel">{{ text_choose_columns }}</h4>
+			</div>
+			<div class="modal-body bull5i-container">
+				<div class="bull5i-overlay fade">
+					<div class="page-overlay-progress"><i class="fa fa-refresh fa-spin fa-5x text-muted"></i></div>
+				</div>
+				<div class="notice">
+				</div>
+				<form method="post" action="{{ settings }}" class="form-horizontal ajax-form" role="form" id="pageColumnsModalForm">
+					<fieldset>
+						<h4>{{ entry_columns }}</h4>
+						<table class="table table-hover table-condensed page-columns sortable">
+							<thead>
+								<tr>
+									<th>#</th>
+									<th>{{ text_column }}</th>
+									<th class="text-center">{{ text_display }}</th>
+									<th class="text-center">{{ text_editable }}</th>
+								</tr>
+							</thead>
+							<tbody>
+								<!-- ko foreach: product_columns -->
+								<tr data-bind="attr: {'data-id': column}, css: {'danger': !visible()}">
+									<td><i class="fa fa-arrows-v"></i></td>
+									<td><!-- ko text: name --><!-- /ko --><input data-bind="value: index, attr: {name:'index[columns][' + column +']'}" type="hidden" class="column-index" /></td>
+									<td class="text-center"><input data-bind="checked: visible, attr: {name:'display[columns][' + column +']'}" type="checkbox" class="column-display" /></td>
+									<td class="text-center"><!-- ko if: editable -->{{ text_yes }}<!-- /ko --><!-- ko ifnot: editable -->{{ text_no }}<!-- /ko --></td>
+								</tr>
+								<!-- /ko -->
+							</tbody>
+						</table>
+						<h4>{{ entry_actions }}</h4>
+						<table class="table table-hover table-condensed page-actions sortable">
+							<thead>
+								<tr>
+									<th>#</th>
+									<th>{{ text_action }}</th>
+									<th class="text-center">{{ text_display }}</th>
+								</tr>
+							</thead>
+							<tbody>
+								<!-- ko foreach: product_actions -->
+								<tr data-bind="attr: {'data-id': column}, css: {'danger': !visible()}">
+									<td><i class="fa fa-arrows-v"></i></td>
+									<td><!-- ko text: name --><!-- /ko --><input data-bind="value: index, attr: {name:'index[actions][' + column +']'}" type="hidden" class="column-index" /></td>
+									<td class="text-center"><input data-bind="checked: visible, attr: {name:'display[actions][' + column +']'}" type="checkbox" class="column-display" /></td>
+								</tr>
+								<!-- /ko -->
+							</tbody>
+						</table>
+					</fieldset>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default cancel" data-dismiss="modal"><i class="fa fa-times"></i> {{ button_close }}</button>
+				<button type="button" class="btn btn-primary submit" data-form="#pageColumnsModalForm" data-context="#pageColumnsModal" data-vm="pageColumnsVM" data-loading-text="<i class='fa fa-spinner fa-spin'></i> {{ text_saving }}"><i class="fa fa-save"></i> {{ button_save }}</button>
+			</div>
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<!-- other settings -->
+<div class="modal fade" id="otherSettingsModal" tabindex="-1" role="dialog" aria-labelledby="otherSettingsModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h4 class="modal-title" id="otherSettingsModalLabel">{{ text_other_settings }}</h4>
+			</div>
+			<div class="modal-body bull5i-container">
+				<div class="notice">
+				</div>
+				<form method="post" action="{{ settings }}" class="form-horizontal ajax-form" role="form" id="otherSettingsForm">
+					<fieldset>
+						<div class="form-group">
+							<label class="col-sm-4 control-label" for="module_product_quick_edit_list_view_image_width" data-bind="css: {'has-error': module_product_quick_edit_list_view_image_width.hasError || module_product_quick_edit_list_view_image_height.hasError}">{{ entry_list_view_image_size }}</label>
+							<div class="col-sm-8">
+								<div class="input-group">
+									<input type="text" class="form-control text-right" name="module_product_quick_edit_list_view_image_width" id="module_product_quick_edit_list_view_image_width" data-bind="value: module_product_quick_edit_list_view_image_width, css: {'has-error': module_product_quick_edit_list_view_image_width.hasError}">
+									<span class="input-group-addon"><i class="fa fa-times"></i></span>
+									<input type="text" class="form-control" name="module_product_quick_edit_list_view_image_height" id="module_product_quick_edit_list_view_image_height" data-bind="value: module_product_quick_edit_list_view_image_height, css: {'has-error': module_product_quick_edit_list_view_image_height.hasError}">
+								</div>
+							</div>
+							<div class="col-sm-offset-4 col-sm-8 error-container has-error" data-bind="visible: module_product_quick_edit_list_view_image_width.hasError && module_product_quick_edit_list_view_image_width.errorMsg">
+								<span class="help-block error-text" data-bind="text: module_product_quick_edit_list_view_image_width.errorMsg"></span>
+							</div>
+							<div class="col-sm-offset-4 col-sm-8 error-container has-error" data-bind="visible: module_product_quick_edit_list_view_image_height.hasError && module_product_quick_edit_list_view_image_height.errorMsg">
+								<span class="help-block error-text" data-bind="text: module_product_quick_edit_list_view_image_height.errorMsg"></span>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="quickEditOn" class="col-sm-4 control-label">{{ entry_quick_edit_on }}</label>
+							<div class="col-sm-3 fc-auto-width">
+								<select name="module_product_quick_edit_quick_edit_on" id="quickEditOn" class="form-control" data-bind="value: module_product_quick_edit_quick_edit_on">
+									<option value="click">{{ text_single_click }}</option>
+									<option value="dblclick">{{ text_double_click }}</option>
+								</select>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="priceRelativeTo" class="col-sm-4 control-label">{{ entry_price_relative_to }}</label>
+							<div class="col-sm-3 fc-auto-width">
+								<select name="module_product_quick_edit_price_relative_to" id="priceRelativeTo" class="form-control" data-bind="value: module_product_quick_edit_price_relative_to">
+									<option value="previous">{{ text_previous_value }}</option>
+									<option value="product">{{ text_product_price }}</option>
+								</select>
+							</div>
+							<div class="col-sm-offset-4 col-sm-8 help-container">
+								<span class="help-block help-text">{{ help_price_relative_to }}</span>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="serverSideCaching" class="col-sm-4 control-label">{{ entry_server_side_caching }}</label>
+							<div class="col-sm-8">
+								<label class="radio-inline">
+									<input type="radio" name="module_product_quick_edit_server_side_caching" id="serverSideCaching" value="1" data-bind="checked: module_product_quick_edit_server_side_caching"> {{ text_yes }}
+								</label>
+								<label class="radio-inline">
+									<input type="radio" name="module_product_quick_edit_server_side_caching" id="serverSideCachingNo" value="0" data-bind="checked: module_product_quick_edit_server_side_caching"> {{ text_no }}
+								</label>
+							</div>
+							<div class="col-sm-offset-4 col-sm-8 help-container">
+								<span class="help-block help-text">{{ help_server_side_caching }}</span>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="clientSideCaching" class="col-sm-4 control-label">{{ entry_client_side_caching }}</label>
+							<div class="col-sm-8">
+								<label class="radio-inline">
+									<input type="radio" name="module_product_quick_edit_client_side_caching" id="clientSideCaching" value="1" data-bind="checked: module_product_quick_edit_client_side_caching"> {{ text_yes }}
+								</label>
+								<label class="radio-inline">
+									<input type="radio" name="module_product_quick_edit_client_side_caching" id="clientSideCachingNo" value="0" data-bind="checked: module_product_quick_edit_client_side_caching"> {{ text_no }}
+								</label>
+							</div>
+							<div class="col-sm-offset-4 col-sm-8 help-container">
+								<span class="help-block help-text">{{ help_client_side_caching }}</span>
+							</div>
+						</div>
+						<!-- ko if: module_product_quick_edit_client_side_caching() == '1' -->
+						<div class="form-group" data-bind="css: {'has-error': module_product_quick_edit_cache_size.hasError}">
+							<label for="clientSideCacheSize" class="col-sm-4 control-label">{{ entry_client_side_cache_size }}</label>
+							<div class="col-sm-4">
+								<input type="text" class="form-control text-right" name="module_product_quick_edit_cache_size" id="clientSideCacheSize" data-bind="value: module_product_quick_edit_cache_size">
+							</div>
+							<div class="col-sm-offset-4 col-sm-8 error-container" data-bind="visible: module_product_quick_edit_cache_size.hasError && module_product_quick_edit_cache_size.errorMsg">
+								<span class="help-block error-text" data-bind="text: module_product_quick_edit_cache_size.errorMsg"></span>
+							</div>
+							<div class="col-sm-offset-4 col-sm-8 help-container">
+								<span class="help-block help-text">{{ help_client_side_cache_size }}</span>
+							</div>
+							<input type="hidden" name="module_product_quick_edit_cache_size" data-bind="value: module_product_quick_edit_cache_size">
+						</div>
+						<!-- /ko -->
+						<!-- ko if: module_product_quick_edit_client_side_caching() != '1' -->
+						<input type="hidden" name="module_product_quick_edit_cache_size" data-bind="value: module_product_quick_edit_cache_size">
+						<!-- /ko -->
+						<div class="form-group">
+							<label for="alternateRowColour" class="col-sm-4 control-label">{{ entry_alternate_row_colour }}</label>
+							<div class="col-sm-8">
+								<label class="radio-inline">
+									<input type="radio" name="module_product_quick_edit_alternate_row_colour" id="alternateRowColour" value="1" data-bind="checked: module_product_quick_edit_alternate_row_colour"> {{ text_yes }}
+								</label>
+								<label class="radio-inline">
+									<input type="radio" name="module_product_quick_edit_alternate_row_colour" id="alternateRowColourNo" value="0" data-bind="checked: module_product_quick_edit_alternate_row_colour"> {{ text_no }}
+								</label>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="rowHoverHighlighting" class="col-sm-4 control-label">{{ entry_row_hover_highlighting }}</label>
+							<div class="col-sm-8">
+								<label class="radio-inline">
+									<input type="radio" name="module_product_quick_edit_row_hover_highlighting" id="rowHoverHighlighting" value="1" data-bind="checked: module_product_quick_edit_row_hover_highlighting"> {{ text_yes }}
+								</label>
+								<label class="radio-inline">
+									<input type="radio" name="module_product_quick_edit_row_hover_highlighting" id="rowHoverHighlightingNo" value="0" data-bind="checked: module_product_quick_edit_row_hover_highlighting"> {{ text_no }}
+								</label>
+							</div>
+							<div class="col-sm-offset-4 col-sm-8 help-container">
+								<span class="help-block help-text">{{ help_row_hover_highlighting }}</span>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="highlightStatus" class="col-sm-4 control-label">{{ entry_highlight_status }}</label>
+							<div class="col-sm-8">
+								<label class="radio-inline">
+									<input type="radio" name="module_product_quick_edit_highlight_status" id="highlightStatus" value="1" data-bind="checked: module_product_quick_edit_highlight_status"> {{ text_yes }}
+								</label>
+								<label class="radio-inline">
+									<input type="radio" name="module_product_quick_edit_highlight_status" id="highlightStatusNo" value="0" data-bind="checked: module_product_quick_edit_highlight_status"> {{ text_no }}
+								</label>
+							</div>
+							<div class="col-sm-offset-4 col-sm-8 help-container">
+								<span class="help-block help-text">{{ help_highlight_status }}</span>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="highlightFilteredColumns" class="col-sm-4 control-label">{{ entry_highlight_filtered_columns }}</label>
+							<div class="col-sm-8">
+								<label class="radio-inline">
+									<input type="radio" name="module_product_quick_edit_highlight_filtered_columns" id="highlightFilteredColumns" value="1" data-bind="checked: module_product_quick_edit_highlight_filtered_columns"> {{ text_yes }}
+								</label>
+								<label class="radio-inline">
+									<input type="radio" name="module_product_quick_edit_highlight_filtered_columns" id="highlightFilteredColumnsNo" value="0" data-bind="checked: module_product_quick_edit_highlight_filtered_columns"> {{ text_no }}
+								</label>
+							</div>
+							<div class="col-sm-offset-4 col-sm-8 help-container">
+								<span class="help-block help-text">{{ help_highlight_filtered_columns }}</span>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="highlightActions" class="col-sm-4 control-label">{{ entry_highlight_actions }}</label>
+							<div class="col-sm-8">
+								<label class="radio-inline">
+									<input type="radio" name="module_product_quick_edit_highlight_actions" id="highlightActions" value="1" data-bind="checked: module_product_quick_edit_highlight_actions"> {{ text_yes }}
+								</label>
+								<label class="radio-inline">
+									<input type="radio" name="module_product_quick_edit_highlight_actions" id="highlightActionsNo" value="0" data-bind="checked: module_product_quick_edit_highlight_actions"> {{ text_no }}
+								</label>
+							</div>
+							<div class="col-sm-offset-4 col-sm-8 help-container">
+								<span class="help-block help-text">{{ help_highlight_actions }}</span>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="filterSubCategory" class="col-sm-4 control-label">{{ entry_filter_sub_category }}</label>
+							<div class="col-sm-8">
+								<label class="radio-inline">
+									<input type="radio" name="module_product_quick_edit_filter_sub_category" id="filterSubCategory" value="1" data-bind="checked: module_product_quick_edit_filter_sub_category"> {{ text_yes }}
+								</label>
+								<label class="radio-inline">
+									<input type="radio" name="module_product_quick_edit_filter_sub_category" id="filterSubCategoryNo" value="0" data-bind="checked: module_product_quick_edit_filter_sub_category"> {{ text_no }}
+								</label>
+							</div>
+							<div class="col-sm-offset-4 col-sm-8 help-container">
+								<span class="help-block help-text">{{ help_filter_sub_category }}</span>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="searchBar" class="col-sm-4 control-label">{{ entry_search_bar }}</label>
+							<div class="col-sm-8">
+								<label class="radio-inline">
+									<input type="radio" name="module_product_quick_edit_search_bar" id="searchBar" value="1" data-bind="checked: module_product_quick_edit_search_bar"> {{ text_visible }}
+								</label>
+								<label class="radio-inline">
+									<input type="radio" name="module_product_quick_edit_search_bar" id="searchBarNo" value="0" data-bind="checked: module_product_quick_edit_search_bar"> {{ text_hidden }}
+								</label>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="batchEdit" class="col-sm-4 control-label">{{ entry_batch_edit }}</label>
+							<div class="col-sm-8">
+								<label class="radio-inline">
+									<input type="radio" name="module_product_quick_edit_batch_edit" id="batchEdit" value="1" data-bind="checked: module_product_quick_edit_batch_edit"> {{ text_yes }}
+								</label>
+								<label class="radio-inline">
+									<input type="radio" name="module_product_quick_edit_batch_edit" id="batchEditNo" value="0" data-bind="checked: module_product_quick_edit_batch_edit"> {{ text_no }}
+								</label>
+							</div>
+							<div class="col-sm-offset-4 col-sm-8 help-container">
+								<span class="help-block help-text">{{ help_batch_edit }}</span>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="showSuccessMessage" class="col-sm-4 control-label">{{ entry_show_success_message }}</label>
+							<div class="col-sm-8">
+								<label class="radio-inline">
+									<input type="radio" name="module_product_quick_edit_show_success_message" id="showSuccessMessage" value="1" data-bind="checked: module_product_quick_edit_show_success_message"> {{ text_yes }}
+								</label>
+								<label class="radio-inline">
+									<input type="radio" name="module_product_quick_edit_show_success_message" id="showSuccessMessageNo" value="0" data-bind="checked: module_product_quick_edit_show_success_message"> {{ text_no }}
+								</label>
+							</div>
+							<div class="col-sm-offset-4 col-sm-8 help-container">
+								<span class="help-block help-text">{{ help_show_success_message }}</span>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="defaultSort" class="col-sm-4 control-label">{{ entry_default_sorting }}</label>
+							<div class="col-sm-3 fc-auto-width">
+								<select name="module_product_quick_edit_default_sort" id="defaultSort" class="form-control" data-bind="value: module_product_quick_edit_default_sort">
+									{% for sort in sorts %}
+									<option value="{{ sort.value }}"{{ sort.value == module_product_quick_edit_default_sort ? ' selected' }}>{{ sort.name }}</option>
+									{% endfor %}
+								</select>
+							</div>
+							<div class="col-sm-3 fc-auto-width">
+								<select name="module_product_quick_edit_default_order" id="defaultOrder" class="form-control" data-bind="value: module_product_quick_edit_default_order">
+									<option value="ASC"{{ "asc" == module_product_quick_edit_default_order|lower() ? ' selected' }}>{{ text_ascending }}</option>
+									<option value="DESC"{{ "desc" == module_product_quick_edit_default_order|lower() ? ' selected' }}>{{ text_descending }}</option>
+								</select>
+							</div>
+						</div>
+						<!-- ko if: module_product_quick_edit_debug_mode() == '1' -->
+						<div class="form-group">
+							<label for="debugMode" class="col-sm-4 control-label">{{ entry_debug_mode }}</label>
+							<div class="col-sm-8">
+								<label class="radio-inline">
+									<input type="radio" name="module_product_quick_edit_debug_mode" id="debugMode" value="1" data-bind="checked: module_product_quick_edit_debug_mode"> {{ text_yes }}
+								</label>
+								<label class="radio-inline">
+									<input type="radio" name="module_product_quick_edit_debug_mode" id="debugModeNo" value="0" data-bind="checked: module_product_quick_edit_debug_mode"> {{ text_no }}
+								</label>
+							</div>
+						</div>
+						<!-- /ko -->
+						<!-- ko if: module_product_quick_edit_debug_mode() != '1' -->
+						<input type="hidden" name="module_product_quick_edit_debug_mode" value="0" data-bind="checked: module_product_quick_edit_debug_mode">
+						<!-- /ko -->
+					</fieldset>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default cancel" data-dismiss="modal"><i class="fa fa-times"></i> {{ button_close }}</button>
+				<button type="button" class="btn btn-primary submit" data-form="#otherSettingsForm" data-context="#otherSettingsModal" data-vm="otherSettingsVM" data-loading-text="<i class='fa fa-spinner fa-spin'></i> {{ text_saving }}"><i class="fa fa-save"></i> {{ button_save }}</button>
+			</div>
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+{% if "image" in columns or "images" in actions %}
+<!-- image manager -->
+<div class="modal fade" id="modal-image" tabindex="-1" role="dialog" aria-labelledby="imageManagerModalLabel" aria-hidden="true">
+</div><!-- /.modal -->
+{% endif %}
+
+<!-- action menu modal -->
+<div class="modal fade modal-60p" id="actionQuickEditModal" tabindex="-1" role="dialog" aria-labelledby="actionQuickEditModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h4 class="modal-title" id="actionQuickEditModalLabel"></h4>
+			</div>
+			<div class="modal-body bull5i-container">
+				<div class="notice">
+				</div>
+				<form enctype="multipart/form-data" id="actionQuickEditForm" onsubmit="return false;">
+					<fieldset>
+					</fieldset>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default cancel" data-dismiss="modal"><i class="fa fa-times"></i> {{ button_close }}</button>
+				<button type="button" class="btn btn-danger submit remove" data-form="#actionQuickEditForm" data-context="#actionQuickEditModal" data-vm="actionQuickEditVM" data-loading-text="<i class='fa fa-spinner fa-spin'></i> {{ text_removing }}"><i class="fa fa-minus-circle"></i> {{ button_remove }}</button>
+				<button type="button" class="btn btn-success submit add" data-form="#actionQuickEditForm" data-context="#actionQuickEditModal" data-vm="actionQuickEditVM" data-loading-text="<i class='fa fa-spinner fa-spin'></i> {{ text_adding }}"><i class="fa fa-plus-circle"></i> {{ button_add }}</button>
+				<button type="button" class="btn btn-primary submit" data-form="#actionQuickEditForm" data-context="#actionQuickEditModal" data-vm="actionQuickEditVM" data-loading-text="<i class='fa fa-spinner fa-spin'></i> {{ text_saving }}"><i class="fa fa-save"></i> {{ button_save }}</button>
+			</div>
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+{{ column_left }}
+<div id="content">
+	<div class="page-header">
+		<div class="container-fluid">
+			<div class="pull-right">
+				<button type="button" class="btn btn-default" data-toggle="tooltip" data-container="body" data-placement="bottom" title="{{ button_toggle_search_bar }}" id="btn-search-bar"><i class="fa fa-search-{{ module_product_quick_edit_search_bar ? 'minus' : 'plus' }}"></i></button>
+				<div class="btn-group">
+					<button type="button" class="btn btn-default dropdown-toggle" data-hover="tooltip" title="{{ text_settings }}" data-placement="left" data-toggle="dropdown" id="btn-settings"><i class="fa fa-cog"></i> <b class="caret"></b></button>
+					<ul class="dropdown-menu" role="menu">
+						<li><a href="#" data-toggle="modal" data-target="#displayLengthModal">{{ text_items_per_page }}</a></li>
+						<li><a href="#" data-toggle="modal" data-target="#pageColumnsModal">{{ text_choose_columns }}</a></li>
+						<li class="divider"></li>
+						<li><a href="#" data-toggle="modal" data-target="#otherSettingsModal">{{ text_other_settings }}</a></li>
+						<li class="divider"></li>
+						<li><a href="{{ clear_cache }}" id="clearCache">{{ text_clear_cache }}</a></li>
+					</ul>
+				</div>
+				<button type="button" class="btn btn-primary" data-toggle="tooltip" data-container="body" data-placement="bottom" title="{{ button_add }}" data-url="{{ add }}" id="btn-insert" data-form="#pqe-list-form" data-context="#content"><i class="fa fa-plus"></i></button>
+				<button type="button" class="btn btn-default" data-toggle="tooltip" data-container="body" data-placement="bottom" title="{{ button_copy }}" data-url="{{ copy }}" id="btn-copy" data-form="#pqe-list-form" data-context="#content" data-loading-text="<i class='fa fa-spinner fa-spin'></i>" disabled><i class="fa fa-files-o"></i></button>
+				<button type="button" class="btn btn-danger" data-toggle="tooltip" data-container="body" data-placement="bottom" title="{{ button_delete }}" data-url="{{ delete }}" id="btn-delete" data-form="#pqe-list-form" data-context="#content" data-loading-text="<i class='fa fa-spinner fa-spin'></i>" disabled><i class="fa fa-trash-o"></i></button>
+			</div>
+			<h1><i class="fa fa-cubes fa-fw ext-icon"></i> {{ heading_title }}</h1>
+			<ul class="breadcrumb">
+				{% for breadcrumb in breadcrumbs %}
+				<li><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+				{% endfor %}
+			</ul>
+		</div>
+	</div>
+
+	<div class="alerts">
+		<div class="container-fluid" id="alerts">
+			{% for type, _alerts in alerts %}
+				{% for alert in _alerts %}
+					{% if alert %}
+			<div class="alert alert-{% if type == "error" %}danger{% else %}{{ type }}{% endif %} fade in">
+				<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+				<i class="fa {{ _self.alert_icon(type) }}"></i>{{ alert }}
+			</div>
+					{% endif %}
+				{% endfor %}
+			{% endfor %}
+		</div>
+	</div>
+
+	<div class="container-fluid bull5i-content bull5i-container{{ not module_product_quick_edit_search_bar ? ' hide' }}" id="search-bar">
+		<div class="row navbar-bull5i">
+			<div class="pull-right">
+				<div class="nav navbar-nav navbar-checkbox hidden" id="batch-edit-container">
+					<div class="checkbox">
+						<label>
+							<input type="checkbox" id="batch-edit"> {{ text_batch_edit }}
+						</label>
+					</div>
+				</div>
+				<div class="nav navbar-nav navbar-form" id="nav-search">
+					<div class="form-group search-form">
+						<label for="global-search" class="sr-only">{{ text_search }}</label>
+						<div class="search">
+							<div class="input-group">
+								<input type="text" name="search" class="form-control" placeholder="{{ text_search }}" id="global-search" value="{{ search }}">
+								<span class="input-group-btn">
+									<button type="button" class="btn btn-default" data-toggle="tooltip" data-container="body" data-placement="bottom" title="{{ text_search }}" id="global-search-btn"><i class="fa fa-search fa-fw"></i></button>
+									<!-- ko if: value() != '' --><button type="button" class="btn btn-default" data-bind="tooltip: {container: 'body', placement: 'bottom'}" title="{{ text_clear_search }}" id="clear-global-search-btn"><i class="fa fa-times fa-fw"></i></button><!-- /ko -->
+								</span>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="container-fluid bull5i-content bull5i-container">
+		<div id="dT_processing" class="dataTables_processing fade"><i class="fa fa-refresh fa-spin fa-5x"></i></div>
+		<form method="post" enctype="multipart/form-data" id="pqe-list-form" class="form-horizontal" role="form">
+			<fieldset>
+				<div class="table-responsive">
+					<table cellpadding="0" cellspacing="0" border="0" class="table table-bordered table-condensed{{ module_product_quick_edit_row_hover_highlighting ? ' table-hover' : '' }}{{ module_product_quick_edit_alternate_row_colour ? ' table-striped' : '' }}" id="dT">
+						<thead>
+							<tr>
+								{% for col in columns %}
+									{% if col == 'selector' %}
+								<th class="{{ column_info[col].align }} col_{{ col }}" width="1"><input type="checkbox" id="dT-selector" /></th>
+									{% elseif col in ['image', 'id'] %}
+								<th class="{{ column_info[col].align }} col_{{ col }}" width="1">{{ column_info[col].name }}</th>
+									{% else %}
+								<th class="{{ column_info[col].align }} col_{{ col }}">{{ column_info[col].name }}</th>
+									{% endif %}
+								{% endfor %}
+							</tr>
+							<tr class="filters">
+								{% for col in columns %}
+									{% if col in ['selector', 'view_in_store', 'gross_price'] %}
+								<th></th>
+									{% elseif col == 'status' %}
+								<th class="{{ column_info[col].align }}">
+									<select name="filter_{{ col }}" class="form-control input-sm search_init fltr {{ col }}" data-column="{{ col }}">
+										<option value="" selected></option>
+										<option value="1">{{ text_enabled }}</option>
+										<option value="0">{{ text_disabled }}</option>
+									</select>
+								</th>
+									{% elseif col in ['image', 'subtract', 'shipping'] %}
+								<th class="{{ column_info[col].align }}">
+									<select name="filter_{{ col }}" class="form-control input-sm search_init fltr {{ col }}" data-column="{{ col }}">
+										<option value="" selected></option>
+										<option value="1">{{ text_yes }}</option>
+										<option value="0">{{ text_no }}</option>
+									</select>
+								</th>
+									{% elseif col == 'action' %}
+								<th class="{{ column_info[col].align }}">
+									<div class="btn-group btn-group-flex">
+										<button type="button" class="btn btn-sm btn-default" id="filter" data-toggle="tooltip" data-container="body" title="{{ text_filter }}"><i class="fa fa-filter fa-fw"></i></button>
+										<button type="button" class="btn btn-sm btn-default" id="clear-filter" data-toggle="tooltip" data-container="body" title="{{ text_clear_filter }}"><i class="fa fa-times fa-fw"></i></button>
+									</div>
+								</th>
+									{% elseif col == 'manufacturer' %}
+									{% if col in typeahead|keys %}
+								<th class="{{ column_info[col].align }}">
+									<input type="text" class="form-control input-sm fltr {{ col }} typeahead id_based" placeholder="{{ text_autocomplete }}">
+									<input type="hidden" name="filter_{{ col }}" class="search_init fltr {{ col }}" data-column="{{ col }}">
+								</th>
+									{% else %}
+								<th class="{{ column_info[col].align }}">
+									<select name="filter_{{ col }}" class="form-control input-sm search_init fltr {{ col }}" data-column="{{ col }}">
+										<option value="" selected></option>
+										<option value="*">{{ text_none }}</option>
+										{% for m in manufacturers %}
+										<option value="{{ m.manufacturer_id }}">{{ m.name }}</option>
+										{% endfor %}
+									</select>
+								</th>
+									{% endif %}
+									{% elseif col == 'category' %}
+									{% if col in typeahead|keys %}
+								<th class="{{ column_info[col].align }}">
+									<input type="text" class="form-control input-sm fltr {{ col }} typeahead id_based" placeholder="{{ text_autocomplete }}">
+									<input type="hidden" name="filter_{{ col }}" class="search_init fltr {{ col }}" data-column="{{ col }}">
+								</th>
+									{% else %}
+								<th class="{{ column_info[col].align }}">
+									<select name="filter_{{ col }}" class="form-control input-sm search_init fltr {{ col }}" data-column="{{ col }}">
+										<option value="" selected></option>
+										<option value="*">{{ text_none }}</option>
+										{% for c in categories %}
+										<option value="{{ c.category_id }}">{{ c.name }}</option>
+										{% endfor %}
+									</select>
+								</th>
+									{% endif %}
+									{% elseif col == 'download' %}
+									{% if col in typeahead|keys %}
+								<th class="{{ column_info[col].align }}">
+									<input type="text" class="form-control input-sm fltr {{ col }} typeahead id_based" placeholder="{{ text_autocomplete }}">
+									<input type="hidden" name="filter_{{ col }}" class="search_init fltr {{ col }}" data-column="{{ col }}">
+								</th>
+									{% else %}
+								<th class="{{ column_info[col].align }}">
+									<select name="filter_{{ col }}" class="form-control input-sm search_init fltr {{ col }}" data-column="{{ col }}">
+										<option value="" selected></option>
+										<option value="*">{{ text_none }}</option>
+										{% for dl in downloads %}
+										<option value="{{ dl.download_id }}">{{ dl.name }}</option>
+										{% endfor %}
+									</select>
+								</th>
+									{% endif %}
+									{% elseif col == 'filter' %}
+									{% if col in typeahead|keys %}
+								<th class="{{ column_info[col].align }}">
+									<input type="text" class="form-control input-sm fltr {{ col }} typeahead id_based" placeholder="{{ text_autocomplete }}">
+									<input type="hidden" name="filter_{{ col }}" class="search_init fltr {{ col }}" data-column="{{ col }}">
+								</th>
+									{% else %}
+								<th class="{{ column_info[col].align }}">
+									<select name="filter_{{ col }}" class="form-control input-sm search_init fltr {{ col }}" data-column="{{ col }}">
+										<option value="" selected></option>
+										<option value="*">{{ text_none }}</option>
+										{% for fg in filters %}
+										<optgroup label="{{  fg.name|addslashes() }}">
+										{% for f in fg.filters %}
+											<option value="{{ f.filter_id }}">{{ f.name }}</option>
+										{% endfor %}
+										</optgroup>
+										{% endfor %}
+									</select>
+								</th>
+									{% endif %}
+									{% elseif col == 'store' %}
+								<th class="{{ column_info[col].align }}">
+									<select name="filter_{{ col }}" class="form-control input-sm search_init fltr {{ col }}" data-column="{{ col }}">
+										<option value="" selected></option>
+										<option value="*">{{ text_none }}</option>
+										{% for s in stores %}
+										<option value="{{ s.store_id }}">{{ s.name }}</option>
+										{% endfor %}
+									</select>
+								</th>
+									{% elseif col == 'length_class' %}
+								<th class="{{ column_info[col].align }}">
+									<select name="filter_{{ col }}" class="form-control input-sm search_init fltr {{ col }}" data-column="{{ col }}">
+										<option value="" selected></option>
+										{% for lc in length_classes %}
+										<option value="{{ lc.length_class_id }}">{{ lc.title }}</option>
+										{% endfor %}
+									</select>
+								</th>
+									{% elseif col == 'weight_class' %}
+								<th class="{{ column_info[col].align }}">
+									<select name="filter_{{ col }}" class="form-control input-sm search_init fltr {{ col }}" data-column="{{ col }}">
+										<option value="" selected></option>
+										{% for wc in weight_classes %}
+										<option value="{{ wc.weight_class_id }}">{{ wc.title }}</option>
+										{% endfor %}
+									</select>
+								</th>
+									{% elseif col == 'stock_status' %}
+								<th class="{{ column_info[col].align }}">
+									<select name="filter_{{ col }}" class="form-control input-sm search_init fltr {{ col }}" data-column="{{ col }}">
+										<option value="" selected></option>
+										{% for ss in stock_statuses %}
+										<option value="{{ ss.stock_status_id }}">{{ ss.name }}</option>
+										{% endfor %}
+									</select>
+								</th>
+									{% elseif col == 'tax_class' %}
+								<th class="{{ column_info[col].align }}">
+									<select name="filter_{{ col }}" class="form-control input-sm search_init fltr {{ col }}" data-column="{{ col }}">
+										<option value="" selected></option>
+										<option value="*">{{ text_none }}</option>
+										{% for tc in tax_classes %}
+										<option value="{{ tc.tax_class_id }}">{{ tc.title }}</option>
+										{% endfor %}
+									</select>
+								</th>
+									{% elseif col == 'price' %}
+								<th class="{{ column_info[col].align }}">
+									<div class="input-group">
+										<input type="text" name="filter_{{ col }}" class="form-control input-sm search_init fltr {{ col }}" id="filter_price" data-column="{{ col }}">
+										<input type="hidden" value="" id="filter_special_price">
+										<div class="input-group-btn" data-toggle="buttons">
+											<button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" tabindex="-1">
+												<span class="caret"></span>
+												<span class="sr-only">{{ text_toggle_dropdown }}</span>
+											</button>
+											<ul class="dropdown-menu text-left pull-right price" role="menu">
+												<li class="active"><a href="#" class="filter-special-price" data-value="" id="special-price-off"><i class="fa fa-fw fa-check"></i> {{ text_special_off }}</a></li>
+												<li><a href="#" class="filter-special-price" data-value="na"><i class="fa fa-fw"></i> {{ text_special_not_available }}</a></li>
+												<li><a href="#" class="filter-special-price" data-value="active"><i class="fa fa-fw"></i> {{ text_special_active }}</a></li>
+												<li><a href="#" class="filter-special-price" data-value="expired"><i class="fa fa-fw"></i> {{ text_special_expired }}</a></li>
+												<li><a href="#" class="filter-special-price" data-value="future"><i class="fa fa-fw"></i> {{ text_special_future }}</a></li>
+											</ul>
+										</div>
+									</div>
+								</th>
+									{% elseif col in ['name', 'model', 'sku', 'upc', 'ean', 'jan', 'isbn', 'mpn', 'location'] %}
+								<th class="{{ column_info[col].align }}"><input type="text" name="filter_{{ col }}" class="form-control input-sm search_init fltr {{ col }} typeahead" placeholder="{{ text_autocomplete }}" data-column="{{ col }}"></th>
+									{% else %}
+								<th class="{{ column_info[col].align }}"><input type="text" name="filter_{{ col }}" class="form-control input-sm search_init fltr {{ col }}" data-column="{{ col }}"></th>
+									{% endif %}
+								{% endfor %}
+							</tr>
+						</thead>
+						<tbody>
+						</tbody>
+					</table>
+				</div>
+			</fieldset>
+		</form>
+	</div>
+
+</div>
+<div class="row-fluid"><div class="col-xs-12 text-center"><small class="text-muted" id="ajax-request-container"></small></div></div>
+<div class="row-fluid"><div class="col-xs-12 text-center"><small class="text-muted">{{ text_page_created }}</small></div></div>
+<script type="text/javascript"><!--
+(function(bull5i,$,undefined){var errors={{ errors|json_encode() }},related={{ related|json_encode() }},active_filters={{ active_filters|json_encode() }},values={displayLengthModal:{module_product_quick_edit_items_per_page:parseInt("{{ items_per_page * 1 }}")},otherSettingsModal:{module_product_quick_edit_list_view_image_width:parseInt("{{ module_product_quick_edit_list_view_image_width * 1 }}"),module_product_quick_edit_list_view_image_height:parseInt("{{ module_product_quick_edit_list_view_image_height * 1 }}"),module_product_quick_edit_quick_edit_on:"{{ module_product_quick_edit_quick_edit_on|addslashes() }}",module_product_quick_edit_price_relative_to:"{{ module_product_quick_edit_price_relative_to|addslashes() }}",module_product_quick_edit_server_side_caching:"{{ module_product_quick_edit_server_side_caching }}",module_product_quick_edit_client_side_caching:"{{ module_product_quick_edit_client_side_caching }}",module_product_quick_edit_cache_size:parseInt("{{ module_product_quick_edit_cache_size ? module_product_quick_edit_cache_size : '1000' }}"),module_product_quick_edit_alternate_row_colour:"{{ module_product_quick_edit_alternate_row_colour }}",module_product_quick_edit_row_hover_highlighting:"{{ module_product_quick_edit_row_hover_highlighting }}",module_product_quick_edit_highlight_status:"{{ module_product_quick_edit_highlight_status }}",module_product_quick_edit_highlight_filtered_columns:"{{ module_product_quick_edit_highlight_filtered_columns }}",module_product_quick_edit_highlight_actions:"{{ module_product_quick_edit_highlight_actions }}",module_product_quick_edit_filter_sub_category:"{{ module_product_quick_edit_filter_sub_category }}",module_product_quick_edit_debug_mode:"{{ module_product_quick_edit_debug_mode * 1 }}",module_product_quick_edit_search_bar:"{{ module_product_quick_edit_search_bar * 1 }}",module_product_quick_edit_batch_edit:"{{ module_product_quick_edit_batch_edit * 1 }}",module_product_quick_edit_show_success_message:"{{ module_product_quick_edit_show_success_message * 1 }}",module_product_quick_edit_default_sort:"{{ module_product_quick_edit_default_sort }}",module_product_quick_edit_default_order:"{{ module_product_quick_edit_default_order }}"},pageColumnsModal:{product_actions:{{ product_actions|json_encode() }},product_columns:{{ product_columns|json_encode() }}},search:{value:"{{ search|addslashes() }}"}},ta_sources=[];bull5i.user_token="{{ user_token }}",bull5i.debugging=!!parseInt("{{ module_product_quick_edit_debug_mode * 1 }}"),bull5i.clearCache=parseInt("{{ clear_dt_cache * 1 }}"),bull5i.highlight_filtered_columns=parseInt(values.otherSettingsModal.module_product_quick_edit_highlight_filtered_columns),bull5i.texts=$.extend({},bull5i.texts,{text_request_handled:"{{ text_request_handled|addslashes() }}",error_ajax_request:"{{ error_ajax_request|addslashes() }}",error_items_per_page:"{{ error_items_per_page|addslashes() }}",error_image_width:"{{ error_image_width|addslashes() }}",error_image_height:"{{ error_image_height|addslashes() }}",error_cache_size:"{{ error_cache_size|addslashes() }}"});var Column=function(e,i,t,a,s){this.column=e,this.index=ko.observable(i),this.name=t,this.editable=ko.observable(s),this.visible=ko.observable(a)},displayLengthModalViewModel=function(){var e=this;validate_items_per_page=function(e){isNaN(parseInt(e))||0==parseInt(e)||parseInt(e)<-1?(this.target.hasError(!0),this.target.errorMsg(this.message)):(this.target.hasError(!1),this.target.errorMsg(""))},this.module_product_quick_edit_items_per_page=ko.observable(0).extend({numeric:{precision:0,context:e},validate:{message:bull5i.texts.error_items_per_page,context:e,method:validate_items_per_page}}),this.module_product_quick_edit_items_per_page.subscribe(function(e){void 0!=bull5i.dtApi&&bull5i.dtApi.page.len(parseInt(e))})};displayLengthModalViewModel.prototype=new bull5i.observable_object_methods;var otherSettingsModalViewModel=function(){var e=this;validate_image_size=function(e){isNaN(parseInt(e))||parseInt(e)<1?(this.target.hasError(!0),this.target.errorMsg(this.message)):(this.target.hasError(!1),this.target.errorMsg(""))},validate_cache_size=function(e){isNaN(parseInt(e))||parseInt(e)<1||bull5i.view_models&&bull5i.view_models.displayLengthVM&&bull5i.view_models.displayLengthVM.module_product_quick_edit_items_per_page()>0&&parseInt(e)<bull5i.view_models.displayLengthVM.module_product_quick_edit_items_per_page()?(this.target.hasError(!0),this.target.errorMsg(this.message)):(this.target.hasError(!1),this.target.errorMsg(""))},this.module_product_quick_edit_list_view_image_width=ko.observable(40).extend({numeric:{precision:0,context:e},validate:{message:bull5i.texts.error_image_width,context:e,method:validate_image_size}}),this.module_product_quick_edit_list_view_image_height=ko.observable(40).extend({numeric:{precision:0,context:e},validate:{message:bull5i.texts.error_image_height,context:e,method:validate_image_size}}),this.module_product_quick_edit_quick_edit_on=ko.observable("click"),this.module_product_quick_edit_price_relative_to=ko.observable("previous"),this.module_product_quick_edit_server_side_caching=ko.observable("0"),this.module_product_quick_edit_client_side_caching=ko.observable("0"),this.module_product_quick_edit_cache_size=ko.observable(0).extend({numeric:{precision:0,context:e},validate:{message:bull5i.texts.error_cache_size,context:e,method:validate_cache_size}}),this.module_product_quick_edit_alternate_row_colour=ko.observable("0"),this.module_product_quick_edit_row_hover_highlighting=ko.observable("0"),this.module_product_quick_edit_highlight_status=ko.observable("0"),this.module_product_quick_edit_highlight_filtered_columns=ko.observable("0"),this.module_product_quick_edit_highlight_actions=ko.observable("0"),this.module_product_quick_edit_filter_sub_category=ko.observable("0"),this.module_product_quick_edit_debug_mode=ko.observable(0),this.module_product_quick_edit_search_bar=ko.observable("1"),this.module_product_quick_edit_batch_edit=ko.observable("0"),this.module_product_quick_edit_show_success_message=ko.observable("1"),this.module_product_quick_edit_default_sort=ko.observable("pd.name"),this.module_product_quick_edit_default_order=ko.observable("ASC"),this.module_product_quick_edit_list_view_image_width.subscribe(function(){void 0!=bull5i.dtApi&&bull5i.dtApi.clearPipeline()}),this.module_product_quick_edit_list_view_image_height.subscribe(function(){void 0!=bull5i.dtApi&&bull5i.dtApi.clearPipeline()}),this.module_product_quick_edit_debug_mode.subscribe(function(e){bull5i.debugging=!!parseInt(e)}),this.module_product_quick_edit_alternate_row_colour.subscribe(function(e){var i=$("#dT");parseInt(e)?i.addClass("table-striped"):i.removeClass("table-striped")}),this.module_product_quick_edit_row_hover_highlighting.subscribe(function(e){var i=$("#dT");parseInt(e)?i.addClass("table-hover"):i.removeClass("table-hover")}),this.module_product_quick_edit_search_bar.subscribe(function(s){var a=$("#search-bar"),e=$("#btn-search-bar i.fa");parseInt(s)?(a.removeClass("hide"),e.removeClass("fa-search-plus").addClass("fa-search-minus")):(a.addClass("hide"),e.removeClass("fa-search-minus").addClass("fa-search-plus"))}),this.module_product_quick_edit_batch_edit.subscribe(function(t){$("#batch-edit").prop("checked",!!parseInt(t))}),this.module_product_quick_edit_highlight_status.subscribe(function(){void 0!=bull5i.dtApi&&bull5i.dtApi.clearPipeline()}),this.module_product_quick_edit_highlight_filtered_columns.subscribe(function(e){bull5i.highlight_filtered_columns=parseInt(e)}),this.module_product_quick_edit_highlight_actions.subscribe(function(){void 0!=bull5i.dtApi&&bull5i.dtApi.clearPipeline()}),this.module_product_quick_edit_filter_sub_category.subscribe(function(){void 0!=bull5i.dtApi&&bull5i.dtApi.clearPipeline()})};otherSettingsModalViewModel.prototype=new bull5i.observable_object_methods;var pageColumnsModalViewModel=function(){var e=this;this.product_actions=ko.observableArray([]),this.product_columns=ko.observableArray([]),e.updateValues=function(i){for(var t in e)ko.isWriteableObservable(e[t])&&i.hasOwnProperty(t)&&e[t]($.map(i[t],function(e,i){return new Column(i,e.hasOwnProperty("index")?e.index:0,e.hasOwnProperty("name")?e.name:"<unknown>",e.hasOwnProperty("display")?e.display:1,e.hasOwnProperty("editable")?e.editable:1)}))}},searchViewModel=function(){var e=this;this.value=ko.observable(""),e.updateValues=function(i){for(var t in e)ko.isWriteableObservable(e[t])&&i.hasOwnProperty(t)&&("function"==typeof e[t].updateValues?e[t].updateValues(i[t]):e[t](i[t]))},e.setSearch=function(i){e.value(i)}};bull5i.view_models=$.extend({},bull5i.view_models,{displayLengthVM:new displayLengthModalViewModel,otherSettingsVM:new otherSettingsModalViewModel,pageColumnsVM:new pageColumnsModalViewModel,searchVM:new searchViewModel}),bull5i.view_models.displayLengthVM.updateValues(values.displayLengthModal),bull5i.view_models.displayLengthVM.applyErrors(errors),bull5i.view_models.otherSettingsVM.updateValues(values.otherSettingsModal),bull5i.view_models.otherSettingsVM.applyErrors(errors),bull5i.view_models.pageColumnsVM.updateValues(values.pageColumnsModal),bull5i.view_models.searchVM.updateValues(values.search),ko.applyBindings(bull5i.view_models.displayLengthVM,$("#displayLengthModal")[0]),ko.applyBindings(bull5i.view_models.otherSettingsVM,$("#otherSettingsModal")[0]),ko.applyBindings(bull5i.view_models.pageColumnsVM,$("#pageColumnsModal")[0]),ko.applyBindings(bull5i.view_models.searchVM,$("#nav-search")[0]),$(".sortable").sortable({containerSelector:"table",itemPath:"> tbody",itemSelector:"tr",placeholder:'<tr class="placeholder"/>',distance:5,onDragStart:function(e){e.children().each(function(){$(this).width($(this).width())}),e.addClass("dragged"),$("body").addClass("dragging")},onDrag:function(e,i){i.left=0,e.css(i)},onDrop:function(e,i){e.children().each(function(){$(this).removeAttr("style")}),e.removeClass("dragged").removeAttr("style"),$("body").removeClass("dragging"),$("tbody tr",$(i.el[0])).each(function(e){var i=ko.dataFor(this);i.index(e)})}});
+{% for column, attr in typeahead %}
+{% if column == 'category' %}
+ta_sources['{{ column }}']=new Bloodhound({ {% if attr.prefetch %}prefetch:'{{ attr.prefetch }}',{% endif %}{% if attr.remote %}remote:{url:'{{ attr.remote }}',wildcard:'%QUERY'},{% endif %}datumTokenizer:Bloodhound.tokenizers.obj.whitespace('value'),queryTokenizer:Bloodhound.tokenizers.whitespace,identify:function(obj){return obj.id},sufficient:10});ta_sources["{{ column }}"].initialize(),$(".{{ column }}.typeahead").typeahead({hint:!0,highlight:!0},{name:"{{ column }}",limit:10,display:'value',source:ta_sources["{{ column }}"],templates:{notFound:['<div class="tt-no-suggestion">{{ text_no_records_found|addslashes() }}</div>'].join("\n"),pending:['<div class="tt-no-suggestion"><i class="fa fa-spin fa-refresh"></i> {{ text_loading_records|addslashes() }}</div>'].join('\n'),suggestion:Handlebars.compile('{% verbatim %}<p><span class="tt-nowrap"><span class="tt-secondary">{{path}}</span>{{value}}</span></p>{% endverbatim %}')}});
+{% elseif column == 'filter' %}
+ta_sources['{{ column }}']=new Bloodhound({ {% if attr.prefetch %}prefetch:'{{ attr.prefetch }}',{% endif %}{% if attr.remote %}remote:{url:'{{ attr.remote }}',wildcard:'%QUERY'},{% endif %}datumTokenizer:Bloodhound.tokenizers.obj.whitespace('value'),queryTokenizer:Bloodhound.tokenizers.whitespace,identify:function(obj){return obj.id},sufficient:10});ta_sources["{{ column }}"].initialize(),$(".{{ column }}.typeahead").typeahead({hint:!0,highlight:!0},{name:"{{ column }}",limit:10,display:'value',source:ta_sources["{{ column }}"],templates:{notFound:['<div class="tt-no-suggestion">{{ text_no_records_found|addslashes() }}</div>'].join("\n"),pending:['<div class="tt-no-suggestion"><i class="fa fa-spin fa-refresh"></i> {{ text_loading_records|addslashes() }}</div>'].join('\n'),suggestion:Handlebars.compile('{% verbatim %}<p><span class="tt-nowrap"><span class="tt-secondary">{{group}}</span>{{value}}</span></p>{% endverbatim %}')}});
+{% elseif column in ['name', 'model', 'sku', 'upc', 'ean', 'jan', 'isbn', 'mpn', 'location', 'download', 'manufacturer'] %}
+ta_sources['{{ column }}']=new Bloodhound({ {% if attr.prefetch %}prefetch:'{{ attr.prefetch }}',{% endif %}{% if attr.remote %}remote:{url:'{{ attr.remote }}',wildcard:'%QUERY'},{% endif %}datumTokenizer:Bloodhound.tokenizers.obj.whitespace('value'),queryTokenizer:Bloodhound.tokenizers.whitespace,identify:function(obj){return obj.id},sufficient:10});ta_sources["{{ column }}"].initialize(),$(".{{ column }}.typeahead").typeahead({hint:!0,highlight:!0},{name:"{{ column }}",limit:10,display:'value',source:ta_sources["{{ column }}"],templates:{notFound:['<div class="tt-no-suggestion">{{ text_no_records_found|addslashes() }}</div>'].join("\n"),pending:['<div class="tt-no-suggestion"><i class="fa fa-spin fa-refresh"></i> {{ text_loading_records|addslashes() }}</div>'].join('\n'),suggestion:Handlebars.compile('{% verbatim %}<p><span class="tt-nowrap">{{value}}</span></p>{% endverbatim %}')}});
+{% endif %}
+{% endfor %}
+function response_handler(r,e){var e="undefined"==typeof e?!0:e;return bull5i.display_alerts(r.alerts,!0),r.success?!0:r.errors&&r.errors.error?r.errors.error:(e&&$(this).editable("hide"),!1)}
+function setup_editables(table){var defaultParams={ajaxOptions:{type:"POST",dataType:"json",cache:!1},type:"text",url:"{{ update }}",toggle:"{{ module_product_quick_edit_quick_edit_on }}",highlight:!1,container:"body",title:"",emptytext:"",pk:bull5i.get_pk_params,value:function(){return table.cell(this).data()},params:function(e){var t=$.extend({},bull5i.get_additional_params());return t.id=e.pk.id,t.column=e.pk.column,t.old=$.isArray(e.pk.old)&&0==e.pk.old.length?null:e.pk.old,t.value=$.isArray(e.value)&&0==e.value.length?null:e.value,$("#batch-edit").is(":checked")&&$("input[name*='selected']:checked").length&&(t.ids=$("input[name*='selected']:checked").serializeObject().selected),t},success:function(e,t){var a=response_handler.call(this,e);if(!0===a){var l=table.cell(this).index().column,n=table.column(l).dataSrc();return e.value&&(t=e.value),$.isArray(e.results.done)&&($.each(e.results.done,function(a,l){var u=$("#p_"+l).get(0);if(u){var r=table.row(u).data();null!=e.values?(e.values.hasOwnProperty("*")&&$.extend(r,e.values["*"]),e.values.hasOwnProperty(l)&&$.extend(r,e.values[l])):r[n]=t,"function"==typeof table.updatePipeline&&table.updatePipeline(table.row(u).index(),r)}}),e.results.done.length&&!1===update_related(n,e.results.done)&&table.draw(!1)),{newValue:t}}return!1===a?{newValue:$(this).html()}:a},display:function(e,t){return"abrakadabra"}}
+{% set result = false %}{% for type in ["status_qe", "yes_no_qe", "manufac_qe", "stock_qe", "tax_cls_qe", "length_qe", "weight_qe"] %}{% set result = result b-or type in types %}{% endfor %}{% if result %},selectParams={type:'select',showbuttons:!0}{% endif %}
+{% set result = false %}{% for type in ["cat_qe", "dl_qe", "filter_qe", "store_qe"] %}{% set result = result b-or type in types %}{% endfor %}{% if result %},select2Params={type:"select2",select2:{multiple:!0,allowClear:!0,placeholder:"{{ text_autocomplete }}",searchInputPlaceholder:"{{ text_autocomplete }}"},viewseparator:"<br/>",buttons:'<button type="button" class="btn btn-danger btn-sm editable-submit editable-remove editable-custom" data-toggle="tooltip" title="{{ button_remove }}"><i class="fa fa-minus"></i></button><button type="button" class="btn btn-success btn-sm editable-submit editable-add editable-custom" data-toggle="tooltip" title="{{ button_add }}"><i class="fa fa-plus"></i></button><button type="button" class="btn btn-primary btn-sm editable-submit editable-overwrite" data-toggle="tooltip" title="{{ button_save }}"><i class="fa fa-check"></i></button><button type="button" class="btn btn-default btn-sm editable-cancel" data-toggle="tooltip" title="{{ button_cancel }}"><i class="fa fa-remove"></i></button>',savenochange:!0}{% endif %};
+{% if "qe" in types %}$("td.qe").editable(defaultParams);{% endif %}
+{% if "date_qe" in types %}$("td.date_qe").editable($.extend(!0,{},defaultParams,{type:"combodate",format:"YYYY-MM-DD",template:"D / MMMM / YYYY",combodate:{smartDays:!0,maxYear:{{ "now"|date("Y") + 5 }}}}));{% endif %}
+{% if "datetime_qe" in types %}$("td.datetime_qe").editable($.extend(!0,{},defaultParams,{type:"combodate",format:"YYYY-MM-DD HH:mm:ss",template:"D / MMM / YYYY  HH:mm:ss",combodate:{smartDays:!0,maxYear:{{ "now"|date("Y") + 5 }},minuteStep:1}}));{% endif %}
+{% if "status_qe" in types %}$("td.status_qe").editable($.extend({},defaultParams,selectParams,{source:[{value:0,text:"{{ text_disabled|addslashes() }}"},{value:1,text:"{{ text_enabled|addslashes() }}"}]}));{% endif %}
+{% set multilingual_text = [] %}{% for type in ['name_qe', 'tag_qe'] %}{% if type in types %}{% set multilingual_text = multilingual_text | merge(['td.' ~ type]) %}{% endif %}{% endfor %}
+{% if multilingual_text %}$("{{ multilingual_text|join(',') }}").editable($.extend({},defaultParams,{type:"multilingual_text",source:"{{ load }}",sourceOptions:function(){var e=table.cell(this).index().row,t=table.cell(this).index().column;return{type:"POST",dataType:"json",data:{id:table.row(e).data().id,column:table.column(t).dataSrc(),ids:$("#batch-edit").is(":checked")&&$("input[name*='selected']:checked").length?$("input[name*='selected']:checked").serializeObject().selected:[]}}},sourceLoaded:function(e){return bull5i.display_alerts(e.alerts,!0),e.success?e.data:e.errors&&e.errors.error?e.errors.error:null},showbuttons:"bottom",value:null,success:function(e,t){if(result=response_handler.call(this,e,!1),!0===result){var l=table.cell(this).index().column,a=table.column(l).dataSrc();return e.value&&(t=e.value),$.isArray(e.results.done)&&($.each(e.results.done,function(l,r){var s=$("#p_"+r).get(0);if(s){var n=table.row(s).data();null!=e.values?(e.values.hasOwnProperty("*")&&$.extend(!0,n,e.values["*"]),e.values.hasOwnProperty(r)&&$.extend(!0,n,e.values[r])):n[a]=t,"function"==typeof table.updatePipeline&&table.updatePipeline(table.row(s).index(),n)}}),e.results.done.length&&!1===update_related(a,e.results.done)&&table.draw(!1)),{newValue:t}}var r=$(this).data("editable").input.$tpl;return r&&(r.find(".form-group").removeClass("has-error"),r.find(".form-group .help-block").remove()),!1===result?e.errors&&$.isArray(e.errors.value)&&r?($.each(e.errors.value,function(e,t){var l=t.lang,a=t.text;r.find('.form-group[data-lang="'+l+'"]').addClass("has-error").append($("<span/>",{class:"help-block"}).html(a))}),!1):{newValue:$(this).html()}:result}}));{% endif %}
+{% if "yes_no_qe" in types %}$("td.yes_no_qe").editable($.extend({},defaultParams,selectParams,{source:[{value:0,text:"{{ text_no|addslashes() }}"},{value:1,text:"{{ text_yes|addslashes() }}"}]}));{% endif %}
+{% if "manufac_qe" in types %}$("td.manufac_qe").editable($.extend({},defaultParams,selectParams,{ {% if manufacturer_select %}source:{{ manufacturer_select }},prepend:[{value:0,text:'{{ text_none|addslashes() }}'}]{% else %}type:"typeaheadjs",showbuttons:!0,typeahead:{options:{hint:!0,highlight:!0},dataset:{name:"manufacturer",limit:10,display:'value',source:ta_sources.manufacturer,templates:{empty:['<div class="tt-no-suggestion">{{ text_no_records_found|addslashes() }}</div>'].join("\n"),suggestion:Handlebars.compile('{% verbatim %}<p><span class="tt-nowrap">{{value}}</span></p>{% endverbatim %}')}}},tpl:'<input type="text" placeholder="{{ text_autocomplete }}">',value2input:function(t){var e=this.options.scope,a=bull5i.dtApi.cell(e).index().row,n=bull5i.dtApi.cell(e).index().column,i=bull5i.dtApi.row(a).data(),p=bull5i.dtApi.column(n).dataSrc(),l="";return l=""!=i[p+"_text"]?i[p+"_text"]:"{{ text_none }}",this.$input.data("ta-selected",{value:l,id:t}),l},input2value:function(){var t=this.$input.data("ta-selected");return"undefined"!=typeof t?"*"!=t.id?t.id:0:null}{% endif %}}));{% endif %}
+{% if "cat_qe" in types %}$("td.cat_qe").editable($.extend(!0,{},defaultParams,select2Params,{ {% if category_select %}source:{{ category_select }},{% else %}select2:{minimumInputLength:1,ajax:{type:"GET",url:"{{ filter }}",dataType:"json",cache:!1,quietMillis:150,data:function(e){return{query:e,type:"category",user_token:"{{ user_token }}"}},results:function(e){var t=[];return $.each(e,function(e,n){t.push({id:n.id,text:n.full_name})}),{results:t}}},initSelection:function(e,t){var n=[];$(e.val().split(",")).each(function(){n.push(this)}),$.ajax({type:"GET",url:"{{ filter }}",dataType:"json",data:{query:n,type:"category",multiple:!0,user_token:"{{ user_token }}"}}).done(function(e){var n=[];$.each(e,function(e,t){n.push({id:t.id,text:t.full_name})}),t(n)})}}{% endif %}}));{% endif %}
+{% if "dl_qe" in types %}$("td.dl_qe").editable($.extend(!0,{},defaultParams,select2Params,{ {% if download_select %}source:{{ download_select }},{% else %}select2:{minimumInputLength:1,ajax:{type:"GET",url:"{{ filter }}",dataType:"json",cache:!1,quietMillis:150,data:function(e){return{query:e,type:"download",user_token:"{{ user_token }}"}},results:function(e){var t=[];return $.each(e,function(e,n){t.push({id:n.id,text:n.value})}),{results:t}}},initSelection:function(e,t){var n=[];$(e.val().split(",")).each(function(){n.push(this)}),$.ajax({type:"GET",url:"{{ filter }}",dataType:"json",data:{query:n,type:"download",multiple:!0,user_token:"{{ user_token }}"}}).done(function(e){var n=[];$.each(e,function(e,t){n.push({id:t.id,text:t.value})}),t(n)})}}{% endif %}}));{% endif %}
+{% if "filter_qe" in types %}$("td.filter_qe").editable($.extend(!0,{},defaultParams,select2Params,{ {% if filter_select %}source:{{ filter_select }},{% else %}select2:{minimumInputLength:1,ajax:{type:"GET",url:"{{ filter }}",dataType:"json",cache:!1,quietMillis:150,data:function(e){return{query:e,type:"filter",user_token:"{{ user_token }}"}},results:function(e){var t=[],n=[];return $.each(e,function(e,u){var i=$.inArray(u.group_name);-1==i&&(i=n.length,n.push(u.group_name),t[i]={text:u.group_name,children:[]}),t[i].children.push({id:u.id,text:u.value,group:u.group})}),{results:t}}},initSelection:function(e,t){var n=[];$(e.val().split(",")).each(function(){n.push(this)}),$.ajax({type:"GET",url:"{{ filter }}",dataType:"json",data:{query:n,type:"filter",multiple:!0,user_token:"{{ user_token }}"}}).done(function(e){var n=[];$.each(e,function(e,t){n.push({id:t.id,text:t.full_name})}),t(n)})},formatSelection:function(e){return void 0!=e.group?e.group+e.text:e.text}}{% endif %}}));{% endif %}
+{% if "store_qe" in types %}$("td.store_qe").editable($.extend({},defaultParams,select2Params,{source:{{ store_select }}}));{% endif %}
+{% if "stock_qe" in types %}$("td.stock_qe").editable($.extend({},defaultParams,selectParams,{source:{{ stock_status_select }}}));{% endif %}
+{% if "tax_cls_qe" in types %}$("td.tax_cls_qe").editable($.extend({},defaultParams,selectParams,{source:{{ tax_class_select }}}));{% endif %}
+{% if "length_qe" in types %}$("td.length_qe").editable($.extend({},defaultParams,selectParams,{source:{{ length_class_select }}}));{% endif %}
+{% if "weight_qe" in types %}$("td.weight_qe").editable($.extend({},defaultParams,selectParams,{source:{{ weight_class_select }}}));{% endif %}
+{% if "qty_qe" in types %}$("td.qty_qe").editable($.extend({},defaultParams));{% endif %}
+{% if "image_qe" in types %}$("td.image_qe").editable($.extend(!0,{},defaultParams,{type:"image",noImage:"{{ no_image }}",clearText:"{{ text_clear }}",browseText:"{{ text_browse }}",value:function(){var e={},a=bull5i.dtApi.cell(this).data(),t=bull5i.dtApi.cell(this).index().row,i=bull5i.dtApi.row(t).data();return e.image=a,e.thumbnail=i.image_thumb,e.alt=i.image_alt,e.title=i.image_title,e},params:function(e){var a={};return a.id=e.pk.id,a.column=e.pk.column,a.old=e.pk.old,a.value=e.value,$("#batch-edit").is(":checked")&&$("input[name*='selected']:checked").length&&(a.ids=$("input[name*='selected']:checked").serializeObject().selected),a},chooseImage:function(e,a){var t="quick-edit-image",i="quick-edit-thumbnail",o="",l=$.Deferred();return $("#"+t).val(""),$.ajax({url:"index.php?route=common/filemanager&user_token={{ user_token }}&target="+encodeURIComponent(t),dataType:"html"}).done(function(l){$("#modal-image").append(l),$("#modal-image").modal("show"),$("#modal-image").on("hide.bs.modal",function(){var l=$("#"+i+" .content-overlay");$("#"+t).val()?(o=$("#"+t).val(),$.ajax({url:"index.php?route=extension/module/product_quick_edit/image&user_token={{ user_token }}&image="+encodeURIComponent(o)+"&width={{ list_view_image_width }}&height={{ list_view_image_height }}",dataType:"text",beforeSend:function(){l&&l.addClass("in")}}).done(function(t){e.image=o,e.thumbnail=t,a.call(null,e)}).always(function(){l&&l.removeClass("in")})):"function"==typeof a&&a.call(null,null),$("#modal-image").off("hide.bs.modal")}).on("hidden.bs.modal",function(){$("#modal-image").empty(),$("#modal-image").off("hidden.bs.modal")})}).always(function(){l.resolve()}),l.promise()}}));{% endif %}
+{% if "price_qe" in types %}$("td.price_qe").editable($.extend({},defaultParams));{% endif %}
+}
+function show_quick_edit_modal(o,i,d){var t=$.Deferred();$("#actionQuickEditModal .modal-body form fieldset").html(i.data),i.title&&$("#actionQuickEditModal .modal-title").html(i.title),-1!==$.inArray(o,["seo_urls","descriptions"])?$("#actionQuickEditModal").find(".modal-footer .submit.add,.modal-footer .submit.remove").attr("disabled",!0):$("#actionQuickEditModal").find(".modal-footer .submit.add,.modal-footer .submit.remove").attr("disabled",!1),$("#actionQuickEditModal").modal("show"),$("#actionQuickEditModal").on("click",".modal-footer .cancel",function(o){t.resolve()}).on("click",".modal-footer .submit",function(o){if("function"==typeof d){$(o.currentTarget).hasClass("add")?bull5i.form_add():$(o.currentTarget).hasClass("remove")?bull5i.form_remove():bull5i.form_overwrite();$("#actionQuickEditModal .modal-body form").serializeObject();d.call(this,$("#actionQuickEditModal .modal-body form")).done(function(){t.resolve()})}else t.resolve()}),$("#actionQuickEditModal").on("hide.bs.modal",function(){$("#actionQuickEditModal").off("hide.bs.modal")}).on("hidden.bs.modal",function(){$("#actionQuickEditModal .modal-body form fieldset").empty(),$("#actionQuickEditModal .modal-body .notice").empty(),$("#actionQuickEditModal .modal-title").empty(),$("#actionQuickEditModal").off("hidden.bs.modal"),$("#actionQuickEditModal").off("click",".modal-footer .cancel"),$("#actionQuickEditModal").off("click",".modal-footer .submit")}),t.always(function(){$("#actionQuickEditModal").modal("hide")})}function update_related(i,o){if(o&&related[i]&&related[i].length){var l={};return $.each(related[i],function(i,t){l[t]=o}),bull5i.processing&&bull5i.processing(!0,"related"),$.ajax({url:"{{ reload }}",type:"POST",cache:!1,dataType:"json",data:{data:l}}).done(function(i){i.values&&void 0!=bull5i.dtApi&&$.each(i.values,function(i,o){var l=$("#p_"+i).get(0);if(l){var t=bull5i.dtApi.row(l).data();$.extend(t,o),"function"==typeof bull5i.dtApi.updatePipeline&&bull5i.dtApi.updatePipeline(bull5i.dtApi.row(l).index(),t)}}),bull5i.display_alerts(i.alerts,!0,$("#alerts"))}).fail($.proxy(bull5i.ajax_fail,{alerts:$("#alerts")})).always(function(){void 0!=bull5i.dtApi&&bull5i.dtApi.draw(!1),bull5i.processing&&bull5i.processing(!1,"related")}),!0}return!1}
+$(function(){$('#dT').DataTable({dom:"t<'row-fluid'<'col-xs-6'i><'col-xs-6 text-right'p>>",serverSide:!0,{% if module_product_quick_edit_client_side_caching %}ajax:$.fn.dataTable.pipeline({url:"{{ source }}",data:function(e){var a=$("#filter_special_price");e.user_token="{{ user_token }}",a.length&&a.val()&&(e.filter_special_price=a.val())},pages:parseInt("{{ (module_product_quick_edit_cache_size and (module_product_quick_edit_cache_size / items_per_page)|round(0, 'ceil') > 0) ? (module_product_quick_edit_cache_size / items_per_page)|round(0, 'ceil') : 1 }}")}),{% else %}ajax:{type:"POST",url:"{{ source }}",data:function(e){var a=$("#filter_special_price");e.user_token="{{ user_token }}",a.length&&a.val()&&(e.filter_special_price=a.val())}},{% endif %}
+initComplete:function(e){if(""!=e.oPreviousSearch.sSearch){var a=ko.contextFor($("#global-search-btn").get(0));$("#global-search").val(e.oPreviousSearch.sSearch),a&&a.$root.setSearch(e.oPreviousSearch.sSearch)}for(i=0,len=e.aoColumns.length;len>i;i++)e.aoPreSearchCols[i].sSearch.length>0&&$("tr.filters .fltr."+e.aoColumns[i].name+":input").not(".typeahead").val(e.aoPreSearchCols[i].sSearch);if(e.oLoadedState&&void 0!=e.oLoadedState.specialPrice&&""!=e.oLoadedState.specialPrice&&($special=$('ul.price .filter-special-price[data-value="'+e.oLoadedState.specialPrice+'"]'),$special.length&&bull5i.update_special_price_menu($special)),e.oLoadedState&&void 0!=e.oLoadedState.typeaheads&&void 0!=e.oLoadedState.typeaheads)for(key in e.oLoadedState.typeaheads)$(".fltr.typeahead.tt-input."+key).data("ta-selected",{value:e.oLoadedState.typeaheads[key]}).data("ta-name",key).typeahead("val",e.oLoadedState.typeaheads[key])},stateSaveParams:function(e,a){a.specialPrice=$("#filter_special_price").length?$("#filter_special_price").val():"",a.typeaheads={},$(".fltr.typeahead.tt-input").each(function(){var t=$(this).typeahead("val");name=e.aoColumns[$(this).closest("th").index()].name,a.typeaheads[name]=t})},stateLoadParams:function(e,a){if($.query.get("dTc")){var t=$.query.get("search");if(void 0!=a.specialPrice&&""!=a.specialPrice&&$("#filter_special_price").length&&$("#filter_special_price").val(a.specialPrice),void 0!=a.typeaheads)for(key in a.typeaheads)$(".fltr.typeahead.tt-input."+key).typeahead("val",a.typeaheads[key]);t&&(a.search.search=t)}else{var s=$.query,i=s.get("page"),l=new $.fn.dataTable.Api(e);a.search.search=s.get("search"),a.start=i&&parseInt(i)?parseInt(i-1)*a.length:0;for(var o=0,d=a.columns.length;d>o;o++)try{var p=l.column(o).dataSrc(),r=s.get("filter_"+p);input=$("tr.filters [name=filter_"+p+"]:input"),a.columns[o].search.search=r,input&&(input.hasClass("typeahead")?input.typeahead("val",r):input.val(r)),active_filters.hasOwnProperty(p)&&$(".fltr.typeahead.tt-input."+p).data("ta-selected",{value:active_filters[p].value}).data("ta-name",p).typeahead("val",active_filters[p].value)}catch(h){}void 0!=a.typeaheads&&delete a.typeaheads,bull5i.clearCache=!0}},rowCallback:function(e,a){$(e).data("id",a.id)},drawCallback:function(e){var a=void 0!=bull5i.dtApi?bull5i.dtApi:new $.fn.dataTable.Api(e);setup_editables(a),bull5i.update_nav_checkboxes(),bull5i.update_nav_controls()},language:{aria:{sortAscending:"{{ text_sort_ascending|addslashes() }}",sortDescending:"{{ text_sort_descending|addslashes() }}"},paginate:{first:"{{ text_first_page|addslashes() }}",last:"{{ text_last_page|addslashes() }}",next:"{{ text_next_page|addslashes() }}",previous:"{{ text_previous_page|addslashes() }}"},emptyTable:"{{ text_empty_table|addslashes() }}",info:"{{ text_showing_info|addslashes() }}",infoEmpty:"{{ text_showing_info_empty|addslashes() }}",infoFiltered:"{{ text_showing_info_filtered|addslashes() }}",infoPostFix:"",infoThousands:" ",loadingRecords:"{{ text_loading_records|addslashes() }}",zeroRecords:"{{ text_no_matching_records|addslashes() }}"},deferRender:!0,processing:!1,stateSave:!0,autoWidth:!1,sortCellsTop:!0,pageLength:parseInt("{{ items_per_page * 1 }}"),
+columnDefs:[
+{% if "selector" in columns %}{targets:["col_selector"],createdCell:function(e,t,c){$(e).html($("<input/>",{type:"checkbox",name:"selected[]",value:c.id}))}},{% endif %}
+{% if "view_in_store" in columns %}{targets:["col_view_in_store"],createdCell:function(e,t){for(var l=$("<select/>",{"class":"form-control view_in_store"}).append($("<option/>",{value:""}).html("{{ text_select|addslashes() }}")),o=0;o<t.length;o++)l.append($("<option/>",{value:t[o].url}).html(t[o].name));$(e).html(l)}},{% endif %}
+{% if "action" in columns %}{targets:["col_action"],createdCell:function(t,n,a){for(var e=$("<div/>",{"class":"btn-group btn-group-flex"}),l=0;l<n.length;l++)$btn=n[l].url?$("<a/>",{href:n[l].url,"class":"btn btn-default btn-xs",id:n[l].action+"-"+a.id,title:n[l].title}):$("<button/>",{type:"button","class":"btn btn-default btn-xs action",id:n[l].action+"-"+a.id,title:n[l].title}).data("column",n[l].action),n[l].type&&($btn.addClass(n[l].type),"view"==n[l].type&&$btn.attr("target","_blank")),a[n[l].action+"_exist"]&&$btn.addClass("btn-warning"),n[l].class&&$btn.addClass(n[l].class),n[l].name&&$btn.html(n[l].name),n[l].ref&&$btn.data("ref",n[l].ref),n[l].icon&&$btn.prepend($("<i/>",{"class":"fa fa-"+n[l].icon})),e.append($btn);$(t).html(e)}},{% endif %}
+{% if "image" in columns %}{targets:["col_image"],createdCell:function(t,a,i){$(t).html($("<img/>",{src:i.image_thumb,alt:i.image_alt,title:i.image_title,"class":"img-thumbnail"}).data("id",i.id))}},{% endif %}
+{% if "price" in columns %}{targets:["col_price"],createdCell:function(e,l,t){t.special?$(e).html($("<s/>").html(l)).append($("<br/>")).append($("<span/>",{"class":"text-danger"}).html(t.special)):$(e).html(l)}},{% endif %}
+{% if "gross_price" in columns %}{targets:["col_gross_price"],createdCell:function(e,l,t){t.gross_special?$(e).html($("<s/>").html(l)).append($("<br/>")).append($("<span/>",{"class":"text-danger"}).html(t.gross_special)):$(e).html(l)}},{% endif %}
+{% if "status" in columns %}{targets:["col_status"],createdCell:function(t,s,a){$(t).html(a.status_class?$("<span/>",{"class":"label label-"+a.status_class}).html(a.status_text):a.status_text)}},{% endif %}
+{% for col in ["category", "download", "filter", "store"] %}{% if col in columns %}{targets:["col_{{ col }}"],createdCell:function(c,t,e){var o=[];$.each(e.{{ col }}_data,function(c,t){o.push(t.text)}),$(c).html(o.join("<br/>"))}},{% endif %}{% endfor %}
+{% for col in ["shipping", "subtract", "stock_status", "tax_class", "length_class", "weight_class", "manufacturer", "date_added", "date_modified", "date_available"] %}{% if col in columns %}{targets:["col_{{ col }}"],createdCell:function(c,e,t){$(c).html(t.{{ col }}_text)}},{% endif %}{% endfor %}
+{% if "quantity" in columns %}{targets:["col_quantity"],createdCell:function(t,a){var e=$("<span/>").html(a),a=parseInt(a);e.addClass(0>=a?"label label-warning":5>a?"label label-danger":"label label-success"),$(t).html(e)}},{% endif %}
+{orderable:!1,targets:{{ non_sortable_columns }}},{searchable:!1,targets:['col_selector','col_action']}
+],order:[],columns:[{% for idx, class in column_classes %}{% if class %}{data:"{{ columns[idx] }}",name:"{{ columns[idx] }}",className:"{{ class }}"},{% else %}{data:"{{ columns[idx] }}",name:"{{ columns[idx] }}"},{% endif %}{% endfor %}]
+});
+$("body").on("keydown","#otherSettingsModal",function(e){if(e.altKey&&e.shiftKey&&68==e.keyCode){var t=ko.dataFor(this);t.module_product_quick_edit_debug_mode("0"==t.module_product_quick_edit_debug_mode()?"1":"0")}}).on("click","td button.action",function(e){if(null!=bull5i.dtApi){var t=$(this).closest("td").get(0),l=$(this).data("column"),a=bull5i.dtApi.cell(t).index().row,i=bull5i.dtApi.row(a).data().id;null!=i&&null!=l&&(bull5i.processing&&bull5i.processing(!0,"action"),$.ajax({url:"{{ load }}",type:"POST",cache:!1,dataType:"json",data:{id:i,column:l,ids:$("#batch-edit").is(":checked")&&$("input[name*='selected']:checked").length?$("input[name*='selected']:checked").serializeObject().selected:[]}}).done(function(e){e.success&&show_quick_edit_modal(l,e,function(e){var t=$.Deferred(),a=e.serializeObject(),o=$.extend({id:i,column:l,value:$.isEmptyObject(a)?null:a,old:""},bull5i.get_additional_params()),n={self:this,dfd:t,btn:$(this),form:e,vm:$(this).data("vm"),context:$($(this).data("context")),alerts:$.merge($("#alerts"),$("div.notice",$($(this).data("context"))))};return $("#batch-edit").is(":checked")&&$("input[name*='selected']:checked").length&&(o.ids=$("input[name*='selected']:checked").serializeObject().selected),$.ajax({type:"POST",url:"{{ update }}",dataType:"json",data:o,beforeSend:function(){n.btn.button("loading"),$("fieldset",n.form).attr("disabled",!0)}}).done(function(e){n.vm&&e.values&&bull5i.view_models&&bull5i.view_models[n.vm]&&bull5i.view_models[n.vm].updateValues&&bull5i.view_models[n.vm].updateValues(e.values),n.vm&&bull5i.view_models&&bull5i.view_models[n.vm]&&bull5i.view_models[n.vm].applyErrors&&bull5i.view_models[n.vm].applyErrors(e.errors?e.errors:{}),e.success&&(null!=bull5i.dtApi&&null!=e.value&&e.results&&$.isArray(e.results.done)&&($.each(e.results.done,function(t,a){var i=$("#p_"+a).get(0);if(i){var o=bull5i.dtApi.row(i).data();null!=e.values?(e.values.hasOwnProperty("*")&&$.extend(o,e.values["*"]),e.values.hasOwnProperty(a)&&$.extend(o,e.values[a])):o[l+"_exist"]=e.value,"function"==typeof bull5i.dtApi.updatePipeline&&bull5i.dtApi.updatePipeline(bull5i.dtApi.row(i).index(),o)}}),e.results.done.length&&!1===update_related(l,e.results.done)&&bull5i.dtApi.draw(!1)),t.resolve()),bull5i.display_alerts(e.alerts,!0,n.alerts)}).fail($.proxy(bull5i.ajax_fail,n)).always(function(e,t,l){n.btn.button("reset"),$("fieldset",n.form).attr("disabled",!1)}),t.promise()}),bull5i.display_alerts(e.alerts,!0)}).fail($.proxy(bull5i.ajax_fail,{alerts:$("#alerts")})).always(function(e,t,l){bull5i.processing&&bull5i.processing(!1,"action")}))}}),$.extend($.fn.select2.defaults,{formatNoMatches:function(){return"{{ text_no_matches_found|addslashes() }}"},formatInputTooShort:function(e,t){var l=t-e.length;return"{{ text_input_too_short|addslashes() }}".replace("%d",l)},formatInputTooLong:function(e,t){var l=e.length-t;return"{{ text_input_too_long|addslashes() }}".replace("%d",l)},formatSelectionTooBig:function(e){return"{{ text_selection_too_big|addslashes() }}".replace("%d",e)},formatLoadMore:function(e){return"{{ text_loading_more_results|addslashes() }}"},formatSearching:function(){return"{{ text_searching|addslashes() }}"}}),null!=moment&&moment.locale("{{ code }}"),$(document).on("click","a[data-toggle='im']",function(e){e.preventDefault(),$(this).popover({html:!0,placement:"right",trigger:"manual",content:function(){return['<button type="button" class="btn btn-primary btn-browse-image" data-toggle="tooltip" title="{{ text_browse }}" data-loading-text="<i class=\'fa fa-fw fa-spinner fa-spin\'></i>"><i class="fa fa-pencil"></i></button>','<button type="button" class="btn btn-danger btn-clear-image" data-toggle="tooltip" title="{{ text_clear }}"><i class="fa fa-fw fa-ban"></i></button>'].join(" ")}}),$(this).on("shown.bs.popover",function(e){$("[data-toggle='tooltip']").tooltip({container:"body"})}).on("hidden.bs.popover",function(e){$(this).popover("destroy")}),$(this).popover("toggle")});
+});}(window.bull5i=window.bull5i||{},jQuery));
+//--></script>
+{{ footer }}

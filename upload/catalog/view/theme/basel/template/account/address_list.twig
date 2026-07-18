@@ -1,0 +1,44 @@
+{{ header }}
+<div class="container">
+  <ul class="breadcrumb">
+    {% for breadcrumb in breadcrumbs %}
+    <li><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+    {% endfor %}
+  </ul>
+  {% if success %}
+  <div class="alert alert-success"><i class="fa fa-check-circle"></i> {{ success }}</div>
+  {% endif %}
+  {% if error_warning %}
+  <div class="alert alert-warning"><i class="fa fa-exclamation-circle"></i> {{ error_warning }}</div>
+  {% endif %}
+  <div class="row">{{ column_left }}
+    {% if column_left and column_right %}
+    {% set class = 'col-sm-6' %}
+    {% elseif column_left or column_right %}
+    {% set class = 'col-md-9 col-sm-8' %}
+    {% else %}
+    {% set class = 'col-sm-12' %}
+    {% endif %}
+    <div id="content" class="{{ class }}">{{ content_top }}
+      <h1 id="page-title">{{ heading_title }}</h1>
+      <legend>{{ text_address_book }}</legend>
+      {% if addresses %}
+      
+          {% for result in addresses %}
+          <div class="single-address">
+          <i class="display-block margin-b15">{{ result.address }}</i>
+          <small><a href="{{ result.update }}" class="inline-link">{{ button_edit }}</a></small>
+          <small><a href="{{ result.delete }}" class="inline-link">{{ button_delete }}</a></small>
+          </div>
+          {% endfor %}
+       
+      {% else %}
+      <p>{{ text_empty }}</p>
+      {% endif %}
+      <div class="buttons clearfix text-right">
+        <a href="{{ add }}" class="btn btn-contrast">{{ button_new_address }}</a>
+      </div>
+      {{ content_bottom }}</div>
+    {{ column_right }}</div>
+</div>
+{{ footer }}

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<modification>
+    <name>{name}</name>
+    <version>{version}</version>
+    <author>HuntBee OpenCart Services</author>
+    <link>https://www.huntbee.com</link>
+	<code>huntbee_seo_friendly_url_ocmod</code>
+
+	<file path="catalog/controller/startup/seo_url.php">
+		<operation>
+			<search><![CDATA[parse_str($url_info['query'], $data);]]></search>
+			<add position="after"><![CDATA[
+			$special_routes = false;
+			if (isset($data['route'])) {
+				$hb_keyword = $this->db->query("SELECT `keyword` FROM `".DB_PREFIX."seo_url` WHERE `query` = '".$this->db->escape($data['route'])."' AND `language_id` = '".(int)$this->config->get('config_language_id')."' AND `store_id` = '".(int)$this->config->get('config_store_id')."' LIMIT 1");
+				if ($hb_keyword->num_rows > 0){
+					if (isset($set_language_code) && !empty($set_language_code)) {
+						$url .= '/'. $set_language_code. '/'.$hb_keyword->row['keyword'];
+					}else{
+						$url .= '/'.$hb_keyword->row['keyword'];
+					}	
+					
+					$special_routes = true;
+				}
+
+				if ($data['route'] == 'common/home') {
+					if (isset($set_language_code) && !empty($set_language_code)) {
+						$url .= '/'.$set_language_code;
+					}else{
+						$url .= '/';
+					}		
+					
+					$special_routes = true;
+				}
+				
+				if ($this->config->get('hb_seourl_simplified') && $data['route'] == 'product/product') {
+    				unset($data['path']);
+    				unset($data['manufacturer_id']);
+    			}
+			}
+			]]></add>
+		</operation>
+		
+		<operation>
+			<search><![CDATA[$url .= '/' . $query->row['keyword'];]]></search>
+			<add position="replace"><![CDATA[
+			if ($this->config->get('hb_seourl_simplified')) {
+			    $url = '/' . $query->row['keyword'];
+			}else{
+			    $url .= '/' . $query->row['keyword'];
+			}
+			]]></add>
+		</operation>
+		
+		<operation>
+			<search><![CDATA[if ($url) {]]></search>
+			<add position="before"><![CDATA[
+			if (!empty($url) && $special_routes == false){
+				if (isset($set_language_code) && !empty($set_language_code)) {
+					$url = '/'.$set_language_code. $url;
+				}else{
+					$url = $url;
+				}
+			}
+			]]></add>
+		</operation>
+	</file>
+</modification>

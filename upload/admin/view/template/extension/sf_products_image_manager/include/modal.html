@@ -1,0 +1,441 @@
+<div class="modal settings" id = "im_setting_modal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+        <h4 class="modal-title">{{pim}} {{settings}}</h4>
+      </div>
+      <div class="modal-body">
+        <!-- tabs nav -->
+        <ul class="nav nav-tabs" id="settingsTab" role="tablist">
+          <li  id="base_tab" class="nav-item active">
+            <a class="nav-link" data-toggle="tab" href="#base" role="tab" aria-controls="base" >{{settings}}</a>
+          </li>
+          <li id = "watermark_tab" class="nav-item hidden">
+            <a class="nav-link"  data-toggle="tab" href="#watermark" role="tab" aria-controls="watermark" >{{watermark}}</a>
+          </li>
+        </ul>
+        <!-- tabs content -->
+        <form >
+          <div class="tab-content" id="myTabContent">
+            <!-- base setting start -->
+              <div class="tab-pane fade active in form-horizontal" id="base" role="tabpanel" aria-labelledby="base_tab">
+
+                <div class="form-group row" >
+                  <label  class="col-sm-3 col-form-label">{{watermark}}</label>
+                  <div class="col-sm-9 ">
+                    <input data-showhideid = "watermark_tab" class="form-check-input toggle-item" type="checkbox" id="ws" name="watermark_status" >
+                    <label for="ws" class="toggle-btn"></label>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label for="mi" class="col-sm-3 col-form-label">{{max_images}}</label>
+                  <div class="col-sm-9">
+                    <input type="number" class="form-control" id="mi" placeholder="20"  name="max_images">
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label for="iz" class="col-sm-3 col-form-label">{{max_image_size}}</label>
+                  <div class="col-sm-9">
+                    <input type="range" class="form-control" id="iz"  placeholder="1024" name="image_size" min="0" max="7">
+                    <small  class="input-label">{{resolution}}: <span class="iz"></span></small>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label for="iq" class="col-sm-3 col-form-label">{{image_quality}}</label>
+                  <div class="col-sm-9">
+                    <input type="range" class="form-control" id="iq"  placeholder="9"  name="image_quality" min="0" max="100">
+                    <small  class="input-label">{{compression}}: <span class="iq"></span>%</small>
+                  </div>
+                </div>
+
+                <div class="form-group row">
+                  <label for="ris" class="col-sm-3 col-form-label">{{remove_images}}</label>
+                  <div class="col-sm-9">
+                    <select class="form-control form-control-sm" id="ris" name="remove_images">
+                      <option value="0">{{do_not}}</option>
+                      <option value="1">{{when_pro_is_del}}</option>
+                      <option value="2">{{when_rem_4_pro}}</option>
+                      <option value="3">{{anyway}}</option>
+                    </select>
+                     <small class="input-label">{{when_should}}?</small>
+                  </div>
+                </div>
+
+                <fieldset class="form-group">
+                  <div class="row" >
+                    <legend class="col-form-label col-sm-4 pt-0">{{image_name}}</legend>
+                    <div class="col-sm-8">
+                      <div class="form-check">
+                        <input data-hideid = "tf" class="form-check-input" type="radio" name="image_name" id="ind"  checked value = "default">
+                        <label class="form-check-label" for="ind">
+                         {{default}}
+                        </label>
+                      </div>
+                      <div class="form-check">
+                        <input data-hideid = "tf" class="form-check-input" type="radio" name="image_name" id="inr" value = "random">
+                        <label class="form-check-label" for="inr">
+                          {{random}}
+                        </label>
+                      </div>
+                      <div class="form-check disabled">
+                        <input  data-showid = "tf" class="form-check-input" type="radio" name="image_name" id="int" value = "translit">
+                        <label class="form-check-label" for="int">
+                          {{translit}}
+                        </label>
+                      </div>
+                      <div id = "tf" class="form-group translit-form hidden"  >
+                        <textarea class="form-control" name="translit_map" ></textarea>
+                        <p class="help-block">{{example}}: s{с} ch{ч}ni{你} hao{好}</p>
+                      </div>
+                    </div>
+                  </div>
+                </fieldset>
+
+                <div class="form-group row">
+                  <label for="uf" class="col-sm-3 control-label">
+                    <span 
+                    data-trigger="hover" 
+                    class="example-popover" 
+                    data-toggle="popover" 
+                    title="Exemple and Shortcode"
+                    data-html="true" 
+                    data-content="
+                    Shortcodes: {day},{month},{year},{input-name}; 
+                    <br>Separator: |;               
+                    <br>Exemples:
+                    <br>1. {manufacturer}/product_{year}
+                    <br>2. product-{month}
+                    <br>3. {sku} | {model}/{year}
+                    ">{{upload_folder}}</span>
+                </label>
+                  <div class="col-sm-9">
+                    <input type="text" class="form-control" id="uf" placeholder="{sku}/product-{year}|{year}/{month}"  name="upload_folder">
+                  </div>
+                </div>
+   
+            </div>
+              <!-- base setting end -->
+
+            <!-- watermark setting start -->
+            <div class="tab-pane fade" id="watermark" role="tabpanel" aria-labelledby="watermark_tab">
+              
+              <div class="row">
+                <div class="col-sm-12 previwe-watermark">
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="wmt" class="col-sm-3 col-form-label">{{watermark}}</label>
+                <div class="col-sm-9">
+                  <input type="text" class="form-control" id="wmt"  placeholder="" name="watermark[text]">
+                  <input type="hidden"  id="wmi"  name = "watermark[src]">
+                  <small class="input-label">{{text_or_url}}</small>
+                  <div class="wm-color" id="wmc" style="background: rgb(64, 190, 212);">
+                    <div class="colors-frame">
+                      <div class="colors-list">
+                        <span class="color-box" data-wmc = "#ff0000" style="background: #ff0000;"></span>
+                        <span class="color-box" data-wmc = "#5770ce" style="background: #5770ce;"></span>
+                        <span class="color-box" data-wmc = "#ffffff" style="background: #ffffff;"></span>
+                        <span class="color-box" data-wmc = "#000000" style="background: #000000;"></span>
+                        <span class="color-box dynamic-box" data-wmc = "#ffffff" style="background: #ffffff;"></span>
+                        <input value="#ffffff" type="text" id = 'wmc_val' name="watermark[color]"  maxlength="7">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="wmp" class="col-sm-3 col-form-label">{{Position}}</label>
+                <div class="col-sm-9">
+                  <select class="form-control form-control-sm" id="wmp" name="watermark[position]">
+                    <option value="top_left">{{top_left}}</option>
+                    <option value="top_right">{{top_right}}</option>
+                    <option value="bottom_left">{{bottom_left}}</option>
+                    <option value="bottom_right">{{bottom_right}}</option>
+                    <option value="center">{{center}}</option>
+                    <option value="multiple">{{multiple}}</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="wmo" class="col-sm-3 col-form-label">{{transmittance}}</label>
+                <div class="col-sm-9">
+                  <input type="range" class="form-control" id="wmo" name="watermark[opacity]">
+                  <small  class="input-label">{{Opacity}}: <span class="wmo"></span>%</small>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="wms" class="col-sm-3 col-form-label">{{dimensions}}</label>
+                <div class="col-sm-9">
+                  <input type="range" class="form-control" id="wms"   name="watermark[size]">
+                  <small  class="input-label">{{zoom}}: <span class="wms"></span>%</small>
+                </div>
+              </div>
+            </div>
+            <!-- watermark setting end -->
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" id = "save_setting"   class="btn btn-light-red">Save</button>
+      </div>
+    </div>
+  </div>
+  <script type="text/javascript">
+  (function($){
+
+  var pimSettings = JSON.parse(JSON.stringify(pimJson.content)),
+      html = $('#im_setting_modal > .modal-dialog').html();
+
+  html = html.replace(/\{\{(\w+)\}\}/g,function(matches,m1) 
+  {
+    return pimJson.lang[m1] || m1;
+  });
+
+  $('#im_setting_modal > .modal-dialog').html(html);
+
+  $('.example-popover').popover({
+    container: 'body'
+  })
+
+
+
+//Color picker
+$('#wmc').click(function(e)
+{
+  if(e.target.tagName !== 'INPUT')
+  {
+    if(e.target.className.indexOf('color-box') != -1)
+    {
+      var bgColor = $(e.target).data('wmc');
+
+      this.style.background = bgColor;
+
+      $('#wmc_val').val(bgColor).keyup();
+    }
+    
+    $(this).toggleClass("active");
+
+  }
+});
+
+//range image max size small text
+var resolution = ['480p','720p','1080p','2K','4K','8K','10K','Original'];
+
+//form one change
+$('#im_setting_modal form [name]').on('change keyup',
+    function(e)
+    {
+      var elementId;
+
+      //hidden block show on change by data info
+      if(elementId = $(this).data('showhideid'))
+      {
+        $('#' + elementId).toggleClass('hidden');
+      }
+      else if(elementId = $(this).data('hideid'))
+      {
+        $('#' + elementId).addClass('hidden');
+      }
+      else if(elementId = $(this).data('showid'))
+      {
+        $('#' + elementId).removeClass('hidden');
+      }
+
+
+      //range small text val on change
+      if (this.type == 'range')
+      {
+        var smallText = this.value;
+
+        if(this.name == 'image_size')
+        {
+          smallText = resolution[this.value];
+        }
+
+        $('.' + this.id).text(smallText);
+      }
+
+      //preview watermark
+
+      if(this.id.indexOf('wm') === 0)
+      {
+        //if changed watermark text input 
+        var newText = this.name === 'watermark[text]';
+
+        if(this.name === 'watermark[color]')
+        {
+          newText = 'color';
+
+          var dyBox = $('.dynamic-box');
+
+          dyBox.data('wmc',this.value);
+
+          dyBox[0].style.background = this.value;
+        }
+
+        if(e.type == 'change' && newText)
+        {
+            return;
+        }
+
+        eval('pimSettings.' + this.name.replace(/\[/g,'.').replace(/\]/g,'') + '=\'' + this.value +'\'');
+
+        watermarkPreView ('.previwe-watermark',newText);
+      }
+
+    });
+
+
+
+
+// fill form
+
+function formFill(formItems,data)
+{ 
+  if(typeof formItems == 'object')
+  {
+    form = formItems.closest('form');
+
+    form.addClass('fill');
+
+    formItems.each(function(key, value)
+    {
+      try
+      {
+          var fill = eval('data.' + this.name.replace(/\[/g,'.').replace(/\]/g,''));
+      }
+      catch(e)
+      {
+
+          var fill = '';
+      }
+      
+
+      if(fill)
+      { 
+
+        if(this.type == 'checkbox' || this.type == 'radio' && this.value == fill)
+        {
+          $(this).click();
+        }
+        else if(this.type == 'hidden' || this.type == 'text' || this.type == 'range' || this.type == 'number')
+        {
+          this.value = fill;
+          //range small text val on change
+          if (this.type == 'range')
+          {
+            var smallText = this.value;
+
+            if(this.name == 'image_size')
+            {
+              smallText = resolution[this.value];
+            }
+
+            $('.' + this.id).text(smallText);
+          }
+
+          //color picker
+          if(this.name === 'watermark[color]')
+          {
+            var dyBox = $('.dynamic-box');
+
+            dyBox.data('wmc',this.value);
+
+            dyBox[0].style.background = this.value;
+
+            $('#wmc')[0].style.background = this.value;
+          }
+        }
+        else if(/select/i.test(this.type))
+        {
+          $('#' + this.id + ' option[value ="' + fill + '"]').prop('selected',true)
+        }
+        else if(this.type == 'textarea')
+        {
+          this.innerText = fill;
+        }
+
+      }
+
+    });
+
+    form.removeClass('fill');
+  }
+
+
+}
+
+formFill($('#im_setting_modal form [name]'),pimSettings);
+
+
+//WaterMark preview image load
+$('#watermark_tab').one('click',function ()
+{
+  watermarkPreView ('.previwe-watermark','old');
+});
+
+
+function watermarkPreView (viewblock,newText) {
+
+  if(newText)
+  {
+    if(!/(\.(jpe?g|png|gif|bmp)$)/.test(pimSettings.watermark.text))
+    {
+        var font = "300px serif";
+
+        var canvas =  document.createElement('canvas');
+        var ctx = canvas.getContext("2d");
+       
+        //context set font for take with and height
+        ctx.font = font;
+        var width = ctx.measureText(pimSettings.watermark.text).width;
+        var heigh = parseInt(font, 10);
+
+        //set canvas height
+        canvas.width = width;
+        canvas.height = heigh;
+
+        //fill text
+        ctx.font = font;
+        ctx.fillStyle = pimSettings.watermark.color ? pimSettings.watermark.color : '#fff';
+        ctx.textBaseline = 'top';
+        ctx.fillText(pimSettings.watermark.text , 0,0);
+
+        //return text to data 64 url
+        src = canvas.toDataURL("image/png");
+        //show color picker
+        $('#wmc').removeClass('hidden');
+    }
+    else
+    {   //link of an image
+        src = pimSettings.watermark.text;
+        //hide color picker
+        $('#wmc').addClass('hidden');
+    }
+
+    pimSettings.watermark.image = new Image();
+
+    pimSettings.watermark.image.src = src;
+
+    if(newText !== 'old')
+    {
+      $('input#wmi')[0].value  = src;
+    }
+  }
+
+
+  //watermark preview backgraund image
+  var backgraund = new Image();
+
+  backgraund.src = pimJson['wm_bg'];
+
+  backgraund.onload = function()
+  {
+    $(viewblock).html(preViewCanvas("jpg",400,backgraund,true,pimSettings.watermark));
+  }
+
+} //func preViewWaterMark
+})(typeof jQuery211 !== 'undefined' ? jQuery211 : jQuery);
+  </script>
+</div>

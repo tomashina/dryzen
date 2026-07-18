@@ -1,0 +1,123 @@
+<div class="col-sm-offset-3" style="margin-top:25px;margin-bottom:5px">
+<div class="bs-callout bs-callout-info bs-callout-sm">
+<h4>Filter cache</h4>
+<p>If you have a large amount of products, you might enable caching</p>
+<p>Type in a password token below. You then also need to type in the same token in the following file</p>
+<p>catalog/controller/extension/module/digital_elephant_filter/cache_panel.php</p>
+</div>
+</div>
+
+<div class="form-group">
+    <label class="col-sm-3 control-label">{{ text_cache_isset }}</label>
+    <label class="col-sm-1 control-label" style="text-align:left !important;">
+        {% set checked = '' %}
+        {% if DEF_settings.cache.isset %}
+            {% set checked = ' checked="checked"' %}
+        {% endif %}
+        <input type="checkbox"
+               id="cache-commanding"
+               class="form-control checkbox-inline"
+               name="DEF_settings[cache][isset]"
+            {{ checked }}
+            >
+    </label>
+</div>
+
+<div class="form-group">
+    <label class="col-sm-3 control-label">{{ text_cache_token }}</label>
+    <div class="col-sm-3">
+
+        {% set attr_disable = 'disabled' %}
+        {% if DEF_settings.cache.isset %}
+            {% set attr_disable = '' %}
+        {% endif %}
+
+        <input type="text"
+               id="cache-token"
+               class="form-control cache-dependent"
+               name="DEF_settings[cache][token]"
+               value="{{ DEF_settings['cache']['token'] }}"
+               placeholder="sdfs23dsf54d2"
+               {{ attr_disable }}
+            >
+    </div>
+</div>
+
+<div class="form-group">
+    <label class="col-sm-3 control-label">{{ text_cache_update }}</label>
+    <div class="col-sm-1">
+        <button type="button"
+                id="cache-update"
+               class="form-control btn btn-success cache-dependent"
+               name="DEF_settings[cache][update]"
+            {{ attr_disable }}
+            ><i class="fa fa-refresh"></i></button>
+    </div>
+</div>
+
+<div class="form-group">
+    <label class="col-sm-3 control-label">{{ text_cache_clear }}</label>
+    <div class="col-sm-1">
+        <button type="button"
+                id="cache-clear"
+                class="form-control btn btn-danger cache-dependent"
+                name="DEF_settings[cache][clear]"
+            {{ attr_disable }}
+            ><i class="fa fa-eraser"></i></button>
+    </div>
+</div>
+
+<script>
+    $(function(){
+        $('#cache-commanding').click(function() {
+            if($('input').is('#cache-commanding:checked')) {
+                cacheDependentOn();
+            } else {
+                cacheDependentOff();
+            }
+        });
+    });
+
+    function cacheDependentOff() {
+        $('.cache-dependent').prop( "disabled", true );
+    }
+
+    function cacheDependentOn() {
+        $('.cache-dependent').prop( "disabled", false );
+    }
+
+    $('#cache-update').click(function() {
+        var token = $('#cache-token').val();
+        var icon = $(this).children('i');
+        icon.addClass('fa-spin fa-fw');
+        $.ajax({
+           url: '{{ action_cache_update }}',
+            dataType: 'HTML',
+            method: 'post',
+            data: {token: token},
+            success: function(html) {
+                icon.removeClass('fa-spin fa-fw');
+                alert(html);
+            }
+        });
+    });
+
+    $('#cache-clear').click(function() {
+        var token = $('#cache-token').val();
+        var icon = $(this).children('i');
+        icon.removeClass('fa-eraser');
+        icon.addClass('fa-refresh fa-spin fa-fw');
+        $.ajax({
+            url: '{{ action_cache_clear }}',
+            dataType: 'HTML',
+            method: 'post',
+            data: {token: token},
+            success: function(html) {
+                icon.removeClass('fa-refresh fa-spin fa-fw');
+                icon.addClass('fa-eraser');
+                alert(html);
+            }
+        });
+    })
+
+</script>

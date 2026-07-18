@@ -1,0 +1,725 @@
+{{ header }}{{ column_left }} 
+<!--Main Content block start-->
+
+<div id="content">
+  <!--Header Start-->
+  <div class="page-header">
+    <div class="container-fluid">
+      <div class="pull-right">
+        <button type="submit" form="form-language" data-toggle="tooltip" title="{{ button_save }}" class="btn btn-primary"><i class="fa fa-save"></i>&nbsp;{{ button_save }}</button>
+		<a class="btn btn-default" onclick="showFilterBlock();"><i class="fa fa-filter"></i>&nbsp;{{ button_filter }}</a>
+		<button type="button" class="btn btn-success" data-toggle="modal" data-target="#add-links"><i class="fa fa-plus"></i>&nbsp;{{ button_addlinks }}</button>
+		<button type="button" class="btn btn-danger" id="delete"><i class="fa fa-trash-o"></i>&nbsp;{{ button_delete }}</button>
+		<a href="{{ doc_link }}" target="_blank" class="btn btn-default" data-toggle="tooltip" title="Documentation"><i class="fa fa-book"></i>&nbsp;{{ button_doc }}</a>
+        <a href="{{ cancel }}" data-toggle="tooltip" title="{{ button_cancel }}" class="btn btn-default"><i class="fa fa-reply"></i></a>
+	  </div>
+      <h1>{{ heading_title }}</h1>
+      <ul class="breadcrumb">
+        {% for breadcrumb in breadcrumbs %} 
+        <li><a href="{{ breadcrumb['href'] }}">{{ breadcrumb['text'] }}</a></li>
+        {% endfor %} 
+      </ul>
+    </div>
+  </div>
+  <!--Header End-->
+  <!--Container 1 start -->
+  <div class="container-fluid">
+    <!--Start - Error / Success Message if any -->
+    {% if (error_warning) %} 
+    <div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i> {{ error_warning }} 
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+    </div>
+    {% endif %} 
+    {% if (success) %} 
+    <div class="alert alert-success"><i class="fa fa-check-circle"></i> {{ success }} 
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+    </div>
+    {% endif %} 
+    <!--End - Error / Success Message if any -->
+	<div id="msgoutput" style="text-align:center;"></div>
+	
+    <!--Panel Content Start-->
+    <div class="panel panel-default">
+		<div class="panel-heading">
+			<h3 class="panel-title"><i class="fa fa-pencil"></i> {{ heading_title }}</h3>
+				{% if (stores) %} 
+				<div class="pull-right">
+				<select id="store">
+					<option value="0" {{ store_id == 0?'selected':'' }}>Default Store</option>
+					{% for store in stores %} 
+						<option value="{{ store['store_id'] }}" {{ store_id == store['store_id']?'selected':'' }}>{{ store['name'] }}</option>
+					{% endfor %} 
+				</select>
+				</div>
+				{% endif %} 
+		</div>
+		<div class="panel-body">
+			<form action="{{ action }}" method="post" enctype="multipart/form-data" id="form-language" class="form-horizontal">
+				<div class="well filterblock">
+					<div class="form-group">
+						<div class="col-sm-3">
+							<label class="control-label">{{ column_link_added_by }}</label>
+							<select class="form-control" name="hb_brokenlinks_sauthor">
+								<option value="0" {{ hb_brokenlinks_sauthor == "0"? 'selected':'' }}>{{ text_show_all }}</option>
+								<option value="3" {{ hb_brokenlinks_sauthor == "3"? 'selected':'' }}>{{ text_show_system_added }}</option>
+								<option value="2" {{ hb_brokenlinks_sauthor == "2"? 'selected':'' }}>{{ text_show_admin_added }}</option>
+							</select>
+						</div>
+						<div class="col-sm-3">
+							<label class="control-label">{{ column_redirect_value }}</label>
+							<select class="form-control" name="hb_brokenlinks_sredirect">
+								<option value="0" {{ hb_brokenlinks_sredirect == "0"? 'selected':'' }}>{{ text_show_all }}</option>
+								<option value="1" {{ hb_brokenlinks_sredirect == "1"? 'selected':'' }}>{{ text_show_blank }}</option>
+								<option value="2" {{ hb_brokenlinks_sredirect == "2"? 'selected':'' }}>{{ text_show_filled }}</option>
+							</select>
+						</div>
+						<div class="col-sm-3">
+							<label class="control-label">{{ column_sort }}</label>
+							<select class="form-control" name="hb_brokenlinks_ssort">
+								<option value="date_modified" {{ hb_brokenlinks_ssort == "date_modified"? 'selected':'' }}>{{ text_last_modified_date }}</option>
+								<option value="date_added" {{ hb_brokenlinks_ssort == "date_added"? 'selected':'' }}>{{ text_date_added }}</option>
+								<option value="hits" {{ hb_brokenlinks_ssort == "hits"? 'selected':'' }}>{{ text_hits }}</option>
+								<option value="redirect_hits" {{ hb_brokenlinks_ssort == "redirect_hits"? 'selected':'' }}>{{ text_redirect_hits }}</option>
+							</select>
+						</div>
+						<div class="col-sm-3">
+							<label class="control-label">{{ column_order_by }}</label>
+							<select class="form-control" name="hb_brokenlinks_sorder">
+								<option value="DESC" {{ hb_brokenlinks_ssort == "DESC"? 'selected':'' }}>{{ text_desc }}</option>
+								<option value="ASC" {{ hb_brokenlinks_ssort == "ASC"? 'selected':'' }}>{{ text_asc }}</option>
+							</select>
+						</div>	
+					</div>
+
+					<div class="form-group">
+						<div class="col-sm-8">
+							<span class="text text-primary"><i class="fa fa-info-circle"></i>&nbsp;{{ text_click_save }}</span>
+						</div>
+						<div class="col-sm-4">
+							<div class="pull-right">
+								<a class="btn btn-default" onclick="hideFilterBlock();"><i class="fa fa-times"></i>&nbsp;{{ button_close }}</a>
+							</div>
+						</div>	
+					</div>					
+				</div>
+				
+				<!--Tabs UL Starts-->
+				<ul class="nav nav-tabs" id="tabs">
+					<li class="active"><a href="#tab-broken" onclick="loadBlock('brokenlinks');" data-toggle="tab"><i class="fa fa-chain-broken"></i>&nbsp;{{ tab_broken }}</a></li>
+					<li><a href="#tab-redirect" onclick="loadBlock('redirects');" data-toggle="tab"><i class="fa fa-share"></i>&nbsp;{{ tab_redirect }}</a></li>
+					<li><a href="#tab-setup" data-toggle="tab"><i class="fa fa-cogs"></i>&nbsp;{{ tab_setup }}</a></li>
+					<li><a href="#tab-keyword" onclick="loadBlock('keywords');" data-toggle="tab"><i class="fa fa-tags"></i>&nbsp;{{ tab_keyword }}</a></li>
+					<li><a href="#tab-replace" onclick="loadBlock('replacers');" data-toggle="tab"><i class="fa fa-retweet"></i>&nbsp;{{ tab_replace }}</a></li>
+					<li><a href="#tab-templates" data-toggle="tab"><i class="fa fa-newspaper-o"></i>&nbsp;{{ tab_templates }}</a></li>
+					<li><a href="#tab-tools" data-toggle="tab"><i class="fa fa-wrench"></i>&nbsp;{{ tab_tools }}</a></li>
+				</ul>
+				<!--Tabs UL Ends-->
+				<div class="tab-content">
+					<!--Broken Links-->
+					<div class="tab-pane active" id="tab-broken">						
+						<div class="input-group" style="margin-bottom:10px;">
+							<input type="text" id="search-brokenlink-value" onkeyup="searchBrokenLink();" class="form-control" placeholder="{{ text_search_links }}">
+							<span class="input-group-addon btn" id="search-brokenlink-button" onclick="searchBrokenLink();"><i class="fa fa-search"></i></span>
+						</div>
+						<div id="brokenlinks-block"></div>
+					</div>
+					
+					<!--REDIRECTS LINKS-->
+					<div class="tab-pane" id="tab-redirect">
+						<h3>{{ text_general_redirect }} (200 <i class="fa fa-long-arrow-right"></i> 301 / 302 / 307)</h3>
+						
+						<div class="input-group" style="margin-bottom:10px;">
+							<input type="text" id="search-commonlink-value" onkeyup="searchCommonLink();" class="form-control" placeholder="{{ text_search_links }}">
+							<span class="input-group-addon btn" id="search-commonlink-button" onclick="searchCommonLink();"><i class="fa fa-search"></i></span>
+						</div>
+						<div id="redirects-block"></div>
+					</div>
+					
+					<!--SETUP-->
+					<div class="tab-pane" id="tab-setup">
+						<div class="form-group">
+							<label class="col-sm-3 control-label">{{ column_smart_url }}</label>
+							<div class="col-sm-9">
+								<input type="checkbox" data-toggle="toggle" data-onstyle="success" name="hb_brokenlinks_smarturl" class="form-control" value="1" {{ hb_brokenlinks_smarturl == '1'? 'checked':'' }} />
+							</div>
+						</div>
+						
+						<div class="form-group">
+								<label class="col-sm-3 control-label">{{ column_keyword_url }}</label>
+								<div class="col-sm-9">
+									<input type="checkbox" data-toggle="toggle" data-onstyle="success" name="hb_brokenlinks_keywordurl" class="form-control" value="1" {{ hb_brokenlinks_keywordurl == '1'? 'checked':'' }} />
+								</div>
+						</div>
+						
+						<div class="form-group">
+								<label class="col-sm-3 control-label">{{ column_replacer }}</label>
+								<div class="col-sm-9">
+									<input type="checkbox" data-toggle="toggle" data-onstyle="success" name="hb_brokenlinks_replacer" class="form-control" value="1" {{ hb_brokenlinks_replacer == '1'? 'checked':'' }} />
+								</div>
+						</div>
+						
+						<div class="form-group">
+								<label class="col-sm-3 control-label">{{ column_default_url }}</label>
+								<div class="col-sm-9">
+									<input type="text" name="hb_brokenlinks_defaulturl" class="form-control" value="{{ hb_brokenlinks_defaulturl }}"  />
+								</div>
+						</div>
+						
+						<div class="form-group">
+							<label class="col-sm-3 control-label">{{ column_redirect_type }}</label>
+							<div class="col-sm-9">
+								<select class="form-control" name="hb_brokenlinks_rtype">
+								<option value="301" {{ hb_brokenlinks_rtype == "301"? 'selected':'' }}>{{ text_301 }} [Recommended]</option>
+								<option value="302" {{ hb_brokenlinks_rtype == "302"? 'selected':'' }}>{{ text_302 }}</option>
+								<option value="307" {{ hb_brokenlinks_rtype == "307"? 'selected':'' }}>{{ text_307 }}</option>
+								</select>	                
+							</div>
+						</div>
+							
+						<div class="form-group">
+							<label class="col-sm-3 control-label">{{ column_auto_delete }}</label>						
+							<div class="col-sm-9">
+								<div class="input-group">
+								<div class="input-group-addon">{{ text_delete_days }}</div>
+								<input type="number" name="hb_brokenlinks_adel_days" class="form-control text-right col-sm-2" value="{{ hb_brokenlinks_adel_days }}"  />
+								<div class="input-group-addon">{{ text_delete_hits }}</div>
+								<input type="number" name="hb_brokenlinks_adel_count" class="form-control text-right" value="{{ hb_brokenlinks_adel_count }}"  />
+								</div>
+							</div>
+						</div>
+							
+						<div class="form-group">
+							<label class="col-sm-3 control-label">{{ column_query_exclude }}</label>
+							<div class="col-sm-9">
+								<input type="text" name="hb_brokenlinks_excludequery" value="{{ hb_brokenlinks_excludequery }}" class="form-control" /><br>
+							</div>
+						</div>
+						
+						<div class="form-group">
+							<label class="col-sm-3 control-label">{{ column_error_exclude }}</label>
+							<div class="col-sm-9">
+								<textarea class="form-control" rows="5" cols="60" name="hb_brokenlinks_excludeterms">{{ hb_brokenlinks_excludeterms }}</textarea><br>
+							</div>
+						</div>
+					
+						<div class="form-group">
+							<label class="col-sm-3 control-label">{{ column_ignore_ip }}</label>
+							<div class="col-sm-9">
+								<textarea class="form-control" rows="5" cols="60" name="hb_brokenlinks_ignoreip">{{ hb_brokenlinks_ignoreip }}</textarea><br>
+							</div>
+						</div>
+						
+						<div class="form-group">
+							<label class="col-sm-3 control-label">{{ column_ignore_agent }}</label>
+							<div class="col-sm-9">
+								<textarea class="form-control" rows="5" cols="60" name="hb_brokenlinks_ignoreagents">{{ hb_brokenlinks_ignoreagents }}</textarea><br>
+							</div>
+						</div>					
+					</div>
+					
+					<!--KEYWORD-->
+					<div class="tab-pane" id="tab-keyword">
+						<h3><i class="fa fa-info-circle"></i>&nbsp;{{ text_keyword_info }}</h3>
+							<div class="form-group">
+								<div class="col-sm-10">
+									<button type="button" class="btn btn-warning" data-toggle="modal" data-target="#keyword-modal"><i class="fa fa-plus"></i>&nbsp;{{ button_add_keyword }}</button>
+								</div>
+							</div>
+						<div id="keywords-block"></div>
+					</div>
+					
+					<!--Replacer-->
+					<div class="tab-pane" id="tab-replace">
+						<h3><i class="fa fa-info-circle"></i>&nbsp;{{ text_replacer_info }}</h3>
+							<div class="form-group">
+								<div class="col-sm-10">
+									<button type="button" class="btn btn-warning" data-toggle="modal" data-target="#replace-modal"><i class="fa fa-plus"></i>&nbsp;{{ button_add_string }}</button>
+								</div>
+							</div>
+						<div id="replacers-block"></div>
+					</div>
+					
+					<!--PAGE DESIGN-->  
+					<div class="tab-pane" id="tab-templates">
+						<div class="form-group">
+							<span class="col-sm-2 control-label">{{ column_enable_page }}</span>
+							<div class="col-sm-10">
+								<input type="checkbox" data-toggle="toggle" data-onstyle="success" name="hb_brokenlinks_enablepage" class="form-control" value="1" {{ hb_brokenlinks_enablepage == 1? 'checked':'' }} />
+							</div>
+						</div>
+							
+						<div class="form-group page-designer">
+							<span class="col-sm-2 control-label">{{ column_page_designer }}</span> 
+							<div class="col-sm-10">
+								<ul class="nav nav-tabs" id="languages">
+								{% for language in languages %} 
+								<li><a href="#language{{ language['language_id'] }}" data-toggle="tab">{{ language['name'] }}</a></li>
+								{% endfor %} 
+								</ul>
+							
+								<div class="tab-content"> <!-- language tab content -->
+								{% for language in languages %} 
+								<div class="tab-pane" id="language{{ language['language_id'] }}">	
+								<div class="form-group">
+										<div class="col-sm-12">
+											<textarea name="hb_brokenlinks_page{{ language.language_id }}" id="page{{ language.language_id }}" data-toggle="summernote" data-lang="{{ summernote }}" class="form-control">{{ hb_brokenlinks_page[language['language_id']] }}</textarea>
+										</div>
+								</div>
+								</div>
+								{% endfor %} 
+								</div> <!-- language tab content end-->	
+							</div>
+						</div>
+								
+					</div>
+					
+					<!--TOOLS-->
+					<div class="tab-pane" id="tab-tools">
+						<div class="table-responsive">
+							<table class="table table-bordered table-hover">
+								<tr>
+									<td>{{ tool_redirect_update }}</td>
+									<td align="center">
+									<input type="text" class="form-control" id="old_url" placeholder="{{ text_existing_redirect }}"><i class="fa fa-angle-double-down"></i><br>
+									<input type="text" class="form-control" placeholder="{{ text_new_redirect }}" id="new_url"></td>
+									<td><button type="button" onClick="bulk_update_redirect();"  class="btn btn-primary">{{ button_update }}</button></td>
+								</tr>
+								<tr>
+									<td>{{ tool_type_update }}</td>
+									<td align="center">
+									<select name="type" class="form-control" id="old_type">
+											<option value="301" >{{ text_301 }}</option>
+											<option value="302" >{{ text_302 }}</option>
+											<option value="307" >{{ text_307 }}</option>
+									</select>
+									
+									<i class="fa fa-angle-double-down"></i><br>
+									<select name="type" class="form-control" id="new_type">
+											<option value="301" >{{ text_301 }}</option>
+											<option value="302" >{{ text_302 }}</option>
+											<option value="307" >{{ text_307 }}</option>
+									</select>
+									</td>
+									<td><button type="button" onClick="update_type();"  class="btn btn-primary">{{ button_update }}</button></td>
+								</tr>
+								<tr>
+									<td>{{ tool_assign_default }}</td>
+									<td>{{ hb_brokenlinks_defaulturl }}</td>
+									<td><button type="button" onClick="update_default();"  class="btn btn-primary" {% if hb_brokenlinks_defaulturl | length < 4 %} {{ 'disabled' }}{% endif %}>{{ button_update }}</button></td>
+								</tr>
+								<tr>
+									<td colspan="2">{{ tool_reset }}</td>
+									<td><button type="button" onClick="reset_all();" class="btn btn-danger">{{ button_delete }}</button></td>
+								</tr>
+							</table>
+						</div> 
+					</div>
+					
+				</div><!--tab-content block end-->
+			</form>
+			<!--ADD NEW START-->
+			<div class="modal fade" id="add-links" tabindex="-1" role="dialog" aria-labelledby="add-linksLabel">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span>&times;</span></button>
+					<h4 class="modal-title">Add Redirect Path</h4>
+				</div>
+				<div class="modal-body">
+					<div class="form-group">
+						<label class="control-label">{{ text_error_url }}<span data-toggle="tooltip" title="{{ text_error_url_help }}"></span></label>
+						<textarea class="form-control" id="error_url"></textarea>
+					</div>
+					<div class="form-group">
+						<label class="control-label">{{ text_redirect_url }}</label>
+						<input type="text" class="form-control" id="redirect_url">
+					</div>
+					<div class="form-group">
+						<label class="control-label">{{ text_redirect_type }}</label>
+						<select id="redirect_type" class="form-control" id="redirect_type">
+							<option value="301" >{{ text_301 }}</option>
+							<option value="302" >{{ text_302 }}</option>
+							<option value="307" >{{ text_307 }}</option>
+						</select>
+					</div>
+					<div class="form-group">
+						<label class="control-label">{{ text_redirect_author }}</label>
+						<select id="redirect_author" class="form-control" id="redirect_author">
+						<option value="0">--PLEASE SELECT--</option>
+						<option value="1">General Redirect (200 Redirect)</option>
+						<option value="2">Broken Link Redirect (404 Redirect)</option>
+						</select>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">{{ button_close }}</button>
+					<button type="button" class="btn btn-primary" id="add-links-entry">{{ button_add }}</button>
+				</div>
+				<div id="addentry-result" style="text-align:center;"></div>
+				</div>
+			</div>
+			</div>
+			<!--ADD NEW END-->
+			<!--KEYWORD BASED URL START-->
+			<div class="modal fade" id="keyword-modal" tabindex="-1" role="dialog">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span>&times;</span></button>
+					<h4 class="modal-title">{{ text_modal_keyword_info }}</h4>
+				</div>
+				<div class="modal-body">
+					<div class="form-group">
+						<label class="control-label">{{ column_keyword }}</label>
+						<input type="text" class="form-control" id="keyword-term">
+					</div>
+					<div class="form-group">
+						<label class="control-label">{{ column_redirect_url }}</label>
+						<input type="text" class="form-control" id="keyword-redirect-url">
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">{{ button_close }}</button>
+					<button type="button" class="btn btn-primary" id="add-keyword-entry">{{ button_add }}</button>
+				</div>
+				<div id="addkeyword-result" style="text-align:center;"></div>
+				</div>
+			</div>
+			</div>
+			<!--KEYWORD BASED URL END-->
+			<!--URL REPLACER START-->
+			<div class="modal fade" id="replace-modal" tabindex="-1" role="dialog">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span>&times;</span></button>
+					<h4 class="modal-title">{{ text_modal_replacer_info }}</h4>
+				</div>
+				<div class="modal-body">
+					<div class="form-group">
+						<label class="control-label">{{ column_match }}</label>
+						<input type="text" class="form-control" id="match-string">
+					</div>
+					<div class="form-group">
+						<label class="control-label">{{ column_replace }}</label>
+						<input type="text" class="form-control" id="replace-string">
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">{{ button_close }}</button>
+					<button type="button" class="btn btn-primary" id="add-replacer-entry">{{ button_add }}</button>
+				</div>
+				<div id="replacer-result" style="text-align:center;"></div>
+				</div>
+			</div>
+			</div>
+			<!--URL REPLACER END-->
+			<!--REFERRER MODAL START-->
+			<div class="modal fade" id="referrer-modal" tabindex="-1" role="dialog">
+			<div class="modal-dialog modal-lg" role="document">
+				<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span>&times;</span></button>
+					<h4 class="modal-title">{{ text_referrers }}</h4>
+				</div>
+				<div class="modal-body">
+						<div id="referrer-block"></div>
+				</div>
+				</div>
+			</div>
+			</div>
+			<!--REFERRER MODAL END-->
+			
+		</div>
+    </div>
+    <!--Panel Content End-->
+    <!--Huntbee copyrights-->
+    <div class="container-fluid">
+      <center>
+        <span class="help">{{ heading_title }} - {{ extension_version }} &copy; <a href="https://www.huntbee.com/">WWW.HUNTBEE.COM</a> | <a href="https://www.huntbee.com/get-support">SUPPORT</a></span>
+      </center>
+    </div>
+    <!--Huntbee copyrights end-->
+  </div>
+  <!--Container 1 start -->
+</div>
+<!--Main Content block end-->
+
+<link href="view/javascript/codemirror/lib/codemirror.css" rel="stylesheet" />
+<link href="view/javascript/codemirror/theme/monokai.css" rel="stylesheet" />
+<script type="text/javascript" src="view/javascript/codemirror/lib/codemirror.js"></script> 
+<script type="text/javascript" src="view/javascript/codemirror/lib/xml.js"></script> 
+<script type="text/javascript" src="view/javascript/codemirror/lib/formatting.js"></script> 
+<script type="text/javascript" src="view/javascript/summernote/summernote.min.js"></script>
+<link href="view/javascript/summernote/summernote.min.css" rel="stylesheet" />
+<script type="text/javascript" src="view/javascript/summernote/summernote-image-attributes.js"></script>
+<script type="text/javascript" src="view/javascript/summernote/opencart.js"></script>
+
+<link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+<script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+
+<script type="text/javascript"><!--
+	$('#languages a:first').tab('show');
+//--></script>
+
+<script type="text/javascript">
+$(document).ready(function() {
+	loadBlock('brokenlinks');
+	if ($('input[name="hb_brokenlinks_enablepage"]').is(':checked')){
+		$('.page-designer').show();
+	}else{
+		$('.page-designer').hide();
+	}
+	$('.filterblock').hide();
+});
+
+function loadBlock(name){
+	$('#'+name+'-block').html('<center><div class="loaddiv"><i class="fa fa-circle-o-notch fa-spin fa-3x fa-fw"></i></div></center>');
+	$('#'+name+'-block').load('index.php?route={{ base_route }}/hb_brokenlinks/'+name+'&user_token={{ user_token }}&store_id={{ store_id }}');
+}
+
+function showFilterBlock(){
+	$('.filterblock').show();
+}
+
+function hideFilterBlock(){
+	$('.filterblock').slideUp('slow');
+}
+</script>
+
+<script type="text/javascript">
+$('#brokenlinks-block').delegate('.pagination a', 'click', function(e) {
+	e.preventDefault();
+
+	$('#brokenlinks-block').load(this.href);
+});
+
+$('#redirects-block').delegate('.pagination a', 'click', function(e) {
+	e.preventDefault();
+
+	$('#redirects-block').load(this.href);
+});
+
+$('input[name="hb_brokenlinks_enablepage"]').on('change', function() {
+	 if(this.checked) {
+        $('.page-designer').show();
+    }else{
+		$('.page-designer').hide();
+	}
+});
+</script>
+
+<script type="text/javascript">
+$('#add-links-entry').on('click', function() {
+	$('#addentry-result').html('');
+	$.ajax({
+		  type: 'post',
+		  url: 'index.php?route={{ base_route }}/hb_brokenlinks/addlinks&user_token={{ user_token }}&store_id={{ store_id }}',
+		  data: {links : $('#error_url').val(), redirect : $('#redirect_url').val(), response : $('#redirect_type').val(), type : $('#redirect_author').val()},
+		  dataType: 'json',
+		  success: function(json) {
+				if (json['success']) {
+					  $('#addentry-result').html('<div class="alert alert-success">'+json['success']+'<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+					  loadBlock('brokenlinks');
+					  loadBlock('redirects');
+				}
+				if (json['error']) {
+					  $('#addentry-result').html('<div class="alert alert-danger">'+json['error']+'<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+				}
+		  },			
+			error: function(xhr, ajaxOptions, thrownError) {
+				alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+			}
+
+	 });	
+});
+
+$('#add-keyword-entry').on('click', function() {
+	$('#addkeyword-result').html('');
+	$.ajax({
+		  type: 'post',
+		  url: 'index.php?route={{ base_route }}/hb_brokenlinks/add_keyword&user_token={{ user_token }}&store_id={{ store_id }}',
+		  data: {keyword : $('#keyword-term').val(), redirect : $('#keyword-redirect-url').val()},
+		  dataType: 'json',
+		  success: function(json) {
+				if (json['success']) {
+					  $('#addkeyword-result').html('<div class="alert alert-success">'+json['success']+'<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+					  loadBlock('keywords');
+				}
+				if (json['error']) {
+					  $('#addkeyword-result').html('<div class="alert alert-danger">'+json['error']+'<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+				}
+		  },			
+			error: function(xhr, ajaxOptions, thrownError) {
+				alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+			}
+
+	 });	
+});
+
+$('#add-replacer-entry').on('click', function() {
+	$('#replacer-result').html('');
+	$.ajax({
+		  type: 'post',
+		  url: 'index.php?route={{ base_route }}/hb_brokenlinks/add_replacer&user_token={{ user_token }}&store_id={{ store_id }}',
+		  data: {matchsting : $('#match-string').val(), replacestring : $('#replace-string').val()},
+		  dataType: 'json',
+		  success: function(json) {
+				if (json['success']) {
+					$('#replacer-result').html('<div class="alert alert-success">'+json['success']+'<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+					loadBlock('replacers');
+				}
+				if (json['error']) {
+					  $('#replacer-result').html('<div class="alert alert-danger">'+json['error']+'<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+				}
+		  },			
+			error: function(xhr, ajaxOptions, thrownError) {
+				alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+			}
+
+	 });	
+});
+
+$('#delete').on('click', function() {
+	$('#msgoutput').html('<center><i class="fa fa-circle-o-notch fa-spin fa-fw"></i></center>');
+	var arraydata404 = $('input[name="selected404[]"]:checked').map(function(){
+        return this.value;
+    }).get()
+	var arraydata200 = $('input[name="selected200[]"]:checked').map(function(){
+        return this.value;
+    }).get()
+	
+	$.ajax({
+		type: 'post',
+		url: 'index.php?route={{ base_route }}/hb_brokenlinks/delete&user_token={{ user_token }}&store_id={{ store_id }}',
+		data: {selected404 : arraydata404,selected200 : arraydata200},
+		dataType: 'json',
+		success: function(json) {
+			if (json['success']) {
+				$('#msgoutput').html('<div class="alert alert-success">'+json['success']+'<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+				loadBlock('brokenlinks');
+				loadBlock('redirects');
+			}
+			if (json['error']) {
+				$('#msgoutput').html('<div class="alert alert-danger">'+json['error']+'<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+			}
+		},			
+		error: function(xhr, ajaxOptions, thrownError) {
+			alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+		}
+	 });	
+});
+
+function updateredirect(redirect, id){
+	$('#msg'+id).html('<center><i class="fa fa-circle-o-notch fa-spin fa-fw"></i></center>');
+	$.ajax({
+		  type: 'post',
+		  url: 'index.php?route={{ base_route }}/hb_brokenlinks/update_redirect&user_token={{ user_token }}&store_id={{ store_id }}',
+		  data: {redirect: redirect, id: id},
+		  dataType: 'json',
+		  success: function(json) {
+				if (json['success']) {
+					  $('#msg'+id).html('<div class="alert alert-success">'+json['success']+'<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+				}
+				if (json['error']) {
+					  $('#msg'+id).html('<div class="alert alert-danger">'+json['error']+'<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+				}
+				if (json['sameurl']) {
+					  $('#msg'+id).html('');
+				}
+		  }
+	 });
+ }
+ 
+function deleteKeyword(id){
+	$('#msgoutput').html('');
+	$.ajax({
+		  type: 'post',
+		  url: 'index.php?route={{ base_route }}/hb_brokenlinks/delete_keyword&user_token={{ user_token }}&store_id={{ store_id }}',
+		  data: {id : id},
+		  dataType: 'json',
+		  success: function(json) {
+				if (json['success']) {
+					  $('#msgoutput').html('<div class="alert alert-success">'+json['success']+'<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+					  loadBlock('keywords');
+				}
+		  },			
+		  error: function(xhr, ajaxOptions, thrownError) { alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText); }
+	 });
+}
+
+function deleteReplacer(id){
+	$('#msgoutput').html('');
+	$.ajax({
+		  type: 'post',
+		  url: 'index.php?route={{ base_route }}/hb_brokenlinks/delete_replacer&user_token={{ user_token }}&store_id={{ store_id }}',
+		  data: {id : id},
+		  dataType: 'json',
+		  success: function(json) {
+				if (json['success']) {
+					  $('#msgoutput').html('<div class="alert alert-success">'+json['success']+'<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+					  loadBlock('replacers');
+				}
+		  },			
+		  error: function(xhr, ajaxOptions, thrownError) { alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText); }
+	 });
+}
+ 
+function showreferrer(id){
+	$('#referrer-block').html('<i class="fa fa-circle-o-notch fa-spin fa-2x fa-fw"></i>');
+	$('#referrer-block').load('index.php?route={{ base_route }}/hb_brokenlinks/referrers&user_token={{ user_token }}&store_id={{ store_id }}&id='+id);
+	$('#referrer-modal').modal('show');
+}
+
+function bulk_update_redirect(){	
+	var oldurl = $('#old_url').val();
+	var newurl = $('#new_url').val();
+
+	// Check if fields are empty
+    if (!oldurl || !newurl) {
+        alert('{{ error_improper_data }}');
+        return; // Exit the function if fields are empty
+    }
+	
+	if (confirm('{{ text_confirm }}')) {
+        location = 'index.php?route={{ base_route }}/hb_brokenlinks/tool_bulkredirectupdate&user_token={{ user_token }}&store_id={{ store_id }}&old=' + encodeURIComponent(oldurl) + '&new=' + encodeURIComponent(newurl);
+    }
+}
+
+function update_type(){
+	var oldtype = $('#old_type').val();
+	var newtype = $('#new_type').val();
+	if (confirm('{{ text_confirm }}')) {
+	location = 'index.php?route={{ base_route }}/hb_brokenlinks/tool_bulktype&user_token={{ user_token }}&store_id={{ store_id }}&old='+oldtype+'&new='+newtype;
+	}
+}
+
+function update_default(){
+	if (confirm('{{ text_confirm }}')) {
+		location = 'index.php?route={{ base_route }}/hb_brokenlinks/tool_bulkdefault&user_token={{ user_token }}&store_id={{ store_id }}';
+	}
+}
+
+function reset_all(){
+	if (confirm('{{ text_confirm }}')) {
+		location = 'index.php?route={{ base_route }}/hb_brokenlinks/tool_resetall&user_token={{ user_token }}&store_id={{ store_id }}';
+	}
+}
+
+function searchBrokenLink() {
+	var searchvalue = $('#search-brokenlink-value').val();
+	$('#brokenlinks-block').load('index.php?route={{ base_route }}/hb_brokenlinks/brokenlinks&user_token={{ user_token }}&store_id={{ store_id }}&search='+searchvalue);
+};
+
+function searchCommonLink() {
+	var searchvalue = $('#search-commonlink-value').val();
+	$('#redirects-block').load('index.php?route={{ base_route }}/hb_brokenlinks/redirects&user_token={{ user_token }}&store_id={{ store_id }}&search='+searchvalue);
+};
+</script>
+
+<script type="text/javascript">
+$('#store').on('change', function() {
+	window.location.href = 'index.php?route={{ base_route }}/hb_brokenlinks&user_token={{ user_token }}&store_id='+$('#store').val();
+});
+</script>
+{{ footer }}

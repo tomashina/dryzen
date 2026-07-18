@@ -1,0 +1,375 @@
+{#
+This file is subject to the terms and conditions defined in the "EULA.txt"
+file, which is part of this source code package and is also available on the
+page: https://raw.githubusercontent.com/ocmod-space/license/main/EULA.txt.
+#}
+
+{% set links = {
+'Opencart Marketplace': 'https://www.opencart.com/index.php?route=marketplace/extension/info&extension_id=35022',
+'Github': 'https://github.com/ocmod-space/ocmod-seo-tools',
+'EULA': 'https://raw.githubusercontent.com/ocmod-space/license/main/EULA.txt'
+} %}
+{% set copyright = '© Copyright 2019-' ~ 'now'|date('Y') ~ ' Andrii Burkatskyi aka underr' %}
+{% set email = '<a
+  href="mailto:ocmod.space@gmail.com?Subject=[OpenCart] Seo Breadcrumbs">ocmod.space@gmail.com</a>' %}
+
+{{ header }}
+{{ column_left }}
+<div id="content">
+  <div class="page-header">
+    <div class="container-fluid">
+      <div class="pull-right">
+        <button class="btn btn-primary" data-toggle="tooltip" form="form-module" title="{{ button_save }}"
+          type="submit">
+          <i class="fa fa-save"></i>
+        </button>
+        <a class="btn btn-default" data-toggle="tooltip" href="{{ cancel }}" title="{{ button_cancel }}">
+          <i class="fa fa-reply"></i>
+        </a>
+      </div>
+      <h1>
+        {{ heading_title }}
+      </h1>
+      <br/>
+      <ul class="breadcrumb">
+        {% for breadcrumb in breadcrumbs %}
+        <li>
+          <a href="{{ breadcrumb.href }}">
+            {{ breadcrumb.text }}
+          </a>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+  <div class="container-fluid">
+    {% if error_permission %}
+    <div class="alert alert-danger alert-dismissible">
+      <i class="fa fa-exclamation-circle"></i>
+      {{ error_permission }}
+      <button class="close" data-dismiss="alert" type="button">
+        &times;
+      </button>
+    </div>
+    {% endif %}
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">
+          <i class="fa fa-pencil"></i>
+          {{ text_edit }}
+        </h3>
+      </div>
+      <div class="panel-body">
+        <form action="{{ action }}" class="form-horizontal" enctype="multipart/form-data" id="form-module"
+          method="post">
+          <div class="form-group">
+            <div class="btn-group btn-group-toggle col-sm-3" data-toggle="buttons" id="input-status">
+              <label class="btn btn-default btn-enabled{% if status %} active btn-success{% endif %}">
+                <input autocomplete="off" name="module_seo_breadcrumbs_status" type="radio" value="1" {% if status %}checked{%
+                  endif %} />
+                {{ text_enabled }}
+              </label>
+              <label class="btn btn-default btn-disabled{% if not status %} active btn-danger{% endif %}">
+                <input autocomplete="off" name="module_seo_breadcrumbs_status" type="radio" value="0" {% if not status
+                  %}checked{% endif %}>
+                {{ text_disabled }}
+              </label>
+            </div>
+          </div>
+
+          <ul class="nav nav-tabs" id="tabs">
+            <li class="active">
+              <a data-toggle="tab" href="#tab-breadcrumbs">
+                {{ entry_tab_breadcrumbs }}
+              </a>
+            </li>
+            <li>
+              <a data-toggle="tab" href="#tab-info">
+                <i class="fa fa-info-circle" aria-hidden="true"></i>
+              </a>
+            </li>
+          </ul>
+
+          <div class="tab-content">
+            <div class="tab-pane active" id="tab-breadcrumbs">
+              <div class="form-group ">
+                <label class="col-sm-2 control-label text-right" for="select-path">
+                  {{ entry_breadcrumbs_path }}
+                </label>
+                <div class="col-sm-4 text-left">
+                  <select class="form-control" id="select-path" name="module_seo_breadcrumbs[breadcrumbs_path]">
+
+                    {% for path in paths %}
+
+                    <option value="{{ path }}" {% if seo_breadcrumbs.breadcrumbs_path == path %}selected="selected" {% endif %}>
+                      {{ _context['text_path_' ~ path] }}
+                    </option>
+
+                    {% endfor %}
+
+                  </select>
+                </div>
+                <div class="col-sm-6 text-left"><em>{{ help_breadcrumbs_path }}</em></div>
+              </div>
+
+              <div class="form-group ">
+                <label class="col-sm-2 control-label text-right" for="select-breadcrumbs-force">
+                  {{ entry_breadcrumbs_force }}
+                </label>
+
+                <div class="col-sm-4 text-left">
+                  <select class="form-control" id="select-breadcrumbs-force"
+                    name="module_seo_breadcrumbs[breadcrumbs_force]">
+                    {% if not seo_breadcrumbs.breadcrumbs_force %}
+
+                    <option value="0" selected>
+                      {{ text_disabled }}
+                    </option>
+                    <option value="1">
+                      {{ text_enabled }}
+                    </option>
+
+                    {% else %}
+
+                    <option value="0">
+                      {{ text_disabled }}
+                    </option>
+                    <option value="1" selected>
+                      {{ text_enabled }}
+                    </option>
+
+                    {% endif %}
+                  </select>
+                </div>
+                <div class="col-sm-6 text-left"><em>{{ help_breadcrumbs_force }}</em></div>
+              </div>
+
+              <div class="form-group ">
+                <label class="col-sm-2 control-label text-right" for="select-breadcrumbs-search">
+                  {{ entry_breadcrumbs_search }}
+                </label>
+
+                <div class="col-sm-4 text-left">
+                  <select class="form-control" id="select-breadcrumbs-search"
+                    name="module_seo_breadcrumbs[breadcrumbs_search]">
+                    {% if not seo_breadcrumbs.breadcrumbs_search %}
+
+                    <option value="0" selected>
+                      {{ text_disabled }}
+                    </option>
+                    <option value="1">
+                      {{ text_enabled }}
+                    </option>
+
+                    {% else %}
+
+                    <option value="0">
+                      {{ text_disabled }}
+                    </option>
+                    <option value="1" selected>
+                      {{ text_enabled }}
+                    </option>
+
+                    {% endif %}
+                  </select>
+                </div>
+                <div class="col-sm-6 text-left"><em>{{ help_breadcrumbs_search }}</em></div>
+              </div>
+
+              <div class="form-group">
+                <label class="col-sm-2 control-label text-right" for="select-breadcrumbs-manufacturer">
+                  {{ entry_breadcrumbs_manufacturer }}
+                </label>
+
+                <div class="col-sm-4 text-left">
+                  <select class="form-control" id="select-breadcrumbs-manufacturer"
+                    name="module_seo_breadcrumbs[breadcrumbs_manufacturer]">
+                    {% if not seo_breadcrumbs.breadcrumbs_manufacturer %}
+
+                    <option value="0" selected>
+                      {{ text_disabled }}
+                    </option>
+                    <option value="1">
+                      {{ text_enabled }}
+                    </option>
+
+                    {% else %}
+
+                    <option value="0">
+                      {{ text_disabled }}
+                    </option>
+                    <option value="1" selected>
+                      {{ text_enabled }}
+                    </option>
+
+                    {% endif %}
+                  </select>
+                </div>
+                <div class="col-sm-6 text-left"><em>{{ help_breadcrumbs_manufacturer }}</em></div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-2 control-label text-right" for="select-breadcrumbs-json">
+                  {{ entry_breadcrumbs_json }}
+
+                  {% if breadcrumbs_json_disabled %}
+
+                  <a href="{{ text_link }}" data-toggle="tooltip" title="{{ help_download }}">
+                    <i class="fa fa-download" aria-hidden="true"></i>
+                  </a>
+
+                  {% endif %}
+
+                </label>
+
+                <div class="col-sm-4 text-left">
+                  <select class="form-control" id="select-breadcrumbs-json" name="module_seo_breadcrumbs[breadcrumbs_json]"
+                    {% if breadcrumbs_json_disabled %}disabled{% endif %}>
+                    {% if not seo_breadcrumbs.breadcrumbs_json %}
+
+                    <option value="0" selected>
+                      {{ text_disabled }}
+                    </option>
+                    <option value="1">
+                      {{ text_enabled }}
+                    </option>
+
+                    {% else %}
+
+                    <option value="0">
+                      {{ text_disabled }}
+                    </option>
+                    <option value="1" selected>
+                      {{ text_enabled }}
+                    </option>
+
+                    {% endif %}
+                  </select>
+                </div>
+                <div class="col-sm-6 text-left"><em>{{ help_breadcrumbs_json }}</em></div>
+              </div>
+
+              <div class="form-group ">
+                <label class="col-sm-2 control-label text-right" for="select-breadcrumbs-nolink">
+                  {{ entry_breadcrumbs_nolink }}
+                </label>
+
+                <div class="col-sm-4 text-left">
+                  <select class="form-control" id="select-breadcrumbs-nolink"
+                    name="module_seo_breadcrumbs[breadcrumbs_nolink]">
+                    {% if not seo_breadcrumbs.breadcrumbs_nolink %}
+
+                    <option value="0" selected>
+                      {{ text_disabled }}
+                    </option>
+                    <option value="1">
+                      {{ text_enabled }}
+                    </option>
+
+                    {% else %}
+
+                    <option value="0">
+                      {{ text_disabled }}
+                    </option>
+                    <option value="1" selected>
+                      {{ text_enabled }}
+                    </option>
+
+                    {% endif %}
+                  </select>
+                </div>
+                <div class="col-sm-6 text-left"><em>{{ help_breadcrumbs_nolink }}</em></div>
+              </div>
+
+              <div class="form-group ">
+                <label class="col-sm-2 control-label text-right" for="select-breadcrumbs-bold">
+                  {{ entry_breadcrumbs_bold }}
+                </label>
+                <div class="col-sm-4 text-left">
+                  <select name="module_seo_breadcrumbs[breadcrumbs_bold]" id="select-breadcrumbs-bold" class="form-control">
+                    {% if not seo_breadcrumbs.breadcrumbs_bold %}
+
+                    <option value="0" selected>
+                      {{ text_disabled }}
+                    </option>
+                    <option value="1">
+                      {{ text_enabled }}
+                    </option>
+
+                    {% else %}
+
+                    <option value="0">
+                      {{ text_disabled }}
+                    </option>
+                    <option value="1" selected>
+                      {{ text_enabled }}
+                    </option>
+
+                    {% endif %}
+                  </select>
+                </div>
+                <div class="col-sm-6 text-left"><em>{{ help_breadcrumbs_bold }}</em></div>
+              </div>
+            </div>
+
+            <div class="tab-pane" id="tab-info">
+              <div class="col-sm-12 text-center">{{ text_about }}</div>
+
+              <div class="text-center">
+                {% for name, url in links %}
+
+                <a href="{{ url }}" target="_blank">{{ name }}</a>
+                {% if not loop.last %} | {% endif %}
+
+                {% endfor %}
+              </div>
+              <hr />
+              <div class="text-center">{{ copyright }}, {{ email }}</div>
+            </div>
+          </div>
+
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<script type="text/javascript"><!--
+function disableInput(e, a = true) {
+    $(e).fadeTo('fast', a ? 0.5 : 1, function () {
+        $(e + ' input').prop('disabled', a ? true : false);
+    });
+}
+
+if (!$('#select-path').val()) {
+    disableInput('#div-path-options');
+} else {
+    disableInput('#div-path-options', false);
+}
+
+$('#select-path').on('change', function () {
+    if (!$(this).val()) {
+        disableInput('#div-path-options');
+    } else {
+        disableInput('#div-path-options', false);
+    }
+
+});
+
+$('input[type="text"]').on('input', function () {
+    $(this).attr('value', $(this).val());
+});
+
+$('#input-status .btn.btn-default').click(function () {
+    if (!$(this).hasClass('active')) {
+        if ($(this).hasClass('btn-enabled')) {
+            $('#input-status .btn.btn-default').removeClass('btn-danger');
+            $(this).addClass('btn-success');
+        }
+
+        if ($(this).hasClass('btn-disabled')) {
+            $('#input-status .btn.btn-default').removeClass('btn-success');
+            $(this).addClass('btn-danger');
+        }
+    }
+});
+--></script>
+{{ footer }}

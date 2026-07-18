@@ -1,0 +1,36 @@
+{% if ( ro_installed ?? false ) %}
+				
+	{# // << Product Image Option DropDown compatibility #}
+	{% if ( text_select_your ?? false) and (options ?? false) and (options is iterable) %}
+		<script>
+			var ro_piodd_select_texts = [];
+			{% for option in options %}
+				{% if option.type == 'image' %}
+					ro_piodd_select_texts[{{ option.product_option_id }}] = '{{ text_select_your ~ option.name }}';
+				{% endif %}
+			{% endfor %}
+		</script>	
+	{% endif %}
+	{# // >> Product Image Option DropDown compatibility #}
+	{# // << the common part and the part for option reset #}
+	{% if ( ro_data ?? false ) or ( (ro_settings ?? false) and (ro_settings.show_clear_options ?? false) ) %}
+		<style >{# space for comp with some themes like oct_remarket #}
+			.ro_option_disabled { color: #e1e1e1!important; }
+			.ro_option_faded { color: #a1a1a1!important; }
+		</style>
+	{% endif %}
+	{# // >> the common part and the part for option reset #}
+	
+	{% if (ro_include_scripts ?? false) and (ro_scripts ?? false) %}
+		{% for ro_script in ro_scripts %}
+			<script type="text/javascript" src="{{ ro_script }}"></script>
+		{% endfor %}
+	{% endif %}
+
+		
+	{% if ( ro_data ?? false ) or (ro_settings.show_clear_options ?? false) %}
+		
+		{% include "extension_liveopencart/related_options/tpl/product_page_script_init.twig" %}
+		
+	{% endif %}
+{% endif %}

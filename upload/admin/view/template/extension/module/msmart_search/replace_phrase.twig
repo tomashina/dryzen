@@ -1,0 +1,166 @@
+{% include 'extension/module/msmart_search/_header.twig' %}
+<br />
+
+	<table class="table table-bordered table-hover table-striped">
+		<thead>
+			<tr>
+				<th width="50%">{{ text_phrase_to_replace }}</th>
+				<th width="1"><small>{{ text_regex }}</small></th>
+				<th colspan="2">{{ text_new_phrase }}</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>
+					<input type="text" class="form-control" id="val-phrase" value="" />
+					<small>{{ text_outdated_phrase }}</small>
+				</td>
+				<td class="text-center">
+					<input type="checkbox" id="val-regex" value="1" />
+				</td>
+				<td>
+					<input type="text" class="form-control" id="val-new-phrase" value="" />
+					<small>{{ text_new_phrase }}</small>
+				</td>
+				<td width="50">
+					<button type="button" class="btn btn-sm btn-success" id="insert-phrase"><i class="glyphicon glyphicon-plus-sign"></i> Insert</button>
+				</td>
+			</tr>
+		</tbody>
+		<tfoot>
+			<tr>
+				<td colspan="4" class="mss-helper">
+					{{ text_regex_help }} 
+				</td>
+			</tr>
+		</tfoot>
+	</table>
+	<br /><br />	
+	<table class="table table-bordered table-hover table-striped">
+		<thead>
+			<tr>
+				<th width="50%">{{ text_phrase_to_replace }}</th>
+				<th width="1"><small>{{ text_regex }}</small></th>
+				<th>{{ text_new_phrase }}</th>
+				<th width="100"></th>
+			</tr>
+		</thead>
+		<tbody id='table_body' >
+				{% if ( phrases is empty ) %}	
+				<tr class="no-results">
+					<td colspan="4" class="text-center">
+						<b>{{ text_no_results }}</b>
+					</td>
+				</tr>
+				{% endif %} 
+			{% for phrase in phrases %} 
+			<tr>
+				<td width="50%">
+					{{ phrase['search'] }} 
+				</td>
+				<td class="text-center">
+					<i class="fa fa-{{ phrase['regex'] == '1' ? 'check' : 'remove' }}"></i>
+				</td>
+				<td>
+					{{ phrase['replaced'] }} 
+				</td>
+				<td width="100" class="text-center">
+					<button type="button" data-id-to-remove="{{ phrase['phrase_id'] }}" class="btn btn-sm btn-danger"><i class="glyphicon glyphicon-remove"></i></button>
+				</td>
+			</tr>
+			{% endfor %} 
+		</tbody>
+	</table>
+		{{ pagination }} 
+	
+<script type="text/javascript">
+	(function(){
+		var to_remove_id = null;
+		
+		function ajax( action, paramsPost, paramsGet, callback ) {
+			if( typeof params == 'undefined' ) {
+				params = {};
+			}
+
+			$.post( '{{ phrase_url }}'.replace( /&amp;/g, '&' ) + 
+					'&action=' + action +
+					( paramsGet ? '&' + paramsGet : ''), 
+				paramsPost, 
+				function( json ){
+					if( typeof json.error != 'undefined' ) {
+						alert(json.error);
+					} else if(json.action == 'add'){
+						var	tr = '<tr>'+
+							'<td width="50%">'+
+								json.phrase+
+							'</td>'+
+							'<td class="text-center"><i class="fa fa-'+(json.regex=='1'?'check':'remove')+'"></i></td>'+
+							'<td>'+
+								json.alias +
+							'</td>'+
+							'<td width="100" class="text-center">'+
+								'<button type="button" data-id-to-remove="'+ json.id + '" class="btn btn-sm btn-danger"><i class="glyphicon glyphicon-remove"></i></button>'+
+							'</td>'+
+						'</tr>';
+
+						$('#table_body').append( tr );
+						$('#table_body tr.no-results').remove();
+					} else if(json.action == 'delete'){
+						$('button[data-id-to-remove="'+json.id+'"]').closest('tr').remove();
+					}
+					
+					if( typeof callback == 'function' ) {
+						callback();
+					}
+				}
+			);
+		}
+		
+		$('#insert-phrase').on('click', function(){
+			var phrase = $('#val-phrase').val(),
+				regex = $('#val-regex').is(':checked')?'1':'0',
+				alias = $('#val-new-phrase').val();
+
+			ajax( 'insert', {
+				phrase: phrase,
+				alias: alias,
+				regex: regex,
+				to_remove_id: to_remove_id
+			}, undefined, function(){
+				$('#val-phrase,#val-new-phrase').val('');
+				$('#val-regex').prop('checked', false);
+			});
+			
+			to_remove_id = null;
+
+			return false;
+		});
+		
+		$('#val-new-phrase').keyup(function(e){
+			if( e.keyCode == 13 ) {
+				$('#insert-phrase').trigger('click');
+			}
+		});
+		
+		$('#table_body').on('click', "tr > td > button", function(){
+			if( confirm( 'Are you sure?' ) ) {
+				var id = $(this).attr('data-id-to-remove');
+				ajax( 'remove', {
+					id: id
+				});
+			}
+			
+			return false;
+		});
+
+	})( jQuery );
+</script>		
+<style type="text/css">
+	.mss-helper pre {
+		display: inline-block;
+		margin: 0;
+		vertical-align: middle;
+		padding: 3px 5px;
+	}
+</style>
+{% include 'extension/module/msmart_search/_footer.twig' %}

@@ -1,0 +1,426 @@
+<?php echo $header; ?><?php echo $column_left; ?>
+<!--Main Content block start-->
+
+<div id="content">
+  <!--Header Start-->
+  <div class="page-header">
+    <div class="container-fluid">
+      <div class="pull-right">
+        <button type="submit" onClick="document.getElementById('form-seoimage').submit();" form="form-seoimage" data-toggle="tooltip" title="<?php echo $button_save; ?>" class="btn btn-primary"><i class="fa fa-save"></i> SAVE</button>
+		<a class="btn btn-danger" onclick="confirm('Are you sure?') ? clear_logs() : false;"><i class="fa fa-trash"></i> Clear Logs</a>
+		<a href="https://www.huntbee.com/documentation/docs/seo-image-rename/" target="_blank" class="btn btn-default"><i class="fa fa-book"></i> DOCUMENTATION</a>
+		<a href="<?php echo $cancel; ?>" data-toggle="tooltip" title="<?php echo $button_cancel; ?>" class="btn btn-default"><i class="fa fa-reply"></i></a>
+	  </div>
+      <h1><?php echo $heading_title; ?></h1>
+      <ul class="breadcrumb">
+        <?php foreach ($breadcrumbs as $breadcrumb) { ?>
+        <li><a href="<?php echo $breadcrumb['href']; ?>"><?php echo $breadcrumb['text']; ?></a></li>
+        <?php } ?>
+      </ul>
+    </div>
+  </div>
+  <!--Header End-->
+  <!--Container 1 start -->
+  <div class="container-fluid">
+    <!--Start - Error / Success Message if any -->
+    <?php if ($error_warning) { ?>
+    <div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i> <?php echo $error_warning; ?>
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+    </div>
+    <?php } ?>
+    <?php if ($success) { ?>
+    <div class="alert alert-success"><i class="fa fa-check-circle"></i> <?php echo $success; ?>
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+    </div>
+    <?php } ?>
+    <!--End - Error / Success Message if any -->
+	<div id="msgoutput"></div>
+	
+    <!--Panel Content Start-->
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title"><i class="fa fa-magic"></i> <?php echo $heading_title; ?></h3>
+		<?php if ($stores) { ?>
+		<div class="pull-right">
+		<select id="store">
+			<option value="0" <?php echo ($store_id == 0)?'selected':''; ?>>Default Store</option>
+			<?php foreach ($stores as $store) { ?>
+				<option value="<?php echo $store['store_id']; ?>" <?php echo ($store_id == $store['store_id'])?'selected':''; ?>><?php echo $store['name']; ?></option>
+			<?php } ?>
+		</select>
+		</div>
+		<?php } ?>
+      </div>
+      <div class="panel-body">
+        <form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data" id="form-seoimage" class="form-horizontal">
+			<!--Tabs UL Starts-->
+			<ul class="nav nav-tabs" id="tabs">
+                <li class="active"><a href="#tab-dashboard" onclick="loadBlock('dashboard');" data-toggle="tab"><i class="fa fa-tachometer" aria-hidden="true"></i> <?php echo $tab_dashboard; ?></a></li>
+				<li><a href="#tab-filemanager" data-toggle="tab"><i class="fa fa-folder" aria-hidden="true"></i> Image Folder Manager</a></li>
+				<li><a href="#tab-setting" data-toggle="tab"><i class="fa fa-cogs" aria-hidden="true"></i> <?php echo $tab_setting; ?></a></li>
+				<li><a href="#tab-target-dir" data-toggle="tab"><i class="fa fa-folder-open-o" aria-hidden="true"></i> <?php echo $tab_target_directory; ?></a></li>
+				<li><a href="#tab-logs" onclick="loadBlock('logs');" data-toggle="tab"><i class="fa fa-calendar-plus-o" aria-hidden="true"></i> <?php echo $tab_logs; ?></a></li>
+				<li><a href="#tab-missing" onclick="loadBlock('missing');" data-toggle="tab"><i class="fa fa-exclamation" aria-hidden="true"></i> Missing Images</a></li>
+	          </ul>
+			  <!--Tabs UL Ends-->
+			  <div class="tab-content">
+
+			  	<div class="tab-pane active" id="tab-dashboard">
+					<div id="dashboard-block"></div>
+	
+					<div class="alert alert-warning"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i> Image directory (<?php echo $dir_image; ?>) backup and database backup is strongly recommended before using this extension</div>
+				</div>
+				
+				<!--FILE MANAGER-->
+				<div class="tab-pane" id="tab-filemanager">
+					<iframe id="iframe" width="100%" height="1200px" src="view/javascript/hb_filemanager/dialog.php?editor=0&type=0&lang=en_EN&popup=0&crossdomain=0&field_id=&relative_url=0&akey=<?php echo $token; ?>"></iframe>
+				</div>
+				
+				<!--SETUP-->
+				<div class="tab-pane" id="tab-setting">	
+					<div class="form-group">
+						<label class="col-sm-3 control-label">Status</label>
+						<div class="col-sm-9">
+							<input type="checkbox" data-toggle="toggle" data-onstyle="success" name="hb_seoimage_status" class="form-control" value="1" <?php echo ($hb_seoimage_status == '1')? 'checked':'' ; ?> />
+						</div>
+				   </div>
+				   			   
+					<div class="form-group">
+						<label class="col-sm-3 control-label">Change image filetype to JPG?</label>
+						<div class="col-sm-3">
+							<input type="checkbox" data-toggle="toggle" data-onstyle="success" name="hb_seoimage_jpg_convert" class="form-control" value="1" <?php echo ($hb_seoimage_jpg_convert == '1')? 'checked':'' ; ?> />
+						</div>
+						<div class="col-sm-6">
+							<div class="alert alert-warning">A JPG extension image is recommended for SEO, however if you are using images that has transparent background, changing the image type (eg: <strong>.png</strong> or <strong>.gif</strong>) to <strong>.jpg</strong> will remove the transparent property. Carefully select this setting.</div>
+						</div>
+				   </div>
+				   
+				   <div class="form-group">
+						<label class="col-sm-3 control-label">Delete original image file after relocation?</label>
+						<div class="col-sm-3">
+							<input type="checkbox" data-toggle="toggle" data-onstyle="success" name="hb_seoimage_delete_original" class="form-control" value="1" <?php echo ($hb_seoimage_delete_original == '1')? 'checked':'' ; ?> />
+						</div>
+				   </div>
+				   
+				   <div class="form-group">
+		                <label class="col-sm-3 control-label">Select Language</label>
+		                <div class="col-sm-3">
+							<select class="form-control" name="hb_seoimage_language">
+                            <?php foreach ($languages as $language) { ?>
+							  <option value="<?php echo $language['language_id']; ?>" <?php echo ($hb_seoimage_language ==  $language['language_id'])? 'selected':''; ?> ><?php echo $language['name']; ?></option>
+			                 <?php } ?> 
+                            </select>		                
+                            </div>
+		             </div>
+					 
+					 <div class="form-group">
+		                <label class="col-sm-3 control-label">Image Filename template for Product Images</label>
+		                <div class="col-sm-3">
+		                  <input type="text" name="hb_seoimage_pattern_p" value="<?php echo $hb_seoimage_pattern_p; ?>" class="form-control" />
+						  <div id="filename-preview-p"></div>
+						</div>
+						<div class="col-sm-6">
+							<label class="control-label">Short-codes :</label>
+							<a data-clipboard-text="{p}" aria-label="Copied" class="btn btn-sm btn-default copybtn" title="Product name">{p}</a>
+							<a data-clipboard-text="{c}" aria-label="Copied" class="btn btn-sm btn-default copybtn" title="Product Parent Category name">{c}</a>
+							<a data-clipboard-text="{m}" aria-label="Copied" class="btn btn-sm btn-default copybtn" title="Product Model">{m}</a>
+							<a data-clipboard-text="{sku}" aria-label="Copied" class="btn btn-sm btn-default copybtn" title="Product SKU">{sku}</a>
+							<a data-clipboard-text="{upc}" aria-label="Copied" class="btn btn-sm btn-default copybtn" title="Product UPC">{upc}</a>
+							<a data-clipboard-text="{product_id}" aria-label="Copied" class="btn btn-sm btn-default copybtn" title="Product ID">{product_id}</a>
+						</div>
+		             </div>
+					 
+					 <div class="form-group">
+		                <label class="col-sm-3 control-label">Image Filename template for Product Additional Images</label>
+		                <div class="col-sm-3">
+		                  <input type="text" name="hb_seoimage_pattern_pa" value="<?php echo $hb_seoimage_pattern_pa; ?>" class="form-control" />
+						  <div id="filename-preview-pa"></div>
+						</div>
+						<div class="col-sm-6">
+							<label class="control-label">Short-codes :</label>
+							<a data-clipboard-text="{p}" aria-label="Copied" class="btn btn-sm btn-default copybtn" title="Product name">{p}</a>
+							<a data-clipboard-text="{c}" aria-label="Copied" class="btn btn-sm btn-default copybtn" title="Product Parent Category name">{c}</a>
+							<a data-clipboard-text="{m}" aria-label="Copied" class="btn btn-sm btn-default copybtn" title="Product Model">{m}</a>
+							<a data-clipboard-text="{sku}" aria-label="Copied" class="btn btn-sm btn-default copybtn" title="Product SKU">{sku}</a>
+							<a data-clipboard-text="{upc}" aria-label="Copied" class="btn btn-sm btn-default copybtn" title="Product UPC">{upc}</a>
+							<a data-clipboard-text="{product_id}" aria-label="Copied" class="btn btn-sm btn-default copybtn" title="Product ID">{product_id}</a>
+						</div>
+		             </div>
+					 
+					 <div class="form-group">
+		                <label class="col-sm-3 control-label">Image Filename template for Product Option Images</label>
+		                <div class="col-sm-3">
+		                  <input type="text" name="hb_seoimage_pattern_po" value="<?php echo $hb_seoimage_pattern_po; ?>" class="form-control" />
+						  <div id="filename-preview-po"></div>
+						</div>
+						<div class="col-sm-6">
+							<label class="control-label">Short-codes :</label>
+							<a data-clipboard-text="{name}" aria-label="Copied" class="btn btn-sm btn-default copybtn" title="Option Name">{name}</a>
+						</div>
+		             </div>
+					 
+					 <div class="form-group">
+		                <label class="col-sm-3 control-label">Target Folder Path for Product Images</label>
+		                <div class="col-sm-3">
+		                  <input type="text" name="hb_seoimage_tgf_product" value="<?php echo $hb_seoimage_tgf_product; ?>" class="form-control" />
+						</div>
+						<div class="col-sm-6">
+							<div class="alert alert-info">Renamed Product Images will be located under <?php echo $dir_image; ?><?php echo $hb_seoimage_tgf_product; ?></div>
+						</div>
+		             </div>
+					 
+					 <div class="form-group">
+		                <label class="col-sm-3 control-label">Target Folder Path for Product Options</label>
+		                <div class="col-sm-3">
+		                  <input type="text" name="hb_seoimage_tgf_option" value="<?php echo $hb_seoimage_tgf_option; ?>" class="form-control" />
+						</div>
+						<div class="col-sm-6">
+							<div class="alert alert-info">Renamed Product Images will be located under <?php echo $dir_image; ?><?php echo $hb_seoimage_tgf_option; ?></div>
+						</div>
+		             </div>
+					 
+					
+					 <div class="form-group">
+		                <label class="col-sm-3 control-label">Target Folder Path for Category Images</label>
+		                <div class="col-sm-3">
+		                  <input type="text" name="hb_seoimage_tgf_category" value="<?php echo $hb_seoimage_tgf_category; ?>" class="form-control" />
+						</div>
+						<div class="col-sm-6">
+							<div class="alert alert-info">Renamed Category Images will be located under <?php echo $dir_image; ?><?php echo $hb_seoimage_tgf_category; ?></div>
+						</div>
+		             </div>
+					 
+					 <div class="form-group">
+		                <label class="col-sm-3 control-label">Target Folder Path for Brand Images</label>
+		                <div class="col-sm-3">
+		                  <input type="text" name="hb_seoimage_tgf_brand" value="<?php echo $hb_seoimage_tgf_brand; ?>" class="form-control" />
+						</div>
+						<div class="col-sm-6">
+							<div class="alert alert-info">Renamed Brand Images will be located under <?php echo $dir_image; ?><?php echo $hb_seoimage_tgf_brand; ?></div>
+						</div>
+		             </div>
+
+					<div class="form-group">
+		                <label class="col-sm-3 control-label">Folder Name Where Image should be saved if no category assigned to product</label>
+		                <div class="col-sm-3">
+		                  <input type="text" name="hb_seoimage_tgf_unassigned" placeholder="others" value="<?php echo $hb_seoimage_tgf_unassigned; ?>" class="form-control" />
+						</div>
+						<div class="col-sm-6">
+							<div class="alert alert-info">Renamed Images will be located under <?php echo $dir_image; ?><?php echo $hb_seoimage_tgf_product; ?><?php echo $hb_seoimage_tgf_unassigned; ?></div>
+						</div>
+		             </div>
+					 
+					 <div class="form-group">
+						<label class="col-sm-3 control-label">Run Script Automatically whenever a item/product is edited or added</label>
+						<div class="col-sm-9">
+							<input type="checkbox" data-toggle="toggle" data-onstyle="success" name="hb_seoimage_auto" class="form-control" value="1" <?php echo ($hb_seoimage_auto == '1')? 'checked':'' ; ?> />
+						</div>
+				   </div>
+
+				</div>
+				
+				<div class="tab-pane" id="tab-target-dir">
+					<?php if ($directories) { ?>
+						<div class="list-group">
+						<?php foreach ($directories as $directory) { ?>
+							<button type="button" class="list-group-item"><?php echo $directory['directory_name']; ?></button>
+						<?php } ?>
+						</div>
+					<?php } else { ?>
+						<div class="alert pr_error">No Directories detected under the mentioned target folder. Directories will be created during Image renaming and the names are based on parent categories assigned to products.</div>
+					<?php } ?>
+				</div>
+				
+				<div class="tab-pane" id="tab-logs">
+					<div id="logs-block"></div>
+				</div>
+				
+				<div class="tab-pane" id="tab-missing">
+					<div id="missing-block"></div>
+				</div>
+				
+			  </div><!--tab-content block end-->
+        </form>
+		
+		<!--DISPUTE MODAL START-->
+		<div class="modal fade" id="image-list-modal" tabindex="-1" role="dialog">
+		  <div class="modal-dialog modal-lg" role="document">
+			<div class="modal-content">
+			  <div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title">IMAGES</h4>
+			  </div>
+			  <div class="modal-body">
+			  		<div id="image-list-block"></div>
+			  </div>
+			</div>
+		  </div>
+		</div>
+		<!--DISPUTE MODAL END-->
+		
+      </div>
+    </div>
+    <!--Panel Content End-->
+    <!--Huntbee copyrights-->
+    <div class="container-fluid">
+      <center>
+        <span class="help"><?php echo $heading_title; ?> - <?php echo $extension_version; ?> &copy; <a href="https://www.huntbee.com/">WWW.HUNTBEE.COM</a> | <a href="https://www.huntbee.com/get-support">SUPPORT</a></span>
+      </center>
+    </div>
+    <!--Huntbee copyrights end-->
+  </div>
+  <!--Container 1 start -->
+</div>
+<!--Main Content block end-->
+<style type="text/css"> <!--addtional css-->
+a {cursor:pointer;}
+</style>
+
+<style type="text/css">
+.loaddiv{margin:100px;color:#0099CC;}
+body{font-family: 'PT Sans', sans-serif; font-size: 13px;}
+</style>
+
+<script type="text/javascript">
+ var access_key = '<?php echo $token; ?>';
+ var token = '<?php echo $token; ?>';
+ var base_route = '<?php echo $base_route; ?>';
+ var store_id = '<?php echo $store_id; ?>';
+</script>
+
+
+<link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+<script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>	
+
+<script type="text/javascript">
+$(document).ready(function() {
+	loadBlock('dashboard');
+});
+</script>
+<script type="text/javascript">
+$('#logs-block').delegate('.pagination a', 'click', function(e) {
+	e.preventDefault();
+	$('#logs-block').load(this.href);
+});
+
+$('#image-list-block').delegate('.pagination a', 'click', function(e) {
+	e.preventDefault();
+	$('#image-list-block').load(this.href);
+});
+
+function loadBlock(name){
+	$('#'+name+'-block').html('<center><div class="loaddiv"><i class="fa fa-circle-o-notch fa-spin fa-3x fa-fw"></i></div></center>');
+	$('#'+name+'-block').load('index.php?route=<?php echo $base_route; ?>/hb_seoimage/'+name+'&token=<?php echo $token; ?>&store_id=<?php echo $store_id; ?>');
+}
+
+function show_image_list(table, type){
+	$('#image-list-block').html('<i class="fa fa-circle-o-notch fa-spin fa-2x fa-fw"></i>');
+	$('#image-list-block').load('index.php?route=<?php echo $base_route; ?>/hb_seoimage/image_list&token=<?php echo $token; ?>&store_id=<?php echo $store_id; ?>&table='+table+'&type='+type);
+	$('#image-list-modal').modal('show');
+}
+</script>
+
+<script type="text/javascript">
+function startprocess(url) {
+	$.ajax({
+		url: url,
+		dataType: 'json',
+		beforeSend: function() {
+			$('#button-rename').button('loading');
+		},
+		complete: function() {
+			$('#button-rename').button('reset');
+		},
+		success: function(json) {
+			$('.alert, .text-danger').remove();
+
+			if (json['error']) {
+				if (json['error']['products']) {
+					$('#msgoutput').html('<div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i> ' + json['error']['products'] + '<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+				}	
+			}
+
+			if (json['success']) {
+				$('#msgoutput').html('<div class="alert alert-success"><i class="fa fa-check-circle"></i>  ' + json['success'] + '<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+			}
+			
+			if (json['next']) {
+				startprocess(json['next']);
+			}else{
+				loadBlock('dashboard');
+			}
+		},
+		error: function(xhr, ajaxOptions, thrownError) {
+			alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+		}
+	});
+}
+
+function rename_images(type) {
+	$('#msgoutput').html('');
+	$.ajax({
+		  url: 'index.php?route=<?php echo $base_route; ?>/hb_seoimage/rename'+type+'images&token=<?php echo $token; ?>&store_id=<?php echo $store_id; ?>',
+		  dataType: 'json',
+		  	beforeSend: function() {
+				$('#button-'+type+'-rename').button('loading');
+			},
+			complete: function() {
+				$('#button-'+type+'-rename').button('reset');
+			},
+			  success: function(json) {
+				if (json['success']) {
+					$('#msgoutput').html('<div class="alert alert-success">'+json['success']+'<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+					loadBlock('dashboard');
+				}
+			  },			
+			  error: function(xhr, ajaxOptions, thrownError) {
+					alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+			  }
+	 });
+}
+
+function clear_logs(){
+	$('#msgoutput').html('<center><i class="fa fa-circle-o-notch fa-spin fa-3x fa-fw"></i></center>');
+	$.ajax({
+		url: 'index.php?route=<?php echo $base_route; ?>/hb_seoimage/clear_logs&token=<?php echo $token; ?>',
+        dataType: 'json',
+		success: function(json) {
+		  $('#msgoutput').html('<div class="alert alert-success"><i class="fa fa-check"></i> '+json['success']+'<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+		  loadBlock('logs');
+		  loadBlock('missing');
+		},			
+		error: function(xhr, ajaxOptions, thrownError) { alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText); }
+	 });	
+}
+
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js"></script>
+<script type="text/javascript">
+function setTooltip(btn, message) {
+  btn.tooltip('hide')
+    .attr('data-original-title', message)
+    .tooltip('show');
+}
+
+function hideTooltip(btn) {
+  setTimeout(function() {
+    btn.tooltip('hide');
+  }, 9000);
+}
+
+var clipboard = new ClipboardJS('.copybtn');
+
+clipboard.on('success', function(e) {
+	var btn = $(e.trigger);
+  	setTooltip(btn, 'Copied');
+  	//hideTooltip(btn);
+});
+</script>
+
+<script type="text/javascript">
+$('#store').on('change', function() {
+	window.location.href = 'index.php?route=<?php echo $base_route; ?>/hb_seoimage&token=<?php echo $token; ?>&store_id='+$('#store').val();
+});
+</script>
+<?php echo $footer; ?>

@@ -1,0 +1,49 @@
+<div class="main-menu-wrapper hidden-md hidden-lg">
+
+
+    <div class="closemenu">
+        <div class="icon-element mnu">
+
+            <a class="shortcut-wrapper menu-closer hidden-md hidden-lg">
+                <i class="icon-line-cross icon"></i>
+            </a>
+
+        </div>
+    </div>
+
+<ul class="mobile-top lang">
+     <li class="mobile-lang-curr "></li>
+    </ul>
+
+{% if secondary_menu %}
+<ul class="categories">
+    {% if secondary_menu == 'oc' %}
+        <!-- Default menu -->
+        {{ default_menu }}
+    {% elseif secondary_menu is defined %}
+        <!-- Mega menu -->
+        {% for key, row in secondary_menu_mobile %}
+            {% include 'basel/template/common/menus/mega_menu.twig' %}
+        {% endfor %}
+    {% endif %}
+</ul>
+{% endif %}
+<ul class="categories">
+    {% include 'basel/template/common/static_links.twig' %}
+</ul>
+
+{% if primary_menu %}
+<ul class="categories">
+{% if primary_menu == 'oc' %}
+<!-- Default menu -->
+{{ default_menu }}
+{% elseif primary_menu is defined %}
+<!-- Mega menu -->
+{% for key, row in primary_menu_mobile %}
+{% include 'basel/template/common/menus/mega_menu.twig' %}
+{% endfor %}
+{% endif %}
+</ul>
+{% endif %}
+</div>
+<span class="body-cover menu-closer"></span>

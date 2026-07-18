@@ -1,0 +1,49 @@
+{{ header }}
+<div class="container">
+  <ul class="breadcrumb">
+    {% for breadcrumb in breadcrumbs %}
+    <li> <a href="{{ breadcrumb.href }}"> {{ breadcrumb.text }} </a> </li>
+    {% endfor %}
+  </ul>
+  <div class="row">{{ column_left }}
+    {% if column_left and column_right %}
+    {% set class = 'col-sm-6' %}
+    {% elseif column_left or column_right %}
+    {% set class = 'col-md-9 col-sm-8' %}
+    {% else %}
+    {% set class = 'col-sm-12' %}
+    {% endif %}
+    <div id="content" class="{{ class }}">{{ content_top }}
+      <h1 id="page-title">{{ heading_title }}</h1>
+      
+      {% if categories %}
+      <p class="margin-b30"><strong>{{ text_index }}</strong>
+        {% for category in categories %}
+        &nbsp;&nbsp;&nbsp;<a href="index.php?route=product/manufacturer#{{ category.name }}">{{ category.name }}</a>
+        {% endfor %}
+      </p>
+      
+      {% for category in categories %}
+      <div class="brand-letter">
+      <h2 id="{{ category.name }}">{{ category.name }}</h2>
+      {% if category.manufacturer %}
+      {% for manufacturers in category.manufacturer|batch(4) %}
+      <div class="row">
+        {% for manufacturer in manufacturers %}
+        <div class="col-sm-3"><a href="{{ manufacturer.href }}"><img src="{{ manufacturer.image }}" alt="{{ manufacturer.name }}" /></a></div>
+        {% endfor %}
+      </div>
+      {% endfor %}
+      {% endif %}
+      </div>
+      {% endfor %}
+      {% else %}
+      <p>{{ text_empty }}</p>
+      <div class="buttons clearfix">
+        <div class="pull-right"><a href="{{ continue }}" class="btn btn-primary">{{ button_continue }}</a></div>
+      </div>
+      {% endif %}
+      {{ content_bottom }}</div>
+    {{ column_right }}</div>
+</div>
+{{ footer }}

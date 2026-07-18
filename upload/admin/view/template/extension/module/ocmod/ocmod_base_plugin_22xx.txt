@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<modification>
+    <name>Base Plugin from HuntBee [2000 - 2200]</name>
+    <version>{huntbee_version}</version>
+    <author>HuntBee OpenCart Services</author>
+    <link>http://www.huntbee.com</link>
+	<code>huntbee_base_plugin</code>
+				
+    <file path="admin/controller/common/menu.php">
+		<operation error="skip">
+			<search><![CDATA[$data['feed'] = $this->url->link('extension/feed',]]></search>
+			<add position="before"><![CDATA[
+			$data['text_apps'] = $this->language->get('text_apps');
+			$data['text_seo'] = $this->language->get('text_seo');
+			
+			$data['hbapps_menu'] = array();
+			$data['hbapps_menu'] = $this->load->controller('extension/hbapps/menu');
+			
+			$data['hbapps_menu'] = array();
+			$data['hbseo_menu'] = $this->load->controller('extension/hbseo/menu');
+			]]></add>
+		</operation>
+	</file>		
+	
+	<file path="admin/language/*/common/menu.php">
+		<operation>
+			<search><![CDATA[$_['text_feed']]]></search>
+			<add position="before"><![CDATA[
+			$_['text_apps']                        = 'Productivity Apps';
+			$_['text_seo']                        = 'SEO Extensions';
+			]]></add>
+		</operation>
+	</file>
+	
+	<file path="admin/view/template/common/menu.tpl">
+		<operation>
+			<search><![CDATA[<li id="sale"><a class="parent"><i class="fa fa-shopping-cart fa-fw"></i> <span><?php echo $text_sale; ?></span></a>]]></search>
+			<add position="before"><![CDATA[
+			<li id="hbapps"><a class="parent"><i class="fa fa-windows fa-fw"></i> <span><?php echo $text_apps; ?></span></a>
+			<ul>
+				<?php foreach ($hbapps_menu as $menu) { ?>
+					<li><a href="<?php echo $menu['href']; ?>"><?php echo $menu['name']; ?></a></li>
+				<?php } ?>
+			</ul>
+			</li>
+			
+			<li id="hbseo"><a class="parent"><i class="fa fa-google fa-fw"></i> <span><?php echo $text_seo; ?></span></a>
+			<ul>
+				<?php foreach ($hbseo_menu as $menu) { ?>
+					<li><a href="<?php echo $menu['href']; ?>"><?php echo $menu['name']; ?></a></li>
+				<?php } ?>
+			</ul>
+			</li>
+			]]></add>
+		</operation>
+	</file>
+</modification>

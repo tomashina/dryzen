@@ -1,0 +1,31 @@
+<table class="table table-hover table-bordered">
+	<thead>
+		<tr>
+			<td>{{ col_fields }}</td>
+			<td class="text-center">{{ col_total_items }}</td>
+			{% for language in languages %} 
+				<td class="text-center"><img src="language/{{ language['code'] }}/{{ language['code'] }}.png" title="{{ language['name'] }}" /> {{ language['name'] }}</td>
+			{% endfor %} 
+			<td class="text-center col-sm-2">{{ col_action }}</td>
+		</tr>
+	</thead>
+	<tbody>
+		{% for key,value in columns %} 
+		<tr>
+			<td><strong>{{ value }}</strong></td>
+			<td class="text-center">{% if key == 'attribute' %}{{ total_attribute_items }}{% else %}{{ total_items }}{% endif %}</td>
+			{% for language in languages %} 
+				{% if key == 'attribute' %}
+				<td class="text-center {{ total_attribute_items == item[key][language['language_id']]?'success':'warning' }}" id="cell_{{ type }}_{{ key }}_{{ language.language_id }}">{{ item[key][language['language_id']] }}</td>
+				{% else %}
+				<td class="text-center {{ total_items == item[key][language['language_id']]?'success':'warning' }}" id="cell_{{ type }}_{{ key }}_{{ language.language_id }}">{{ item[key][language['language_id']] }}</td>
+				{% endif %}
+			{% endfor %} 
+			<td class="text-center">
+				<a class="btn btn-sm btn-primary" onclick="generate('{{ type }}','{{ key }}', 0);" id="button_bulk_generate_{{ key }}"><i class="fa fa-play-circle-o"></i> {{ button_generate }}</a>
+				<a class="btn btn-sm btn-danger" onclick="clear_data('{{ type }}','{{ key }}')" id="button_bulk_clear_{{ key }}"><i class="fa fa-trash"></i> {{ button_clear }}</a>
+			</td>
+		</tr>
+		{% endfor %} 
+	</tbody>
+</table>

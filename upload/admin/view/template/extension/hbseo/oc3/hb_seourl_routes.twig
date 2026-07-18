@@ -1,0 +1,131 @@
+<div class="row" style="margin-bottom:10px;">
+    <div class="col-sm-12">
+        <div class="pull-right">
+            <a class="btn btn-success btn-sm" id="add-routes"><i class="fa fa-plus"></i>&nbsp;{{ button_add_routes }}</a>
+            <a class="btn btn-warning btn-sm" id="reset-routes"><i class="fa fa-repeat"></i>&nbsp;{{ button_reset_routes }}</a>
+            <a class="btn btn-danger btn-sm" id="delete-routes"><i class="fa fa-trash"></i>&nbsp;{{ button_delete_routes }}</a>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-sm-12"> 
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <td class="text-center" style="width: 1px;"><input type="checkbox" onclick="$('input[name*=\'selected\']').prop('checked', $(this).prop('checked'));" class="form-check-input"/></td>
+                        <td class="text-left">{{ tab_routes }}</td>
+
+                        {% for language in languages %}
+                        <td class=""><img src="language/{{ language.code }}/{{ language.code }}.png" title="{{ language.name }}"/>&nbsp;{{ language.name }}</td>
+                        {% endfor %}
+
+                        <td class="text-center col-sm-1">{{ text_action }}</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if (routes) %}
+                        {% for route in routes %}
+                            <tr>
+                                <td class="text-center" style="width: 1px;"><input type="checkbox" name="selected[]" value="{{ route.query }}" class="form-check-input"></td>
+                                <td>{{ route.query }}</td>
+                                {% for language in languages %}
+                                        <td class="col-sm-2">{{ route_array[route['query']][language['language_id']] }}</td>
+                                {% endfor %}
+                                <td class="text-center"><a class="btn btn-sm btn-info" onclick="edit_route('{{ route.query|escape('url') }}');"><i class="fa fa-pencil-square-o"></i>&nbsp;{{ button_edit }}</a></td>
+                            </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td class="text-center" colspan="{{ languages|length + 2 }}">{{ text_no_records }}</td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+$('#add-routes').click(function() {
+  $('#edit-route-block').load('index.php?route={{ base_route }}/hb_seourl/edit_route&user_token={{ user_token }}&store_id={{ store_id }}');
+  $('#update-route-button').hide();
+  $('#add-route-button').show();
+  $('#modal-edit-route').modal('show');
+});
+
+$('#add-route-button').click(function() {
+  $('#editform-result').html('');
+  $.post('index.php?route={{ base_route }}/hb_seourl/update_route&user_token={{ user_token }}&store_id={{ store_id }}', $('#form-edit-route').serialize(),function(json) {
+    if (json['success']) {
+		$('#editform-result').html('<div class="alert alert-success"><i class="fa fa-check"></i>&nbsp;'+json['success']+'<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+        loadBlock('routes');
+    } else
+    if (json['warning']) {
+        $('#editform-result').html('<div class="alert alert-danger">'+json['error']+'<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+    }
+  },'json');
+});
+
+$('#reset-routes').click(function() {
+    $('.alert-dismissible').remove(); 
+    if (confirm("{{ text_confirm_reset_routes }}")) {
+        
+        $.ajax({
+            type: 'get',
+            url: 'index.php?route={{ base_route }}/hb_seourl/reset_routes&user_token={{ user_token }}&store_id={{ store_id }}',
+            dataType: 'json',	
+            beforeSend: function () {
+                $('#reset-routes').button('loading');
+            },	
+            complete: function () {
+                $('#reset-routes').button('reset');
+            },
+            success: function(json) {
+                if (json['success']) {
+                    $('#msgoutput').html('<div class="alert alert-success"><i class="fa fa-check"></i>&nbsp;'+json['success']+'<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+                    loadBlock('routes');
+                }
+                if (json['error']) {
+                    $('#msgoutput').html('<div class="alert alert-danger">'+json['error']+'<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+                }
+            },			
+            error: function(xhr, ajaxOptions, thrownError) { alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText); }
+        });
+    }
+});
+
+$('#delete-routes').click(function() {
+    $('.alert-dismissible').remove(); 
+    if (confirm("{{ text_confirm_delete_routes }}")) {
+	var arraydata = $('input[name="selected[]"]:checked').map(function(){
+        return this.value;
+    }).get();
+	
+	$.ajax({
+        type: 'post',
+        url: 'index.php?route={{ base_route }}/hb_seourl/delete_route&user_token={{ user_token }}&store_id={{ store_id }}',
+        data: {selected : arraydata},
+        dataType: 'json',	
+        beforeSend: function () {
+            $('#delete-routes').button('loading');
+        },	
+        complete: function () {
+            $('#delete-routes').button('reset');
+        },
+        success: function(json) {
+            if (json['success']) {
+                    $('#msgoutput').html('<div class="alert alert-success"><i class="fa fa-check"></i>&nbsp;'+json['success']+'<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+                    loadBlock('routes');
+            }
+            if (json['error']) {
+                    $('#msgoutput').html('<div class="alert alert-danger">'+json['error']+'<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+            }
+        },			
+		  error: function(xhr, ajaxOptions, thrownError) { alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText); }
+	 });
+  }
+});
+</script>

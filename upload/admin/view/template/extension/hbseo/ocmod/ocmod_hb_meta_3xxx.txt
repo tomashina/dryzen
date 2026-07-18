@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<modification>
+    <name>{name}</name>
+    <version>{version}</version>
+    <author>HuntBee OpenCart Services</author>
+    <link>https://www.huntbee.com</link>
+	<code>huntbee_seo_metatags_ocmod</code>
+	
+	<file path="catalog/controller/common/home.php">
+        <operation>
+            <search><![CDATA[$this->document->setTitle($this->config->get('config_meta_title'));]]></search>
+            <add position="replace"><![CDATA[$this->document->setTitle($this->config->get('hb_metatags_hmtitle'.$this->config->get('config_language_id')));]]></add>
+        </operation>
+        <operation>
+            <search><![CDATA[$this->document->setDescription($this->config->get('config_meta_description'));]]></search>
+            <add position="replace"><![CDATA[$this->document->setDescription($this->config->get('hb_metatags_hmdesc'.$this->config->get('config_language_id')));]]></add>
+        </operation>
+        <operation>
+            <search><![CDATA[$this->document->setKeywords($this->config->get('config_meta_keyword'));]]></search>
+            <add position="replace"><![CDATA[$this->document->setKeywords($this->config->get('hb_metatags_hmkeyword'.$this->config->get('config_language_id')));]]></add>
+        </operation>
+    </file>
+    
+    <file path="catalog/controller/common/header.php">
+        <operation>
+            <search><![CDATA[$data['direction'] = $this->language->get('direction');]]></search>
+            <add position="after"><![CDATA[
+            if (isset($this->request->get['route'])) {
+                $hb_meta_routes = $this->db->query("SELECT * FROM  `".DB_PREFIX."hb_route_meta` WHERE `route` = '".$this->db->escape($this->request->get['route'])."' AND `store_id` = '".(int)$this->config->get('config_store_id')."' AND `language_id` = '".(int)$this->config->get('config_language_id')."' LIMIT 1");
+                if ($hb_meta_routes->num_rows == 1) {
+                    if (isset($this->request->get['page'])) {
+                        $hb_page_number = ' ['.(int)$this->request->get['page'].']';
+                    } else {
+                        $hb_page_number = '';
+                    }
+                    $data['title'] = $hb_meta_routes->row['meta_title'].$hb_page_number;
+                    $data['description'] = $hb_meta_routes->row['meta_description'].$hb_page_number;
+                    $data['keywords'] = $hb_meta_routes->row['meta_keyword'].$hb_page_number;
+                }
+            }
+            ]]></add>
+        </operation>
+    </file>
+    
+    <file path="catalog/controller/product/search.php">
+        <operation>
+            <search><![CDATA[$data['limit'] = $limit;]]></search>
+            <add position="after"><![CDATA[
+            if ($data['products']){
+                    $language_id = $this->config->get('config_language_id');
+                    $total_results = $product_total;
+                    $page_number = 1;
+                    if (isset($this->request->get['page'])) {
+                        $page_number = $this->request->get['page'];
+                    }
+                    
+                    if (isset($this->request->get['tag'])) {
+                        $tagword = $this->request->get['tag'];
+                        $hbst_meta_title = $this->config->get('hb_metatags_tgtitle'.$language_id);
+                        $hbst_meta_description = $this->config->get('hb_metatags_tgdesc'.$language_id);
+                        $hbst_meta_keyword = $this->config->get('hb_metatags_tgkeyword'.$language_id);
+                    }
+                    if (isset($this->request->get['search'])) {
+                        $tagword = $this->request->get['search'];
+                        $hbst_meta_title = $this->config->get('hb_metatags_srtitle'.$language_id);
+                        $hbst_meta_description = $this->config->get('hb_metatags_srdesc'.$language_id);
+                        $hbst_meta_keyword = $this->config->get('hb_metatags_srkeyword'.$language_id);
+                    }
+                    
+                    $hbst_meta_title = str_replace('{tag}',$tagword, $hbst_meta_title);
+                    $hbst_meta_title = str_replace('{total}',$total_results, $hbst_meta_title);
+                    $hbst_meta_title = str_replace('{page}',$page_number, $hbst_meta_title);
+                    
+                    $hbst_meta_description = str_replace('{tag}',$tagword, $hbst_meta_description);
+                    $hbst_meta_description = str_replace('{total}',$total_results, $hbst_meta_description);
+                    $hbst_meta_description = str_replace('{page}',$page_number, $hbst_meta_description);
+                                    
+                    $keyword = '';
+                    $separator = ' ';
+                    foreach ($data['products'] as $product){
+                        $keyword .= $product['name'].$separator;
+                    }
+                    $keyword = rtrim($keyword,$separator);
+                    
+                    $hbst_meta_keyword = str_replace('{products}',$keyword, $hbst_meta_keyword);
+                    if (!empty($hbst_meta_title)){
+                        $this->document->setTitle($hbst_meta_title);
+                    }
+                    if (!empty($hbst_meta_description)){
+                        $this->document->setDescription($hbst_meta_description);
+                    }
+                    if (!empty($hbst_meta_keyword)){	
+                        $this->document->setKeywords($hbst_meta_keyword);
+                    }
+                    
+            }							
+            ]]></add>
+        </operation>
+    </file>
+    
+    <!--PAGINATED META FIX-->
+    <file path="catalog/controller/product/category.php">
+        <operation>
+            <search><![CDATA[$this->document->setTitle($category_info['meta_title']);]]></search>
+            <add position="replace"><![CDATA[
+            if (isset($this->request->get['page'])) {
+                $language_id = $this->config->get('config_language_id');
+                $hbfd_meta_title = $this->config->get('hb_metatags_pgtitle'.$language_id);
+                $hbfd_meta_description = $this->config->get('hb_metatags_pgdesc'.$language_id);
+                
+                if (isset($hbfd_meta_title)){
+                    $hbfd_meta_title = str_replace('{page}',$this->request->get['page'], $hbfd_meta_title);
+                    $hbfd_meta_title = str_replace('{meta}',$category_info['meta_title'], $hbfd_meta_title);
+                    $this->document->setTitle($hbfd_meta_title);
+                }					
+            } else {
+                $this->document->setTitle($category_info['meta_title']);
+            }					
+            ]]></add>
+        </operation>
+            <operation>
+            <search><![CDATA[$this->document->setDescription($category_info['meta_description']);]]></search>
+            <add position="replace"><![CDATA[
+            if (isset($this->request->get['page'])) {					
+                if (isset($hbfd_meta_description)){
+                    $hbfd_meta_description = str_replace('{page}',$this->request->get['page'], $hbfd_meta_description);
+                    $hbfd_meta_description = str_replace('{meta}',$category_info['meta_description'], $hbfd_meta_description);
+                    $this->document->setDescription($hbfd_meta_description);
+                }					
+            } else {
+                $this->document->setDescription($category_info['meta_description']);
+            }					
+            ]]></add>
+        </operation>
+    </file>
+    
+    <file path="catalog/controller/product/special.php">
+        <operation>
+            <search><![CDATA[$this->document->setTitle($this->language->get('heading_title'));]]></search>
+            <add position="replace"><![CDATA[
+            if (isset($this->request->get['page'])) {
+                $language_id = $this->config->get('config_language_id');
+                $hbfd_meta_title = $this->config->get('hb_metatags_pgtitle'.$language_id);
+                $hbfd_meta_description = $this->config->get('hb_metatags_pgdesc'.$language_id);
+                
+                if (isset($hbfd_meta_title)){
+                    $hbfd_meta_title = str_replace('{page}',$this->request->get['page'], $hbfd_meta_title);
+                    $hbfd_meta_title = str_replace('{meta}',$this->language->get('heading_title'), $hbfd_meta_title);
+                    $this->document->setTitle($hbfd_meta_title);
+                }					
+            } else {
+                $this->document->setTitle($this->language->get('heading_title'));
+            }					
+            ]]></add>
+        </operation>
+    </file>
+
+</modification>

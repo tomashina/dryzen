@@ -1,0 +1,377 @@
+{{ header }}{{ column_left }}
+<div id="content">
+  <div class="page-header">
+    <div class="container-fluid">
+       <div class="pull-right">
+        <a class="btn btn-primary" onclick="$('#save').val('stay');$('#form-showintabs').submit();" data-toggle="tooltip" title="{{ button_save }}"><i class="fa fa-save"></i></a>
+        </div>
+      <h1>{{ heading_title }}</h1>
+      <ul class="breadcrumb">
+        {% for breadcrumb in breadcrumbs %}
+        <li><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+        {% endfor %}
+      </ul>
+     </div>
+     </div>
+    <div class="container-fluid">
+  {% if error_warning %}
+  <div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i> {{ error_warning }}
+  <button type="button" class="close" data-dismiss="alert">&times;</button>
+  </div>
+  {% endif %}
+  {% if success %}
+  <div class="alert alert-success"><i class="fa fa-exclamation-circle"></i> {{ success }}
+  <button type="button" class="close" data-dismiss="alert">&times;</button>
+  </div>
+  {% endif %}
+  
+  <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">{{ heading_title }}</h3>
+      </div>
+      <div class="panel-body">
+      <div class="row">
+      
+      <div class="col-sm-12">
+      <div class="bs-callout bs-callout-info">
+      {{ text_info }}
+      <a href="{{ modules_url }}" target="_blank">{{ text_to_modules }}</a>
+      </div>
+      </div>
+      
+      <form action="{{ action }}" method="post" enctype="multipart/form-data" id="form-showintabs" class="form-vertical">
+        <div class="col-sm-2">
+      		<ul class="nav nav-pills nav-stacked" id="tab" data-tabs="tabs">
+                {% set tab_row = 1 %}
+                {% for keyTab, tab in tabs %}
+                {% set tab_row = tab_row + 1 %}
+        		<li><a href="#tab-tab-{{ keyTab }}" data-toggle="tab"><i class="fa fa-minus-circle" onclick="$('a[href=\'#tab-tab-{{ keyTab }}\']').parent().remove(); $('#tab-tab-{{ keyTab }}').remove(); $('#tab a:first').tab('show');"></i> {{ tab.tab_title }}</a></li>
+        		{% endfor %}
+                <li id="tab-add" style="cursor:pointer"><a onclick="addTab();"><i class="fa fa-plus-circle"></i> {{ button_add_tab }}</a></li>        	</ul>
+        </div> <!-- col-sm-2 -->
+     <div class="col-sm-10">
+        <div class="tab-content first">
+        {% for keyTab, tab in tabs %}
+        {% set tab_row = tab_row + 1 %}
+        <div class="tab-pane" id="tab-tab-{{ keyTab }}">
+        
+        <h4>{{ entry_title }}</h4>
+            <div class="form-group">
+            {% for language in languages %}<div class="input-group">
+            <span class="input-group-addon">
+            <img src="language/{{ language.code }}/{{ language.code }}.png" title="{{ language.language_id }}" />
+            </span>
+            <input class="form-control" type="text" name="showintabs_tab[{{ keyTab }}][title][{{ language.language_id }}]" value="{{ tab.title[language.language_id] }}" class="{% if language.language_id == language_admin_id %}language-title{% endif %}" />
+            </div>
+            {% endfor %}
+            </div>
+        
+                     <h4 class="source">{{ entry_source }}</h4>          
+                                <fieldset>
+                                  <legend>
+                                    <input type="radio" id="select_product{{ keyTab }}" name="showintabs_tab[{{ keyTab }}][data_source]" value="SP" 
+                                    {% if tab.data_source is empty or tab.data_source == "SP" %} checked="checked"{% endif %} />
+                                    <label for="select_product{{ keyTab }}" >{{ header_products_select }}</label>
+                                  </legend>
+                                  <div class="field_cont"{% if tab.data_source is defined and tab.data_source != "SP" %} style="display:none"{% endif %}>
+                                      <label>{{ entry_products }}</label>
+                                      <input type="text" class="form-control" name="products" value="" id="{{ keyTab }}"/>
+                                    <div id="products-tabs-{{ keyTab }}" class="well well-sm" style="height: 150px; overflow: auto;">
+                                    {% if tab.products %}
+                                    {% for product_tab in tab.products %}
+                                    <div id="product-tabs-{{ keyTab }}-{{ product_tab.product_id }}"><i class="fa fa-minus-circle"></i> {{ product_tab.name }}
+                                    <input type="hidden" name="showintabs_tab[{{ keyTab }}][products][{{ product_tab.product_id }}][product_id]" value="{{ product_tab.product_id }}" />
+                                    </div>
+                                    {% endfor %}
+                                    {% endif %}
+                                    </div>
+                                  </div>
+                                </fieldset>
+                                <fieldset>
+                                  
+                                  <legend>
+                                    <input type="radio" id="predef_groups{{ keyTab }}" name="showintabs_tab[{{ keyTab }}][data_source]" value="PG" {% if tab.data_source == "PG" %} checked="checked"{% endif %} />
+                                    <label for="predef_groups{{ keyTab }}">{{ header_predefined_groups }}</label>
+                                  </legend>
+                                  <div class="field_cont" {% if tab.data_source is defined and tab.data_source != 'PG' %} style="display:none"{% endif %} >
+                                    <label>{{ entry_group }}</label>
+                                    <select name="showintabs_tab[{{ keyTab }}][product_group]" class="form-control">
+                                      <option value="BS" {% if tab.data_source is defined and tab.product_group == 'BS' %} selected="selected"{% endif %} >{{ text_best_seller }}</option>
+                                      <option value="LA" {% if tab.data_source is defined and tab.product_group == 'LA' %} selected="selected"{% endif %} >{{ text_latest_products }}</option>
+                                      <option value="SP" {% if tab.data_source is defined and tab.product_group == 'SP' %} selected="selected"{% endif %} >{{ text_special_products }}</option>
+                                      <option value="PP" {% if tab.data_source is defined and tab.product_group == 'PP' %} selected="selected"{% endif %} >{{ text_popular_products }}</option>
+                                    </select>
+                                  </div>
+                                </fieldset>
+                                <fieldset>
+                                
+                                  <legend>
+                                    <input type="radio" id="custom_query{{ keyTab }}" name="showintabs_tab[{{ keyTab }}][data_source]" value="CQ" {% if tab.data_source is defined and tab.data_source == 'CQ' %} checked="checked" {% endif %}/>
+                                    <label for="custom_query{{ keyTab }}">{{ header_custom_query }}</label>
+                                  </legend>
+                                  
+                                  <div class="field_cont" {% if tab.data_source is defined and tab.data_source != 'CQ' %} style="display:none"{% endif %} >
+                                    <label>{{ text_category }}</label>
+                                      <select name="showintabs_tab[{{ keyTab }}][filter_category]" class="form-control">
+                                          <option value="ALL">{{ text_all_categories }}</option>
+                                        {% for category in categories %}
+                                          <option value="{{ category.category_id }}" {% if tab.filter_category is defined and tab.filter_category == category.category_id %} selected="selected"{% endif %} >{{ category.name }}</option>
+                                        {% endfor %}
+                                      </select>
+                                      
+                                      <label>{{ text_manufacturer }}</label>
+                                      <select name="showintabs_tab[{{ keyTab }}][filter_manufacturer]" class="form-control">
+                                          <option value="ALL">{{ text_all_manufacturer }}</option>
+                                        {% for manufacturer in manufacturers %}
+                                          <option value="{{ manufacturer.manufacturer_id }}" {% if tab.filter_manufacturer is defined and tab.filter_manufacturer == manufacturer.manufacturer_id %} selected="selected"{% endif %} >{{ manufacturer.name }}</option>
+                                        {% endfor %}
+                                      </select>
+                                      
+                                      <label>{{ entry_sort_query }}</label>
+                                      <select class="margin_top form-control" name="showintabs_tab[{{ keyTab }}][sort]">
+                                          <option value="pd.name" {% if tab.sort is defined and tab.sort == 'pd.name' %} selected="selected"{% endif %} >{{ text_sort_name }}</option>
+                                          <option value="rating" {% if tab.sort is defined and tab.sort == 'rating' %} selected="selected"{% endif %} >{{ text_sort_rating }}</option>
+                                          <option value="sort_order" {% if tab.sort is defined and tab.sort == 'sort_order' %} selected="selected"{% endif %} >{{ text_sort_sort_order }}</option>
+                                          <option value="p.price" {% if tab.sort is defined and tab.sort == 'p.price' %} selected="selected"{% endif %} >{{ text_sort_price }}</option>
+                                          <option value="p.date_added" {% if tab.sort is defined and tab.sort == 'p.date_added' %} selected="selected"{% endif %} >{{ text_sort_added }}</option>  
+                                      </select>
+                                   </div>
+                                </fieldset>
+                        </div>
+                    {% endfor %}
+      </form>
+    </div>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+</div>
+
+{{ footer }}<script type="text/javascript"><!--
+function addTab(){
+  //Caculamos numero de pestaña es valor de ultima + 1
+  if(! $('input[name=\'products\']').last().attr('id')){
+    var tab_row = 1;
+  }else{
+    var tab_row = parseInt($('input[name=\'products\']').last().attr('id'), 10) + 1;
+  }
+
+  //COmponemos html de una pestaña
+  var html = '';
+  
+  html  = '<div class="tab-pane" id="tab-tab-' + tab_row + '">';
+  html += '<h4>{{ entry_title }}</h4>';
+  html += '<div class="form-group">';
+  
+  {% for language in languages %}
+  html += '<div class="input-group">';
+  html += '<span class="input-group-addon">';
+  html += '<img src="language/{{ language.code }}/{{ language.code }}.png" title="{{ language.name }}" /></span>';
+  html += '</span>';
+  html += '<input class="form-control" type="text" name="showintabs_tab[' + tab_row + '][title][{{ language.language_id }}]" value="" {% if language.language_id == language_admin_id %} class="language-title"{% endif %} />';
+  html += '</div>';
+  {% endfor %}
+  html += '</div>';
+  html += '<h4 class="source">{{ entry_source }}</h4>';
+  html += '<fieldset><legend>';
+  html += '<input type="radio" id="select_product' + tab_row + '" name="showintabs_tab[' + tab_row + '][data_source]" value="SP" checked="checked"/> <label for="select_product' + tab_row + '">{{ header_products_select }}</label> </legend>';
+  html += '<div class="field_cont">';
+  html += '<label>{{ entry_products }}</label>';
+  html += '<input type="text" class="form-control" name="products" value="" id="' + tab_row + '"/>';
+  html += '<div id="products-tabs-' + tab_row + '" class="well well-sm" style="height: 150px; overflow: auto;"></div>';
+  html += '</div>';
+  html += '</fieldset><fieldset><legend>';
+  
+  html += '<input type="radio" id="predef_groups' + tab_row + '" name="showintabs_tab[' + tab_row + '][data_source]" value="PG" /> <label for="predef_groups' + tab_row + '">{{ header_predefined_groups }}</label></legend>';
+  html += '<div class="field_cont" style="display:none" >';
+  html += '<label>{{ entry_group }}</label>';
+  html += '<select class="form-control" name="showintabs_tab[' + tab_row + '][product_group]">';
+  html += '<option value="BS" >{{ text_best_seller }}</option>';
+  html += '<option value="LA" >{{ text_latest_products }}</option>';
+  html += '<option value="SP" >{{ text_special_products }}</option>';
+  html += '<option value="PP" >{{ text_popular_products }}</option>';
+  html += '</select></div></fieldset><fieldset>';
+  
+  html += '<legend>';                  
+  html += '<input type="radio" id="custom_query' + tab_row + '" name="showintabs_tab[' + tab_row + '][data_source]" value="CQ" /> <label for="custom_query' + tab_row + '"> {{ header_custom_query }}</label> </legend>';
+  html += '<div class="field_cont" style="display:none">';
+  
+  html += '<label>{{ text_category }}</label>';
+  html += '<select class="form-control" name="showintabs_tab[' + tab_row + '][filter_category]">';
+  html += '<option value="ALL">{{ text_all_categories }}</option>';
+  {% for category in categories %}
+  html += '<option value="{{ category.category_id }}" >{{ category.name|escape('js') }}</option>';
+  {% endfor %}
+  html += '</select>';
+
+  html += '<label>{{ text_manufacturer }}</label>';
+  html += '<select name="showintabs_tab[' + tab_row + '][filter_manufacturer]" class="form-control">';
+  html += '<option value="ALL">{{ text_all_manufacturer }}</option>';
+  {% for manufacturer in manufacturers %}
+  html += '<option value="{{ manufacturer.manufacturer_id }}">{{ manufacturer.name|escape('js') }}</option>';
+  {% endfor %}
+  html += '</select>';
+  html += '<label>{{ entry_sort_query }}</label>';
+  html += '<select class="form-control" name="showintabs_tab[' + tab_row + '][sort]">';
+  html += '<option value="pd.name" >{{ text_sort_name }}</option>';
+  html += '<option value="rating" >{{ text_sort_rating }}</option>';
+  html += '<option value="sort_order" >{{ text_sort_sort_order }}</option>';
+  html += '<option value="p.price" >{{ text_sort_price }}</option>';
+  html += '<option value="p.date_added" >{{ text_sort_added }}</option>';  
+  html += '</select></div></fieldset>';
+  html += '</div>';
+
+  $('.tab-content.first').append(html);
+  
+  $('#tab-add').before('<li><a href="#tab-tab-' + tab_row + '" data-toggle="tab"><i class="fa fa-minus-circle" onclick="$(\'a[href=\\\'#tab-tab-' + tab_row + '\\\']\').parent().remove(); $(\'#tab-tab-' + tab_row + '\').remove(); $(\'#tab a:first\').tab(\'show\');"></i> ' + '{{ text_tab }}' + tab_row + '</a></li>');
+	
+  $('#tab a[href=\'#tab-tab-' + tab_row + '\']').tab('show');
+  
+  //Enable autocomplete
+  $('input[name=\'products\']').autocomplete(autocomp_cfg);
+  
+  //Remove products from individual list
+  $('.well').delegate('.fa-minus-circle', 'click', function() {
+  $(this).parent().remove();
+  });
+
+  //open/close the filter methods
+  $('legend > input').on('change', function() {
+  $(this).closest('div').find('div.field_cont').hide();
+  $(this).closest('fieldset').find('div.field_cont').fadeIn();
+  });
+}
+
+// show first tab on page load
+$('#tab li:first-child a').tab('show');
+//Autocomplete
+var autocomp_cfg = {
+  delay: 500,
+  source: function(request, response) {
+    $.ajax({
+      url: 'index.php?route=extension/basel/productgroups/autocomplete&user_token={{ token }}&filter_name=' +  encodeURIComponent(request),
+      dataType: 'json',
+      success: function(json) {   
+        response($.map(json, function(item) {
+          return {
+            label: item.name,
+            value: item.product_id
+          }
+        }));
+      }
+    });
+  }, 
+  
+  select: function(item) {
+    var tab_row = $(this).attr('id');
+
+    $('#product-tabs-' + tab_row + '-' + item.value).remove();
+
+    var prodElement = '';
+    prodElement += '<div id="product-tabs-' + tab_row + '-' + item.value + '">' + '<i class="fa fa-minus-circle"></i> ' + item.label ;
+    prodElement += '  <input type="hidden" name="showintabs_tab[' + tab_row + '][products][' + item.value + '][product_id]" value="' + item.value + '" />';
+    prodElement += '</div>';
+
+    $('#products-tabs-' + tab_row).append(prodElement);
+        
+    return false;
+  },
+  focus: function(event, ui) {
+      return false;
+  }
+};
+// Autocomplet de productos
+$('input[name=\'products\']').autocomplete(autocomp_cfg);
+
+//Delete de productos
+$('.well').delegate('.fa-minus-circle', 'click', function() {
+	$(this).parent().remove();
+});
+//--></script>
+<script type="text/javascript"><!--
+//open/close the filter methods
+$('legend > input').on('change', function() {
+  $(this).closest('div').find('div.field_cont').hide();
+  $(this).closest('fieldset').find('div.field_cont').fadeIn();
+});
+//--></script> 
+<script type="text/javascript"><!--
+//cambio de titulo de pestaña cuando escribe el user
+$('.language-title').on('keyup input paste', function() {
+  var href = $(this).closest('div').attr('id');
+  $('a[href="#' + href + '"] > div').text($(this).val());
+});
+//--></script> 
+<script type="text/javascript"><!--
+//control delete pestañas
+function removeTab(TabId) {
+  $('#tab-' + TabId ).remove(); 
+  $('#tab-tab-' + TabId).remove(); 
+  $('.vtabs a:first').trigger('click');
+  $('input[value="' + TabId + '"]:checkbox').parent().remove(); 
+}
+//--></script>
+<style>
+.panel-body {
+    padding-bottom: 35px;
+}
+legend {
+	border-bottom:none;
+	background:#f3f3f3;
+	line-height:20px;
+	padding:10px;
+	border-radius:5px;
+	border:1px solid #dddddd;
+	margin-bottom:10px;
+}
+legend label {
+	font-size:14px;
+	font-weight:bold;
+	cursor:pointer;
+	color:#888888;
+	margin:0px;
+	padding-bottom:5px;
+	vertical-align:top;
+}
+legend input[type="radio"]:checked+label { 
+	color:#222222;
+}
+.field_cont {
+	padding-bottom:20px;
+}
+label {
+	font-weight:normal;
+	font-size:14px;
+	margin-top:10px;
+}
+h4 {
+	font-size:18px;
+}
+h4.source {
+	margin-top:25px;
+}
+.well {
+	margin-bottom:0;
+}
+.form-group {
+	padding-top:0;
+}
+.bs-callout {
+    padding: 20px;
+    margin: 5px 0 25px 0;
+    border: 1px solid #eee;
+    border-left-width: 5px;
+    border-radius: 3px;
+}
+.bs-callout h4 {
+    margin-top: 0;
+    margin-bottom: 5px;
+}
+.bs-callout-info {
+    border-left-color: #5bc0de;
+}
+.bs-callout-info h4 {
+    color: #5bc0de;
+}
+</style>

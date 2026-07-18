@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="utf-8"?>
+<modification>
+    <name>{name}</name>
+    <version>{version}</version>
+    <author>HuntBee OpenCart Services</author>
+    <link>https://www.huntbee.com</link>
+	<code>hb_crawl_ocmod</code>
+	
+	<file path="system/library/document.php">
+        <operation>
+            <search><![CDATA[public function addLink($href, $rel) {]]></search>
+            <add position="before"><![CDATA[
+				public function setHbmeta($name, $content) {
+                    $this->hbmeta[] = array(
+                        'name'   => $name,
+                        'content' => $content
+                     );
+                }
+                
+                public function getHbmeta() {
+                    return $this->hbmeta;
+                }
+                
+                ]]>
+            </add>
+        </operation>
+        <operation>
+            <search><![CDATA[private $keywords;]]></search>
+            <add position="after"><![CDATA[
+				private $hbmeta = array();
+				]]></add>
+        </operation>
+    </file>
+    
+	<file path="catalog/controller/common/header.php">
+        <operation>
+            <search><![CDATA[$data['title'] = $this->document->getTitle();]]></search>
+            <add position="before"><![CDATA[
+				$data['hbmetas'] = is_array($this->document->getHbmeta()) ? $this->document->getHbmeta() : '';
+                if (isset($this->request->get['route']) && $this->config->get('hb_crawl_status')) {
+                    $route = $this->request->get['route'];
+                    if (($meta = $this->db->query("SELECT `meta` FROM `" . DB_PREFIX . "seo_crawl_routes` WHERE `route` = '" . $this->db->escape($route) . "' LIMIT 1")->row['meta'] ?? false)) {
+                        $data['hbmetas'][0] = ['name' => 'robots', 'content' => $meta];
+                    } elseif (array_intersect($route === 'product/search' ? ['sort', 'limit'] : ['sort', 'limit', 'tag', 'search'], array_keys($this->request->get))) {
+                        $data['hbmetas'][0] = ['name' => 'robots', 'content' => 'noindex, nofollow'];
+                    }
+                }
+				]]>
+            </add>
+        </operation>
+    </file>
+    
+    <file path="catalog/view/theme/*/template/common/header.twig">
+        <operation>
+            <search><![CDATA[<title>]]></search>
+            <add position="before"><![CDATA[
+                {% if hbmetas is iterable %}
+                    {% for hbmeta in hbmetas %} 
+                    <meta name="{{ hbmeta['name'] }}" content="{{ hbmeta['content'] }}" />
+                    {% endfor %} 
+                {% endif %} 
+				]]>
+            </add>
+        </operation>
+    </file>
+	
+    <file path="catalog/controller/product/special.php">
+        <operation>
+            <search><![CDATA[foreach ($results as $result)]]></search>
+            <add position="before"><![CDATA[
+            if ($this->config->get('hb_crawl_status')) {
+                if (empty($results)) {
+                    $meta_robot_tag = $this->config->get('hb_crawl_notfound');
+			    }else{
+			        $meta_robot_tag = $this->config->get('hb_crawl_special');
+			    }
+			    
+			    if ($meta_robot_tag != 'No Tag') { 
+		            $this->document->setHbmeta('robots', $meta_robot_tag);
+		        }
+			}
+			]]></add>
+        </operation>
+    </file>
+    
+    <file path="catalog/controller/product/search.php">
+        <operation>
+            <search><![CDATA[foreach ($results as $result)]]></search>
+            <add position="before"><![CDATA[
+            if ($this->config->get('hb_crawl_status')) {
+                if (empty($results)) {
+                    $meta_robot_tag = $this->config->get('hb_crawl_notfound');
+			    }else{
+			        if (isset($this->request->get['search'])) {
+			            $meta_robot_tag = $this->config->get('hb_crawl_search');
+		            }else{
+		                $meta_robot_tag = $this->config->get('hb_crawl_tag');
+		            }
+			    }
+			    
+			    if ($meta_robot_tag != 'No Tag') { 
+		            $this->document->setHbmeta('robots', $meta_robot_tag);
+		        }
+			}
+			]]></add>
+        </operation>
+    </file>
+    
+    <file path="catalog/controller/product/category.php">
+        <operation>
+            <search><![CDATA[$results = $this->model_catalog_product->getProducts($filter_data);]]></search>
+            <add position="after"><![CDATA[
+			    if ($this->config->get('hb_crawl_status')) {
+                    if (empty($results)) {
+                        $meta_robot_tag = $this->config->get('hb_crawl_notfound');
+    			    }else{
+    			        $meta_robot_tag = $this->config->get('hb_crawl_category');
+    			    }
+    			    
+    			    if ($meta_robot_tag != 'No Tag') { 
+    		            $this->document->setHbmeta('robots', $meta_robot_tag);
+    		        }
+    			}
+			]]></add>
+        </operation>
+        
+        <operation>
+            <search><![CDATA[$this->response->setOutput($this->load->view('error/not_found', $data));]]></search>
+            <add position="before"><![CDATA[
+			    if ($this->config->get('hb_crawl_status')) {
+                    $meta_robot_tag = $this->config->get('hb_crawl_notfound');
+    			    
+    			    if ($meta_robot_tag != 'No Tag') { 
+    		            $this->document->setHbmeta('robots', $meta_robot_tag);
+    		        }
+    			}
+			]]></add>
+        </operation>
+    </file>
+    
+    <file path="catalog/controller/product/product.php">
+        <operation>
+            <search><![CDATA[if ($product_info) {]]></search>
+            <add position="after"><![CDATA[
+			    if ($this->config->get('hb_crawl_status')) {
+                    $meta_robot_tag = $this->config->get('hb_crawl_product');
+    			    
+    			    if ($meta_robot_tag != 'No Tag') { 
+    		            $this->document->setHbmeta('robots', $meta_robot_tag);
+    		        }
+    			}
+			]]></add>
+        </operation>
+        
+        <operation>
+            <search><![CDATA[$this->response->setOutput($this->load->view('error/not_found', $data));]]></search>
+            <add position="before"><![CDATA[
+			    if ($this->config->get('hb_crawl_status')) {
+                    $meta_robot_tag = $this->config->get('hb_crawl_notfound');
+    			    
+    			    if ($meta_robot_tag != 'No Tag') { 
+    		            $this->document->setHbmeta('robots', $meta_robot_tag);
+    		        }
+    			}
+			]]></add>
+        </operation>
+    </file>
+    
+    <file path="catalog/controller/product/manufacturer.php">
+        <operation>
+            <search><![CDATA[$results = $this->model_catalog_manufacturer->getManufacturers();]]></search>
+            <add position="after"><![CDATA[
+			    if ($this->config->get('hb_crawl_status')) {
+                    if (empty($results)) {
+                        $meta_robot_tag = $this->config->get('hb_crawl_notfound');
+    			    }else{
+    			        $meta_robot_tag = $this->config->get('hb_crawl_manufacturer');
+    			    }
+    			    
+    			    if ($meta_robot_tag != 'No Tag') { 
+    		            $this->document->setHbmeta('robots', $meta_robot_tag);
+    		        }
+    			}
+			]]></add>
+        </operation>
+        
+        <operation>
+            <search><![CDATA[if ($manufacturer_info) {]]></search>
+            <add position="after"><![CDATA[
+			    if ($this->config->get('hb_crawl_status')) {
+                    $meta_robot_tag = $this->config->get('hb_crawl_manufacturer');
+    			    
+    			    if ($meta_robot_tag != 'No Tag') { 
+    		            $this->document->setHbmeta('robots', $meta_robot_tag);
+    		        }
+    			}
+			]]></add>
+        </operation>
+        
+        <operation>
+            <search><![CDATA[$this->response->setOutput($this->load->view('error/not_found', $data));]]></search>
+            <add position="before"><![CDATA[
+			    if ($this->config->get('hb_crawl_status')) {
+                    $meta_robot_tag = $this->config->get('hb_crawl_notfound');
+    			    
+    			    if ($meta_robot_tag != 'No Tag') { 
+    		            $this->document->setHbmeta('robots', $meta_robot_tag);
+    		        }
+    			}
+			]]></add>
+        </operation>
+    </file>
+    
+    <file path="catalog/controller/information/information.php">
+        <operation>
+            <search><![CDATA[if ($information_info) {]]></search>
+            <add position="after"><![CDATA[
+			    if ($this->config->get('hb_crawl_status')) {
+                    $meta_robot_tag = $this->config->get('hb_crawl_information');
+    			    
+    			    if ($meta_robot_tag != 'No Tag') { 
+    		            $this->document->setHbmeta('robots', $meta_robot_tag);
+    		        }
+    			}
+			]]></add>
+        </operation>
+        
+        <operation>
+            <search><![CDATA[$this->response->setOutput($this->load->view('error/not_found', $data));]]></search>
+            <add position="before"><![CDATA[
+			    if ($this->config->get('hb_crawl_status')) {
+                    $meta_robot_tag = $this->config->get('hb_crawl_notfound');
+    			    
+    			    if ($meta_robot_tag != 'No Tag') { 
+    		            $this->document->setHbmeta('robots', $meta_robot_tag);
+    		        }
+    			}
+			]]></add>
+        </operation>
+    </file>
+		
+	<!-- journal3 -->
+	<file path="catalog/controller/journal3/blog.php" error="skip">
+        <operation error="skip">
+            <search><![CDATA[$total = $this->model_journal3_blog->getPostsTotal($filter_data);]]></search>
+            <add position="after"><![CDATA[
+			    if ($this->config->get('hb_crawl_status')) {
+                    if (empty($results)) {
+                        $meta_robot_tag = $this->config->get('hb_crawl_notfound');
+    			    }else{
+    			        $meta_robot_tag = $this->config->get('hb_crawl_jblog');
+    			    }
+    			    
+    			    if ($meta_robot_tag != 'No Tag') { 
+    		            $this->document->setHbmeta('robots', $meta_robot_tag);
+    		        }
+    			}
+			]]></add>
+        </operation>
+        
+        <operation error="skip">
+            <search><![CDATA[$this->response->setOutput($this->load->view('error/not_found', $data));]]></search>
+            <add position="before"><![CDATA[
+			    if ($this->config->get('hb_crawl_status')) {
+                    $meta_robot_tag = $this->config->get('hb_crawl_notfound');
+    			    
+    			    if ($meta_robot_tag != 'No Tag') { 
+    		            $this->document->setHbmeta('robots', $meta_robot_tag);
+    		        }
+    			}
+			]]></add>
+        </operation>
+    </file>
+
+    <file path="catalog/controller/product/category.php">
+        <operation error="skip">
+            <search><![CDATA[$results = $this->model_journal3_filter->getProducts($filter_data);]]></search>
+            <add position="after"><![CDATA[
+			    if ($this->config->get('hb_crawl_status')) {
+                    if (empty($results)) {
+                        $meta_robot_tag = $this->config->get('hb_crawl_notfound');
+    			    }else{
+    			        $meta_robot_tag = $this->config->get('hb_crawl_category');
+    			    }
+    			    
+    			    if ($meta_robot_tag != 'No Tag') { 
+    		            $this->document->setHbmeta('robots', $meta_robot_tag);
+    		        }
+    			}
+			]]></add>
+        </operation>
+    </file>
+
+</modification>

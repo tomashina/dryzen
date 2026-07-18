@@ -1,0 +1,59 @@
+  <ul id="cart-content">
+    {% if products or vouchers %}
+    <li>
+      <table class="table products">
+        {% for product in products %}
+        <tr>
+          <td class="image">
+          {% if product.thumb %}
+            <a href="{{ product.href }}"><img src="{{ product.thumb }}" alt="{{ product.name }}" title="{{ product.name }}" /></a>
+            {% endif %}
+            </td>
+          <td class="main"><a class="product-name main-font" href="{{ product.href }}">{{ product.name }}</a>
+            {{ product.quantity }} x <span class="price">{{ product.price }}</span>
+            {% if product.option %}
+            {% for option in product.option %}
+            <br />
+            - <small>{{ option.name }} {{ option.value }}</small>
+            {% endfor %}
+            {% endif %}
+            {% if product.recurring %}
+            <br />
+            - <small>{{ text_recurring }} {{ product.recurring }}</small>
+            {% endif %}
+          </td>
+          <td class="remove"><a onclick="cart.remove('{{ product.cart_id }}');" title="{{ button_remove }}" class="remove">&times;</a></td>
+        </tr>
+        {% endfor %}
+        {% for voucher in vouchers %}
+        <tr>
+          <td colspan="2" class="text-left"><span class="product-name main-font">{{ voucher.description }}</span>
+          1 x <span class="price">{{ voucher.amount }}</span></td>
+          <td class="text-right"><a onclick="voucher.remove('{{ voucher.key }}');" title="{{ button_remove }}" class="remove">&times;</a></td>
+        </tr>
+        {% endfor %}
+      </table>
+    </li>
+    <li>
+      <div>
+        <table class="table totals">
+          {% for total in totals %}
+          <tr>
+            <td class="text-left">{{ total.title }}</td>
+            <td class="text-right">{{ total.text }}</td>
+          </tr>
+          {% endfor %}
+        </table>
+        <a class="btn btn-default btn-block" href="{{ cart }}">{{ text_cart }}</a>
+        <a class="btn btn-contrast btn-block" href="{{ checkout }}">{{ text_checkout }}</a>
+      </div>
+    </li>
+    {% else %}
+    <li>
+      <div class="table empty">
+      <div class="table-cell"><i class="global-cart"></i></div>
+      <div class="table-cell">{{ text_empty }}</div>
+      </div>
+    </li>
+    {% endif %}
+  </ul>

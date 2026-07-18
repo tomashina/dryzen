@@ -1,0 +1,411 @@
+{% include 'extension/module/msmart_search/_header.twig' %}
+<br />
+
+<ul class="nav nav-tabs">
+	<li class="active"><a href="#lf-general" data-toggle="tab"><i class="fa fa-cog" aria-hidden="true"></i> {{ text_general }}</a></li>
+	<li><a href="#lf-products" data-toggle="tab"><i class="fa fa-cube" aria-hidden="true"></i> {{ text_products }}</a></li>
+	<li><a href="#lf-categories" data-toggle="tab"><i class="fa fa-list-ul" aria-hidden="true"></i> {{ text_categories }}</a></li>
+	<li><a href="#lf-styles" data-toggle="tab"><i class="fa fa-adjust" aria-hidden="true"></i> {{ tab_styles }}</a></li>
+</ul>
+
+<div class="tab-content">
+	<br />
+	<div class="tab-pane active" id="lf-general">
+		<table class="table table-tbody">
+			<tbody>
+				<tr>
+					<td width="300">{{ entry_mode }}</td>
+					<td>
+						<table>
+							<tr>
+								<td>
+									<label class="text-center">
+										<img src="{{ HTTP_URL }}view/stylesheet/mss/images/view-standard.png" />
+										<br />
+										<input type="radio" name="{{ _name }}[mode]" value="standard" {{ settings['mode'] is empty or settings['mode'] == 'standard' ? 'checked="checked"' : '' }} />
+										{{ text_standard }} 
+									</label>
+								</td>
+								<td>
+									<label class="text-center">
+										<img src="{{ HTTP_URL }}view/stylesheet/mss/images/view-tabs.png" />
+										<br />
+										<input type="radio" name="{{ _name }}[mode]" value="tabs" {{ settings['mode'] is not empty and settings['mode'] == 'tabs' ? 'checked="checked"' : '' }} />
+										{{ text_tabs }} 
+									</label>
+								</td>
+							</tr>
+						</table>
+						<span class="help help-block">
+							{{ text_tabs_help }} 
+						</span>
+					</td>
+				</tr>
+				<tr>
+					<td width="300">{{ entry_search_input_selector }}</td>
+					<td>
+						<input type="text" name="{{ _name }}[input_selector]" class="form-control" value="{{ settings['input_selector'] is empty ? '#search input[type=text]:first' : settings['input_selector'] }}"/>
+					</td>
+				</tr>
+				<tr>
+					<td>{{ text_standard_mode }} / {{ entry_max_height }}</td>
+					<td>
+						<div class="input-group col-lg-2">
+							<input type="text" name="{{ _name }}[max_height]" class="form-control" value="{{ settings['max_height'] is empty ? '250' : settings['max_height'] }}"/>
+							<div class="input-group-addon">
+								px
+							</div>
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td>{{ text_tabs_mode }} / {{ entry_max_height }}</td>
+					<td>
+						<div class="input-group col-lg-2">
+							<input type="text" name="{{ _name }}[max_height_tabs]" class="form-control" value="{{ settings['max_height_tabs'] is empty ? '430' : settings['max_height_tabs'] }}"/>
+							<div class="input-group-addon">
+								px
+							</div>
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td>{{ entry_show_loading_icon }}</td>
+					<td>
+						<input type="checkbox" name="{{ _name }}[show_loading_icon]" value="1" {{ settings['show_loading_icon'] is not empty ? ' checked="checked"' : '' }}/>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						{{ entry_show_button_view_all }}
+						<span class="help help-block">{{ text_only_for_standard_mode }}</span>
+					</td>
+					<td>
+						<input type="checkbox" name="{{ _name }}[show_button_view_all]" value="1" {{ settings['show_button_view_all'] is not empty ? ' checked="checked"' : '' }}/>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						{{ entry_search_in_product_descriptions }}
+						<span class="help help-block">{{ text_only_for_standard_mode }}</span>
+					</td>
+					<td>
+						<input type="checkbox" name="{{ _name }}[search_in_product_descriptions]" value="1" {{ settings['search_in_product_descriptions'] is not empty ? ' checked="checked"' : '' }}/>
+					</td>
+				</tr>
+				<tr>
+					<td>{{ entry_limit }}</td>
+					<td>
+						<div class="input-group col-lg-2">
+							<input type="text" name="{{ _name }}[limit]" class="form-control" value="{{ settings['limit'] is empty ? '10' : settings['limit'] }}"/>
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						{{ entry_limit_similar_phrases }} 
+						<span class="help help-block">{{ text_only_for_tabs_mode }}</span>
+					</td>
+					<td>
+						<div class="input-group col-lg-2">
+							<input type="text" name="{{ _name }}[limit_similar_phrases]" class="form-control" value="{{ settings['limit_similar_phrases'] is empty ? '10' : settings['limit_similar_phrases'] }}"/>
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td>{{ entry_min_length }}</td>
+					<td>
+						<div class="input-group col-lg-2">
+							<input type="text" name="{{ _name }}[min_length]" class="form-control" value="{{ settings['min_length'] is empty ? '1' : settings['min_length'] }}"/>
+						</div>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<div class="tab-pane" id="lf-products">
+		<table class="table table-tbody">
+			<tr>
+				<td width="200">{{ entry_enabled }}</td>
+				<td>
+					<input type="checkbox" name="{{ _name }}[enabled]" value="1" {{ settings['enabled'] is empty ? '' : ' checked="checked"' }}/>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					{{ entry_show_image }} 
+					<span class="help help-block">{{ text_only_for_standard_mode }}</span>
+				</td>
+				<td>
+					<input type="checkbox" name="{{ _name }}[show_image]" value="1" {{ settings['show_image'] is empty ? '' : ' checked="checked"' }}/>
+				</td>
+			</tr>
+			<tr>
+				<td>{{ text_standard_mode }} / {{ entry_image_size }}</td>
+				<td>
+					<div class="input-group col-lg-2">
+						<input type="text" name="{{ _name }}[img_width]" class="form-control" value="{{ settings['img_width'] is empty ? '40' : settings['img_width'] }}"/>
+						<div class="input-group-addon">x</div>
+						<input type="text" name="{{ _name }}[img_height]" class="form-control" value="{{ settings['img_height'] is empty ? '40' : settings['img_height'] }}"/>
+						<div class="input-group-addon">px</div>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td>{{ text_tabs_mode }} / {{ entry_image_size }}</td>
+				<td>
+					<div class="input-group col-lg-2">
+						<input type="text" name="{{ _name }}[img_width_tabs]" class="form-control" value="{{ settings['img_width_tabs'] is empty ? '122' : settings['img_width_tabs'] }}"/>
+						<div class="input-group-addon">x</div>
+						<input type="text" name="{{ _name }}[img_height_tabs]" class="form-control" value="{{ settings['img_height_tabs'] is empty ? '122' : settings['img_height_tabs'] }}"/>
+						<div class="input-group-addon">px</div>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					{{ entry_product_columns }} 
+				<span class="help help-block">{{ text_only_for_tabs_mode }}</span>
+				</td>
+				<td>
+					<div class="input-group col-lg-2">
+						<input type="text" name="{{ _name }}[product_columns]" class="form-control" value="{{ settings['product_columns'] is empty ? '3' : settings['product_columns'] }}"/>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td>{{ entry_show_price }}</td>
+				<td>
+					<input type="checkbox" name="{{ _name }}[show_price]" value="1" {{ settings['show_price'] is empty ? '' : ' checked="checked"' }}/>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					{{ entry_show_manufacturer }} 
+					<span class="help help-block">{{ text_only_for_standard_mode }}</span>
+				</td>
+				<td>
+					<input type="checkbox" name="{{ _name }}[show_manufacturer]" value="1" {{ settings['show_manufacturer'] is empty ? '' : ' checked="checked"' }}/>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					{{ entry_show_model }} 
+					<span class="help help-block">{{ text_only_for_standard_mode }}</span>
+				</td>
+				<td>
+					<input type="checkbox" name="{{ _name }}[show_model]" value="1" {{ settings['show_model'] is empty ? '' : ' checked="checked"' }}/>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					{{ entry_show_header_products }} 
+				</td>
+				<td>
+					<input type="checkbox" name="{{ _name }}[show_header]" value="1" {{ settings['show_header'] is empty ? '' : ' checked="checked"' }}/>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div class="tab-pane" id="lf-categories">
+		<center><strong>{{ text_works_only_in_standard_mode }}</strong></center>
+		<table class="table table-tbody">
+			<tr>
+				<td width="200">{{ entry_enabled }}</td>
+				<td>
+					<input type="checkbox" name="{{ _name }}[enabled_categories]" value="1" {{ settings['enabled_categories'] is empty ? '' : ' checked="checked"' }}/>
+				</td>
+			</tr>
+			<tr>
+				<td>{{ entry_show_image }}</td>
+				<td>
+					<input type="checkbox" name="{{ _name }}[show_image_categories]" value="1" {{ settings['show_image_categories'] is empty ? '' : ' checked="checked"' }}/>
+				</td>
+			</tr>
+			<tr>
+				<td>{{ entry_image_size }}</td>
+				<td>
+					<div class="input-group col-lg-2">
+						<input type="text" name="{{ _name }}[img_width_categories]" class="form-control" value="{{ settings['img_width_categories'] is empty ? '40' : settings['img_width_categories'] }}"/>
+						<div class="input-group-addon">x</div>
+						<input type="text" name="{{ _name }}[img_height_categories]" class="form-control" value="{{ settings['img_height_categories'] is empty ? '40' : settings['img_height_categories'] }}"/>
+						<div class="input-group-addon">px</div>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td>{{ entry_show_header_categories }}</td>
+				<td>
+					<input type="checkbox" name="{{ _name }}[show_header_categories]" value="1" {{ settings['show_header_categories'] is empty ? '' : ' checked="checked"' }}/>
+				</td>
+			</tr>
+			<tr>
+				<td>{{ entry_show_description }}</td>
+				<td>
+					<input type="checkbox" name="{{ _name }}[show_description_categories]" value="1" {{ settings['show_description_categories'] is empty ? '' : ' checked="checked"' }}/>
+				</td>
+			</tr>
+			<tr>
+				<td>{{ entry_description_max_length }}</td>
+				<td>
+					<div class="input-group col-lg-2">
+						<input type="text" name="{{ _name }}[description_max_length_categories]" class="form-control" value="{{ settings['description_max_length_categories'] is empty ? '100' : settings['description_max_length_categories'] }}"/>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					{{ entry_display_categories_first }} 
+				</td>
+				<td>
+					<input type="checkbox" name="{{ _name }}[display_categories_first]" value="1" {{ settings['display_categories_first'] is empty ? '' : ' checked="checked"' }}/>
+					<span class="help help-block">{{ text_display_categories_first_guide }}</span>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div class="tab-pane" id="lf-styles">
+		<table class="table table-tbody">
+			<tr>
+				<td width='25%'>{{ entry_custom_css }}</td>
+				<td>
+					<textarea name="{{ _name }}[custom_css]" rows="10" class="form-control">{{ settings['custom_css'] is empty ? '' : settings['custom_css'] }}</textarea>
+				</td>
+			</tr>
+			<tr>
+				<td style='border-top: none'>
+					<i class="fa fa-adjust" style="font-size: 18px; margin-bottom: 20px;"></i>&nbsp; <b>{{ entry_custom_colors }}</b>
+				</td>
+			</tr>
+			<tr>
+				<td style='border-top: none'><i class="fa fa-header" style="font-size: 18px"></i>&nbsp; {{ entry_products_header_color }}</td>
+				<td style='border-top: none'>
+					<div class="input-group" style='width: 300px'>
+						<span class="input-group-addon">{{ entry_css_color }}</span>
+						<input type="text" name="{{ _name }}[custom_color_css][product_header]" value="{{ settings['custom_color_css']['product_header'] is defined ? settings['custom_color_css']['product_header'] : '' }}" class="form-control mss-colorPicker" />
+						<span class="input-group-addon" style='background-color: {{ settings['custom_color_css']['product_header'] is defined ? settings['custom_color_css']['product_header'] : '' }};'></span>
+					</div>
+								</td>
+			</tr>
+			<tr>
+				<td><i class="fa fa-header" style="font-size: 18px"></i>&nbsp; {{ entry_categories_header_color }}</td>
+				<td>
+					<div class="input-group" style='width: 300px'>
+						<span class="input-group-addon">{{ entry_css_color }}</span>
+						<input type="text" name="{{ _name }}[custom_color_css][categories_header]" value="{{ settings['custom_color_css']['product_header'] is defined ? settings['custom_color_css']['categories_header'] : '' }}" class="form-control mss-colorPicker" />
+						<span class="input-group-addon" style='background-color: {{ settings['custom_color_css']['categories_header'] is defined ? settings['custom_color_css']['categories_header'] : '' }};'></span>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td><i class="fa fa-square-o" style="font-size: 18px"></i>&nbsp; {{ entry_button_more_color }}</td>
+				<td>
+					<div class="input-group" style='width: 300px'>
+						<span class="input-group-addon">{{ entry_css_color }}</span>
+						<input type="text" name="{{ _name }}[custom_color_css][view_all]" value="{{ settings['custom_color_css']['view_all'] is defined ? settings['custom_color_css']['view_all'] : '' }}" class="form-control mss-colorPicker" />
+						<span class="input-group-addon" style='background-color: {{ settings['custom_color_css']['view_all'] is defined ? settings['custom_color_css']['view_all'] : '' }};'></span>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td><i class="fa fa-header" style="font-size: 18px"></i>&nbsp; {{ entry_header_text_color }}</td>
+				<td>
+					<div class="input-group" style='width: 300px'>
+						<span class="input-group-addon">{{ entry_css_color }}</span>
+						<input type="text" name="{{ _name }}[custom_color_css][header_text]" value="{{ settings['custom_color_css']['header_text'] is defined ? settings['custom_color_css']['header_text'] : '' }}" class="form-control mss-colorPicker" />
+						<span class="input-group-addon" style='background-color: {{ settings['custom_color_css']['header_text'] is defined ? settings['custom_color_css']['header_text'] : '' }};'></span>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td><i class="fa fa-cube" style="font-size: 18px"></i>&nbsp; {{ entry_results_background }}</td>
+				<td>
+					<div class="input-group" style='width: 300px'>
+						<span class="input-group-addon">{{ entry_css_color }}</span>
+						<input type="text" name="{{ _name }}[custom_color_css][results_background]" value="{{ settings['custom_color_css']['results_background'] is defined ? settings['custom_color_css']['results_background'] : '' }}" class="form-control mss-colorPicker" />
+						<span class="input-group-addon" style='background-color: {{ settings['custom_color_css']['results_background'] is defined ? settings['custom_color_css']['results_background'] : '' }};'></span>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td><i class="fa fa-cube" style="font-size: 18px"></i>&nbsp; {{ entry_results_hover }}</td>
+				<td>
+					<div class="input-group" style='width: 300px'>
+						<span class="input-group-addon">{{ entry_css_color }}</span>
+						<input type="text" name="{{ _name }}[custom_color_css][results_hover]" value="{{ settings['custom_color_css']['results_hover'] is defined ? settings['custom_color_css']['results_hover'] : '' }}" class="form-control mss-colorPicker" />
+						<span class="input-group-addon" style='background-color: {{ settings['custom_color_css']['results_hover'] is defined ? settings['custom_color_css']['results_hover'] : '' }};'></span>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td><i class="fa fa-info" style="font-size: 18px"></i>&nbsp; {{ entry_results_text }}</td>
+				<td>
+					<div class="input-group" style='width: 300px'>
+						<span class="input-group-addon">{{ entry_css_color }}</span>
+						<input type="text" name="{{ _name }}[custom_color_css][results_text]" value="{{ settings['custom_color_css']['results_text'] is defined ? settings['custom_color_css']['results_text'] : '' }}" class="form-control mss-colorPicker" />
+						<span class="input-group-addon" style='background-color: {{ settings['custom_color_css']['results_text'] is defined ? settings['custom_color_css']['results_text'] : '' }};'></span>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td><i class="fa fa-cubes" style="font-size: 18px"></i>&nbsp; {{ entry_border_results }}</td>
+				<td>
+					<div class="input-group" style='width: 300px'>
+						<span class="input-group-addon">{{ entry_css_color }}</span>
+						<input type="text" name="{{ _name }}[custom_color_css][border_results]" value="{{ settings['custom_color_css']['border_results'] is defined ? settings['custom_color_css']['border_results'] : '' }}" class="form-control mss-colorPicker" />
+						<span class="input-group-addon" style='background-color: {{ settings['custom_color_css']['border_results'] is defined ? settings['custom_color_css']['border_results'] : '' }};'></span>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td><i class="fa fa-money" style="font-size: 18px"></i>&nbsp; {{ entry_price_results }}</td>
+				<td>
+					<div class="input-group" style='width: 300px'>
+						<span class="input-group-addon">{{ entry_css_color }}</span>
+						<input type="text" name="{{ _name }}[custom_color_css][price_results]" value="{{ settings['custom_color_css']['price_results'] is defined ? settings['custom_color_css']['price_results'] : '' }}" class="form-control mss-colorPicker" />
+						<span class="input-group-addon" style='background-color: {{ settings['custom_color_css']['price_results'] is defined ? settings['custom_color_css']['price_results'] : '' }};'></span>
+					</div>
+				</td>
+			</tr>
+		</table>
+	</div>
+</div>
+<style>
+	.colorpicker{
+		z-index: 999;
+	}
+</style>
+<script>
+	(function(){
+		$('input[type=radio][name*=mode]').change(function(){
+			var val = $(this).val();
+			
+			$('#product-rows')[val == 'tabs' ? 'removeClass':'addClass']('hide');
+		}).filter(':checked').trigger('change');
+		
+			//Color Pickers
+	jQuery("input.mss-colorPicker").each(function(){
+		var tis = jQuery(this);
+
+		if( tis.ColorPicker ) {
+			tis.ColorPicker({
+				onSubmit: function(hsb, hex, rgb, el) {
+					jQuery(el).val("#"+hex).next().css("background-color","#"+hex);
+					jQuery(el).ColorPickerHide();
+				},
+				onChange: function(hsb, hex, rgb) {
+					tis.val("#"+hex).next().css("background-color","#"+hex);
+				},
+				onBeforeShow: function() {
+					tis.ColorPickerSetColor(tis.val());
+				}
+			}).bind('keyup', function(){
+				tis.ColorPickerSetColor("#"+tis.val());
+			});
+		}
+	});
+		
+	})();
+</script>
+
+{% include 'extension/module/msmart_search/_footer.twig' %}

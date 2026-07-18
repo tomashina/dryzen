@@ -1,0 +1,431 @@
+{{ header }}{{ column_left }}
+<div id="content">
+  <div class="page-header">
+    <div class="container-fluid">
+      <div class="pull-right">
+        <button type="button" onclick="$('#form-json-api').attr('action', '{{ action }}').attr('target', '_self').submit()" data-toggle="tooltip" title="{{ button_save }}" class="btn btn-primary"><i class="fa fa-save"></i></button>
+        <a href="{{ cancel }}" data-toggle="tooltip" title="{{ button_cancel }}" class="btn btn-default"><i class="fa fa-reply"></i></a></div>
+      <h1>{{ heading_title }}</h1>
+       <ul class="breadcrumb">
+        {% for breadcrumb in breadcrumbs %}
+        <li><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+  <div class="container-fluid">
+    {% if error_warning %}
+    <div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i> {{ error_warning }}
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+    </div>
+    {% endif %}
+    <ul class="nav nav-tabs">
+	  <li class="active"><a href="#tab-general" data-toggle="tab">General</a></li>
+	  <li><a href="#tab-split" data-toggle="tab">Split</a></li>
+	  <li><a href="#tab-modify" data-toggle="tab">Modify</a></li>	  
+	  <li><a href="#tab-settings" data-toggle="tab">Settings</a></li>
+	  <li><a href="#tab-test" data-toggle="tab">Test</a></li>
+	  <li><a href="#tab-import" data-toggle="tab">Import</a></li>
+	</ul>
+	<form action="{{ action }}" method="post" enctype="multipart/form-data" id="form-json-api" class="form-horizontal">
+	  <div class="tab-content">
+        <div class="tab-pane active" id="tab-general">
+		  <fieldset class="form-horizontal">
+			<legend> Link </legend>
+			<div class="form-group required">
+			  <label class="control-label" for="input-link">{{ entry_link }}</label>
+			  <input type="text" name="import_api_link" value="{{ import_api_link }}" placeholder="{{ entry_link }}" id="input-link" class="form-control" />
+			</div>
+			<div class="buttons">
+			  <div class="pull-right">
+				<input type="button" value="{{ button_continue }}" id="button-link" data-loading-text="{{ text_loading }}" class="btn btn-primary" />
+			  </div>
+			</div>
+		  </fieldset>
+		  <fieldset class="form-horizontal">
+			<legend> Assign </legend>
+			{% for oc_field in oc_fields %}
+			  <div class="form-group">
+				<label class="col-sm-2 control-label" for="input-value-{{ oc_field }}">{{ entry_values[oc_field] }}</label>
+				<div class="col-sm-10">
+				  <select name="import_api_field[{{ oc_field }}]" id="input-value-{{ oc_field }}" class="form-control api_field">
+					<option value="">{{ text_select }}</option>
+					{% for api_field in api_fields %}
+					  {% if api_field == saved_values[oc_field] %}
+					  <option value="{{ api_field }}" selected="selected">{{ api_field }}</option>
+					  {% else %}
+					  <option value="{{ api_field }}">{{ api_field }}</option>
+					  {% endif %}
+					{% endfor %}
+				  </select>
+				</div>
+			  </div>
+			{% endfor %}
+			{% for i in 1..extra_fields_number %}
+			  <div class="form-group">
+				<label class="col-sm-2 control-label" for="input-value-ev-{{ i }}">{{ entry_values['field' ~ i] }}</label>
+				<div class="col-sm-10">
+				  <select name="import_api_field[field{{ i }}]" id="input-value-ev-{{ i }}" class="form-control api_field">
+				   <option value="">{{ text_select }}</option>
+					{% for api_field in api_fields %}
+					  {% if api_field == saved_values['field' ~ i] %}
+					  <option value="{{ api_field }}" selected="selected">{{ api_field }}</option>
+					  {% else %}
+					  <option value="{{ api_field }}">{{ api_field }}</option>
+					  {% endif %}
+					{% endfor %}
+				  </select>
+				</div>
+			  </div>
+			{% endfor %}
+		  </fieldset>
+		  <input type="hidden" name="import_api_fields" id="fields" value="{{ import_api_fields }}"/>
+	    </div>
+		<div class="tab-pane" id="tab-modify">
+		  <fieldset class="form-horizontal">
+			<legend> Modify </legend>
+			{% for i in 1..extra_modifications_number %}
+			  <div class="form-group">
+				<label class="col-sm-2 control-label" for="input-modification-em-{{ i }}">{{ entry_modifications['modification' ~ i] }}</label>
+				<div class="col-sm-10">
+				  <input name="import_api_modification[modification{{ i }}]" id="input-modification-em-{{ i }}" class="form-control" value="{{ saved_modifications['modification' ~ i] }}" placeholder="[[modification{{ i }}]]"/>
+				</div>
+			  </div>
+			{% endfor %}
+
+			{% for oc_field in oc_fields %}
+			  <div class="form-group">
+				<label class="col-sm-2 control-label" for="input-modification-{{ oc_field }}">{{ entry_modifications[oc_field] }}</label>
+				<div class="col-sm-10">
+				  <input name="import_api_modification[{{ oc_field }}]" id="input-modification-{{ oc_field }}" class="form-control" value="{{ saved_modifications[oc_field] }}" placeholder="[[{{ oc_field }}]]">
+				</div>
+			  </div>
+			{% endfor %}
+		  </fieldset>
+		</div>
+		<div class="tab-pane" id="tab-split">
+		  <fieldset class="form-horizontal">
+			<legend> Separate combined </legend>
+			{% for oc_field in oc_fields %}
+			  <div class="form-group">
+				<label class="col-sm-2 control-label" for="input-combination-{{ oc_field }}">{{ entry_combinations[oc_field] }}</label>
+				<div class="col-sm-10">
+				  <input name="import_api_combination[{{ oc_field }}]" id="input-combination-{{ oc_field }}" class="form-control" value="{{ saved_combinations[oc_field] }}"/>
+				</div>
+			  </div>
+			{% endfor %}
+		  </fieldset>
+		</div>
+		<div class="tab-pane" id="tab-settings">
+		  <fieldset class="form-horizontal">
+			<legend> Settings </legend>
+			<div class="form-group">
+			  <label class="col-sm-2 control-label" for="input_tax_class_id">{{ entry_tax_class }}</label>
+			  <div class="col-sm-10">
+				<select name="import_api_tax" id="input_tax_class_id" class="form-control">
+				  <option value="0">{{ text_none }}</option>
+                  {% for tax_class in tax_classes %}
+                  {% if tax_class.tax_class_id == import_api_tax %}
+                  <option value="{{ tax_class.tax_class_id }}" selected="selected">{{ tax_class.title }}</option>
+                  {% else %}
+                  <option value="{{ tax_class.tax_class_id }}">{{ tax_class.title }}</option>
+                  {% endif %}
+                  {% endfor %}
+				</select>
+			  </div>
+			</div>
+			<div class="form-group">
+              <label class="col-sm-2 control-label" for="input-stock-status">{{ entry_stock_status }}</label>
+              <div class="col-sm-10">
+                <select name="import_api_stock_status_id" id="input-stock-status" class="form-control">
+                  {% for stock_status in stock_statuses %}
+                  {% if stock_status.stock_status_id == import_api_stock_status_id %}
+                  <option value="{{ stock_status.stock_status_id }}" selected="selected">{{ stock_status.name }}</option>
+                  {% else %}
+                  <option value="{{ stock_status.stock_status_id }}">{{ stock_status.name }}</option>
+                  {% endif %}
+                  {% endfor %}
+                </select>
+              </div>
+            </div>
+			<div class="form-group">
+              <label class="col-sm-2 control-label" for="input-weight-class">{{ entry_weight_class }}</label>
+              <div class="col-sm-10">
+                <select name="import_api_weight_class_id" id="input-weight-class" class="form-control">
+                  {% for weight_class in weight_classes %}
+                  {% if weight_class.weight_class_id == import_api_weight_class_id %}
+                  <option value="{{ weight_class.weight_class_id }}" selected="selected">{{ weight_class.title }}</option>
+                  {% else %}
+                  <option value="{{ weight_class.weight_class_id }}">{{ weight_class.title }}</option>
+                  {% endif %}
+                  {% endfor %}
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+			<label class="col-sm-2 control-label" for="input-top-category">Top category</label>
+			  <div class="col-sm-10">
+			    <input name="import_api_top_category" id="input-top-category" class="form-control" value="{{ import_api_top_category }}"/>
+			  </div>
+		    </div>
+            <div class="form-group">
+			<label class="col-sm-2 control-label" for="input-default-category">Default category</label>
+			  <div class="col-sm-10">
+			    <input name="import_api_default_category" id="input-default-category" class="form-control" value="{{ import_api_default_category }}"/>
+			  </div>
+		    </div>
+            <div class="form-group">
+			<label class="col-sm-2 control-label" for="input-default-brand">Default brand</label>
+			  <div class="col-sm-10">
+			    <input name="import_api_default_brand" id="input-default-brand" class="form-control" value="{{ import_api_default_brand }}"/>
+			  </div>
+		    </div>
+            <div class="form-group">
+			<label class="col-sm-2 control-label" for="input-attribute-group">Attribute group</label>
+			  <div class="col-sm-10">
+			    <input name="import_api_attribute_group" id="input-attribute-group" class="form-control" value="{{ import_api_attribute_group }}"/>
+			  </div>
+		    </div>
+			<div class="form-group">
+			<label class="col-sm-2 control-label" for="input-default-option">Default option</label>
+			  <div class="col-sm-10">
+			    <input name="import_api_default_option" id="input-default-option" class="form-control" value="{{ import_api_default_option }}"/>
+			  </div>
+		    </div>
+			<div class="form-group">
+			<label class="col-sm-2 control-label" for="input-default-attribute">Default attribute</label>
+			  <div class="col-sm-10">
+			    <input name="import_api_default_attribute" id="input-default-attribute" class="form-control" value="{{ import_api_default_attribute }}"/>
+			  </div>
+		    </div>
+			<div class="form-group">
+			<label class="col-sm-2 control-label" for="input-multiplier">Price multiplier</label>
+			  <div class="col-sm-10">
+			    <input name="import_api_multiplier" id="input-multiplier" class="form-control" value="{{ import_api_multiplier }}"/>
+			  </div>
+		    </div>
+			<div class="form-group">
+			  <label class="col-sm-2 control-label" for="input-category-path">Create category path from array</label>
+			  <div class="col-sm-10">
+				<select name="import_api_category_path" id="input-category-path" class="form-control">
+                  {% if import_api_category_path %}
+				   <option value="0">No</option>
+				   <option value="1" selected="selected">Yes</option>
+                  {% else %}
+				   <option value="0" selected="selected">No</option>
+				   <option value="1">Yes</option>
+                  {% endif %}
+				</select>
+			  </div>
+			</div>		
+		  </fieldset>
+		</div>
+		<div class="tab-pane" id="tab-test">
+		  <div class="form-group">
+			<label class="col-sm-2 control-label" for="input-index-test">Test start index</label>
+			  <div class="col-sm-10">
+			    <input name="import_api_start_index" id="input-index-test" class="form-control" value="{{ import_api_start_index }}"/>
+			  </div>
+		  </div>	
+		  <div class="buttons">
+		  	<input type="button" value="Original import" id="view-raw" data-loading-text="{{ text_loading }}" class="btn btn-primary api-test" />
+		  	<input type="button" value="After split" id="view-split" data-loading-text="{{ text_loading }}" class="btn btn-primary api-test" />
+		  	<input type="button" value="After grouping" id="view-grouping" data-loading-text="{{ text_loading }}" class="btn btn-primary api-test" />
+		  	<input type="button" value="After modification" id="view-modified" data-loading-text="{{ text_loading }}" class="btn btn-primary api-test" />
+		  </div>
+		  <div id="test-result" style="min-height:500px"></div>
+		</div>
+		<div class="tab-pane" id="tab-import">
+		  <div class="form-group">
+			<label class="col-sm-2 control-label" for="input-live-start">Start index</label>
+			  <div class="col-sm-10">
+			    <input name="import_api_live_start" id="input-live-start" class="form-control" value="0"/>
+			  </div>
+		  </div>
+		  <div class="form-group">
+			<label class="col-sm-2 control-label" for="input-live-limit">Number of products</label>
+			  <div class="col-sm-10">
+			    <input name="import_api_live_limit" id="input-live-limit" class="form-control" value="100"/>
+			  </div>
+		  </div>			  
+		  <div class="buttons">
+		  	<input type="button" value="Start import" id="start-import" data-loading-text="{{ text_loading }}" class="btn btn-primary api-import" />
+		  </div>
+		  <div id="import-result" style="min-height:500px"></br>
+		    <div class="progress">
+			  <div class="progress-bar progress-bar-success progress-bar-striped" role="progressbar"
+			  aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width:0%"></div>
+			</div>
+		    <span>Imported : </span> <span id="import-number">NA</span></br>		 
+		    <span>Updated : </span><span id="update-number">NA</span></br>
+		    <span>Total : </span><span id="total-number">NA</span></br>
+		  </div>
+		</div>
+      </div>
+	</form>
+</div>
+
+<script type="text/javascript"><!--
+var global_limit = 0;
+var created = 0;
+var updated = 0;
+
+$(document).delegate('#start-import', 'click', function() {
+   $('#start-import').button('loading');
+   $('#import-number').html('');
+   $('#update-number').html('');
+   start = +($('#input-live-start').val());
+   global_limit = limit = +($('#input-live-limit').val());
+   created = 0;
+   updated = 0;
+   importProducts(start, limit); 
+});
+
+function importProducts(start = 0, limit = 0){
+	$.ajax({
+	url: '../index.php?route=extension/feed/import_api/import&from=admin&start=' + start + '&limit=' + limit,
+        type: 'post',
+        data: $('#form-json-api').serialize(),
+        dataType: 'json',
+        beforeSend: function() {       	
+			$('#import-number').html($('#import-number').html() + ' /Please wait...');
+			$('#update-number').html($('#update-number').html() + ' /Please wait...');
+		},
+        complete: function() {
+           
+        },
+        success: function(ret) {
+			session_processed = ret['products_created'] + ret['products_updated'];
+			createVisialProgress(ret);
+			if(ret['notice'] == 'time_out'){
+				start = start + session_processed;
+
+                if	(limit){
+					limit -= session_processed;
+				}
+
+				importProducts(start, limit);
+				
+			} else {
+				$('#start-import').button('reset');
+			}
+        },
+        error: function(xhr, ajaxOptions, thrownError) {
+            //alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+			importProducts(start, limit);
+        }
+    });	
+}
+
+
+function createVisialProgress(ret){
+	updated += ret['products_updated'];
+	created += ret['products_created'];
+	$('#import-number').html(created);
+	$('#update-number').html(updated);
+	processed = created + updated;
+
+	if(!global_limit){
+		global_limit = ret['total'];
+		$('#total-number').html(ret['total']);
+	}
+
+	if(global_limit){
+		valeur = ( processed / global_limit ) * 100;
+		$('.progress-bar').css('width', valeur+'%').attr('aria-valuenow', valeur);
+	}
+}
+
+$(document).delegate('#button-link', 'click', function() {
+    $.ajax({
+        url: 'index.php?route=extension/module/import_api/fields&user_token={{ user_token }}',
+        type: 'post',
+        data: $('#tab-general :input'),
+        dataType: 'json',
+        beforeSend: function() {
+        	$('#button-link').button('loading');
+		},
+        complete: function() {
+            $('#button-link').button('reset');
+        },
+        success: function(json) {
+			if(json['error']){
+				alert(json['error']);
+			} else {
+				$('.alert, .text-danger').remove();
+			
+				$('.form-group').removeClass('has-error');
+				
+				$('.api_field').empty(); 
+				$('.api_field').append(new Option('--Please select--', 0));
+				$.each(json.field, function(key, value) {
+				  $('.api_field').append(new Option(value, value));
+				});
+				$('#fields').val(json.fields);
+			}
+        
+        },
+        error: function(xhr, ajaxOptions, thrownError) {
+            alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+        }
+    });
+});
+
+$(document).delegate('.api-test', 'click', function() {
+    $.ajax({
+	    url: '../index.php?route=extension/feed/import_api/test&id=' + $(this).attr('id'),
+        type: 'post',
+        data: $('#form-json-api').serialize(),
+        dataType: 'json',
+        beforeSend: function() {
+			$('#test-result').html('Please wait...');
+        	$(".api-test").attr("disabled", true);
+        	//$('.api-test').button('loading');
+		},
+        complete: function() {
+           //$('.api-test').button('reset');
+		   $(".api-test").attr("disabled", false);
+        },
+        success: function(ret) {
+            $('.alert, .text-danger').remove();
+			
+            $('.form-group').removeClass('has-error');
+			html = '';
+			$.each(ret,function(p, product){
+				html += jsonObjToHtml(product);
+				html += '</br><hr>';
+			});
+			
+            $('#test-result').html(html);						
+        },
+        error: function(xhr, ajaxOptions, thrownError) {
+            alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+        }
+    });
+});
+
+function jsonObjToHtml(obj){
+	html = '';
+	$.each(obj, function(index, value){					
+		if(Array.isArray(value)){
+			html += '<p><b>' + index + '</b></p>';
+			html += '<ul>';
+			$.each(value, function(i, v) {
+				if (v !== null && typeof (v) === 'object') {
+					html += jsonObjToHtml(v);
+				} else {
+					html += '<li>' + v + '</li>';
+				}
+			});
+			html += '</ul>';
+		} else if (value !== null && typeof (value) === 'object') {
+			html += '<p><b>' + index + '</b></p>';
+			html += jsonObjToHtml(value);
+		} else {
+			html += '<p><b>' + index + '</b>: ' + value + '</p>';
+		}	   
+	});
+	return html;
+}
+//--></script>
+{{ footer }}

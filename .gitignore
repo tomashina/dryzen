@@ -1,0 +1,37 @@
+# macOS and IDE files
+.DS_Store
+**/.DS_Store
+.idea/
+**/__MACOSX/
+
+# Local backups and database exports
+.local-backup/
+*.sql
+*.sql.gz
+*.zip
+
+# Environment-specific OpenCart configuration
+/upload/config.php
+/upload/admin/config.php
+/upload/env.php
+
+# Runtime and generated files
+*.log
+**/error_log
+/upload/image/cache/*
+!/upload/image/cache/index.html
+/upload/sitemaps/*
+!/upload/sitemaps/index.html
+/upload/system/storage/
+/storagedijana/cache/*
+!/storagedijana/cache/index.html
+/storagedijana/download/*
+!/storagedijana/download/index.html
+/storagedijana/logs/*
+!/storagedijana/logs/index.html
+/storagedijana/modification/*
+!/storagedijana/modification/index.html
+/storagedijana/session/*
+!/storagedijana/session/index.html
+/storagedijana/upload/*
+!/storagedijana/upload/index.html

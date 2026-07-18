@@ -1,0 +1,35 @@
+.quickcheckoutleft {
+	width: 30%;
+	float:left;
+}
+.quickcheckoutright {
+	width: 30%;
+	float: left;
+	padding-left:30px;
+	overflow: auto;
+}
+.quickcheckoutleft.cart-module-holder {
+	width: 40%;
+	padding-left:30px;
+	float:left;
+}
+.quickcheckoutmid {
+	width: 100%;
+}
+
+#quickcheckoutconfirm .quickcheckoutleft .col-sm-6 {
+	width: 100% !important;
+}
+
+table.quickcheckout-cart {
+	overflow: auto;
+}
+.quickcheckout-cart td.image img {
+	width: 30px;
+	height: auto;
+}
+#quickcheckoutconfirm .terms label {
+	margin-right:0px;
+	margin-bottom:15px;
+	display:block;
+}

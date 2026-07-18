@@ -1,0 +1,118 @@
+<div class="header-wrapper header6">
+
+{% if top_line_style %}
+<div class="top_line">
+  <div class="container {{ top_line_width }}">
+    <div class="table">
+        <div class="table-cell left ">
+            <div class="promo-message">{{ promo_message }}</div>
+        </div>
+        <div class="table-cell text-right ">
+            <div class="links">
+            <ul>
+            {% include 'basel/template/common/static_links.twig' %}
+            </ul>
+            {% if lang_curr_title  %}
+            <div class="setting-ul">
+            <div class="setting-li dropdown-wrapper from-left lang-curr-trigger nowrap"><a>
+            <span><img src="image/{{ lang }}.png" alt="{{ lang_curr_title }}" title="{{ lang_curr_title }}"> {{ lang_curr_title }}</span>
+            </a>
+            <div class="dropdown-content dropdown-right lang-curr-wrapper">
+            {{ language }}
+            {{ currency }}
+            </div>
+            </div>
+            </div>
+            {% endif %}
+            </div>
+        </div>
+    </div> <!-- .table ends -->
+  </div> <!-- .container ends -->
+</div> <!-- .top_line ends -->
+{% endif %}
+
+<span class="table header-main sticky-header-placeholder slidedown ">&nbsp;</span>
+<div class=" outer-container header-style sticky-header">
+  <div class="container {{ main_header_width }}">
+    <div class="table header-main {{ main_menu_align }}">
+
+    
+    
+    <div class="table-cell text-left  w25 logo">
+
+        <div id="logo">
+         
+        <a href="{{ home }}"><img src="image/dryzen-blue-logo.svg" title="{{ name }}" alt="{{ name }}" /></a>
+        </div>
+
+    </div>
+    
+    {% if primary_menu %}
+    <div class="table-cell text-center w60 menu-cell hidden-xs hidden-sm">
+        <div class="main-menu">
+            <ul class="categories">
+              {% if primary_menu == 'oc' %}
+                <!-- Default menu -->
+                {{ default_menu }}
+              {% elseif primary_menu is defined %} 
+                <!-- Mega menu -->
+                {% for key, row in primary_menu_desktop %}
+                {% include 'basel/template/common/menus/mega_menu.twig' %}
+                {% endfor %}
+              {% endif %}
+            </ul>
+        </div>
+    </div>
+    {% endif %}
+  
+    <div class="table-cell w15 btns shortcuts text-right">
+       
+       <div class="font-zero">
+           <div class="icon-element is_wishlist">
+
+               {% if logged %}
+                   <a class="shortcut-wrapper wishlist " title="Moj račun" href="{{ login }}"><i class="icon-user icon"></i></a><a class="shortcut-wrapper wishlist hidden-xs"  title="Odjava" href="{{ logout }}"> Odjava<div class="wishlist-hover"></div>
+               </a>
+               {% else %}
+                   <a class="shortcut-wrapper wishlist" title="Moj račun" href="{{ login }}">
+                       <div class="wishlist-hover"><i class="icon-user icon"></i></div>
+                   </a>
+               {% endif %}
+           </div>
+
+
+           <div class="icon-element is_wishlist hidden-xs">
+        <a class="shortcut-wrapper wishlist" href="{{ wishlist }}">
+        <div class="wishlist-hover"><i class="icon-heart icon"></i><span class="counter wishlist-counter">{{ wishlist_counter }}</span></div>
+        </a>
+        </div>
+        
+        <div class="icon-element catalog_hide">
+        <div id="cart" class="dropdown-wrapper from-top">
+        <a href="{{ shopping_cart }}" class="shortcut-wrapper cart">
+        <i id="cart-icon" class="global-cart icon"></i> <span id="cart-total" class="nowrap">
+        <span class="counter cart-total-items">{{ cart_items }}</span>
+        </a>
+        <div class="dropdown-content dropdown-right hidden-sm hidden-xs">
+        {{ cart }}
+        </div>
+        </div>
+        </div>
+        
+        <div class="icon-element">
+        <a class="shortcut-wrapper menu-trigger hidden-md hidden-lg">
+        <i class="icon-line-menu icon"></i>
+        </a>
+        </div>
+        
+       </div>
+        
+    </div>
+    
+    </div> <!-- .table.header_main ends -->
+  </div> <!-- .container ends -->
+</div> <!-- .sticky ends -->
+
+
+
+</div> <!-- .header_wrapper ends -->

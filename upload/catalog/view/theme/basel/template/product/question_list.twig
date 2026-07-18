@@ -1,0 +1,22 @@
+{% if questions %}
+    {% for question in questions %}
+    <div class="table">
+    <div class="table-cell"><i class="fa fa-comments-o"></i></div>
+    <div class="table-cell right">
+    <p class="author"><b>{{ basel_text_question_from }} {{ question.author }}</b> - <span>{{ question.date_added }}</span></p>
+    <p class="question">- {{ question.text }}</p>
+    {% if question.answer %}
+    <p class="our-answer"><b>{{ basel_text_our_answer }}</b></p>
+    <p>- {{ question.answer }}</p>
+    {% else %}
+    <p class="no-answer"><i>({{ basel_text_no_answer }})</i></p>
+    {% endif %}
+    </div>
+    </div>
+    {% endfor %}
+    {% if pagination %}
+    <div class="pagination-holder">{{ pagination }}</div>
+    {% endif %}
+{% else %}
+	<p>{{ basel_text_no_questions }}</p>
+{% endif %}

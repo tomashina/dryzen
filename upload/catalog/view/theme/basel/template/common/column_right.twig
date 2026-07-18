@@ -1,0 +1,9 @@
+{% if modules %}
+<div id="column-right" class="column col-sm-4 col-md-3">
+<div class="inner">
+  {% for module in modules %}
+  {{ module }}
+  {% endfor %}
+</div>
+</div>
+{% endif %}

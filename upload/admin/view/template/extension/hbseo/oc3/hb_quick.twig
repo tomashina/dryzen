@@ -1,0 +1,355 @@
+{{ header }}{{ column_left }} 
+<!--Main Content block start-->
+
+<div id="content">
+  <!--Header Start-->
+  <div class="page-header">
+    <div class="container-fluid">
+      <div class="pull-right">
+		<select id="language_id" name="language_id" class="selectpicker" data-html="true">
+			{% for language in languages %} 
+				<option value="{{ language.language_id }}" data-content="<img src='language/{{ language.code }}/{{ language.code }}.png' /> {{ language.name }}" {{ language_id == language.language_id ? 'selected':'' }}>{{ language.name }}</option>
+			{% endfor %} 
+		</select>
+		<button type="button" class="btn btn-default" data-toggle="modal" data-target="#setting" title="{{ tab_setting }}"><i class="fa fa-gear"></i></button>
+		<a href="{{ doc_link }}" target="_blank" class="btn btn-default"><i class="fa fa-book"></i>&nbsp;{{ button_doc }}</a>
+		<a href="{{ cancel }}" data-toggle="tooltip" title="{{ button_cancel }}" class="btn btn-default"><i class="fa fa-reply"></i></a>
+	  </div>
+      <h1>{{ heading_title }}</h1>
+      <ul class="breadcrumb">
+        {% for breadcrumb in breadcrumbs %} 
+        <li><a href="{{ breadcrumb['href'] }}">{{ breadcrumb['text'] }}</a></li>
+        {% endfor %} 
+      </ul>
+    </div>
+  </div>
+  
+  <!--Header End-->
+  <!--Container 1 start -->
+  <div class="container-fluid">
+    <!--Start - Error / Success Message if any -->
+    {% if (error_warning) %} 
+    <div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i> {{ error_warning }} 
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+    </div>
+    {% endif %} 
+    {% if (success) %} 
+    <div class="alert alert-success"><i class="fa fa-check-circle"></i> {{ success }} 
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+    </div>
+    {% endif %} 
+    <!--End - Error / Success Message if any -->
+	<div id="msgoutput"></div>
+	
+    <!--Panel Content Start-->
+    <div class="panel panel-default">      
+      <div class="panel-body">
+			<!--Tabs UL Starts-->
+			<ul class="nav nav-tabs" id="tabs">
+                <li class="active"><a href="#tab-product" onclick="loadBlock('product');" data-toggle="tab"><i class="fa fa-bars" aria-hidden="true"></i>&nbsp;{{ tab_products }}</a></li>
+				<li><a href="#tab-category" onclick="loadBlock('category');" data-toggle="tab"><i class="fa fa-bars" aria-hidden="true"></i>&nbsp;{{ tab_categories }}</a></li>
+				<li><a href="#tab-information" onclick="loadBlock('information');" data-toggle="tab"><i class="fa fa-bars" aria-hidden="true"></i>&nbsp;{{ tab_informations }}</a></li>
+				<li><a href="#tab-manufacturer" onclick="loadBlock('manufacturer');" data-toggle="tab"><i class="fa fa-bars" aria-hidden="true"></i>&nbsp;{{ tab_manufacturers }}</a></li>
+	        </ul>
+			<!--Tabs UL Ends-->
+			<div class="tab-content">
+
+			  	<div class="tab-pane active" id="tab-product">
+					<div class="row" style="margin-bottom:10px;">
+						<div class="col-sm-12">
+							<div class="input-group">
+								<input type="text" id="search-product-value" class="form-control" placeholder="{{ text_search_product }}">
+								<span class="input-group-addon btn" id="search-product-button" onclick="searchRecord('product');"><i class="fa fa-search"></i></span>
+							</div>
+						</div>
+					</div>
+
+					<div id="product-block" class="ajax-block"></div>
+				</div>
+				
+				<div class="tab-pane" id="tab-category">
+					<div class="row" style="margin-bottom:10px;">
+						<div class="col-sm-12">
+							<div class="input-group">
+								<input type="text" id="search-category-value" class="form-control" placeholder="{{ text_search_category }}">
+								<span class="input-group-addon btn" id="search-category-button" onclick="searchRecord('category');"><i class="fa fa-search"></i></span>
+							</div>
+						</div>
+					</div>
+
+					<div id="category-block" class="ajax-block"></div>
+				</div>
+
+				<div class="tab-pane" id="tab-information">
+					<div class="row" style="margin-bottom:10px;">
+						<div class="col-sm-12">
+							<div class="input-group">
+								<input type="text" id="search-information-value" class="form-control" placeholder="{{ text_search_information }}">
+								<span class="input-group-addon btn" id="search-information-button" onclick="searchRecord('information');"><i class="fa fa-search"></i></span>
+							</div>
+						</div>
+					</div>
+
+					<div id="information-block" class="ajax-block"></div>
+				</div>
+
+				<div class="tab-pane" id="tab-manufacturer">
+					<div class="row" style="margin-bottom:10px;">
+						<div class="col-sm-12">
+							<div class="input-group">
+								<input type="text" id="search-manufacturer-value" class="form-control" placeholder="{{ text_search_manufacturer }}">
+								<span class="input-group-addon btn" id="search-manufacturer-button" onclick="searchRecord('manufacturer');"><i class="fa fa-search"></i></span>
+							</div>
+						</div>
+					</div>
+
+					<div id="manufacturer-block" class="ajax-block"></div>
+				</div>				
+			</div><!--tab-content block end-->
+      
+
+		<!--SETTINGS MODAL START-->
+		<div class="modal fade" id="setting" tabindex="-1" role="dialog" aria-labelledby="setting_label">
+		<div class="modal-dialog modal-lg" role="document">
+			<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span>&times;</span></button>
+				<h4 class="modal-title">{{ tab_setting }}</h4>
+			</div>
+			<div class="modal-body">
+				<form action="{{ action }}" method="post" enctype="multipart/form-data" id="form-rd" class="form-setting">
+					<table class="table table-bordered table-hover">
+						{% for key, value in columns %}
+							<tr>
+								<td class="col-sm-4">{{ value }}</td>
+								<td><input type="checkbox" data-size="small" data-style="android" data-toggle="toggle" data-onstyle="success" name="hb_quick_field_{{ key }}" id="field_{{ key }}" class="form-control" value="1" {{ hb_quick_field[key] == 1? 'checked':'' }} /></td>
+							</tr>
+						{% endfor %} 
+						<tr>
+							<td>{{ label_count }}</td>
+							<td><input type="number" name="hb_quick_count" class="form-control" value="{{ hb_quick_count }}"></td>
+						</tr>
+						<tr>
+							<td>{{ label_sort_field }}</td>
+							<td><select name="hb_quick_sort_field" class="form-control">
+								<option value="item_id" {{ hb_quick_sort_field == 'item_id' ?'selected':'' }}>{{ text_item_id }}</option>
+								<option value="name" {{ hb_quick_sort_field == 'name' ?'selected':'' }}>{{ text_name }}</option>
+								<option value="date_modified" {{ hb_quick_sort_field == 'date_modified' ?'selected':'' }}>{{ text_date_modified }}</option>
+							</select></td>
+						</tr>
+						<tr>
+							<td>{{ label_sort_order }}</td>
+							<td><select name="hb_quick_sort_order" class="form-control">
+								<option value="ASC" {{ hb_quick_sort_order == 'ASC' ?'selected':'' }}>ASC</option>
+								<option value="DESC" {{ hb_quick_sort_order == 'DESC' ?'selected':'' }}>DESC</option>
+							</select></td>
+						</tr>
+					</table>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">{{ button_close }}</button>
+				<button type="submit" form="form-setting" data-toggle="tooltip" title="{{ button_save }}" class="btn btn-primary"><i class="fa fa-save"></i>&nbsp;{{ button_save }}</button>
+			</div>
+			<div id="addentry-result" style="text-align:center;"></div>
+			</div>
+		</div>
+		</div>
+		<!--SETTINGS MODAL END-->
+
+		<!--DESCRIPTION MODAL START-->
+		<div class="modal fade" id="desc-modal" tabindex="-1" role="dialog">
+			<div class="modal-dialog modal-lg" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>	  
+				<h4 class="modal-title"><b><span id="desc-modal-header"></span></b></h4>  
+				</div>
+				<div class="modal-body">
+					<div id="desc-modal-block"></div>
+					<div id="desc-form-result"></div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">{{ button_close }}</button>
+					<a id="button-desc-save" data-toggle="tooltip" title="{{ button_save }}" class="btn btn-primary"><i class="fa fa-save"></i>&nbsp;{{ button_save }}</a>
+				</div>
+			</div>
+			</div>
+		</div>
+		<!--DESCRIPTION MODAL END-->
+		
+      </div>
+    </div>
+    <!--Panel Content End-->
+    <!--Huntbee copyrights-->
+    <div class="container-fluid">
+      <center>
+        <span class="help">{{ heading_title }} - {{ extension_version }} &copy; <a href="https://www.huntbee.com/">WWW.HUNTBEE.COM</a> | <a href="https://www.huntbee.com/get-support">SUPPORT</a></span>
+      </center>
+    </div>
+    <!--Huntbee copyrights end-->
+  </div>
+  <!--Container 1 start -->
+</div>
+<!--Main Content block end-->
+<style type="text/css"> <!--addtional css-->
+a {cursor:pointer;}
+</style>
+
+<style type="text/css">
+.loaddiv{margin:100px;color:#0099CC;}
+body{font-family: sans-serif; }
+</style>
+
+<link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+<script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+
+<script type="text/javascript" src="view/javascript/bootstrap-notify.min.js"></script>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.18/css/bootstrap-select.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.18/js/bootstrap-select.min.js"></script>
+
+
+<script type="text/javascript">
+$(document).ready(function() {
+	loadBlock('product');
+	$('.selectpicker').selectpicker();
+});
+</script>
+
+<script type="text/javascript">
+$('#product-block').delegate('.pagination a', 'click', function(e) {
+	e.preventDefault();
+	$('#product-block').load(this.href);
+});
+
+$('#category-block').delegate('.pagination a', 'click', function(e) {
+	e.preventDefault();
+	$('#category-block').load(this.href);
+});
+
+$('#information-block').delegate('.pagination a', 'click', function(e) {
+	e.preventDefault();
+	$('#information-block').load(this.href);
+});
+
+$('#manufacturer-block').delegate('.pagination a', 'click', function(e) {
+	e.preventDefault();
+	$('#manufacturer-block').load(this.href);
+});
+
+
+function loadBlock(name){
+	$('.ajax-block').html('');
+	$('#'+name+'-block').html('<center><div class="loaddiv"><i class="fa fa-circle-o-notch fa-spin fa-3x fa-fw"></i></div></center>');
+	$('#'+name+'-block').load('index.php?route={{ base_route }}/hb_quick/'+name+'&user_token={{ user_token }}&language_id={{ language_id }}');
+}
+
+function searchRecord(item) {
+	var search_value = $('#search-'+item+'-value').val();
+	$('#'+item+'-block').fadeOut().load('index.php?route={{ base_route }}/hb_quick/'+item+'&user_token={{ user_token }}&language_id={{ language_id }}&search='+encodeURIComponent(search_value)).fadeIn('slow');
+}
+
+function openDescEditor(type, item_id) {
+	$('#desc-modal-header').load('index.php?route={{ base_route }}/hb_quick/item_name&user_token={{ user_token }}&language_id={{ language_id }}&type='+type+'&item_id='+item_id);
+	$('#desc-modal-block').html('<center><div class="loaddiv"><i class="fa fa-circle-o-notch fa-spin fa-3x fa-fw"></i></div></center>');
+	$('#desc-modal-block').load('index.php?route={{ base_route }}/hb_quick/desc_editor&user_token={{ user_token }}&language_id={{ language_id }}&type='+type+'&item_id='+item_id);
+	$('#desc-form-result').html('');
+	$('#desc-modal').modal('show');
+}
+
+// Destroy Summernote when modal is hidden	
+$('#desc-modal').on('hidden.bs.modal', function () {
+    $('#description_editor').summernote('destroy'); // Destroy the editor
+    console.log('Modal closed.');
+
+    // Find the active tab
+    const activeTab = $('#tabs li.active'); // Locate the <li> with the 'active' class
+    const activeTabAnchor = activeTab.find('a'); // Find the <a> element inside the active <li>
+    const hrefValue = activeTabAnchor.attr('href'); // Get the href value (e.g., #tab-manufacturer)
+
+    console.log('Active Tab HREF:', hrefValue);
+
+    // Determine type based on the href value
+    let type = '';
+    if (hrefValue === '#tab-product') {
+        type = 'product';
+    } else if (hrefValue === '#tab-category') {
+        type = 'category';
+    } else if (hrefValue === '#tab-information') {
+        type = 'information';
+    } else if (hrefValue === '#tab-manufacturer') {
+        type = 'manufacturer';
+    }
+
+    // Call the searchRecord function if the type is valid
+    if (type) {
+        searchRecord(type);
+    } else {
+        console.warn('Could not determine the active tab.');
+    }
+});
+
+$('#button-desc-save').on('click', function() {
+	$('#button-desc-save').html('<center><i class="fa fa-circle-o-notch fa-spin fa-fw"></i></center>');	
+	const desc_type = $('#desc_type').val();
+	$.ajax({
+		type: 'post',
+		url: 'index.php?route={{ base_route }}/hb_quick/save_changes&user_token={{ user_token }}&language_id={{ language_id }}',
+		data: {type: desc_type, id: $('#desc_item_id').val(), key: $('#desc_column').val(), value: $('#description_editor').val() },
+		dataType: 'json',
+		success: function(json) {
+			if (json['success']) {
+				$('#desc-form-result').html('<div class="alert alert-success"><i class="fa fa-check"></i>&nbsp;'+json['success']+'<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+				$('#button-desc-save').html('<i class="fa fa-check"></i>&nbsp;{{ button_save }}');
+			}
+
+			if (json['error']) {
+				$('#desc-form-result').html('<div class="alert alert-danger">'+json['error']+'<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+			}
+		},			
+		error: function(xhr, ajaxOptions, thrownError) {
+			alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+		}
+	 });	
+});
+
+</script>
+
+<script type="text/javascript">
+// JavaScript to trigger the search button when Enter key is pressed
+document.getElementById("search-product-value").addEventListener("keydown", function(event) {
+    if (event.key === "Enter") {
+        event.preventDefault();  // Prevent form submission if the input is in a form
+        document.getElementById("search-product-button").click();  // Trigger the search button click
+    }
+});
+
+document.getElementById("search-category-value").addEventListener("keydown", function(event) {
+    if (event.key === "Enter") {
+        event.preventDefault();  // Prevent form submission if the input is in a form
+        document.getElementById("search-category-button").click();  // Trigger the search button click
+    }
+});
+
+document.getElementById("search-information-value").addEventListener("keydown", function(event) {
+    if (event.key === "Enter") {
+        event.preventDefault();  // Prevent form submission if the input is in a form
+        document.getElementById("search-information-button").click();  // Trigger the search button click
+    }
+});
+
+document.getElementById("search-manufacturer-value").addEventListener("keydown", function(event) {
+    if (event.key === "Enter") {
+        event.preventDefault();  // Prevent form submission if the input is in a form
+        document.getElementById("search-manufacturer-button").click();  // Trigger the search button click
+    }
+});
+</script>
+
+<script type="text/javascript">
+$('#language_id').on('change', function() {
+	window.location.href = 'index.php?route={{ base_route }}/hb_quick&user_token={{ user_token }}&language_id='+$('#language_id').val();
+});
+</script>
+{{ footer }}

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<modification>
+    <name>SEO - Broken Link Redirect Manager [2xxx]</name>
+    <version>5.1</version>
+    <author>HuntBee OpenCart Services</author>
+    <link>https://www.huntbee.com</link>
+	<code>broken_link_manager_ocmod</code>
+
+	<file path="catalog/controller/error/not_found.php">		
+		<operation>
+			<search><![CDATA[$this->response->addHeader($this->request->server['SERVER_PROTOCOL'] . ' 404 Not Found');]]> </search>
+			<add position="before"><![CDATA[
+			$this->load->model('extension/module/brokenlink_manager');
+			$this->model_extension_module_brokenlink_manager->checkandredirect();]]></add>
+		</operation>
+			
+		<operation>
+			<search><![CDATA[$data['text_error']]]></search>
+			<add position="before"><![CDATA[
+			$language_id = $this->config->get('config_language_id');
+			
+			if ($this->config->get('hb_brokenlinks_enablepage')) {
+				$data['custom_page'] = $this->config->get('hb_brokenlinks_page'.$language_id);
+				$data['custom_page'] = html_entity_decode($data['custom_page']);
+			}else{
+				$data['custom_page'] = false;
+			}
+			
+			]]>
+			</add>
+		</operation>			
+    </file>	
+		
+	<file path="catalog/controller/product/product.php">		
+		<operation error="skip">
+			<search><![CDATA[$this->document->setTitle($this->language->get('text_error'));]]> </search>
+			<add position="before"><![CDATA[
+			$this->load->model('extension/module/brokenlink_manager');
+			$this->model_extension_module_brokenlink_manager->checkandredirect();]]></add>
+		</operation>	
+	</file>	
+	
+	<file path="catalog/controller/product/category.php">		
+		<operation error="skip">
+			<search><![CDATA[$this->document->setTitle($this->language->get('text_error'));]]> </search>
+			<add position="before"><![CDATA[
+			$this->load->model('extension/module/brokenlink_manager');
+			$this->model_extension_module_brokenlink_manager->checkandredirect();]]></add>
+		</operation>	
+	</file>
+	
+	<file path="catalog/controller/product/manufacturer.php">		
+		<operation error="skip">
+			<search><![CDATA[$this->document->setTitle($this->language->get('text_error'));]]> </search>
+			<add position="before"><![CDATA[
+			$this->load->model('extension/module/brokenlink_manager');
+			$this->model_extension_module_brokenlink_manager->checkandredirect();]]></add>
+		</operation>	
+	</file>
+	
+	<file path="catalog/controller/information/information.php">		
+		<operation error="skip">
+			<search><![CDATA[$this->document->setTitle($this->language->get('text_error'));]]> </search>
+			<add position="before"><![CDATA[
+			$this->load->model('extension/module/brokenlink_manager');
+			$this->model_extension_module_brokenlink_manager->checkandredirect();]]></add>
+		</operation>	
+	</file>		
+	
+	<file path="catalog/view/theme/*/template/error/not_found.tpl">
+		<operation>
+			<search><![CDATA[<?php echo $text_error; ?>]]></search>
+			<add position="replace"><![CDATA[<?php if (isset($custom_page)) { echo $custom_page; } else { echo $text_error; } ?>]]>
+			</add>
+		</operation>
+	</file>
+	
+	<file path="catalog/controller/common/header.php">
+		<operation>
+			<search><![CDATA[$data['title'] = $this->document->getTitle();]]></search>
+			<add position="before"><![CDATA[
+			$this->load->model('extension/module/brokenlink_manager');
+			$this->model_extension_module_brokenlink_manager->validateCommonRedirect();
+			]]>
+			</add>
+		</operation>
+	</file>		
+</modification>

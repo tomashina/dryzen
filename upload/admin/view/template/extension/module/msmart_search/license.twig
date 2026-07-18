@@ -1,0 +1,61 @@
+{% include 'extension/module/msmart_search/_header.twig' %}
+
+<br /><br />
+<center>
+	<font style="font-weight:300; font-size: 30px;">Thank you for choosing</font> <font style="font-weight:400; font-size: 30px;">Mega Smart Search</font>
+</center>
+<br />
+<hr />
+
+<table style="margin: 0 auto;">
+	<tbody>
+		{% if ( _error_warning2 is not empty ) %} 
+		<tr><td><div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i> {{ _error_warning2 }} 
+				<button type="button" class="close" data-dismiss="alert">&times;</button>
+				</div></td></tr>
+		{% endif %} 
+		
+		<tr>
+			<td class="text-center">
+				To complete installation, please enter your <strong>Activation Key</strong>:
+				<table style="margin: 20px auto;">
+					<tr>
+						<td class="text-left" style="padding: 5px; text-align: center;">
+							<input type="text" name="activation_key" value="{{ _POST['activation_key'] is empty ? '' : _POST['activation_key'] }}" class="form-control" style="width: 429px; font-family: 'Courier New', Courier, monospace" placeholder="_____-______-_____-_____-_____-_____-_____-_____" />
+							<small>You can't find it? <a href="https://support.ocdemo.eu/auth/forgot-activation-key" target="_blank">Click here</a></small>
+						</td>
+					</tr>
+				</table>
+				<button class="btn btn-primary btn-sm" type="submit"><i class="glyphicon glyphicon-ok"></i>&nbsp;&nbsp;Confirm</button>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<br />
+				<br />
+				<font style="font-weight:300; font-size: 20px;">Remember!</font>
+				<div class="help-block">
+					<ol>
+						<li>If two times you enter incorrect data, the ability to activate the extension will be blocked for 48 hours.</li>
+						<li>If in the meantime you changed your e-mail in the store where you purchased this extension, to activate it, you should still to use the same which was used to purchase.</li>
+					</ol>
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<td class="text-center">
+				<br />
+				<br />
+				<br />
+				<font style="font-weight:300; font-size: 20px;">Problems with the installation?</font>
+				<br />
+				<br />
+				
+				If you don't know how to finish installation of MSS please contact us: <a href="mailto:support@ocdemo.eu">support@ocdemo.eu</a><br />
+				(don't forget to include your Activation Key and FTP details)
+			</td>
+		</tr>
+	</tbody>
+</table>
+<br /><br />
+{% include 'extension/module/msmart_search/_footer.twig' %}

@@ -1,0 +1,211 @@
+{{ header }}{{ column_left }} 
+<!--Main Content block start-->
+
+<div id="content">
+  <!--Header Start-->
+  <div class="page-header">
+    <div class="container-fluid">
+      <div class="pull-right">
+	    <button type="submit" form="form-translate" data-toggle="tooltip" title="{{ button_save }}" class="btn btn-primary"><i class="fa fa-save"></i>&nbsp;{{ button_save }}</button>
+		<a href="{{ doc_link }}" target="_blank" class="btn btn-default"><i class="fa fa-book"></i>&nbsp;{{ button_doc }}</a>
+		<a href="{{ cancel }}" data-toggle="tooltip" title="{{ button_cancel }}" class="btn btn-default"><i class="fa fa-reply"></i></a>
+	  </div>
+      <h1>{{ heading_title }}</h1>
+      <ul class="breadcrumb">
+        {% for breadcrumb in breadcrumbs %} 
+        <li><a href="{{ breadcrumb['href'] }}">{{ breadcrumb['text'] }}</a></li>
+        {% endfor %} 
+      </ul>
+    </div>
+  </div>
+  <!--Header End-->
+  <!--Container 1 start -->
+  <div class="container-fluid">
+    <!--Start - Error / Success Message if any -->
+    {% if (error_warning) %} 
+    <div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i> {{ error_warning }} 
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+    </div>
+    {% endif %} 
+    {% if (success) %} 
+    <div class="alert alert-success"><i class="fa fa-check-circle"></i> {{ success }} 
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+    </div>
+    {% endif %} 
+    <!--End - Error / Success Message if any -->
+	<div id="msgoutput"></div>
+	
+    <!--Panel Content Start-->
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title"><i class="fa fa-android"></i> {{ heading_title }}</h3>
+      </div>
+      <div class="panel-body">
+	  	<!--Tabs UL Starts-->
+		<ul class="nav nav-tabs" id="tabs">
+			<li class="active"><a href="#tab-setting" data-toggle="tab"><i class="fa fa-cogs" aria-hidden="true"></i>&nbsp;{{ tab_setting }}</a></li>
+			<li><a href="#tab-routes" onclick="loadBlock('routes');" data-toggle="tab"><i class="fa fa-road"></i>&nbsp;{{ tab_routes }}</a></li>
+		</ul>
+		<!--Tabs UL Ends-->
+		<div class="tab-content">
+			<div class="tab-pane active" id="tab-setting">
+				<form action="{{ action }}" method="post" enctype="multipart/form-data" id="form-translate" class="form-horizontal">
+					<div class="form-group">
+						<label class="col-sm-3 control-label">{{ text_crawl_status }}</label>
+						<div class="col-sm-9">
+							<input type="checkbox" data-toggle="toggle" data-onstyle="success" name="hb_crawl_status" class="form-control" value="1" {{ hb_crawl_status == '1'? 'checked':'' }} />
+						</div>
+					</div>
+
+					{% for key, value in categories %}
+					<div class="form-group">
+						<label class="col-sm-3 control-label">{{ value }}</label>						
+						<div class="col-sm-3">
+							<select id="hb_crawl_{{ key }}" name="hb_crawl_{{ key }}" class="form-control">
+							{% for option in options %} 
+								<option value="{{ option }}" {{ hb_crawl[key] == option ? 'selected':'' }}>{{ option }}</option>
+							{% endfor %}								
+							</select>
+						</div>
+					</div>
+					{% endfor %}			
+				</form>	
+			</div><!--tab setting end-->	
+
+			<div class="tab-pane" id="tab-routes">
+				<div class="row" style="margin-bottom:10px;">
+					<div class="col-sm-6">
+						<input type="text" id="route" name="route" class="form-control" placeholder="{{ text_enter_route }}">
+					</div>
+					<div class="col-sm-2">
+						<select id="meta" name="meta" class="form-control">
+							{% for option in options %} 
+								<option value="{{ option }}">{{ option }}</option>
+							{% endfor %}								
+						</select>							
+					</div>
+					<div class="col-sm-2">
+						<a class="btn btn-success col-sm-12" id="button-add-route"><i class="fa fa-plus"></i>&nbsp;{{ button_add }}</a>							
+					</div>
+					<div class="col-sm-2">
+						<a class="btn btn-danger col-sm-12" id="button-delete-routes"><i class="fa fa-trash"></i>&nbsp;{{ button_delete }}</a>							
+					</div>
+				</div>
+
+				<div id="routes-block" class="ajax-block"></div>
+			</div>
+
+		</div>		
+      </div>
+    </div>
+    <!--Panel Content End-->
+    <!--Huntbee copyrights-->
+    <div class="container-fluid">
+      <center>
+        <span class="help">{{ heading_title }} - {{ extension_version }} &copy; <a href="https://www.huntbee.com/">WWW.HUNTBEE.COM</a> | <a href="https://www.huntbee.com/get-support">SUPPORT</a></span>
+      </center>
+    </div>
+    <!--Huntbee copyrights end-->
+  </div>
+  <!--Container 1 start -->
+</div>
+<!--Main Content block end-->
+
+<style type="text/css">
+.loaddiv{margin:100px;color:#0099CC;}
+</style>
+
+<link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+<script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+
+<script type="text/javascript">
+function loadBlock(name){
+	$('.ajax-block').html('');
+	$('#'+name+'-block').html('<center><div class="loaddiv"><i class="fa fa-circle-o-notch fa-spin fa-3x fa-fw"></i></div></center>');
+	$('#'+name+'-block').load('index.php?route={{ base_route }}/hb_crawl/'+name+'&user_token={{ user_token }}');
+}
+
+$('#button-add-route').on('click', function() {
+	$('#button-add-route').html('<center><i class="fa fa-circle-o-notch fa-spin fa-fw"></i></center>');
+
+	$.ajax({
+		type: 'post',
+		url: 'index.php?route={{ base_route }}/hb_crawl/add_route&user_token={{ user_token }}&type=product',
+		data: {route : $('#route').val(), meta: $('#meta').val()},
+		dataType: 'json',
+		success: function(json) {
+			if (json['success']) {
+				$('#msgoutput').html('<div class="alert alert-success"><i class="fa fa-check"></i>&nbsp;'+json['success']+'<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+				$('#button-add-route').html('<i class="fa fa-plus"></i>&nbsp;{{ button_add }}');
+				loadBlock('routes');
+			}
+
+			if (json['error']) {
+				$('#msgoutput').html('<div class="alert alert-danger">'+json['error']+'<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+				$('#button-add-route').html('<i class="fa fa-plus"></i>&nbsp;{{ button_add }}');
+			}
+		},			
+		error: function(xhr, ajaxOptions, thrownError) {
+			alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+		}
+	 });	
+});
+
+$('#button-delete-routes').on('click', function() {
+	if (!confirm("{{ text_confirm }}")) {
+		return false;
+	}
+
+	$('#button-delete-routes').html('<center><i class="fa fa-circle-o-notch fa-spin fa-fw"></i></center>');
+	var arraydata = $('input[name="selected[]"]:checked').map(function(){
+        return this.value;
+    }).get()
+	
+	$.ajax({
+		type: 'post',
+		url: 'index.php?route={{ base_route }}/hb_crawl/delete_routes&user_token={{ user_token }}&type=product',
+		data: {selected : arraydata},
+		dataType: 'json',
+		success: function(json) {
+			if (json['success']) {
+				$('#msgoutput').html('<div class="alert alert-success"><i class="fa fa-check"></i>&nbsp;'+json['success']+'<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+				$('#button-delete-routes').html('<i class="fa fa-check"></i>&nbsp;{{ button_delete }}');
+				loadBlock('routes');
+			}
+
+			if (json['error']) {
+				$('#msgoutput').html('<div class="alert alert-danger">'+json['error']+'<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+				$('#button-delete-routes').html('<i class="fa fa-trash"></i>&nbsp;{{ button_delete }}');
+			}
+		},			
+		error: function(xhr, ajaxOptions, thrownError) {
+			alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+		}
+	 });	
+});
+
+function updateMeta(id, value){
+	$('#msgoutput').html('<center><i class="fa fa-circle-o-notch fa-spin fa-fw"></i></center>');
+
+	$.ajax({
+		type: 'post',
+		url: 'index.php?route={{ base_route }}/hb_crawl/update_route&user_token={{ user_token }}&type=product',
+		data: {id : id, meta: value},
+		dataType: 'json',
+		success: function(json) {
+			if (json['success']) {
+				$('#msgoutput').html('<div class="alert alert-success"><i class="fa fa-check"></i>&nbsp;'+json['success']+'<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+			}
+
+			if (json['error']) {
+				$('#msgoutput').html('<div class="alert alert-danger">'+json['error']+'<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+			}
+		},			
+		error: function(xhr, ajaxOptions, thrownError) {
+			alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+		}
+	});
+}
+</script>
+
+{{ footer }}

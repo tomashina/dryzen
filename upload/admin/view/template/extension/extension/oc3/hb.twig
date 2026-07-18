@@ -1,0 +1,72 @@
+<fieldset>
+  <legend>{{ heading_title }} 
+  
+  <div class="pull-right">
+        <a href="https://www.huntbee.com/documentation/" target="_blank" data-toggle="tooltip" title="Knowledge Base" class="btn btn-default btn-sm"><i class="fa fa-book"></i> User Guides</a>
+		<a href="https://www.huntbee.com/get-support/" target="_blank" data-toggle="tooltip" title="Need Help? Get our Support" class="btn btn-primary btn-sm"><i class="fa fa-life-ring"></i> Get Support</a>
+		<a href="https://www.huntbee.com/" target="_blank" data-toggle="tooltip" title="More useful extensions for you store" class="btn btn-primary btn-sm"><i class="fa fa-cart-plus"></i> Extension Store</a>
+  </div>
+  </legend>
+  
+  {% if (error_warning) %} 
+  <div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i> {{ error_warning }} 
+    <button type="button" class="close" data-dismiss="alert">&times;</button>
+  </div>
+  {% endif %} 
+  {% if (success) %} 
+  <div class="alert alert-success"><i class="fa fa-check-circle"></i> {{ success }} 
+    <button type="button" class="close" data-dismiss="alert">&times;</button>
+  </div>
+  {% endif %} 
+  <div class="table-responsive">
+    <table class="table table-bordered table-hover">
+      <thead>
+        <tr style="background-color:#fcfcfc">
+          <td class="text-left"><i class="fa fa-wrench"></i> {{ column_name }}</td>
+          <td class="text-center">{{ column_action }}</td>
+        </tr>
+      </thead>
+      <tbody>
+        {% if (extensions) %} 
+        {% for extension in extensions %} 
+        <tr>
+          <td class="text-left"><b>{{ extension['name'] }}</b></td>
+          <td class="text-center">
+		  	{% if (extension['installed']) %} 
+				{% if (store_count == 1) %} 
+					{% for store in extension['store'] %} 
+						<a class="btn btn-secondary btn-primary" href="{{ store['edit'] }}"><i class="fa fa-gear"></i> {{ button_edit }}</a>
+					{% endfor %} 
+				{% else %} 
+					<span class="dropdown">
+					  <button class="btn btn-secondary btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						<i class="fa fa-gear"></i> {{ button_edit }} 
+					  </button>
+					  <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+						{% for store in extension['store'] %} 
+						<li><a href="{{ store['edit'] }}">{{ store['name'] }}</a></li>
+						{% endfor %} 
+					  </ul>
+					</span>
+				{% endif %} 
+		  {% endif %} 
+		      {% if (not extension['installed']) %} 
+            <a href="{{ extension['install'] }}" data-toggle="tooltip" title="{{ button_install }}" class="btn btn-success"><i class="fa fa-plus-circle"></i></a>
+            {% else %} 
+            <a href="{{ extension['uninstall'] }}" data-toggle="tooltip" title="{{ button_uninstall }}" class="btn btn-danger"><i class="fa fa-minus-circle"></i></a>
+            <a href="{{ extension['update'] }}" data-toggle="tooltip" title="{{ button_update }}" class="btn btn-warning"><i class="fa fa-refresh"></i></a>
+          {% endif %} 
+          
+
+          </td>
+        </tr>
+        {% endfor %} 
+        {% else %} 
+        <tr>
+          <td class="text-center" colspan="2">{{ text_no_results }}</td>
+        </tr>
+        {% endif %} 
+      </tbody>
+    </table>
+  </div>
+</fieldset>

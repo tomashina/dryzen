@@ -1,0 +1,627 @@
+{{ header }}{{ column_left }} 
+<!--Main Content block start-->
+
+<div id="content">
+	<!--Header Start-->
+	<div class="page-header">
+		<div class="container-fluid">
+			<div class="pull-right">
+				<button form="form-aigen" data-toggle="tooltip" title="{{ button_save }}" id="button-save" class="btn btn-primary"><i class="fa fa-save"></i>&nbsp;{{ button_save }}</button>
+				<a id="button-generate-selected" class="btn btn-success generate"><i class="fa fa-play-circle"></i>&nbsp;{{ button_generate_selected }}</a>
+				<a href="{{ doc_link }}" target="_blank" class="btn btn-default"><i class="fa fa-book"></i>&nbsp;{{ button_doc }}</a>
+				<a href="{{ cancel }}" data-toggle="tooltip" title="{{ button_cancel }}" class="btn btn-default"><i class="fa fa-reply"></i></a>
+			</div>
+			<h1>{{ heading_title }}</h1>
+			<ul class="breadcrumb">
+				{% for breadcrumb in breadcrumbs %}
+				<li><a href="{{ breadcrumb['href'] }}">{{ breadcrumb['text'] }}</a></li>
+				{% endfor %}
+			</ul>
+		</div>
+	</div>
+	<!--Header End-->
+<!--Container 1 start -->
+<div class="container-fluid">
+	<!--Start - Error / Success Message if any -->
+	{% if (error_warning) %}
+	<div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i> {{ error_warning }}
+		<button type="button" class="close" data-dismiss="alert">&times;</button>
+	</div>
+	{% endif %}
+	{% if (success) %}
+	<div class="alert alert-success"><i class="fa fa-check-circle"></i> {{ success }}
+		<button type="button" class="close" data-dismiss="alert">&times;</button>
+	</div>
+	{% endif %}
+	<!--End - Error / Success Message if any -->
+	<div id="msgoutput"></div>
+	<!--Panel Content Start-->
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			<h3 class="panel-title"><i class="fa fa-android"></i> {{ heading_title }}</h3>
+		</div>
+		<div class="panel-body">
+
+			<!--Tabs UL Starts-->
+			<ul class="nav nav-tabs" id="tabs">
+				<li class="active"><a href="#tab-product" onclick="loadBlock('product');" data-toggle="tab"><i class="fa fa-bars"></i> {{ tab_product }}</a></li>
+				<li><a href="#tab-category" onclick="loadBlock('category');" data-toggle="tab"><i class="fa fa-bars"></i> {{ tab_category }}</a></li>
+				{% if onpage_extension %}<li><a href="#tab-manufacturer" onclick="loadBlock('manufacturer');" data-toggle="tab"><i class="fa fa-bars"></i> {{ tab_manufacturer }}</a></li>{% endif %}
+				<li><a href="#tab-information" onclick="loadBlock('information');" data-toggle="tab"><i class="fa fa-bars"></i> {{ tab_information }}</a></li>
+				<li><a href="#tab-setting" data-toggle="tab"><i class="fa fa-cogs"></i> {{ tab_setting }}</a></li>
+				<li><a href="#tab-items" onclick="loadBlock('items');" data-toggle="tab"><i class="fa fa-globe"></i> {{ tab_items }}</a></li>
+				<li><a href="#tab-logs" onclick="loadBlock('logs');" data-toggle="tab"><i class="fa fa-calendar-plus-o"></i> {{ tab_logs }}</a></li>
+			</ul>
+			<!--Tabs UL Ends-->
+			<div class="tab-content">
+
+				<div class="tab-pane active" id="tab-product">
+					<div class="row" style="margin-bottom:10px;">
+						<div class="col-sm-12">
+							<div class="input-group">
+								<input type="text" id="search-product-value" class="form-control" placeholder="{{ text_search_product }}">
+								<span class="input-group-addon btn" id="search-product-button" onclick="searchRecord('product');"><i class="fa fa-search"></i></span>
+							</div>
+						</div>
+					</div>
+
+					<div id="product-block" class="ajax-block"></div>
+				</div>
+
+				<div class="tab-pane" id="tab-category">
+					<div class="row" style="margin-bottom:10px;">
+						<div class="col-sm-12">
+							<div class="input-group">
+								<input type="text" id="search-category-value" class="form-control" placeholder="{{ text_search_category }}">
+								<span class="input-group-addon btn" id="search-category-button" onclick="searchRecord('category');"><i class="fa fa-search"></i></span>
+							</div>
+						</div>
+					</div>
+
+					<div id="category-block" class="ajax-block"></div>
+				</div>
+				
+				{% if onpage_extension %}
+				<div class="tab-pane" id="tab-manufacturer">
+					<div class="row" style="margin-bottom:10px;">
+						<div class="col-sm-12">
+							<div class="input-group">
+								<input type="text" id="search-manufacturer-value" class="form-control" placeholder="{{ text_search_manufacturer }}">
+								<span class="input-group-addon btn" id="search-manufacturer-button" onclick="searchRecord('manufacturer');"><i class="fa fa-search"></i></span>
+							</div>
+						</div>
+					</div>
+
+					<div id="manufacturer-block" class="ajax-block"></div>
+				</div>
+				{% endif %}
+
+				<div class="tab-pane" id="tab-information">
+					<div class="row" style="margin-bottom:10px;">
+						<div class="col-sm-12">
+							<div class="input-group">
+								<input type="text" id="search-information-value" class="form-control" placeholder="{{ text_search_information }}">
+								<span class="input-group-addon btn" id="search-information-button" onclick="searchRecord('information');"><i class="fa fa-search"></i></span>
+							</div>
+						</div>
+						
+					</div>
+
+					<div id="information-block" class="ajax-block"></div>
+				</div>
+
+				<div class="tab-pane" id="tab-items">
+					<div class="row" style="margin-bottom:10px;">
+						<div class="col-sm-9">
+							<div class="input-group">
+								<input type="text" id="search-items-value" class="form-control" placeholder="{{ text_search_items }}">
+								<span class="input-group-addon btn" id="search-items-button" onclick="searchRecord('items');"><i class="fa fa-search"></i></span>
+							</div>
+						</div>
+						<div class="col-sm-3">
+							<div class="pull-right">
+							<div class="btn-group">
+								<button type="button" class="btn btn-success dropdown-toggle" id="btn-group-accept" data-toggle="dropdown">
+									<i class="fa fa-thumbs-up"></i>&nbsp;{{ button_accept }}&nbsp;<span class="caret"></span>
+								</button>
+								<ul class="dropdown-menu dropdown-menu-right" role="menu">
+									<li><a onclick="confirm('{{ text_confirm }}') ? acceptItems('selected') : false;"><i class="fa fa-thumbs-up"></i>&nbsp;{{ button_accept_selected }}</a></li>
+									<li><a onclick="confirm('{{ text_confirm }}') ? acceptItems('all') : false;"><i class="fa fa-thumbs-up"></i>&nbsp;{{ button_accept_all }}</a></li>
+								</ul>
+							</div>
+
+							<div class="btn-group">
+								<button type="button" class="btn btn-warning dropdown-toggle" id="btn-group-restore" data-toggle="dropdown">
+									<i class="fa fa-reply"></i>&nbsp;{{ button_restore }}&nbsp;<span class="caret"></span>
+								</button>
+								<ul class="dropdown-menu dropdown-menu-right" role="menu">
+									<li><a onclick="confirm('{{ text_restore_confirm }}') ? restoreItems('selected') : false;"><i class="fa fa-reply"></i>&nbsp;{{ button_restore_selected }}</a></li>
+									<li><a onclick="confirm('{{ text_restore_confirm }}') ? restoreItems('all') : false;"><i class="fa fa-reply-all"></i>&nbsp;{{ button_restore_all }}</a></li>
+								</ul>
+							</div>
+
+							<div class="btn-group">
+								<button type="button" class="btn btn-danger dropdown-toggle" id="btn-group-delete" data-toggle="dropdown">
+									<i class="fa fa-trash"></i>&nbsp;{{ button_delete }}&nbsp;<span class="caret"></span>
+								</button>
+								<ul class="dropdown-menu dropdown-menu-right" role="menu">
+									<li><a onclick="confirm('{{ text_confirm_delete }}') ? deleteItems('selected') : false;"><i class="fa fa-trash"></i>&nbsp;{{ button_delete_selected }}</a></li>
+									<li><a onclick="confirm('{{ text_confirm_delete }}') ? deleteItems('all') : false;"><i class="fa fa-trash"></i>&nbsp;{{ button_delete_all }}</a></li>
+								</ul>
+							</div>
+							</div>
+						</div>
+				
+					</div>
+
+					<div id="items-block" class="ajax-block"></div>
+				</div>
+
+				<!--SETUP-->
+				<div class="tab-pane" id="tab-setting">
+					<form action="{{ action }}" method="post" enctype="multipart/form-data" id="form-aigen" class="form-horizontal">
+						<div class="form-group">
+							<label class="col-sm-4 control-label">{{ text_status }}</label>
+							<div class="col-sm-8">
+								<input type="checkbox" data-toggle="toggle" data-onstyle="success" name="hb_aigen_status" class="form-control" value="1" {{ hb_aigen_status == '1' ? 'checked' : '' }} />
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label class="col-sm-4 control-label">{{ text_api }}</label>
+							<div class="col-sm-8">
+								<input type="text" name="hb_aigen_api" value="{{ hb_aigen_api }}" class="form-control" />
+								<span class="help-block">{{ text_api_help }}</span>
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label class="col-sm-4 control-label">{{ text_gpt_model }}</label>
+							<div class="col-sm-8">
+								<input type="text" name="hb_aigen_gpt_model" value="{{ hb_aigen_gpt_model }}" class="form-control" />	
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label class="col-sm-4 control-label">{{ text_language }}</label>
+							<div class="col-sm-8">
+								<select name="hb_aigen_language_id" class="form-control">
+									{% for language in languages %}
+									<option value="{{ language['language_id'] }}" {% if language['language_id'] == hb_aigen_language_id %} selected {% endif %}>{{ language['name'] }}</option>
+									{% endfor %}
+								</select>
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label class="col-sm-4 control-label">{{ text_enable_logs }}</label>
+							<div class="col-sm-8">
+								<input type="checkbox" data-toggle="toggle" data-onstyle="success" name="hb_aigen_logs" class="form-control" value="1" {{ hb_aigen_logs == '1' ? 'checked' : '' }} />
+							</div>
+						</div> 
+
+						<div class="form-group">
+							<label class="col-sm-4 control-label">{{ text_product_prompt_template }}<br><div class="text text-info">{{ text_product_prompt_template_help }}</div></label>
+							<div class="col-sm-8">
+								{% for language in languages %}
+								<div class="col-sm-12" style="margin-bottom:10px;">
+									<div class="input-group">
+										<span class="input-group-addon"><img src="language/{{ language['code'] }}/{{ language['code'] }}.png" alt="{{ language.name }}" title="{{ language.name }}"/></span>
+										<textarea name="hb_aigen_product_template{{ language['language_id'] }}" rows="5" class="form-control">{{ hb_aigen_product_template[language['language_id']] }}</textarea>
+									</div>
+								</div>
+								{% endfor %}								
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label class="col-sm-4 control-label">{{ text_category_prompt_template }}<br><div class="text text-info">{{ text_category_prompt_template_help }}</div></label>
+							<div class="col-sm-8">
+								{% for language in languages %}
+								<div class="col-sm-12" style="margin-bottom:10px;">
+									<div class="input-group">
+										<span class="input-group-addon"><img src="language/{{ language['code'] }}/{{ language['code'] }}.png" alt="{{ language.name }}" title="{{ language.name }}"/></span>
+										<textarea name="hb_aigen_category_template{{ language['language_id'] }}" rows="5" class="form-control">{{ hb_aigen_category_template[language['language_id']] }}</textarea>
+									</div>
+								</div>
+								{% endfor %}								
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label class="col-sm-4 control-label">{{ text_manufacturer_prompt_template }}<br><div class="text text-info">{{ text_manufacturer_prompt_template_help }}</div></label>
+							<div class="col-sm-8">
+								{% for language in languages %}
+								<div class="col-sm-12" style="margin-bottom:10px;">
+									<div class="input-group">
+										<span class="input-group-addon"><img src="language/{{ language['code'] }}/{{ language['code'] }}.png" alt="{{ language.name }}" title="{{ language.name }}"/></span>
+										<textarea name="hb_aigen_manufacturer_template{{ language['language_id'] }}" rows="5" class="form-control">{{ hb_aigen_manufacturer_template[language['language_id']] }}</textarea>
+									</div>
+								</div>
+								{% endfor %}								
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label class="col-sm-4 control-label">{{ text_information_prompt_template }}<br><div class="text text-info">{{ text_information_prompt_template_help }}</div></label>
+							<div class="col-sm-8">
+								{% for language in languages %}
+								<div class="col-sm-12" style="margin-bottom:10px;">
+									<div class="input-group">
+										<span class="input-group-addon"><img src="language/{{ language['code'] }}/{{ language['code'] }}.png" alt="{{ language.name }}" title="{{ language.name }}"/></span>
+										<textarea name="hb_aigen_information_template{{ language['language_id'] }}" rows="5" class="form-control">{{ hb_aigen_information_template[language['language_id']] }}</textarea>
+									</div>
+								</div>
+								{% endfor %}								
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label class="col-sm-4 control-label">{{ text_sections }}</label>
+							<div class="col-sm-8">
+								{% for key, language_text in sections %}
+									<div class="checkbox">
+										<label>
+											<input type="checkbox" data-toggle="toggle" data-onstyle="success" name="hb_aigen_sections[]" class="form-control" value="{{ key }}" {% if key in hb_aigen_sections %} checked {% endif %} />
+											{{ language_text }}
+										</label>
+									</div>
+								{% endfor %}
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label class="col-sm-4 control-label">{{ text_description_max_length }}</label>
+							<div class="col-sm-8">
+								<input type="number" name="hb_aigen_description_max_length" value="{{ hb_aigen_description_max_length }}" class="form-control" />
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label class="col-sm-4 control-label">{{ text_one_language }}</label>
+							<div class="col-sm-8">
+								<input type="checkbox" data-toggle="toggle" data-onstyle="success" name="hb_aigen_one_language" class="form-control" value="1" {{ hb_aigen_one_language == '1' ? 'checked' : '' }} />
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label class="col-sm-4 control-label">{{ text_overwrite }}</label>
+							<div class="col-sm-8">
+								<input type="checkbox" data-toggle="toggle" data-onstyle="success" name="hb_aigen_overwrite" class="form-control" value="1" {{ hb_aigen_overwrite == '1' ? 'checked' : '' }} />
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label class="col-sm-4 control-label">{{ text_simulate }}</label>
+							<div class="col-sm-8">
+								<input type="checkbox" data-toggle="toggle" data-onstyle="success" name="hb_aigen_simulate" class="form-control" value="1" {{ hb_aigen_simulate == '1' ? 'checked' : '' }} />
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label class="col-sm-4 control-label">{{ text_cron_key }}</label>
+							<div class="col-sm-8">
+								<input type="text" name="hb_aigen_cron_key" value="{{ hb_aigen_cron_key }}" class="form-control" />
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label class="col-sm-4 control-label">{{ text_cron_limit }}</label>
+							<div class="col-sm-8">
+								<input type="number" name="hb_aigen_cron_limit" value="{{ hb_aigen_cron_limit }}" class="form-control" />
+								<div class="alert alert-info">{{ text_cron_limit_help }}</div>
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label class="col-sm-4 control-label">{{ text_cron_command }}</label>
+							<div class="col-sm-8">
+								<div class="well">{{ hb_aigen_cron }}</div>
+							</div>
+						</div>
+				   </form>
+				</div>
+				
+				<!--TOOLS-->
+				<div class="tab-pane" id="tab-tools">
+					<div id="tools-block"></div>
+				</div>
+				
+				<div id="tab-logs" class="tab-pane">
+					<div id="logs-block"></div>
+
+					<div class="pull-right" style="margin-top:10px;">
+					<a onclick="confirm('{{ text_confirm }}') ? location.href='{{ clear }}' : false;" data-toggle="tooltip" title="{{ button_clear }}" class="btn btn-danger"><i class="fa fa-trash"></i>&nbsp;{{ button_clear_logs }}</a>
+					</div>
+				</div><!--tab-logs-->
+				
+			</div><!--tab-content block end-->		
+
+			<!--PREVIEW TEMPLATE MODAL START-->
+			<div class="modal fade" id="preview-modal" tabindex="-1" role="dialog">
+				<div class="modal-dialog modal-md" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span>&times;</span></button>
+					<h4 class="modal-title"><i class="fa fa-microphone"></i>&nbsp;{{ text_preview }}</h4>
+					</div>
+					<div class="modal-body">
+						<div id="preview-block"></div>
+					</div>
+				</div>
+				</div>
+			</div>
+			<!--PREVIEW TEMPLATE MODAL END-->
+			
+      </div>
+    </div>
+    <!--Panel Content End-->
+    <!--Huntbee copyrights-->
+    <div class="container-fluid">
+      <center>
+        <span class="help">{{ heading_title }} - {{ extension_version }} &copy; <a href="https://www.huntbee.com/">WWW.HUNTBEE.COM</a> | <a href="https://www.huntbee.com/get-support">SUPPORT</a></span>
+      </center>
+    </div>
+    <!--Huntbee copyrights end-->
+  </div>
+  <!--Container 1 start -->
+</div>
+<!--Main Content block end-->
+
+<style type="text/css"> 
+	a {cursor:pointer;}
+	.loaddiv{margin:100px;color:#0099CC;}
+	body{font-family: sans-serif; }
+</style>
+
+<link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+<script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>	 
+
+<script type="text/javascript" src="view/javascript/bootstrap-notify.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function() {
+    loadBlock('product');
+	toggleGenerateButtons();
+});
+
+$('#tabs li a').on('click', function () {
+    setTimeout(toggleGenerateButtons, 10); // Ensure active tab is updated before running
+});
+
+function toggleGenerateButtons() {
+    const type = $('#tabs .active a').attr('href').substring(1).replace('tab-', '');
+	if (type === 'items') {
+		$(".generate").hide();
+	} else {
+		$(".generate").show();
+	}    
+}
+
+function loadBlock(name) {
+    $('body').prepend('<div id="loader" class="text-center" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 9999;"><i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i></div>');
+    $('#loader').show();
+    $('#' + name + '-block').load('index.php?route=extension/hbseo/hb_aigen/' + name + '&user_token={{ user_token }}&store_id={{ store_id }}', function() {
+        $('#loader').fadeOut(function() {
+            $(this).remove();
+        });
+    });
+}
+
+$('#product-block').delegate('.pagination a', 'click', function(e) {
+	e.preventDefault();
+	$('#product-block').load(this.href);
+});
+
+$('#category-block').delegate('.pagination a', 'click', function(e) {
+	e.preventDefault();
+	$('#category-block').load(this.href);
+});
+
+$('#information-block').delegate('.pagination a', 'click', function(e) {
+	e.preventDefault();
+	$('#information-block').load(this.href);
+});
+
+$('#manufacturer-block').delegate('.pagination a', 'click', function(e) {
+	e.preventDefault();
+	$('#manufacturer-block').load(this.href);
+});
+
+$('#items-block').delegate('.pagination a', 'click', function(e) {
+	e.preventDefault();
+	$('#items-block').load(this.href);
+});
+
+function searchRecord(item) {
+	var search_value = $('#search-'+item+'-value').val();
+	$('#'+item+'-block').fadeOut().load('index.php?route=extension/hbseo/hb_aigen/'+item+'&user_token={{ user_token }}&search='+encodeURIComponent(search_value)).fadeIn('slow');
+}
+</script>
+
+<script type="text/javascript">
+function promptPreview(type, item_id, language_id) {
+	$('#preview-block').html('<div class="text-center"><i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i></div>');
+	$.ajax({
+		type: 'post',
+		url: '../index.php?route=extension/module/hb_aigen/prompt_preview',
+		data: {type: type, item_id: item_id, language_id: language_id, authkey : '{{ hb_aigen_cron_key }}'},
+		dataType: 'json',
+		success: function(json) {
+			if (json['success']) {
+				$('#preview-block').html(json['success']);
+			}
+			if (json['error']) {
+				$('#preview-block').html("<div class='alert alert-danger'><i class='fa fa-warning'></i> "+json['error']+"</div>");
+			}
+		}
+	});
+	$('#preview-modal').modal('show');
+}
+
+function generateItem(type, item_id, language_id){
+	$('#btn_generate_item_'+type+'_'+item_id+'_'+language_id).html('<i class="fa fa-spinner fa-pulse"></i>');
+	$.ajax({
+		type: 'post',
+		url: '../index.php?route=extension/module/hb_aigen/generate_item',
+		data: {type: type, item_id: item_id, language_id: language_id, authkey : '{{ hb_aigen_cron_key }}'},
+		dataType: 'json',
+		success: function(json) {
+			if (json.success) {
+				$.notify({ icon: "fa fa-check", message: json.success }, { type: "success" });
+			} else if (json.error) {
+				$.notify({ icon: "fa fa-exclamation", message: json.error }, { type: "danger" });
+			}
+			$('#btn_generate_item_'+type+'_'+item_id+'_'+language_id).html('<i class="fa fa-play-circle"></i>');
+		},
+		error: function(xhr, ajaxOptions, thrownError) {
+			$.notify({ icon: "fa fa-exclamation", message: thrownError }, { type: "danger" });
+			console.log(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+			$('#btn_generate_item_'+type+'_'+item_id+'_'+language_id).html('<i class="fa fa-play-circle"></i>');
+		}
+	});
+}
+
+function acceptItems(mode){
+	if (mode == 'selected') {
+		var arraydata = $('input[name="selected[]"]:checked').map(function(){
+			return this.value;
+		}).get();
+	} else {
+		var arraydata = 'all';
+	}
+
+	$('#btn-group-accept').html('<i class="fa fa-spinner fa-pulse"></i>&nbsp;{{ button_accept }}&nbsp;<span class="caret"></span>');
+
+	$.ajax({
+		type: 'post',
+		url: 'index.php?route=extension/hbseo/hb_aigen/accept_items&user_token={{ user_token }}&mode='+mode,
+		data: {selected: arraydata},
+		dataType: 'json',
+		success: function(json) {
+			if (json.success) {
+				$.notify({ icon: "fa fa-check", message: json.success }, { type: "success" });
+				loadBlock('items');
+			} else if (json.error) {
+				$.notify({ icon: "fa fa-exclamation", message: json.error }, { type: "danger" });
+			}
+
+			$('#btn-group-accept').html('<i class="fa fa-thumbs-up"></i>&nbsp;{{ button_accept }}&nbsp;<span class="caret"></span>');
+		},
+		error: function(xhr, ajaxOptions, thrownError) {
+			$.notify({ icon: "fa fa-exclamation", message: thrownError }, { type: "danger" });
+			console.log(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+			$('#btn-group-accept').html('<i class="fa fa-thumbs-up"></i>&nbsp;{{ button_accept }}&nbsp;<span class="caret"></span>');
+		}
+	});
+}
+
+function restoreItems(mode){
+	if (mode == 'selected') {
+		var arraydata = $('input[name="selected[]"]:checked').map(function(){
+			return this.value;
+		}).get();
+	} else {
+		var arraydata = 'all';
+	}
+
+	$('#btn-group-restore').html('<i class="fa fa-spinner fa-pulse"></i>&nbsp;{{ button_restore }}&nbsp;<span class="caret"></span>');
+
+	$.ajax({
+		type: 'post',
+		url: 'index.php?route=extension/hbseo/hb_aigen/restore_items&user_token={{ user_token }}&mode='+mode,
+		data: {selected: arraydata},
+		dataType: 'json',
+		success: function(json) {
+			if (json.success) {
+				$.notify({ icon: "fa fa-check", message: json.success }, { type: "success" });
+				loadBlock('items');
+			} else if (json.error) {
+				$.notify({ icon: "fa fa-exclamation", message: json.error }, { type: "danger" });
+			}
+
+			$('#btn-group-restore').html('<i class="fa fa-reply"></i>&nbsp;{{ button_restore }}&nbsp;<span class="caret"></span>');
+		},
+		error: function(xhr, ajaxOptions, thrownError) {
+			$.notify({ icon: "fa fa-exclamation", message: thrownError }, { type: "danger" });
+			console.log(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+			$('#btn-group-restore').html('<i class="fa fa-reply"></i>&nbsp;{{ button_restore }}&nbsp;<span class="caret"></span>');
+		}
+	});
+}
+
+function deleteItems(mode){
+	if (mode == 'selected') {
+		var arraydata = $('input[name="selected[]"]:checked').map(function(){
+			return this.value;
+		}).get();
+	} else {
+		var arraydata = 'all';
+	}
+
+	$('#btn-group-delete').html('<i class="fa fa-spinner fa-pulse"></i>&nbsp;{{ button_delete }}&nbsp;<span class="caret"></span>');
+
+	$.ajax({
+		type: 'post',
+		url: 'index.php?route=extension/hbseo/hb_aigen/delete_items&user_token={{ user_token }}&mode='+mode,
+		data: {selected: arraydata},
+		dataType: 'json',
+		success: function(json) {
+			if (json.success) {
+				$.notify({ icon: "fa fa-check", message: json.success }, { type: "success" });
+				loadBlock('items');
+			} else if (json.error) {
+				$.notify({ icon: "fa fa-exclamation", message: json.error }, { type: "danger" });
+			}
+
+			$('#btn-group-delete').html('<i class="fa fa-trash"></i>&nbsp;{{ button_delete }}&nbsp;<span class="caret"></span>');
+		},
+		error: function(xhr, ajaxOptions, thrownError) {
+			$.notify({ icon: "fa fa-exclamation", message: thrownError }, { type: "danger" });
+			console.log(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+			$('#btn-group-delete').html('<i class="fa fa-trash"></i>&nbsp;{{ button_delete }}&nbsp;<span class="caret"></span>');
+		}
+	});
+}
+
+$('#button-generate-selected').on('click', function() {
+	if (!confirm('{{ text_confirm_generate }}')) {
+		return false;
+	}
+
+	var type = $('#tabs .active a').attr('href').substring(1).replace('tab-', '');
+
+	console.log(type);
+
+	$('#button-generate-selected').html('<i class="fa fa-spinner fa-pulse"></i>');
+
+	var arraydata = $('input[name="selected[]"]:checked').map(function(){
+        return this.value;
+    }).get()
+
+	$('#msgoutput').html('');
+	$.ajax({
+		type: 'post',
+		url: '../index.php?route=extension/module/hb_aigen/generate_selected',
+		dataType: 'json',
+		data: {type: type, selected: arraydata, authkey : '{{ hb_aigen_cron_key }}'},
+		success: function(json) {
+			if (json.success) {
+				$.notify({ icon: "fa fa-check", message: json.success }, { type: "success" });
+				loadBlock(type);
+			} else if (json.error) {
+				$.notify({ icon: "fa fa-exclamation", message: json.error }, { type: "danger" });
+			}
+
+			$('#button-generate-selected').html('<i class="fa fa-bolt"></i>&nbsp;{{ button_generate }}');
+		},
+		error: function(xhr, ajaxOptions, thrownError) {
+			$.notify({ icon: "fa fa-exclamation", message: thrownError }, { type: "danger" });
+			console.log(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+			$('#button-generate-selected').html('<i class="fa fa-bolt"></i>&nbsp;{{ button_generate }}');
+		}
+	});	
+});
+</script>
+
+{{ footer }}

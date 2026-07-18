@@ -1,0 +1,14 @@
+<div class="widget bordered-list">
+<b class="bordered-list-title invert">{{ text_account }}</b>
+  {% if not logged %}
+  <a href="{{ login }}">{{ text_login }}</a> <a href="{{ register }}">{{ text_register }}</a> <a href="{{ forgotten }}">{{ text_forgotten }}</a>
+  {% endif %}
+  <a href="{{ account }}">{{ text_account }}</a>
+  {% if logged %}
+  <a href="{{ edit }}">{{ text_edit }}</a> <a href="{{ password }}">{{ text_password }}</a>
+  {% endif %}
+  <a href="{{ payment }}">{{ text_payment }}</a> <a href="{{ tracking }}">{{ text_tracking }}</a> <a href="{{ transaction }}">{{ text_transaction }}</a>
+  {% if logged %}
+  <a href="{{ logout }}">{{ text_logout }}</a>
+  {% endif %}
+</div>

@@ -1,0 +1,221 @@
+{{ header }}{{ column_left }} 
+<!--Main Content block start-->
+
+<div id="content">
+  <!--Header Start-->
+  <div class="page-header">
+    <div class="container-fluid">
+      <div class="pull-right">
+	  	<button form="form-webp" data-toggle="tooltip" title="{{ button_save }}" id="button-save" class="btn btn-primary"><i class="fa fa-save"></i>&nbsp;{{ button_save }}</button>
+		<a onclick="confirm('{{ text_confirm }}') ? deleteCache() : false;" class="btn btn-danger"><i class="fa fa-trash"></i>&nbsp;{{ button_delete_image_cache }}</a>
+		<a href="{{ doc_link }}" target="_blank" class="btn btn-default"><i class="fa fa-book"></i>&nbsp;{{ button_doc }}</a>
+		<a href="{{ cancel }}" data-toggle="tooltip" title="{{ button_cancel }}" class="btn btn-default"><i class="fa fa-reply"></i></a>
+	  </div>
+      <h1>{{ heading_title }}</h1>
+      <ul class="breadcrumb">
+        {% for breadcrumb in breadcrumbs %} 
+        <li><a href="{{ breadcrumb['href'] }}">{{ breadcrumb['text'] }}</a></li>
+        {% endfor %} 
+      </ul>
+    </div>
+  </div>
+  <!--Header End-->
+  <!--Container 1 start -->
+  <div class="container-fluid">
+    <!--Start - Error / Success Message if any -->
+    {% if (error_warning) %} 
+    <div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i> {{ error_warning }} 
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+    </div>
+    {% endif %} 
+    {% if (success) %} 
+    <div class="alert alert-success"><i class="fa fa-check-circle"></i> {{ success }} 
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+    </div>
+    {% endif %} 
+    <!--End - Error / Success Message if any -->
+	<div id="msgoutput"></div>
+	
+    <!--Panel Content Start-->
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title"><i class="fa fa-file-archive-o"></i> {{ heading_title }}</h3>
+      </div>
+      <div class="panel-body">
+        <form action="{{ action }}" method="post" enctype="multipart/form-data" id="form-webp" class="form-horizontal">
+			<!--Tabs UL Starts-->
+			<ul class="nav nav-tabs" id="tabs">
+				<li class="active"><a href="#tab-dashboard" onclick="loadBlock('dashboard');" data-toggle="tab"><i class="fa fa-tachometer"></i>&nbsp;{{ tab_dashboard }}</a></li>
+				<li><a href="#tab-files" onclick="loadBlock('records');" data-toggle="tab"><i class="fa fa-file-image-o"></i>&nbsp;{{ tab_uncompressed }}</a></li>
+				<li><a href="#tab-setting" data-toggle="tab"><i class="fa fa-cogs"></i> {{ tab_setting }}</a></li>
+				<li><a href="#tab-logs" onclick="loadBlock('logs');" data-toggle="tab"><i class="fa fa-calendar-plus-o"></i> {{ tab_logs }}</a></li>
+			</ul>
+			  <!--Tabs UL Ends-->
+			  <div class="tab-content">
+			  	<div class="tab-pane active" id="tab-dashboard">
+					<div id="dashboard-block"></div>
+				</div>
+				
+				<!--FILES-->
+				<div class="tab-pane" id="tab-files">
+					<div id="records-block"></div>
+				</div>
+
+				<!--SETTING-->
+				<div class="tab-pane" id="tab-setting">
+					<div class="form-group">
+						<label class="col-sm-3 control-label">{{ text_cron_key }}</label>
+						<div class="col-sm-9">
+							<input type="text" name="hb_webp_cron_key" value="{{ hb_webp_cron_key }}" class="form-control" />
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label class="col-sm-3 control-label">{{ text_cron_limit }}</label>
+						<div class="col-sm-9">
+							<input type="number" name="hb_webp_cron_limit" value="{{ hb_webp_cron_limit }}" class="form-control" />
+							<div class="alert alert-info">{{ text_cron_limit_help }}</div>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label class="col-sm-3 control-label">{{ text_cron_command }}</label>
+						<div class="col-sm-9">
+							<div class="well">{{ hb_webp_cron }}</div>
+						</div>
+					</div>
+				</div>	
+
+				<div id="tab-logs" class="tab-pane">
+					<div id="logs-block"></div>
+
+					<div class="pull-right" style="margin-top:10px;">
+					<a onclick="confirm('{{ text_confirm }}') ? location.href='{{ clear }}' : false;" data-toggle="tooltip" title="{{ button_clear }}" class="btn btn-danger"><i class="fa fa-trash"></i>&nbsp;{{ button_clear_logs }}</a>
+					</div>
+				</div><!--tab-logs-->
+
+			</div><!--tab-content block end-->
+        </form>
+		
+      </div>
+    </div>
+    <!--Panel Content End-->
+    <!--Huntbee copyrights-->
+    <div class="container-fluid">
+      <center>
+        <span class="help">{{ heading_title }} - {{ extension_version }} &copy; <a href="https://www.huntbee.com/">WWW.HUNTBEE.COM</a> | <a href="https://www.huntbee.com/get-support">SUPPORT</a></span>
+      </center>
+    </div>
+    <!--Huntbee copyrights end-->
+  </div>
+  <!--Container 1 start -->
+</div>
+<!--Main Content block end-->
+<style type="text/css"> <!--addtional css-->
+.loaddiv{margin:100px;color:#0099CC;}
+body{font-family: sans-serif; }
+a {cursor:pointer;}
+</style>
+
+<script type="text/javascript">
+$(document).ready(function() {
+	loadBlock('dashboard');
+});
+</script>
+<script type="text/javascript">
+function loadBlock(name) {
+    $('body').prepend('<div id="loader" class="text-center" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 9999;"><i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i></div>');
+    $('#loader').show();
+    $('#' + name + '-block').load('index.php?route={{ base_route }}/hb_webp/' + name + '&user_token={{ user_token }}&store_id={{ store_id }}', function() {
+        $('#loader').fadeOut(function() {
+            $(this).remove();
+        });
+    });
+}
+
+$('#records-block').delegate('.pagination a', 'click', function(e) {
+	e.preventDefault();
+	$('#records-block').load(this.href);
+});
+
+function getcachedimages(){
+	$('#msgoutput').html('<div class="text-center"><i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i></div>');
+	$.ajax({
+		url: 'index.php?route={{ base_route }}/hb_webp/getcachedimages&user_token={{ user_token }}',
+		dataType: 'json',
+		success: function(json) {
+			if (json['success']) {
+				$('#msgoutput').html('<div class="alert alert-success"><i class="fa fa-check-circle"></i> '+json['success']+'<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+				loadBlock('dashboard');
+			}
+		 }
+	 });
+}
+
+function deleteCache(){
+	$('#msgoutput').html('<div class="text-center"><i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i></div>');
+	$.ajax({
+		  url: 'index.php?route={{ base_route }}/hb_webp/clearcache&user_token={{ user_token }}',
+		  dataType: 'json',
+		  success: function(json) {
+			if (json['success']) {
+				$('#msgoutput').html('<div class="alert alert-success"><i class="fa fa-check-circle"></i> '+json['success']+'<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+				loadBlock('dashboard');
+			}
+		  }
+	 });
+}
+
+function generate(){
+	$('#msgoutput').html('<div class="text-center"><i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i></div>');
+	$.ajax({
+		  url: 'index.php?route={{ base_route }}/hb_webp/generate&user_token={{ user_token }}',
+		  dataType: 'json',
+		  success: function(json) {
+				if (json['success']) {
+					$('#msgoutput').html('<div class="alert alert-success"><i class="fa fa-check-circle"></i> '+json['success']+'<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+					loadBlock('dashboard');
+				}
+		  }
+	 });
+}
+
+function startprocess(url) {
+	$.ajax({
+		url: url,
+		dataType: 'json',
+		beforeSend: function() {
+			$('#button-generate').button('loading');
+		},
+		success: function(json) {
+			$('.alert, .text-danger').remove();
+
+			if (json['error']) {
+				$('#msgoutput').html('<div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i> ' + json['error'] + '</div>');
+			}
+
+			if (json['success']) {
+				$('#msgoutput').html('<div class="alert alert-success">' + json['success'] + '</div>');
+				if (json['percentage']) {
+					google.charts.setOnLoadCallback(drawChart(json['percentage']));
+				}
+			}
+			
+			if (json['next']) {
+				startprocess(json['next']);
+			}
+			
+			if (json['over']) {
+				loadBlock('dashboard');
+				$('#button-generate').button('reset');
+			}
+		},
+		error: function(xhr, ajaxOptions, thrownError) {
+			alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+		}
+	});
+}
+</script>
+
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+{{ footer }}

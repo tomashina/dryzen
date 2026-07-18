@@ -1,0 +1,921 @@
+{{ header }}{{ column_left }}
+<div id="content">
+    <div class="page-header">
+    <div class="container-fluid">
+    
+    <div class="pull-right">
+    <a href="{{ cancel }}" data-toggle="tooltip" title="Cancel" class="btn btn-default"><i class="fa fa-reply"></i></a>
+	</div>
+
+    <h1>{{ heading_title }}</h1>
+    <ul class="breadcrumb">
+    {% for breadcrumb in breadcrumbs %}
+    <li><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+    {% endfor %}
+    </ul>
+    </div>
+    </div>
+    <div class="container-fluid" id="megamenu">
+        
+        {% if error_warning %}
+        <div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i> {{ error_warning }}
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        </div>
+        {% endif %}
+        
+        {% if success %}
+        <div class="alert alert-success"><i class="fa fa-exclamation-circle"></i> {{ success }}
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        </div>
+        {% endif %}
+        
+        <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title"><i class="fa fa-bars"></i> {{ text_edit }}</h3>
+      </div>
+      <div class="panel-body">
+    	<form action="{{ action }}" method="post" enctype="multipart/form-data" id="form">
+        
+        <div id="content">
+            <div class="row">
+                <div class="background clearfix">
+                    {% if moduleid %}
+                    <div class="left col-md-5 col-xs-12 col-sm-6 ">
+                        {{ nestable_list }}
+                        <div class="well">
+                        <div class="row">
+                        <div class="col-sm-6">
+                        <a id="nestable-menu">
+                        <button type="button" data-action="expand-all" class="btn btn-link">{{ text_expand_all }}</button>
+                        <button type="button" data-action="collapse-all" class="btn btn-link">{{ text_collapse_all }}</button>
+                        </a>
+                        </div>
+                        <div class="col-sm-6 text-right">
+                        <a href="{{ action }}&action=create" class="btn btn-sm btn-primary" ><i class="fa fa-plus"></i>&nbsp; {{ text_creat_new_item }}</a>
+                        </div>
+                        </div>
+                        <div class="time">
+                        <div id='sortDBfeedback'></div>
+                        </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    
+                    {% if (action_type == 'create') or (action_type == 'edit') %}
+                    <div class="right col-md-7 col-xs-12 col-sm-6">
+                    
+                    <h2>
+                    <div class="buttons pull-right">
+                                    <button type="submit" name="button-back" class="btn btn-default" value="" title="Configuration">Cancel</button>
+                                    {% if action_type == 'create' %}
+                                    <button type="submit" name="button-create" class="btn btn-primary" value="">Save</button>
+                                    {% elseif action_type == 'edit' %}
+                                    <button type="submit" name="button-edit" class="btn btn-primary" value="">Save</button>
+                                    {% else %}
+                                    <button type="submit" name="button-save" class="btn btn-primary" value="">Save</button>
+                                   {% endif %}
+                            </div>
+                    
+                    		{% if action_type == 'edit' %}
+                            {{ text_edit_item }}{{ edit }})
+                            <input type="hidden" name="id" value="{{ edit }}" />
+                            {% else %}
+                            {{ text_creat_new_item }}
+                            {% endif %}
+                    		</h2>
+                            <input type="hidden" name="status" value="{{ status }}">
+                            
+                            <div class="input clearfix">
+                                    <p>{{ text_name }}<span style="color:#F30">*</span></p>
+                                    {% set i = 0 %}
+									{% for language in languages %}
+                                    {% set i = i + 1 %}
+                                         <input type="text" name="name[{{ language.language_id }}]" placeholder="{{ entry_description_name }}" id="input-head-name-{{ language.language_id }}" value="{{ name[language.language_id] ? name[language.language_id] }}" class="form-control{% if i > 1 %} hide{% else %} first-name{% endif %}" />
+                                    {% endfor %}
+                                    <select  class="form-control lang-select" id="language">
+                                    
+                                    {% for language in languages %}
+                                    <option value="{{ language.language_id }}"><img src="language/{{ language.code }}/{{ language.code }}.png" title="{{ language.name }}" /> {{ language.name }}</option>
+                                    {% endfor %}
+                                    </select>
+                            </div>
+                            
+                            
+                            
+                            
+                            <div class="input clearfix">
+                            <p>{{ text_class_menu }}</p>
+                                    <div class="list-language">
+                                            <input type="text" class="form-control" name="class_menu" value="{{ class_menu }}">
+                                    </div>
+                            </div>
+                            
+                            <div class="input clearfix">
+                            <p>{{ entry_display_mobile_module }}</p>
+                            <select name="disp_mobile_item" class="form-control">
+                                {% if disp_mobile_item %}
+                                <option value="1" selected="selected">{{ text_yes }}</option>
+                                <option value="0">{{ text_no }}</option>
+                                {% else %}
+                                <option value="1">{{ text_yes }}</option>
+                                <option value="0" selected="selected">{{ text_no }}</option>
+                                {% endif %}
+                            </select>
+                        	</div>
+                            
+                            <div class="input clearfix">
+                            <p>Link Target</p>
+                            <input type="text" class="form-control" value="{{ link }}" name="link">
+                            </div>
+                           
+                            
+                            <div class="input clearfix">
+                                    <p>{{ text_link_in_new_window }}</p>
+                                    <select class="form-control" name="new_window">
+                                            {% if new_window == 1 %}
+                                            <option value="0">{{ text_disabled }}</option>
+                                            <option value="1" selected="selected">{{ text_enabled }}</option>
+                                            {% else %}
+                                            <option value="0" selected="selected">{{ text_disabled }}</option>
+                                            <option value="1">{{ text_enabled }}</option>
+                                            {% endif %}
+                                    </select>
+                            </div>
+                            
+                            <div class="input clearfix">
+                                    <p>{{ text_icon_font }}</p>
+                                    <div class="list-language">
+                                    <input type="text" class="form-control" name="icon_font" value="{{ icon_font }}">
+                                    </div>
+                                    <span class="helper">Example: <i>fa fa-desktop</i> or <i>icon-heart</i> &nbsp;-&nbsp; 
+                                    <a href="http://fontawesome.io/cheatsheet/" target="_blank">FontAwesome Icons</a> &nbsp;|&nbsp; 
+                                    <a class="icon_list">Basel Icons</a>
+                                    </span>
+                            </div>
+                            
+                            
+                            <div class="input clearfix">
+                                <p>{{ text_label }}</p>
+                                {% set i = 0 %}
+                                {% for language in languages %}
+                                {% set i = i + 1 %}
+                                <input type="text" name="description[{{ language.language_id }}]" placeholder="{{ text_label }}" id="input-head-des-{{ language.language_id }}" value="{{ description[language.language_id] ? description[language.language_id] }}" class="form-control{% if i > 1 %} hide{% else %} first-name{% endif %}" /> 
+                                {% endfor %}
+                                <select  class="form-control lang-select" id="des_language">
+                                {% for language in languages %}
+                                <option value="{{ language.language_id }}"><img src="language/{{ language.code }}/{{ language.code }}.png" title="{{ language.name }}" /> {{ language.name }}</option>
+                                {% endfor %}
+                                </select>
+                                <span class="helper">Example:<br /><i>&lt;i class=&quot;menu-tag sale&quot;&gt;SALE&lt;/i&gt;<br />&lt;i class=&quot;menu-tag new&quot;&gt;NEW&lt;/i&gt;</i></span>
+                            </div>
+
+                            <input type="hidden" name="item_type" id="item_type" value="{{ item_type }}">
+
+                            {% if item_type %}
+                            <h4 class="button_parent_config active">{{ text_parent_config }}</h4>
+                            <span class="h4_helper">({{ text_parent_item }})</span>
+                            <div id="text_parent_config" class="collapse in" aria-expanded="true">
+                            {% else %}
+                            <h4 class="button_parent_config">{{ text_parent_config }}</h4>
+                            <span class="h4_helper">({{ text_parent_item }})</span>
+                            <div id="text_parent_config" class="collapse">
+                            {% endif %}
+                            
+                            <div class="input clearfix">
+                            <p>{{ text_submenu_width }}</p>
+                            <input type="text" class="form-control" name="submenu_width" value="{{ submenu_width }}">
+							<span class="helper">Enter: <b>full</b> to cteate a full width drop down</span>
+                            </div>
+                            
+                            <div class="input clearfix">
+                            <p>Background Image</p>
+                            <a href="" id="thumb-image" data-toggle="image" class="img-thumbnail"><img src="{{ src_icon }}" alt="" title="" data-placeholder="{{ placeholder }}"  /></a>
+                            <input type="hidden" name="icon" value="{{ icon }}" id="input-image" />
+                            </div>
+                            
+
+                            <div class="input clearfix">
+                                    <p>{{ text_position }}</p>
+                                    <select name="position" class="form-control">
+                                    {% if position == 'left top' %}
+                                    <option value="left top" selected="selected">left top</option>
+                                    {% else %}
+                                    <option value="left top">left top</option>
+                                    {% endif %}
+                                    {% if position == 'left center' %}
+                                    <option value="left center" selected="selected">left center</option>
+                                    {% else %}
+                                    <option value="left center">left center</option>
+                                    {% endif %}
+                                    {% if position == 'left bottom' %}
+                                    <option value="left bottom" selected="selected">left bottom</option>
+                                    {% else %}
+                                    <option value="left bottom">left bottom</option>
+                                    {% endif %}
+                                    {% if position == 'right top' %}
+                                    <option value="right top" selected="selected">right top</option>
+                                    {% else %}
+                                    <option value="right top">right top</option>
+                                    {% endif %}
+                                    {% if position == 'right center' %}
+                                    <option value="right center" selected="selected">right center</option>
+                                    {% else %}
+                                    <option value="right center">right center</option>
+                                    {% endif %}
+                                    {% if position == 'right bottom' %}
+                                    <option value="right bottom" selected="selected">right bottom</option>
+                                    {% else %}
+                                    <option value="right bottom">right bottom</option>
+                                    {% endif %}
+                                    {% if position == 'center top' %}
+                                    <option value="center top" selected="selected">center top</option>
+                                    {% else %}
+                                    <option value="center top">center top</option>
+                                    {% endif %}
+                                    {% if position == 'center center' %}
+                                    <option value="center center" selected="selected">center center</option>
+                                    {% else %}
+                                    <option value="center center">center center</option>
+                                    {% endif %}
+                                    {% if position == 'center bottom' %}
+                                    <option value="center bottom" selected="selected">center bottom</option>
+                                    {% else %}
+                                    <option value="center bottom">center bottom</option>
+                                    {% endif %}
+                                    </select>
+                            </div>
+
+                            </div>
+                            
+                            {% if item_type %}
+                                <h4 class="button_content_config">{{ text_content_config }}</h4>
+                                <span class="h4_helper">({{ text_content_item }})</span>
+                                <div id="text_content_config" class="collapse">
+                            {% else %}
+                                <h4 class="button_content_config active">{{ text_content_config }}</h4>
+                                <span class="h4_helper">({{ text_content_item }})</span>
+                                <div id="text_content_config" class="collapse in" aria-expanded="true">
+                            {% endif %}
+                            
+                            <div class="input clearfix">
+                            <p>Show Item Name</p>
+                            <div class="list-language">
+                                <select name="show_title" class="form-control">
+                                {% if show_title %}
+                                <option value="1" selected="selected">{{ text_yes }}</option>
+                                <option value="0">{{ text_no }}</option>
+                                {% else %}
+                                <option value="1">{{ text_yes }}</option>
+                                <option value="0" selected="selected">{{ text_no }}</option>
+                                {% endif %}
+                            </select>
+                            </div>
+                            </div>
+                        
+                            <div class="input clearfix">
+                            <p>{{ text_content_width }}</p>
+                            <select name="content_width" class="form-control">
+                            {% for i in 1..12 %}
+							<option value="{{ i }}" {% if i == content_width %} {{ 'selected="selected"' }} {% endif %}>{{ i }}/12</option>
+							{% endfor %}
+                            </select>
+                            </div>                           
+                            
+                            <div class="input clearfix">
+                            <p>{{ text_content_type }}</p>
+                            <select name="content_type" class="form-control">
+                                    {% if content_type != 0 %}
+                                    <option value="0">HTML</option>
+                                    {% else %}
+                                    <option value="0" selected="selected">HTML</option>
+                                    {% endif %}
+                                    {% if content_type != 1 %}
+                                    <option value="1">Product</option>
+                                    {% else %}
+                                    <option value="1" selected="selected">Product</option>
+                                    {% endif %}
+                                    {% if content_type != 2 %}
+                                    <option value="2">Categories</option>
+                                    {% else %}
+                                    <option value="2" selected="selected">Categories</option>
+                                    {% endif %}
+                                    {% if content_type != 4 %}
+                                    <option value="4">Image</option>
+                                    {% else %}
+                                    <option value="4" selected="selected">Image</option>
+                                    {% endif %}
+                            </select>
+                            </div>
+                            
+                    <!-------------- HTML ---------------->
+                    <!------------------------------------>
+                    
+                    <div id="content_type0"{% if content_type != 0 %} style="display:none"{% endif %} class="content_type content_type_html">
+                    <legend>HTML</legend>
+                    <div class="tab-pane">
+                    <ul id="language" class="nav nav-tabs">
+                    {% for language in languages %}
+                    <li>
+                    <a data-toggle="tab" href="#content_html_{{ language.language_id }}">
+                    <img src="language/{{ language.code }}/{{ language.code }}.png" title="{{ language.name }}" /> {{ language.name }}
+                    </a>
+                    </li>
+                    {% endfor %}
+                    </ul>
+                    <div class="tab-content">
+                    {% for language in languages %}
+                    {% set lang_id = language.language_id %}
+                    <div id="content_html_{{ language.language_id }}" class="content_html tab-pane">
+                    <textarea name="content[html][text][{{ language.language_id }}]" id="content_html_text_{{ language.language_id }}" class="form-control content-block">{{ content['html']['text'][lang_id] ? content['html']['text'][lang_id] }}</textarea>
+
+                    <a onclick="enable_editor('#content_html_text_{{ language.language_id }}');">Enable HTML Editor</a>
+                    </div>
+                    {% endfor %}
+                    </div>
+                    </div>
+                    </div>
+
+                    <!------------- Product -------------->
+                    <!------------------------------------>
+                    
+                    <div id="content_type1" {% if content_type != 1 %} {{ 'style="display:none"' }} {% endif %} class="content_type">
+                    <legend>Product</legend>
+                    <div class="input clearfix">
+                    <p>Product:<br><span style="font-size:11px;color:#808080">(Autocomplete)</span></p>
+                    <input type="hidden" name="content[product][id]" value="{{ content.product.id }}" />
+					<input type="text" id="product_autocomplete" name="content[product][name]" value="{{ content.product.name ? content.product.name }}">
+                    </div>
+                    
+                    <div class="input clearfix">
+                    <p>Image Width (px)</p>
+                    <input type="text" class="form-control" name="content[product][img_w]" value="{{ content.product.img_w ? content.product.img_w : '262' }}">
+                    </div>
+                    
+                    <div class="input clearfix">
+                    <p>Image Height (px)</p>
+                    <input type="text" class="form-control" name="content[product][img_h]" value="{{ content.product.img_h ? content.product.img_h : '262' }}">
+                    </div>
+                    
+                    </div>
+                    
+                    
+                    <!-------------- Image --------------->
+                    <!------------------------------------>
+                    <div id="content_type4" {% if content_type != 4 %} {{ 'style="display:none"' }} {% endif %} class="content_type">
+                    <legend>Image</legend>
+                    <div class="input clearfix">
+                    <p>Image:</p>
+                    <a href="" id="thumb-image-content" data-toggle="image" class="img-thumbnail"><img src="{{ content.image.image_link ? content.image.image_link : src_image_default }}" alt="" title="" data-placeholder="{{ placeholder }}"  /></a>
+                    <input type="hidden" name="content[image][link]" value="{{ content.image.link ? content.image.link : image_default }}" id="input-image-content" />
+                    </div>
+                    </div>
+                    
+                    
+                    <!----------- Categories ------------->
+                    <!------------------------------------>
+                    <div id="content_type2" {% if content_type != 2 %} {{ 'style="display:none"' }} {% endif %} class="content_type">
+                    <legend>Categories</legend>
+                    <div class="input clearfix">
+                    <p>Add categories<br><span style="font-size:11px;color:#808080">(Autocomplete)</span></p>
+                    <input type="text" id="categories_autocomplete" class="form-control" value="">
+                    </div>
+                    <div class="input clearfix">
+                    <p>Sort categories</p>
+                    <div class="cf nestable-lists">
+                        <div class="dd" id="sort_categories">
+                            <ol class="dd-list">
+                                {{ list_categories }}
+                            </ol>
+                        </div>
+                        <input type="hidden" id="sort_categories_data" name="content[categories][categories]" value="{{ content.categories.categories is iterable ? '' : content.categories.categories }}" />
+                    </div>
+                </div>
+                
+                <div class="input clearfix">
+                    <p>Columns</p>
+                    <select name="content[categories][columns]" class="form-control">
+                        {% if content.categories.columns != 1 %}
+                            <option value="1">1</option>
+                        {% else %}
+                            <option value="1" selected="selected">1</option>
+                        {% endif %}
+
+                        {% if content.categories.columns != 2 %}
+                            <option value="2">2</option>
+                        {% else %}
+                            <option value="2" selected="selected">2</option>
+                        {% endif %}
+
+                        {% if content.categories.columns != 3 %}
+                            <option value="3">3</option>
+                        {% else %}
+                        <option value="3" selected="selected">3</option>
+                        {% endif %}
+
+                        {% if content.categories.columns != 4 %}
+                            <option value="4">4</option>
+                        {% else %}
+                            <option value="4" selected="selected">4</option>
+                        {% endif %}
+
+                        {% if content.categories.columns != 5 %}
+                            <option value="5">5</option>
+                        {% else %}
+                            <option value="5" selected="selected">5</option>
+                        {% endif %}
+
+                        {% if content.categories.columns != 6 %}
+                            <option value="6">6</option>
+                        {% else %}
+                            <option value="6" selected="selected">6</option>
+                        {% endif %}
+                    </select>
+                </div>
+
+                <div class="input clearfix" id="submenu-type">
+                    <p>Submenu type</p>
+                    <select name="content[categories][submenu]" class="form-control">
+                        {% if content.categories.submenu != 1 %}
+                            <option value="1">Hover</option>
+                        {% else %}
+                            <option value="1" selected="selected">Hover</option>
+                        {% endif %}
+
+                        {% if content.categories.submenu != 2 %}
+                            <option value="2">Visible</option>
+                        {% else %}
+                            <option value="2" selected="selected">Visible</option>
+                        {% endif %}
+                    </select>
+                </div>
+
+                <div class="input clearfix" {% if content.categories.submenu != 2 %} {{ 'style="display:none"' }} {% endif %} id="submenu-columns">
+                    <p>Submenu columns</p>
+                    <select name="content[categories][submenu_columns]" class="form-control">
+                        {% if content.categories.submenu_columns != 1 %}
+                            <option value="1">1</option>
+                        {% else %}
+                            <option value="1" selected="selected">1</option>
+                        {% endif %}
+
+                        {% if content.categories.submenu_columns != 2 %}
+                            <option value="2">2</option>
+                        {% else %}
+                            <option value="2" selected="selected">2</option>
+                        {% endif %}
+
+                        {% if content.categories.submenu_columns != 3 %}
+                            <option value="3">3</option>
+                        {% else %}
+                            <option value="3" selected="selected">3</option>
+                        {% endif %}
+
+                        {% if content.categories.submenu_columns != 4 %}
+                            <option value="4">4</option>
+                        {% else %}
+                            <option value="4" selected="selected">4</option>
+                        {% endif %}
+
+                        {% if content.categories.submenu_columns != 5 %}
+                            <option value="5">5</option>
+                        {% else %}
+                            <option value="5" selected="selected">5</option>
+                        {% endif %}
+
+                        {% if content.categories.submenu_columns != 6 %}
+                            <option value="6">6</option>
+                        {% else %}
+                            <option value="6" selected="selected">6</option>
+                        {% endif %}
+                    </select>
+                    </div>
+                    </div>
+                    </div>
+                    </div>
+                    
+                    {% else %}
+                    
+                    <div class="right col-md-7 col-xs-12 col-sm-6">
+                    <h2>{{ text_basic_configuration }}
+                    <div class="buttons pull-right">
+                    <button type="submit" name="button-save" class="btn btn-primary" value="" title="Save">Save</button>
+                    </div>
+                    </h2>
+
+                    <input type="hidden" name="moduleid" value="{{ moduleid ? moduleid }}" />
+                    
+                    
+                    {% if not module_id %}
+                        <div class="input clearfix">
+                                <p>Clone Items From Existing Module</p>
+                                <select name="import_module" class="form-control">
+                                        {% if modules %}
+                                            {% for module in modules %}
+                                             <option value="{{ module.module_id }}">{{ module.name }}</option>
+                                             {% endfor %}
+                                             <option value="0">Create new empty menu</option>
+                                        {% else %}
+                                        <option value="0">No existing modules found</option>
+                                        {% endif %}
+                                </select>
+                        </div>
+                    {% endif %}
+                    
+                    
+                    <div class="input clearfix">
+                            <p>Module Name</p>
+                            <input type="text" name="name" value="{{ name }}"  id="input-name" class="form-control" />
+                    
+                    </div>
+                    
+                    <div class="input clearfix">
+                            <p>{{ text_status }}</p>
+                            <select name="status" class="form-control">
+                                    {% if status %}
+                                    <option value="1" selected="selected">{{ text_enabled }}</option>
+                                    <option value="0">{{ text_disabled }}</option>
+                                    {% else %}
+                                    <option value="1">{{ text_enabled }}</option>
+                                    <option value="0" selected="selected">{{ text_disabled }}</option>
+                                    {% endif %}
+                            </select>
+                    </div>
+
+</div>
+{% endif %}
+</div>
+</div>
+</div>
+<!-- End Content -->
+</form>
+</div>
+</div>
+</div>
+<script type="text/javascript">
+$('#language a:first').tab('show');
+if($("input[name='use_cache']:radio:checked").val() == '0')
+{
+        $('#input-cache_time_form').hide();
+}else
+{
+        $('#input-cache_time_form').show();
+}
+$("input[name='use_cache']").change(function(){
+        val = $(this).val();
+        if(val ==0)
+        {
+                $('#input-cache_time_form').hide();
+        }else
+        {
+                $('#input-cache_time_form').show();
+        }
+});
+$(document).ready(function() {
+        $(".button_parent_config").click(function(){
+            if($(this).hasClass('active')) {
+			}
+			else
+                $(this).addClass('active'),
+            	$("#text_parent_config").collapse('show'),
+				$("#text_content_config").collapse('hide'),
+				$(".button_content_config").removeClass('active'),
+				$("#item_type").val('1');
+        });
+
+        $(".button_content_config").click(function(){
+            if($(this).hasClass('active')) {
+			} else
+                $(this).addClass('active');
+            	$("#text_parent_config").collapse('hide'),
+				$("#text_content_config").collapse('show'),
+				$(".button_parent_config").removeClass('active'),
+				$("#item_type").val('0');
+        });
+
+        $('#nestable-menu').on('click', function(e)
+        {
+            var target = $(e.target),
+                    action = target.data('action');
+            if (action === 'expand-all') {
+                    $('.dd').nestable('expandAll');
+            }
+            if (action === 'collapse-all') {
+                    $('.dd').nestable('collapseAll');
+            }
+        });
+
+        $('#language').change(function(){
+            var that = $(this), opt_select = $('option:selected', that).val() , _input = $('#input-head-name-'+opt_select);
+            $('[id^="input-head-name-"]').addClass('hide');
+            _input.removeClass('hide');
+        });
+
+        $('#head_name_language').change(function(){
+            var that = $(this), opt_select = $('option:selected', that).val() , _input = $('#input-headname-'+opt_select);
+            $('[id^="input-headname-"]').addClass('hide');
+            _input.removeClass('hide');
+        });
+
+        $('#des_language').change(function(){
+            var that = $(this), opt_select = $('option:selected', that).val() , _input = $('#input-head-des-'+opt_select);
+            $('[id^="input-head-des-"]').addClass('hide');
+            _input.removeClass('hide');
+        });
+
+        $('#navigation_language').change(function(){
+            var that = $(this), opt_select = $('option:selected', that).val() , _input = $('#input-text-navigation-'+opt_select);
+            $('[id^="input-text-navigation-"]').addClass('hide');
+            _input.removeClass('hide');
+        });
+
+        $('#home_text_language').change(function(){
+            var that = $(this), opt_select = $('option:selected', that).val() , _input = $('#input-home-text-'+opt_select);
+            $('[id^="input-home-text-"]').addClass('hide');
+            _input.removeClass('hide');
+        });
+
+        $("select[name=content_type]").change(function () {
+                $("select[name=content_type] option:selected").each(function() {
+                        $(".content_type").hide();
+                        $("#content_type" + $(this).val()).show();
+                });
+        });
+        $("#submenu-type").change(function () {
+                $("#submenu-type option:selected").each(function() {
+                        if($(this).val() == 2) {
+                                $("#submenu-columns").show();
+                        } else {
+                                $("#submenu-columns").hide();
+                        }
+                });
+        });
+		$("#orientation_select").change(function () {
+                $("#orientation_select option:selected").each(function() {
+                        if($(this).val() == 1) {
+                                $("#orientation_limit").show();
+                        } else {
+                                $("#orientation_limit").hide();
+                        }
+                });
+        });
+        $('li','.content_type_html').first().addClass('active');
+        $('.tab-pane','.content_type_html .tab-content').first().addClass('active');
+        
+
+        $('#product_autocomplete').autocomplete({
+                delay: 500,
+                source: function(request, response) {
+                        $.ajax({
+								url: 'index.php?route=catalog/product/autocomplete&user_token={{ user_token }}&filter_name=' + encodeURIComponent(request) ,
+                                dataType: 'json',
+                                success: function(json) {
+                                        json.unshift({
+                                                'product_id':  0,
+                                                'name':  'None'
+                                        });
+                                        response($.map(json, function(item) {
+                                                return {
+                                                 label: item.name,
+                                                 value: item.product_id
+                                                }
+                                        }));
+                                }
+                        });
+                },
+                
+                select: function(event) {
+
+                        $('#product_autocomplete').val(event.label);
+                        $('input[name=\'content[product][id]\']').val(event.value);
+                        return false;
+                },
+                focus: function(event) {
+                        return false;
+                }
+        });
+
+
+        $('#categories_autocomplete').autocomplete({
+                delay: 500,
+                source: function(request, response) {
+                        $.ajax({
+								url: 'index.php?route=catalog/category/autocomplete&user_token={{ user_token }}&filter_name=' +  request,
+                                dataType: 'json',
+                                success: function(json) {
+                                        json.unshift({
+                                                'category_id':  0,
+                                                'name':  'None'
+                                        });
+                                        response($.map(json, function(item) {
+                                                return {
+                                                        label: item.name,
+                                                        value: item.category_id
+                                                }
+                                        }));
+                                }
+                        });
+                },
+                select: function(event) {
+                if(event.value > 0) {
+                    $("#sort_categories > .dd-list").append('<li class="dd-item" data-id="' + event.value + '" data-name="' + event.label + '"><a class="fa fa-times"></a><div class="dd-handle">' + event.label + '</div></li>');
+                }
+                updateOutput2($('#sort_categories').data('output', $('#sort_categories_data')));
+				$( "#sort_categories .fa-times" ).on( "click", function() {
+					$(this).parent().remove();
+					updateOutput2($('#sort_categories').data('output', $('#sort_categories_data')));
+				});
+                return false;
+            },
+            focus: function(event) {
+                return false;
+            }
+        });
+
+        function lagXHRobjekt() {
+                var XHRobjekt = null;
+
+                try {
+                        ajaxRequest = new XMLHttpRequest(); // Firefox, Opera, ...
+                } catch(err1) {
+                        try {
+                                ajaxRequest = new ActiveXObject("Microsoft.XMLHTTP"); // Noen IE v.
+                        } catch(err2) {
+                                try {
+                                        ajaxRequest = new ActiveXObject("Msxml2.XMLHTTP"); // Noen IE v.
+                                } catch(err3) {
+                                        ajaxRequest = false;
+                                }
+                        }
+                }
+                return ajaxRequest;
+        }
+
+
+        function menu_updatesort(jsonstring) {
+                mittXHRobjekt = lagXHRobjekt();
+
+                if (mittXHRobjekt) {
+                        mittXHRobjekt.onreadystatechange = function() {
+                                if(ajaxRequest.readyState == 4){
+                                        var ajaxDisplay = document.getElementById('sortDBfeedback');
+                                        ajaxDisplay.innerHTML = ajaxRequest.responseText;
+                                }
+                        }
+						ajaxRequest.open("GET", "index.php?route=extension/module/basel_megamenu&user_token={{ user_token }}&jsonstring=" + encodeURIComponent(jsonstring), true);
+                                
+                        ajaxRequest.setRequestHeader("Content-Type", "application/json");
+                        ajaxRequest.send(null);
+                }
+        }
+
+        var updateOutput = function(e)
+        {
+                var list   = e.length ? e : $(e.target),
+                        output = list.data('output');
+
+                if (window.JSON) {
+                        menu_updatesort(window.JSON.stringify(list.nestable('serialize')));
+                } else {
+                        alert('JSON browser support required for this demo.');
+                }
+        };
+
+        $('#nestable').nestable({
+                group: 1,
+                maxDepth: 2
+        }).on('change', updateOutput);
+
+        updateOutput($('#nestable').data('output', $('#nestable-output')));
+
+        var updateOutput2 = function(e)
+        {
+                var list   = e.length ? e : $(e.target),
+                        output = list.data('output');
+                if (window.JSON && typeof(output)!= 'undefined' ) {
+                        output.val(window.JSON.stringify(list.nestable('serialize')));
+                }
+        };
+        $('#sort_categories').nestable({
+               group: 1,
+                maxDepth: 3
+        }).on('change', updateOutput2);
+
+                updateOutput2($('#sort_categories').data('output', $('#sort_categories_data')));
+
+       $( "#sort_categories .fa-times" ).on( "click", function() {
+               $(this).parent().remove();
+               updateOutput2($('#sort_categories').data('output', $('#sort_categories_data')));
+       });
+        
+		
+		$(document).delegate('.icon_list', 'click', function(e) {
+	e.preventDefault();
+	$.ajax({
+		type: 'get',
+		dataType: 'html',
+		success: function(data) {
+			html  = '<div id="modal-icons" class="modal content">';
+			html += '  <div class="modal-dialog">';
+			html += '    <div class="modal-content">';
+			html += '      <div class="modal-header">';
+			html += '        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>';
+			html += '        <h4 class="modal-title">Icon List Preview</h4>';
+			html += '      </div>';
+			html += '      <div class="modal-body"><iframe src="view/javascript/basel/icons_list/icon_list.html" width="1240" height="560" frameborder="0" allowtransparency="true"></iframe></div>';
+			html += '    </div';
+			html += '  </div>';
+			html += '</div>';
+			$('body').append(html);
+			$('#modal-icons').modal('show');
+		}
+	});
+});
+
+        
+});
+</script>
+<script type="text/javascript">
+function enable_editor(textarea) {
+	$(textarea).summernote({
+			disableDragAndDrop: true,
+			emptyPara: '',
+			height: 300,
+			codemirror: { // codemirror options
+				mode: 'text/html',
+				htmlMode: true,
+				lineNumbers: true,
+				theme: 'monokai'
+			},			
+			fontsize: ['8', '9', '10', '11', '12', '14', '16', '18', '20', '24', '30', '36', '48' , '64'],
+			toolbar: [
+				['style', ['style']],
+				['font', ['bold', 'underline','italic', 'clear']],
+				['fontname', ['fontname']],
+				['color', ['color']],
+				['para', ['ul', 'paragraph']],
+				['table', ['table']],
+				['insert', ['link', 'image', 'video']],
+				['view', ['fullscreen', 'codeview']]
+			],
+			callbacks: {
+					onPaste: function (e) {
+					var bufferText = ((e.originalEvent || e).clipboardData || window.clipboardData).getData('Text');
+					e.preventDefault();
+					document.execCommand('insertText', false, bufferText);
+					}
+            },
+			popover: {
+           		image: [
+					['custom', ['imageAttributes']],
+					['imagesize', ['imageSize100', 'imageSize50', 'imageSize25']],
+					['float', ['floatLeft', 'floatRight', 'floatNone']],
+					['remove', ['removeMedia']]
+				],
+			},
+			buttons: {
+    			image: function() {
+					var ui = $.summernote.ui;
+					// create button
+					var button = ui.button({
+						contents: '<i class="fa fa-image" />',
+						tooltip: $.summernote.lang[$.summernote.options.lang].image.image,
+						click: function () {
+							$('#modal-image').remove();
+							$.ajax({
+								url: 'index.php?route=common/filemanager&user_token=' + getURLVar('user_token'),
+								dataType: 'html',
+								beforeSend: function() {
+									$('#button-image i').replaceWith('<i class="fa fa-circle-o-notch fa-spin"></i>');
+									$('#button-image').prop('disabled', true);
+								},
+								complete: function() {
+									$('#button-image i').replaceWith('<i class="fa fa-upload"></i>');
+									$('#button-image').prop('disabled', false);
+								},
+								success: function(html) {
+									$('body').append('<div id="modal-image" class="modal">' + html + '</div>');
+									
+									$('#modal-image').modal('show');
+									
+									$('#modal-image').delegate('a.thumbnail', 'click', function(e) {
+										e.preventDefault();
+										
+										$(textarea).summernote('insertImage', $(this).attr('href'));
+																	
+										$('#modal-image').modal('hide');
+									});
+								}});}});
+				return button.render();
+		}}});
+}
+</script>
+<link href="view/javascript/codemirror/lib/codemirror.css" rel="stylesheet" />
+<link href="view/javascript/codemirror/theme/monokai.css" rel="stylesheet" />
+<script type="text/javascript" src="view/javascript/codemirror/lib/codemirror.js"></script> 
+<script type="text/javascript" src="view/javascript/codemirror/lib/xml.js"></script> 
+<script type="text/javascript" src="view/javascript/codemirror/lib/formatting.js"></script> 
+<script type="text/javascript" src="view/javascript/summernote/summernote.js"></script>
+<link href="view/javascript/summernote/summernote.css" rel="stylesheet" />
+<script type="text/javascript" src="view/javascript/summernote/summernote-image-attributes.js"></script>
+<script type="text/javascript" src="view/javascript/summernote/opencart.js"></script>
+{{ footer }}

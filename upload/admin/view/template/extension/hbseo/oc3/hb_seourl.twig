@@ -1,0 +1,453 @@
+{{ header }}{{ column_left }} 
+<!--Main Content block start-->
+
+<div id="content">
+  <!--Header Start-->
+  <div class="page-header">
+    <div class="container-fluid">
+      <div class="pull-right">
+        <button type="submit" form="form-seourl" data-toggle="tooltip" title="{{ button_save }}" class="btn btn-primary"><i class="fa fa-save"></i>&nbsp;{{ button_save}}</button>
+		<a href="{{ doc_link }}" target="_blank" class="btn btn-default"><i class="fa fa-book"></i>&nbsp;{{ button_doc }}</a>
+		<a href="{{ cancel }}" data-toggle="tooltip" title="{{ button_cancel }}" class="btn btn-default"><i class="fa fa-reply"></i></a>
+	  </div>
+      <h1>{{ heading_title }}</h1>
+      <ul class="breadcrumb">
+        {% for breadcrumb in breadcrumbs %} 
+        <li><a href="{{ breadcrumb['href'] }}">{{ breadcrumb['text'] }}</a></li>
+        {% endfor %} 
+      </ul>
+    </div>
+  </div>
+  <!--Header End-->
+  <!--Container 1 start -->
+  <div class="container-fluid">
+    <!--Start - Error / Success Message if any -->
+    {% if (error_warning) %} 
+    <div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i> {{ error_warning }} 
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+    </div>
+    {% endif %} 
+    {% if (success) %} 
+    <div class="alert alert-success"><i class="fa fa-check-circle"></i> {{ success }} 
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+    </div>
+    {% endif %} 
+    <!--End - Error / Success Message if any -->	
+	
+	<div id="msgoutput"></div>	
+	<!--Panel Content Start-->
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title"><i class="fa fa-pencil"></i> {{ heading_title }}</h3>
+			{% if (stores) %} 
+			<div class="pull-right">
+			<select id="store">
+				<option value="0" {{ store_id == 0?'selected':'' }}>Default Store</option>
+				{% for store in stores %} 
+					<option value="{{ store['store_id'] }}" {{ store_id == store['store_id']?'selected':'' }}>{{ store['name'] }}</option>
+				{% endfor %} 
+			</select>
+			</div>
+			{% endif %} 
+      </div>
+      <div class="panel-body">
+        <form action="{{ action }}" method="post" enctype="multipart/form-data" id="form-seourl" class="form-horizontal">
+			<!--Tabs UL Starts-->
+			<ul class="nav nav-tabs" id="tabs">
+				<li class="active"><a href="#tab-dashboard" onclick="loadBlock('dashboard');" data-toggle="tab"><i class="fa fa-tachometer"></i>&nbsp;{{ tab_dashboard }}</a></li>
+				{% if languages|length > 1 %}
+				<li><a href="#tab-languages" onclick="loadBlock('languages');" data-toggle="tab"><i class="fa fa-language"></i>&nbsp;{{ tab_languages }}</a></li>
+				{% endif %}
+				<li><a href="#tab-routes" onclick="loadBlock('routes');" data-toggle="tab"><i class="fa fa-anchor"></i>&nbsp;{{ tab_routes }}</a></li>
+				<li><a href="#tab-preserved" onclick="loadBlock('preserved');" data-toggle="tab"><i class="fa fa-table"></i></i>&nbsp;{{ tab_preserved }}</a></li>
+				<li><a href="#tab-setting" data-toggle="tab"><i class="fa fa-cogs"></i>&nbsp;{{ tab_setting }}</a></li>
+				<li><a href="#tab-logs" onclick="loadBlock('logs');" data-toggle="tab"><i class="fa fa-sticky-note"></i>&nbsp;{{ tab_log }}</a></li>
+			</ul>
+
+			  <!--Tabs UL Ends-->
+			  <div class="tab-content">
+			  	<div class="tab-pane active" id="tab-dashboard">
+					<div class="col-sm-9">
+						<div id="dashboard-block"></div>
+					</div>
+					<div class="col-sm-3 well">
+
+						<div class="btn-group" style="margin-bottom:10px; width:100%;">
+						  <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" style="width:100%;">
+							{{ text_generate_keywords }} <span class="caret"></span>
+						  </button>
+						  <ul class="dropdown-menu dropdown-menu-right" role="menu">
+							<li><a onclick="generateALLKeywords('product')"><i class="fa fa-play"></i> {{ text_generate_product_keywords }}</a></li>
+							<li><a onclick="generateALLKeywords('category', 0);"><i class="fa fa-play"></i> {{ text_generate_category_keywords }}</a></li>
+						  	<li><a onclick="generateALLKeywords('manufacturer', 0);"><i class="fa fa-play"></i> {{ text_generate_brand_keywords }}</a></li>
+							<li><a onclick="generateALLKeywords('information', 0)"><i class="fa fa-play"></i> {{ text_generate_information_keywords }}</a></li>
+						  </ul>
+						</div>	
+						
+						<div class="btn-group" style="margin-bottom:10px; width:100%;">
+						  <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown" style="width:100%;">
+							{{ text_clear_keywords }} <span class="caret"></span>
+						  </button>
+						  <ul class="dropdown-menu dropdown-menu-right" role="menu">
+							<li><a onclick="confirm('{{ text_confirm_delete }}') ? clearKeywords('product_id=', 0) : false;"><i class="fa fa-trash"></i> {{ text_clear_product_keywords }}</a></li>
+							<li><a onclick="confirm('{{ text_confirm_delete }}') ? clearKeywords('category_id=', 0) : false;"><i class="fa fa-trash"></i> {{ text_clear_category_keywords }}</a></li>
+						  	<li><a onclick="confirm('{{ text_confirm_delete }}') ? clearKeywords('manufacturer_id=', 0) : false;"><i class="fa fa-trash"></i> {{ text_clear_brand_keywords }}</a></li>
+							<li><a onclick="confirm('{{ text_confirm_delete }}') ? clearKeywords('information_id=', 0) : false;"><i class="fa fa-trash"></i> {{ text_clear_information_keywords }}</a></li>
+						  </ul>
+						</div>
+						
+						<div class="btn-group" style="margin-bottom:10px; width:100%;">
+						  <button type="button" class="btn btn-warning dropdown-toggle" data-toggle="dropdown" style="width:100%;">
+							{{ text_additional_tools }} <span class="caret"></span>
+						  </button>
+						  <ul class="dropdown-menu dropdown-menu-right" role="menu">
+							<li><a onclick="confirm('{{ text_confirm }}') ? preserve(): false;"><i class="fa fa-bookmark"></i> {{ text_preserve_keywords }}</a></li>
+							<li><a onclick="confirm('{{ text_confirm }}') ? clearPreserve(): false;"><i class="fa fa-trash"></i> {{ text_clear_preserve_keywords }}</a></li>
+						  	<li><a onclick="confirm('{{ text_confirm }}') ? passtoredirectmanager(): false;" title="Set 301 Redirect from Preserved Keyword Data"><i class="fa fa-exchange"></i> {{ text_set_redirect }}</a></li>
+						  </ul>
+						</div>										
+					</div>
+				</div>
+				
+	  			<div id="tab-languages" class="tab-pane">
+					<div id="languages-block"></div>
+				</div><!--tab-routes-->
+
+				<div id="tab-routes" class="tab-pane">
+					<div id="routes-block"></div>
+				</div><!--tab-routes-->
+
+				<div id="tab-preserved" class="tab-pane">
+					<div class="row" style="margin-bottom:10px;">
+						<div class="col-sm-12">
+						<div class="input-group">
+							<input type="text" id="search-preserve-value" onkeyup="searchPreserve();" class="form-control" placeholder="{{ txt_search_preserve_label }}">
+							<span class="input-group-addon btn" id="search-preserve-button" onclick="searchPreserve();"><i class="fa fa-search"></i></span>
+						</div>
+						</div>
+					</div>
+
+					<div id="preserved-block"></div>
+				</div><!--tab-routes-->
+				
+				<!--SETUP-->
+				<div class="tab-pane" id="tab-setting">	
+					<div class="form-group">
+						<label class="col-sm-4 control-label">{{ text_product_template }}</label>
+						
+						<div class="col-sm-6">
+							<input type="text" name="hb_seourl_product_template" value="{{ hb_seourl_product_template }}" class="form-control" />
+							<span class="text-info">{{ text_product_template_shortcodes }}</span>
+						</div>
+						<div class="col-sm-2">
+							<input type="checkbox" data-toggle="toggle" data-onstyle="success" name="hb_seourl_use_pattern" class="form-control" value="1" {{ hb_seourl_use_pattern == '1'? 'checked':'' }} />
+						</div>
+				   	</div>
+
+					<div class="form-group">
+						<label class="col-sm-4 control-label">{{ text_transliterate }}</label>
+						<div class="col-sm-8">
+							<input type="checkbox" data-toggle="toggle" data-onstyle="success" name="hb_seourl_trans" class="form-control" value="1" {{ hb_seourl_trans == '1'? 'checked':'' }} />
+						</div>
+				   </div>
+					<div class="form-group">
+						<label class="col-sm-4 control-label">{{ text_auto_mode }}</label>
+						<div class="col-sm-8">
+							<input type="checkbox" data-toggle="toggle" data-onstyle="success" name="hb_seourl_auto" class="form-control" value="1" {{ hb_seourl_auto == '1'? 'checked':'' }} />
+						</div>
+				   </div>
+				   <div class="form-group">
+						<label class="col-sm-4 control-label">
+							<span data-toggle="tooltip" title="" data-original-title="{{ text_hreflang_help }}">{{ text_hreflang }}</span>
+						</label>
+						<div class="col-sm-8">
+							<input type="checkbox" data-toggle="toggle" data-onstyle="success" name="hb_seourl_hreflang" class="form-control" value="1" {{ hb_seourl_hreflang == '1'? 'checked':'' }} />
+						</div>
+				   </div>
+				   <div class="form-group">
+						<label class="col-sm-4 control-label">
+							<span data-toggle="tooltip" title="" data-original-title="{{ text_simplified_help }}">{{ text_simplified }}</span>
+						</label>
+						<div class="col-sm-8">
+							<input type="checkbox" data-toggle="toggle" data-onstyle="success" name="hb_seourl_simplified" class="form-control" value="1" {{ hb_seourl_simplified == '1'? 'checked':'' }} />
+						</div>
+				   </div>
+				   <div class="form-group">
+						<label class="col-sm-4 control-label">
+							<span data-toggle="tooltip" title="" data-original-title="Make sure you have preserved the old keywords by clicking on the Preserve Existing URL Keyword button">{{ text_preserve_keyword }}</span>
+						</label>
+						<div class="col-sm-8">
+							<input type="checkbox" data-toggle="toggle" data-onstyle="success" name="hb_seourl_preserve" class="form-control" value="1" {{ hb_seourl_preserve == '1'? 'checked':'' }} />
+						</div>
+				   </div>
+				</div>
+
+				<div id="tab-logs" class="tab-pane">
+					<div id="logs-block"></div>
+
+					<div class="pull-right" style="margin-top:10px;">
+					<a onclick="confirm('{{ text_confirm }}') ? location.href='{{ clear }}' : false;" data-bs-toggle="tooltip" title="Clear Logs" class="btn btn-danger"><i class="fa fa-trash"></i>&nbsp;{{ button_clear_logs }}</a>
+					</div>
+				</div><!--tab-logs-->
+				
+			  </div><!--tab-content block end-->
+        </form>
+
+		<!--MODAL CREATE TEMPLATE-->
+        <div class="modal fade" id="modal-edit-route" tabindex="-1" role="dialog" aria-labelledby="edit-route-modal">
+          <div class="modal-dialog modal-lg" role="document">
+          <div class="modal-content">
+
+            <div class="modal-header">              
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span>&times;</span></button>
+			  <h4 class="modal-title">{{ text_partner_form }}</h4>
+            </div>
+
+            <div class="modal-body">
+              <div id="edit-route-block"></div>
+            </div>
+
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">{{ button_close }}</button>
+              <button type="button" class="btn btn-primary" id="add-route-button"><i class="fa fa-plus"></i>&nbsp;{{ button_add }}</button>
+              <button type="button" class="btn btn-warning" id="update-route-button"><i class="fa fa-pencil"></i>&nbsp;{{ button_update }}</button>
+            </div>
+
+          </div>
+          </div>
+        </div>
+        <!--END - MODAL CREATE TEMPLATE-->
+		
+      </div>
+    </div>
+    <!--Panel Content End-->
+    <!--Huntbee copyrights-->
+    <div class="container-fluid">
+      <center>
+        <span class="help">{{ heading_title }} - {{ extension_version }} &copy; <a href="https://www.huntbee.com/">HUNTBEE.COM</a> | <a href="https://www.huntbee.com/get-support">SUPPORT</a></span>
+      </center>
+    </div>
+    <!--Huntbee copyrights end-->
+  </div>
+  <!--Container 1 start -->
+</div>
+<!--Main Content block end-->
+
+<link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+<script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>	   
+
+<style type="text/css">
+.table-keyword-header{
+  padding-top: 30px !important;
+  background-color: #e9ecef !important;
+}
+
+a {cursor:pointer;}
+
+.dashboard-table tr:hover {
+  border: 1px solid #ccc;
+  box-shadow: 0 0 5px #ccc;
+}
+
+.updated_count{
+  color: #1e91cf;
+  font-weight: bold;
+}
+</style>
+
+<script type="text/javascript" src="view/javascript/bootstrap-notify.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function() {
+	loadBlock('dashboard');
+});
+</script>
+
+<script type="text/javascript">
+function loadBlock(name){
+	$('#'+name+'-block').html('<center><div class="loaddiv"><i class="fa fa-circle-o-notch fa-spin fa-3x fa-fw"></i></div></center>');
+	$('#'+name+'-block').load('index.php?route={{ base_route }}/hb_seourl/'+name+'&user_token={{ user_token }}&store_id={{ store_id }}');
+}
+
+$('#preserved-block').delegate('.pagination a', 'click', function(e) {
+	e.preventDefault();
+	$('#preserved-block').load(this.href);
+});
+
+function searchPreserve() {
+	$('#preserved-block').html('<center><div class="loaddiv"><i class="fa fa-circle-o-notch fa-spin fa-3x fa-fw"></i></div></center>');
+	var search_value = $('#search-preserve-value').val();
+	$('#preserved-block').load('index.php?route={{ base_route }}/hb_seourl/preserved&user_token={{ user_token }}&store_id={{ store_id }}&search='+encodeURIComponent(search_value));
+};
+
+function generateALLKeywords(key){
+  {% for language in languages %}
+  generateKeywords(key, {{ language.language_id }});
+  {% endfor %}
+}
+
+function generateKeywords(key, language_id) {
+    var next = 'index.php?route={{ base_route }}/hb_seourl/generate_keywords&user_token={{ user_token }}&store_id={{ store_id }}&key=' + key + '&language_id=' + language_id;
+
+    var generate = function () {
+        return $.ajax({
+            url: next,
+            type: 'post',
+            dataType: 'json',
+            success: function (json) {
+                $('.alert-dismissible').remove();
+
+                if (json['error']) {
+                    $('#msgoutput').html('<div class="alert alert-danger">' + json['error'] + '<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+                    delete json['error'];
+                }
+
+                if (json['success']) {
+                    $('#msgoutput').html('<div class="alert alert-success"><i class="fa fa-check"></i>&nbsp;' + json['success'] + '<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+                }
+
+                if (json['progress']) {
+                    var progressBar = $('#' + key + '_progress_bar' + language_id);
+                    progressBar.css('width', '100%');
+					console.log(json['progress']);
+                    progressBar.html(json['progress'] + '%');
+                    progressBar.addClass('progress-bar-striped progress-bar-animated');
+                }
+
+                if (json['progress_success']) {
+                    var progressBar = $('#' + key + '_progress_bar' + language_id);
+                    progressBar.removeClass('progress-bar-info progress-bar-striped progress-bar-animated');
+                    progressBar.addClass('progress-bar-success');
+                }
+
+                if (json['available_keywords']) {
+                    var countElement = $('#' + key + '_count' + language_id);
+                    countElement.addClass('updated_count');
+                    countElement.html(json['available_keywords']);
+                }
+
+                if (json['next']) {
+                    console.log(json['next']);
+                    next = json['next'];
+                    generate(); // Recursively call generate for the next request
+                }
+            },
+            error: function(xhr, ajaxOptions, thrownError) {
+				alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+			}
+        });
+    };
+
+    generate(); // Start the initial generation process
+}
+
+
+function clearKeywords(key, language_id){
+	$('.alert-dismissible').remove();
+	$('#msgoutput').html('<center><i class="fa fa-circle-o-notch fa-spin fa-fw"></i></center>');
+	$.ajax({
+		type: 'post',
+		url: 'index.php?route={{ base_route }}/hb_seourl/clear_seo_url&user_token={{ user_token }}&store_id={{ store_id }}&language_id='+language_id,
+		data: {key : key},
+		dataType: 'json',		
+		success: function(json) {
+			if (json['success']) {
+				$('#msgoutput').html('<div class="alert alert-success"><i class="fa fa-check"></i>&nbsp;'+json['success']+'<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+				loadBlock('dashboard');
+			}
+		},			
+		error: function(xhr, ajaxOptions, thrownError) {
+			alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+		}
+	 });
+}
+
+function preserve(){
+	$('.alert-dismissible').remove(); 
+	$('#msgoutput').html('<center><i class="fa fa-circle-o-notch fa-spin fa-fw"></i></center>');
+	$.ajax({
+		  url: 'index.php?route={{ base_route }}/hb_seourl/preserve_keywords&user_token={{ user_token }}&store_id={{ store_id }}',
+		  dataType: 'json',		
+		  success: function(json) {
+				if (json['success']) {
+					$('#msgoutput').html('<div class="alert alert-success"><i class="fa fa-check"></i>&nbsp;'+json['success']+'<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+				}
+				if (json['error']) {
+            		$('#msgoutput').html('<div class="alert alert-danger">'+json['error']+'<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+				}
+		  },			
+      error: function(xhr, ajaxOptions, thrownError) {
+        alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+      }
+	 });
+}
+
+function clearPreserve(){
+	$('.alert-dismissible').remove(); 
+	$('#msgoutput').html('<center><i class="fa fa-circle-o-notch fa-spin fa-fw"></i></center>');
+	$.ajax({
+		  url: 'index.php?route={{ base_route }}/hb_seourl/clear_preserve&user_token={{ user_token }}&store_id={{ store_id }}',
+		  dataType: 'json',		
+		  success: function(json) {
+				if (json['success']) {
+					$('#msgoutput').html('<div class="alert alert-success"><i class="fa fa-check"></i>&nbsp;'+json['success']+'<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+				}
+        		if (json['error']) {
+            		$('#msgoutput').html('<div class="alert alert-danger">'+json['error']+'<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+				}
+		  },			
+      error: function(xhr, ajaxOptions, thrownError) {
+        alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+      }
+	 });
+}
+
+function passtoredirectmanager(){
+	$('.alert-dismissible').remove(); 
+	$('#msgoutput').html('<center><i class="fa fa-circle-o-notch fa-spin fa-fw"></i></center>');
+	$.ajax({
+		  url: 'index.php?route={{ base_route }}/hb_seourl/seourl_to_brokenlinks&user_token={{ user_token }}&store_id={{ store_id }}',
+		  dataType: 'json',		
+		  success: function(json) {
+				if (json['success']) {
+					 $('#msgoutput').html('<div class="alert alert-success"><i class="fa fa-check"></i>&nbsp;'+json['success']+'<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+				}
+				if (json['error']) {
+            		$('#msgoutput').html('<div class="alert alert-danger">'+json['error']+'<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+				}
+		  },			
+		error: function(xhr, ajaxOptions, thrownError) {
+			alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+		}
+
+	 });
+}
+
+function edit_route(route) {
+  $('#edit-route-block').load('index.php?route={{ base_route }}/hb_seourl/edit_route&user_token={{ user_token }}&store_id={{ store_id }}&routekey='+route);
+  $('#add-route-button').hide();
+  $('#update-route-button').show();
+  $('#modal-edit-route').modal('show');
+}
+
+$('#update-route-button').click(function() {
+$('#editform-result').html('');
+  $.post('index.php?route={{ base_route }}/hb_seourl/update_route&user_token={{ user_token }}&store_id={{ store_id }}', $('#form-edit-route').serialize(),function(json) {
+    if (json['success']) {
+		$('#editform-result').html('<div class="alert alert-success"><i class="fa fa-check"></i>&nbsp;'+json['success']+'<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+        loadBlock('routes');
+    } else
+	if (json['error']) {
+        $('#editform-result').html('<div class="alert alert-danger">'+json['error']+'<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+    }
+  },'json');
+});
+
+</script>
+
+<script type="text/javascript">
+$('#store').on('change', function() {
+	window.location.href = 'index.php?route={{ base_route }}/hb_seourl&user_token={{ user_token }}&store_id='+$('#store').val();
+});
+</script>
+{{ footer }}

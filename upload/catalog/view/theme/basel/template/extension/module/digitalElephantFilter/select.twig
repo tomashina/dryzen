@@ -1,0 +1,27 @@
+<div class="digitalElephantFilter_type_select">
+
+    <select class="form-control" name="{{ inputs_data[0]['input_name'] }}[{{ section['id'] }}][]">
+        <option value="">{{ text_all }}</option>
+        {% for input_data in inputs_data %}
+
+            {% set attr_selected = '' %}
+            {% if check_data_on_active[input_data['input_name']][section['id']] and input_data['input_value'] in check_data_on_active[input_data['input_name']][section['id']] %}
+                {% set attr_selected = 'selected="selected"' %}
+            {% endif %}
+
+            {% if input_data['is_enable'] %}
+                {% set attr_disabled = '' %}
+            {% else %}
+                {% set attr_disabled = 'disabled="disabled"' %}
+            {% endif %}
+
+            <option
+                value="{{ input_data['value_id'] }}"
+                {{ attr_selected }}
+                {{ attr_disabled }}
+                >
+                {{ input_data['input_label'] }}
+            </option>
+        {% endfor %}
+    </select>
+</div>

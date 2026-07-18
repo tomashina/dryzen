@@ -1,0 +1,29 @@
+<form id="form-edit-route">
+    <div class="form-group row" style="margin-bottom:10px;">
+        <label for="key" class="col-sm-2 col-form-label">{{ text_route_key }}</label>
+        <div class="col-sm-10">
+            {% if routekey %}
+            <input type="text" class="form-control" value="{{ routekey }}" disabled>
+            <input type="hidden" class="form-control" name="routekey" value="{{ routekey }}">
+            {% else %}
+            <input type="text" class="form-control" name="routekey" value="{{ routekey }}">
+            {% endif %}
+        </div>
+    </div>
+
+    {% for language in languages %}
+        <div class="form-group row route-language" style="margin-bottom:10px;">
+            <label for="key" class="col-sm-2 col-form-label"><img src="language/{{ language.code }}/{{ language.code }}.png" title="{{ language.name }}"/>&nbsp;{{ language.name }}</label>
+            <div class="col-sm-10">
+                <input type="text" name="route_value[{{ language.language_id }}]" class="form-control" value="{{ route_value[language['language_id']] }}">
+            </div>
+        </div>
+    {% endfor %}
+
+    <div class="row mb-3">
+        <div class="col-sm-12">
+            <div id="editform-result" style="text-align:center;"></div>
+        </div>
+    </div>
+
+</form>

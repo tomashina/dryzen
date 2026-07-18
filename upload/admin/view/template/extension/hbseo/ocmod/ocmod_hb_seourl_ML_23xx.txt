@@ -1,0 +1,477 @@
+<?xml version="1.0" encoding="utf-8"?>
+<modification>
+    <name>SEO - URL Multi-Language [23xx]</name>
+    <version>5.1</version>
+    <author>HuntBee OpenCart Services</author>
+    <link>http://www.huntbee.com</link>
+	<code>huntbee_seo_multi_language_url_ocmod</code>
+
+		<file path="catalog/controller/startup/seo_url.php">
+            <operation>
+                <search><![CDATA[public function rewrite($link) {]]></search>
+                <add position="before"><![CDATA[
+				private function forceSetLanguage($language_id = '1') {
+            		$this->session->data['language_id'] = $language_id;
+            		if (isset($this->session->data['language_id'])){
+            			$this->config->set('config_language_id',$this->session->data['language_id']);
+            			
+            			$language_code = $this->db->query("SELECT `code` FROM `".DB_PREFIX."language` WHERE language_id = '".(int)$this->session->data['language_id']."'");
+            			$this->session->data['language'] = $language_code->row['code'];
+            			$this->language = new Language($this->session->data['language']);
+            			$this->language->load($this->session->data['language']);
+            			$this->registry->set('language', $this->language);
+            		}
+            	}		
+				]]></add>
+            </operation>
+            <operation>
+                <search><![CDATA[if ($query->row['query'] && $url[0]]]></search>
+                <add position="before"><![CDATA[
+				$this->forceSetLanguage($query->row['language_id']);		
+				]]></add>
+            </operation>
+            <operation>
+                <search><![CDATA[$this->request->get['route'] = $hb_route->row['route'];]]></search>
+                <add position="after"><![CDATA[
+				$this->forceSetLanguage($hb_route->row['language_id']);	
+				]]></add>
+            </operation>
+            <operation>
+                <search><![CDATA[if (!isset($this->request->get['route'])) {]]></search>
+                <add position="before"><![CDATA[
+				$hb_lang_route = $this->db->query("SELECT `language_id` FROM `".DB_PREFIX."language` WHERE `code` LIKE '".$this->db->escape($this->request->get['_route_'])."%' LIMIT 1");
+    			if ($hb_lang_route->num_rows == 1) {
+    				$this->request->get['route'] = 'common/home';
+					$this->forceSetLanguage($hb_lang_route->row['language_id']);
+    			}	
+				]]></add>
+            </operation>
+            <operation>
+                <search><![CDATA[if (isset($data['route']) && $data['route'] == 'common/home') {]]></search>
+                <add position="before"><![CDATA[
+				$default_language_code = $this->config->get('config_language');
+				if (isset($this->session->data['language'])){
+					$language_code = $this->session->data['language'];
+				}else{
+					$language_code = $default_language_code;
+				}
+				
+				if ($language_code == $default_language_code) {
+					$set_language_code = '';
+				}else{
+					$set_language_code = substr($language_code,0,2).'/';
+				}
+				
+				]]></add>
+            </operation>
+            <operation>
+                <search><![CDATA[$data = array();]]></search>
+                <add position="after"><![CDATA[
+                if (isset($this->session->data['language_id'])){
+                    $language_id = $this->session->data['language_id'];
+                }else{
+                    $language_query = $this->db->query("SELECT `language_id` FROM ".DB_PREFIX."language WHERE `code` = '".$this->config->get('config_language')."'");
+                    $language_id = $language_query->row['language_id'];
+                }
+                ]]></add>
+            </operation>
+			<operation>
+                <search><![CDATA[`query` = '" . $this->db->escape($key . '=' . (int)$value) . "']]></search>
+                <add position="replace"><![CDATA[`query` = '" . $this->db->escape($key . '=' . (int)$value) . "' and language_id = '".(int)$language_id."']]></add>
+            </operation>
+			<operation>
+                <search><![CDATA[`query` = 'category_id=" . (int)$category . "']]></search>
+                <add position="replace"><![CDATA[`query` = 'category_id=" . (int)$category . "' and language_id = '".(int)$language_id."']]></add>
+            </operation>
+            <operation>
+			    <search><![CDATA[$this->request->get['route'] = 'product/product';]]></search>
+		    	<add position="replace"><![CDATA[$this->request->get['route'] = 'product/product'; 
+		    		$this->session->data['redirect_route'] = 'product/product';
+		        	$this->session->data['product_id'] = $this->request->get['product_id'];]]></add>
+    		</operation>		
+    		<operation>
+    			<search><![CDATA[$this->request->get['route'] = 'product/category';]]></search>
+    			<add position="replace"><![CDATA[$this->request->get['route'] = 'product/category';
+    			$this->session->data['redirect_route'] = 'product/category';
+    			$this->session->data['path'] = $this->request->get['path'];]]></add>
+    		</operation>		
+    		<operation>
+    			<search><![CDATA[$this->request->get['route'] = 'product/manufacturer/info';]]></search>
+    			<add position="replace"><![CDATA[$this->request->get['route'] = 'product/manufacturer/info';
+    			$this->session->data['redirect_route'] = 'product/manufacturer/info';
+    			$this->session->data['manufacturer_id'] = $this->request->get['manufacturer_id'];]]></add>
+    		</operation>
+    		<operation>
+    			<search><![CDATA[$this->request->get['route'] = 'information/information';]]></search>
+    			<add position="replace"><![CDATA[$this->request->get['route'] = 'information/information';
+    			$this->session->data['redirect_route'] = 'information/information';
+    			$this->session->data['information_id'] = $this->request->get['information_id'];
+    			}else{
+    			    $this->request->get['route'] = 'common/home';
+    			    $this->session->data['redirect_route'] = 'common/home';
+    			]]></add>
+    		</operation>
+		</file>
+		
+		<file path="catalog/controller/common/language.php">
+			<operation>
+                <search><![CDATA[$this->session->data['language'] = $this->request->post['code'];]]></search>
+                <add position="after"><![CDATA[
+                $language_query = $this->db->query("SELECT `language_id` FROM ".DB_PREFIX."language WHERE `code` = '".$this->session->data['language']."'");
+			    $this->session->data['language_id'] = $language_query->row['language_id'];
+			    $this->config->set('config_language_id', $language_query->row['language_id']);
+			    ]]></add>
+            </operation>
+            <operation>
+                <search><![CDATA[$url_data = $this->request->get;]]></search>
+                <add position="after"><![CDATA[
+                $additional_url_data = $url_data;
+                unset($additional_url_data['route'],$additional_url_data['_route_'],$additional_url_data['product_id'],$additional_url_data['path'],$additional_url_data['manufacturer_id'],$additional_url_data['information_id']);
+    			$this->session->data['additional_url_data'] = $additional_url_data;
+			    ]]></add>
+            </operation>
+        	<operation>
+                <search><![CDATA[$this->response->redirect($this->request->post['redirect']);]]></search>
+                <add position="replace"><![CDATA[
+                if (isset($this->session->data['redirect_route'])){
+                    if (isset($this->session->data['additional_url_data'])){
+                        $additional_url_data = '&' . urldecode(http_build_query($this->session->data['additional_url_data'], '', '&'));;
+                    }else{
+                        $additional_url_data = '';
+                    }
+                    
+                    if ($this->session->data['redirect_route'] == 'product/product'){
+                        $this->response->redirect($this->url->link('product/product', 'product_id=' . $this->session->data['product_id'].$additional_url_data,$this->request->server['HTTPS']));
+                    }
+                    if ($this->session->data['redirect_route'] == 'product/category'){
+                        $this->response->redirect($this->url->link('product/category', 'path=' . $this->session->data['path'].$additional_url_data,$this->request->server['HTTPS']));
+                    }
+                    if ($this->session->data['redirect_route'] == 'product/manufacturer/info'){
+                        $this->response->redirect($this->url->link('product/manufacturer/info', 'manufacturer_id=' . $this->session->data['manufacturer_id'].$additional_url_data,$this->request->server['HTTPS']));
+                    }
+                    if ($this->session->data['redirect_route'] == 'information/information'){
+                        $this->response->redirect($this->url->link('information/information', 'information_id=' . $this->session->data['information_id'].$additional_url_data,$this->request->server['HTTPS']));
+                    }
+                }else{
+                    $this->response->redirect($this->url->link('common/home'));
+                }
+			    ]]></add>
+            </operation>
+		</file>
+		<file path="catalog/controller/common/home.php">
+			<operation>
+                <search><![CDATA[$data['header'] = $this->load->controller('common/header');]]></search>
+                <add position="after"><![CDATA[
+                unset($this->session->data['redirect_route']);
+			    ]]></add>
+            </operation>
+        </file>
+		
+		<!--ADMIN PRODUCT PAGE-->
+		<file path="admin/controller/catalog/product.php">
+			<operation>
+				<search><![CDATA[$data['keyword'] = $product_info['keyword'];]]></search>
+				<add position="replace"><![CDATA[$data['keyword'] = $this->model_catalog_product->getkeywords($this->request->get['product_id']);]]></add>
+			</operation>	
+			<operation>
+				<search><![CDATA[$data['keyword'] = '';]]></search>
+				<add position="replace"><![CDATA[$data['keyword'] = array();]]></add>
+			</operation>
+			<operation>
+				<search><![CDATA[utf8_strlen($this->request->post['keyword'])]]></search>
+				<add position="replace"><![CDATA[utf8_strlen(current($this->request->post['keyword']))]]></add>
+			</operation>
+			<operation>
+				<search><![CDATA[getUrlAlias($this->request->post['keyword'])]]></search>
+				<add position="replace"><![CDATA[getUrlAlias(current($this->request->post['keyword']))]]></add>
+			</operation>
+		</file>
+
+		<file path="admin/model/catalog/product.php">
+            <operation>
+                <search><![CDATA[, (SELECT keyword FROM " . DB_PREFIX . "url_alias WHERE query = 'product_id=" . (int)$product_id . "') AS keyword]]></search>
+                <add position="replace"><![CDATA[]]></add>
+            </operation>
+			
+			<operation>
+				<search><![CDATA[$this->db->query("INSERT INTO " . DB_PREFIX . "url_alias SET query = 'product_id=" . (int)$product_id . "', keyword = '" . $this->db->escape($data['keyword']) . "'");]]></search>
+				<add position="replace"><![CDATA[
+					foreach ($data['keyword'] as $language_id => $keyword) {
+						if ($keyword) {$this->db->query("INSERT INTO " . DB_PREFIX . "url_alias SET query = 'product_id=" . (int)$product_id . "', keyword = '" . $this->db->escape($keyword) . "', language_id = " . $language_id);}
+					}
+				]]></add>
+			</operation>
+			<operation>
+				<search><![CDATA[$data['keyword'] = '';]]></search>
+				<add position="replace"><![CDATA[$data['keyword'] = array();]]></add>
+			</operation>
+			<operation>
+				<search><![CDATA[public function getProduct($product_id) {]]></search>
+				<add position="before"><![CDATA[
+				public function getkeywords($product_id) {
+					$keywords = array();
+					$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "url_alias WHERE query = 'product_id=" . (int)$product_id . "'");
+					foreach ($query->rows as $result) {
+						$keywords[$result['language_id']] = $result['keyword'];					
+					}
+					return $keywords;
+				}
+				]]></add>
+			</operation>
+		</file>
+		
+		<file path="admin/view/template/catalog/{product_form,category_form,manufacturer_form,information_form}.tpl">
+		<operation>
+			<search><![CDATA[<input type="text" name="keyword" value="<?php echo $keyword; ?>" placeholder="<?php echo $entry_keyword; ?>" id="input-keyword" class="form-control" />]]></search>
+			<add position="replace"><![CDATA[
+			 <table class="table table-hover">
+		    	<?php foreach ($languages as $language) { ?>
+				<tr>
+				<td class="col-sm-8"><input type="text" name="keyword[<?php echo $language['language_id']; ?>]" value="<?php  if (isset($keyword[$language['language_id']])) { echo $keyword[$language['language_id']]; } ?>" class="form-control" /></td>
+				<td class="col-sm-4"><img src="language/<?php echo $language['code']; ?>/<?php echo $language['code']; ?>.png" title="<?php echo $language['name']; ?>" /></td>
+				</tr>
+			    <?php } ?>
+			</table>
+			]]></add>
+		</operation>			
+    	</file>
+    	<!--Admin Category Page -->
+    	<file path="admin/controller/catalog/category.php">
+			<operation>
+				<search><![CDATA[$data['keyword'] = $category_info['keyword'];]]></search>
+				<add position="replace"><![CDATA[$data['keyword'] = $this->model_catalog_category->getkeywords($this->request->get['category_id']);]]></add>
+			</operation>	
+			<operation>
+				<search><![CDATA[$data['keyword'] = '';]]></search>
+				<add position="replace"><![CDATA[$data['keyword'] = array();]]></add>
+			</operation>
+			<operation>
+				<search><![CDATA[utf8_strlen($this->request->post['keyword'])]]></search>
+				<add position="replace"><![CDATA[utf8_strlen(current($this->request->post['keyword']))]]></add>
+			</operation>
+			<operation>
+				<search><![CDATA[getUrlAlias($this->request->post['keyword'])]]></search>
+				<add position="replace"><![CDATA[getUrlAlias(current($this->request->post['keyword']))]]></add>
+			</operation>
+		</file>
+    	<file path="admin/model/catalog/category.php">
+            <operation>
+                <search><![CDATA[, (SELECT DISTINCT keyword FROM " . DB_PREFIX . "url_alias WHERE query = 'category_id=" . (int)$category_id . "') AS keyword]]></search>
+                <add position="replace"><![CDATA[]]></add>
+            </operation>
+			
+			<operation>
+				<search><![CDATA[$this->db->query("INSERT INTO " . DB_PREFIX . "url_alias SET query = 'category_id=" . (int)$category_id . "', keyword = '" . $this->db->escape($data['keyword']) . "'");]]></search>
+				<add position="replace"><![CDATA[
+					foreach ($data['keyword'] as $language_id => $keyword) {
+					if ($keyword) {$this->db->query("INSERT INTO " . DB_PREFIX . "url_alias SET query = 'category_id=" . (int)$category_id . "', keyword = '" . $this->db->escape($keyword) . "', language_id = " . $language_id);}
+					}
+				]]></add>
+			</operation>
+			<operation>
+				<search><![CDATA[public function getCategory($category_id) {]]></search>
+				<add position="before"><![CDATA[
+				public function getkeywords($category_id) {
+					$keywords = array();
+					$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "url_alias WHERE query = 'category_id=" . (int)$category_id . "'");
+					foreach ($query->rows as $result) {
+						$keywords[$result['language_id']] = $result['keyword'];					
+					}
+					return $keywords;
+				}
+				]]></add>
+			</operation>
+		</file>
+		
+		<!--Admin Manufacturer Page -->
+    	<file path="admin/controller/catalog/manufacturer.php">
+    	    <operation>
+				<search><![CDATA[$data['token'] = $this->session->data['token'];]]></search>
+				<add position="after"><![CDATA[
+				    $this->load->model('localisation/language');
+                    $data['languages'] = $this->model_localisation_language->getLanguages();
+                    ]]></add>
+			</operation>
+			<operation>
+				<search><![CDATA[$data['keyword'] = $manufacturer_info['keyword'];]]></search>
+				<add position="replace"><![CDATA[$data['keyword'] = $this->model_catalog_manufacturer->getkeywords($this->request->get['manufacturer_id']);]]></add>
+			</operation>	
+			<operation>
+				<search><![CDATA[$data['keyword'] = '';]]></search>
+				<add position="replace"><![CDATA[$data['keyword'] = array();]]></add>
+			</operation>
+			<operation>
+				<search><![CDATA[utf8_strlen($this->request->post['keyword'])]]></search>
+				<add position="replace"><![CDATA[utf8_strlen(current($this->request->post['keyword']))]]></add>
+			</operation>
+			<operation>
+				<search><![CDATA[getUrlAlias($this->request->post['keyword'])]]></search>
+				<add position="replace"><![CDATA[getUrlAlias(current($this->request->post['keyword']))]]></add>
+			</operation>
+		</file>
+    	<file path="admin/model/catalog/manufacturer.php">
+            <operation>
+                <search><![CDATA[, (SELECT keyword FROM " . DB_PREFIX . "url_alias WHERE query = 'manufacturer_id=" . (int)$manufacturer_id . "') AS keyword]]></search>
+                <add position="replace"><![CDATA[]]></add>
+            </operation>
+			
+			<operation>
+				<search><![CDATA[$this->db->query("INSERT INTO " . DB_PREFIX . "url_alias SET query = 'manufacturer_id=" . (int)$manufacturer_id . "', keyword = '" . $this->db->escape($data['keyword']) . "'");]]></search>
+				<add position="replace"><![CDATA[
+					foreach ($data['keyword'] as $language_id => $keyword) {
+					if ($keyword) {$this->db->query("INSERT INTO " . DB_PREFIX . "url_alias SET query = 'manufacturer_id=" . (int)$manufacturer_id . "', keyword = '" . $this->db->escape($keyword) . "', language_id = " . $language_id);}
+					}
+				]]></add>
+			</operation>
+			<operation>
+				<search><![CDATA[public function getManufacturer($manufacturer_id) {]]></search>
+				<add position="before"><![CDATA[
+				public function getkeywords($manufacturer_id) {
+					$keywords = array();
+					$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "url_alias WHERE query = 'manufacturer_id=" . (int)$manufacturer_id . "'");
+					foreach ($query->rows as $result) {
+						$keywords[$result['language_id']] = $result['keyword'];					
+					}
+					return $keywords;
+				}
+				]]></add>
+			</operation>
+		</file>
+		<!--Admin Information Page -->
+    	<file path="admin/controller/catalog/information.php">
+			<operation>
+				<search><![CDATA[$data['keyword'] = $information_info['keyword'];]]></search>
+				<add position="replace"><![CDATA[$data['keyword'] = $this->model_catalog_information->getkeywords($this->request->get['information_id']);]]></add>
+			</operation>	
+			<operation>
+				<search><![CDATA[$data['keyword'] = '';]]></search>
+				<add position="replace"><![CDATA[$data['keyword'] = array();]]></add>
+			</operation>
+			<operation>
+				<search><![CDATA[utf8_strlen($this->request->post['keyword'])]]></search>
+				<add position="replace"><![CDATA[utf8_strlen(current($this->request->post['keyword']))]]></add>
+			</operation>
+			<operation>
+				<search><![CDATA[getUrlAlias($this->request->post['keyword'])]]></search>
+				<add position="replace"><![CDATA[getUrlAlias(current($this->request->post['keyword']))]]></add>
+			</operation>
+		</file>
+    	<file path="admin/model/catalog/information.php">
+            <operation>
+                <search><![CDATA[, (SELECT keyword FROM " . DB_PREFIX . "url_alias WHERE query = 'information_id=" . (int)$information_id . "') AS keyword]]></search>
+                <add position="replace"><![CDATA[]]></add>
+            </operation>
+			
+			<operation>
+				<search><![CDATA[$this->db->query("INSERT INTO " . DB_PREFIX . "url_alias SET query = 'information_id=" . (int)$information_id . "', keyword = '" . $this->db->escape($data['keyword']) . "'");]]></search>
+				<add position="replace"><![CDATA[
+					foreach ($data['keyword'] as $language_id => $keyword) {
+					if ($keyword) {$this->db->query("INSERT INTO " . DB_PREFIX . "url_alias SET query = 'information_id=" . (int)$information_id . "', keyword = '" . $this->db->escape($keyword) . "', language_id = " . $language_id);}
+					}
+				]]></add>
+			</operation>
+			<operation>
+				<search><![CDATA[public function getInformation($information_id) {]]></search>
+				<add position="before"><![CDATA[
+				public function getkeywords($information_id) {
+					$keywords = array();
+					$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "url_alias WHERE query = 'information_id=" . (int)$information_id . "'");
+					foreach ($query->rows as $result) {
+						$keywords[$result['language_id']] = $result['keyword'];					
+					}
+					return $keywords;
+				}
+				]]></add>
+			</operation>
+		</file>
+
+    	<!--hreflang - https://support.google.com/webmasters/answer/189077?hl=en-->	
+    	<file path="catalog/controller/common/header.php">
+		<operation>
+			<search><![CDATA[$data['base'] = $server;]]></search>
+			<add position="before"><![CDATA[
+			    $data['alternate'] = '';
+		    	$this->load->model('localisation/language');
+				$languages = $this->model_localisation_language->getLanguages();
+				    if (isset($this->request->get['route'])) {
+						if ($this->request->get['route'] == 'product/product') {
+						    foreach($languages as $lang) {
+						        $query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "url_alias` where `query` = CONCAT('product_id=', CAST(".$this->request->get['product_id']." as CHAR)) and language_id = '".(int)$lang['language_id']."' LIMIT 1");
+								if ($query->num_rows) {
+									$seo_alias = $query->row['keyword'];
+									$data['alternate'] .='<link rel="alternate" hreflang="'.$lang['code'].'" href="'.$server.$seo_alias.'" />';
+								}
+						    }
+						}
+						if ($this->request->get['route'] == 'product/category') {
+						    $split_path = explode('_', $this->request->get['path']); 
+						    $catrgy_id = end($split_path);
+						    foreach($languages as $lang) {
+						        $query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "url_alias` where `query` = CONCAT('category_id=', CAST(".$catrgy_id." as CHAR)) and language_id = '".(int)$lang['language_id']."' LIMIT 1");
+								if ($query->num_rows) {
+									$seo_alias = $query->row['keyword'];
+									$data['alternate'] .='<link rel="alternate" hreflang="'.$lang['code'].'" href="'.$server.$seo_alias.'" />';
+								}
+						    }
+						}
+						if ($this->request->get['route'] == 'product/manufacturer/info') {
+						    foreach($languages as $lang) {
+						        $query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "url_alias` where `query` = CONCAT('manufacturer_id=', CAST(".$this->request->get['manufacturer_id']." as CHAR)) and language_id = '".(int)$lang['language_id']."' LIMIT 1");
+								if ($query->num_rows) {
+									$seo_alias = $query->row['keyword'];
+									$data['alternate'] .='<link rel="alternate" hreflang="'.$lang['code'].'" href="'.$server.$seo_alias.'" />';
+								}
+						    }
+						}
+						if ($this->request->get['route'] == 'information/information') {
+						    foreach($languages as $lang) {
+						        $query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "url_alias` where `query` = CONCAT('information_id=', CAST(".$this->request->get['information_id']." as CHAR)) and language_id = '".(int)$lang['language_id']."' LIMIT 1");
+								if ($query->num_rows) {
+									$seo_alias = $query->row['keyword'];
+									$data['alternate'] .='<link rel="alternate" hreflang="'.$lang['code'].'" href="'.$server.$seo_alias.'" />';
+								}
+						    }
+						}
+						if ($this->request->get['route'] == 'common/home') {
+    					    foreach($languages as $lang) {
+                                $home_langcode = substr($lang['code'],0,2);
+                                $default_language_code = substr($this->config->get('config_language'),0,2);
+                                if ($home_langcode == $default_language_code){
+                                    $home_langcode = '';
+                                }else{
+                                    $home_langcode = $home_langcode.'/';
+                                }
+    							$data['alternate'] .='<link rel="alternate" hreflang="'.$lang['code'].'" href="'.$server.$home_langcode.'" />';
+    					    }
+    					}
+    					$hb_keywords = $this->db->query("SELECT * FROM `".DB_PREFIX."hb_url` a, `".DB_PREFIX."language` b WHERE a.language_id = b.language_id AND `route` = '".$this->db->escape($this->request->get['route'])."'");
+            			if ($hb_keywords->num_rows > 1) {
+            			    foreach ($hb_keywords->rows as $lang) {
+            			        $data['alternate'] .='<link rel="alternate" hreflang="'.$lang['code'].'" href="'.$server.$lang['keyword'].'" />';
+            			    }
+            			}
+					}
+					if (!isset($this->request->get['route'])) {
+					    foreach($languages as $lang) {
+                            $home_langcode = substr($lang['code'],0,2);
+                            $default_language_code = substr($this->config->get('config_language'),0,2);
+                            if ($home_langcode == $default_language_code){
+                                $home_langcode = '';
+                            }else{
+                                $home_langcode = $home_langcode.'/';
+                            }
+							$data['alternate'] .='<link rel="alternate" hreflang="'.$lang['code'].'" href="'.$server.$home_langcode.'" />';
+					    }
+					}
+			
+			]]></add>
+		</operation>			
+    	</file>
+    	<file path="catalog/view/theme/*/template/common/header.tpl">
+		<operation>
+			<search><![CDATA[<base href="<?php echo $base; ?>" />]]></search>
+			<add position="after"><![CDATA[<?php if (isset($alternate)) { echo $alternate; } ?>
+			]]></add>
+		</operation>			
+    	</file>
+</modification>

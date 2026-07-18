@@ -1,0 +1,735 @@
+{{ header }} {{ column_left }} 
+<div id="content">
+    <div class="page-header">
+        <div class="container-fluid">
+            <div class="pull-right">
+                <button type="submit" form="form-security-headers" data-toggle="tooltip" title="{{ button_save }} " class="btn btn-sm btn-primary"><i class="fa fa-save"></i>&nbsp;&nbsp;{{ button_save }}</button>
+                <a href="{{ cancel }} " data-toggle="tooltip" title="{{ button_cancel }} " class="btn btn-sm btn-default"><i class="fa fa-reply"></i>&nbsp;&nbsp;{{ button_cancel }}</a></div>
+                <ul class="breadcrumb">
+                    {% for key, breadcrumb in breadcrumbs %}  
+                    <li><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+                    {% endfor %} 
+                </ul>
+            </div>
+        </div>
+        <div class="container-fluid">
+            {% if error_warning %} 
+            <div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i> {{ error_warning }} 
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+            </div>
+            {% endif %} 
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title"><i class="fa fa-cogs"></i>&nbsp;&nbsp;{{ heading_title }}  - {{ text_edit }}</h3>
+                    <span class="pull-right">Extension by:&nbsp;&nbsp;<a href="mailto:todor.donev@gmail.com">Todor Donev</a></span>
+                </div>
+                <div class="panel-body">
+                    <form action="{{ action }} " method="post" enctype="multipart/form-data" id="form-security-headers" class="form-horizontal">
+
+                        <fieldset>
+                        <div class="col-sm-1">&nbsp;&nbsp;</div>
+                        <div class="col-sm-10"><legend><i class="fa fa-shield"></i>&nbsp;&nbsp;{{ legend_extension }}<span class="pull-right"><a href="https://securityheaders.com/" target="_blank" data-toggle="tooltip" title="Check security headers" class="btn btn-success btn-sm"><i class="fa fa-bar-chart"></i>&nbsp;&nbsp;Check the store</a></span></legend>
+                        <div class="alert alert-info">{{ about_extension }}</div>
+                        <p>&nbsp;</p>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">{{ text_stores }}</label>
+                            <div class="col-sm-7">
+                                <style type="text/css">.dropdown > .dropdown-toggle > .caret { margin-top: 8px; } .dropdown > .dropdown-toggle { color: unset; } .nav > #selectStore { border: 1px solid #ccc }</style>
+                                <ul class="nav" style="width:100%">
+                                    <li id="selectStore" class="dropdown" style="cursor:pointer;"><a class="dropdown-toggle" data-toggle="dropdown">{{ store.name }} {{ store.store_id  ==  0 ? " <strong>("~text_default~")</strong>" : '' }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="pull-right caret"></span><span class="sr-only">{{ text_select_store }}</span></a>
+                                        <ul class="dropdown-menu dropdown-menu-center col-sm-12">
+                                            <li class="dropdown-header">{{ text_select_store }}</li>
+                                            <li class="divider"></li>
+                                            {% for key, value in stores %}  
+                                            <li><a href="{{ value.url }}">{{ value.name }} {{ value.store_id  ==  0 ? ' - <strong>('~text_default~')</strong>' : '' }}</a></li>
+                                            {% endfor %}  
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </div>    
+                        </div>
+
+                        <input type="hidden" name="store_id" value="{{ store_id }} " />
+                         
+                         <div class="form-group">
+                            <div class="col-sm-2">&nbsp;</div>
+                            <div class="col-sm-8">
+                            <div class="input-group">
+                            <label class="input-group-addon" style="min-width:200px; {{ status  and  status  ==  '1' ? 'color: rgb(255, 255, 255);background-color: rgb(92, 184, 92);border-color: rgb(76, 174, 76);' : 'color: rgb(255, 255, 255);background-color: rgb(217, 83, 79);border-color: rgb(212, 63, 58);' }}" for="input-status">&nbsp;&nbsp;{{ entry_status }}&nbsp;&nbsp;<i class="fa fa-chevron-right"></i></label>
+                              <select name="module_security_headers_status[status]" id="input-status" class="form-control">
+                                {% if status %} 
+                                <option value="1" selected="selected">{{ text_enabled }}</option>
+                                <option value="0">{{ text_disabled }}</option>
+                                {% else %}   
+                                <option value="1">{{ text_enabled }}</option>
+                                <option value="0" selected="selected">{{ text_disabled }}</option>
+                                {% endif %}  
+                              </select>
+                            </div>
+                          </div>
+                         </div>
+                        </fieldset> 
+                         <p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>
+                        <fieldset>
+                       <div class="form-group">
+                            <div class="col-sm-1">&nbsp;</div>
+                            <div class="col-sm-10">
+                             <legend><i class="fa fa-shield"></i>&nbsp;&nbsp;{{ legend_X_Powered_By }}</legend>
+                            <div class="alert alert-info">{{ about_X_Powered_By }}</div>
+                            <div class="input-group">
+                            <label class="input-group-addon" style="min-width:200px; {{ X_Powered_By  and  X_Powered_By  ==  '1' ? 'color: rgb(255, 255, 255);background-color: rgb(92, 184, 92);border-color: rgb(76, 174, 76);' : 'color: rgb(255, 255, 255);background-color: rgb(217, 83, 79);border-color: rgb(212, 63, 58);' }}" for="input-x-powered-by">&nbsp;&nbsp;{{ entry_X_Powered_By }}&nbsp;&nbsp;<i class="fa fa-chevron-right"></i></label>
+                              <select name="module_security_headers_status[X_Powered_By]" id="input-x-powered-by" class="form-control">
+                                {% if X_Powered_By %} 
+                                <option value="0">{{ text_enabled }}</option>
+                                <option value="1" selected="selected">{{ text_disabled }}</option>
+                                {% else %}   
+                                <option value="0" selected="selected">{{ text_enabled }}</option>
+                                <option value="1">{{ text_disabled }}</option>
+                                {% endif %}  
+                              </select>
+                            </div>
+                          </div>
+                         </div>
+                        </fieldset>
+                        
+                        <fieldset>
+                       <div class="form-group">
+                            <div class="col-sm-1">&nbsp;</div>
+                            <div class="col-sm-10">
+                             <legend><i class="fa fa-shield"></i>&nbsp;&nbsp;{{ legend_forward }}</legend>
+                            <div class="alert alert-info">{{ about_forward }}</div>
+                            <div class="input-group">
+                            <label class="input-group-addon" style="min-width:200px; {{ forward  and  forward  ==  '1' ? 'color: rgb(255, 255, 255);background-color: rgb(92, 184, 92);border-color: rgb(76, 174, 76);' : 'color: rgb(255, 255, 255);background-color: rgb(217, 83, 79);border-color: rgb(212, 63, 58);' }}" for="input-forward">&nbsp;&nbsp;{{ entry_forward }}&nbsp;&nbsp;<i class="fa fa-chevron-right"></i></label>
+                              <select name="module_security_headers_status[forward]" id="input-forward" class="form-control">
+                                {% if forward %} 
+                                <option value="0">{{ text_enabled }}</option>
+                                <option value="1" selected="selected">{{ text_disabled }}</option>
+                                {% else %}   
+                                <option value="0" selected="selected">{{ text_enabled }}</option>
+                                <option value="1">{{ text_disabled }}</option>
+                               {% endif %}   
+                              </select>
+                            </div>
+                          </div>
+                         </div>
+                        </fieldset>
+                        
+                        <fieldset>
+                       <div class="form-group">
+                            <div class="col-sm-1">&nbsp;</div>
+                            <div class="col-sm-10">
+                             <legend><i class="fa fa-shield"></i>&nbsp;&nbsp;{{ legend_ranges }}</legend>
+                            <div class="alert alert-info">{{ about_ranges }}</div>
+                            <div class="input-group">
+                            <label class="input-group-addon" style="min-width:200px; {{ ranges  and  ranges  ==  '1' ? 'color: rgb(255, 255, 255);background-color: rgb(92, 184, 92);border-color: rgb(76, 174, 76);' : 'color: rgb(255, 255, 255);background-color: rgb(217, 83, 79);border-color: rgb(212, 63, 58);' }}" for="input-ranges">&nbsp;&nbsp;{{ entry_ranges }}&nbsp;&nbsp;<i class="fa fa-chevron-right"></i></label>
+                              <select name="module_security_headers_status[ranges]" id="input-ranges" class="form-control">
+                                {% if ranges %} 
+                                <option value="0">{{ text_enabled }}</option>
+                                <option value="1" selected="selected">{{ text_disabled }}</option>
+                                {% else %}   
+                                <option value="0" selected="selected">{{ text_enabled }}</option>
+                                <option value="1">{{ text_disabled }}</option>
+                                {% endif %}  
+                              </select>
+                            </div>
+                          </div>
+                         </div>
+                        </fieldset>
+                       
+                       <fieldset>
+                       <div class="form-group">
+                            <div class="col-sm-1">&nbsp;</div>
+                            <div class="col-sm-10">
+                             <legend><i class="fa fa-shield"></i>&nbsp;&nbsp;{{ legend_proxy }}</legend>
+                            <div class="alert alert-info">{{ about_proxy }}</div>
+                            <div class="input-group">
+                            <label class="input-group-addon" style="min-width:200px; {{ proxy  and  proxy  ==  '1' ? 'color: rgb(255, 255, 255);background-color: rgb(92, 184, 92);border-color: rgb(76, 174, 76);' : 'color: rgb(255, 255, 255);background-color: rgb(217, 83, 79);border-color: rgb(212, 63, 58);' }}" for="input-proxy">&nbsp;&nbsp;{{ entry_proxy }}&nbsp;&nbsp;<i class="fa fa-chevron-right"></i></label>
+                              <select name="module_security_headers_status[proxy]" id="input-proxy" class="form-control">
+                                {% if proxy %} 
+                                <option value="0">{{ text_enabled }}</option>
+                                <option value="1" selected="selected">{{ text_disabled }}</option>
+                                {% else %}   
+                                <option value="0" selected="selected">{{ text_enabled }}</option>
+                                <option value="1">{{ text_disabled }}</option>
+                                {% endif %}  
+                              </select>
+                            </div>
+                          </div>
+                         </div>
+                        </fieldset>
+                        
+                        <fieldset>
+                       <div class="form-group">
+                            <div class="col-sm-1">&nbsp;</div>
+                            <div class="col-sm-10">
+                             <legend><i class="fa fa-shield"></i>&nbsp;&nbsp;{{ legend_X_HTTP_Method_Override }}</legend>
+                            <div class="alert alert-info">{{ about_X_HTTP_Method_Override }}</div>
+                            <div class="input-group">
+                            <label class="input-group-addon" style="min-width:200px; {{ X_HTTP_Method_Override  and  X_HTTP_Method_Override  ==  '1' ? 'color: rgb(255, 255, 255);background-color: rgb(92, 184, 92);border-color: rgb(76, 174, 76);' : 'color: rgb(255, 255, 255);background-color: rgb(217, 83, 79);border-color: rgb(212, 63, 58);' }}" for="input-X-HTTP-Method-Override">&nbsp;&nbsp;{{ entry_X_HTTP_Method_Override }}&nbsp;&nbsp;<i class="fa fa-chevron-right"></i></label>
+                              <select name="module_security_headers_status[X_HTTP_Method_Override]" id="input-X-HTTP-Method-Override" class="form-control">
+                                {% if X_HTTP_Method_Override %} 
+                                <option value="0">{{ text_enabled }}</option>
+                                <option value="1" selected="selected">{{ text_disabled }}</option>
+                                {% else %}   
+                                <option value="0" selected="selected">{{ text_enabled }}</option>
+                                <option value="1">{{ text_disabled }}</option>
+                                {% endif %}  
+                              </select>
+                            </div>
+                          </div>
+                         </div>
+                        </fieldset>
+                       
+                       <fieldset>
+                        <div class="form-group">
+                          <div class="col-sm-1">&nbsp;</div>
+                            <div class="col-sm-10">
+                            <legend><i class="fa fa-shield"></i>&nbsp;&nbsp;{{ legend_X_XSS_Protection }}</legend>
+                            <div class="alert alert-info">{{ about_X_XSS_Protection }}</div>
+                            <div class="alert alert-warning">{{ warning_X_XSS_Protection }}</div>
+                             <div class="input-group">
+                             <label class="input-group-addon" style="min-width:200px; {{ X_XSS_Protection ? 'color: rgb(255, 255, 255);background-color: rgb(92, 184, 92);border-color: rgb(76, 174, 76);' : 'color: rgb(255, 255, 255);background-color: rgb(217, 83, 79);border-color: rgb(212, 63, 58);' }}" for="input-X-XSS-Protection">&nbsp;&nbsp;{{ entry_X_XSS_Protection }}&nbsp;&nbsp;<i class="fa fa-chevron-right"></i></label>
+                              <select name="module_security_headers_status[X_XSS_Protection]" id="input-X-XSS-Protection" class="form-control">
+                              <option value="" {{ X_XSS_Protection  and  X_XSS_Protection  ==  '' ? 'selected=selected' : '' }}>{{ text_insecure }}</option>
+                                <option value="0" {{ X_XSS_Protection  and  X_XSS_Protection  ==  '0' ? 'selected=selected' : '' }}>0</option>
+                                <option value="1" {{ X_XSS_Protection  and  X_XSS_Protection  ==  '1' ? 'selected=selected' : '' }}>1</option>
+                                <option value="1; mode=block" {{ X_XSS_Protection  and  X_XSS_Protection  ==  '1; mode=block' ? 'selected=selected' : '' }}>1; mode=block</option>
+                                
+                              </select>
+                            </div>
+                          </div>
+                          </div>
+                        </fieldset>
+                        
+                        <fieldset>
+                        <div class="form-group">
+                        <div class="col-sm-1">&nbsp;</div>
+                            <div class="col-sm-10">
+                            <legend><i class="fa fa-shield"></i>&nbsp;&nbsp;{{ legend_X_Frame_Options }}</legend>
+                            <div class="alert alert-info">{{ about_X_Frame_Options }}</div>
+                            <div class="alert alert-warning">{{ warning_X_Frame_Options }}</div>
+                             <div class="input-group">
+                             <label class="input-group-addon" style="min-width:200px; {{ X_Frame_Options ? 'color: rgb(255, 255, 255);background-color: rgb(92, 184, 92);border-color: rgb(76, 174, 76);' : 'color: rgb(255, 255, 255);background-color: rgb(217, 83, 79);border-color: rgb(212, 63, 58);' }}" for="input-X-Frame-Options">&nbsp;&nbsp;{{ entry_X_Frame_Options }}&nbsp;&nbsp;<i class="fa fa-chevron-right"></i></label>
+                              <select name="module_security_headers_status[X_Frame_Options]" id="input-X-Frame-Options" class="form-control">
+                              <option value="" {{ X_Frame_Options  and  X_Frame_Options  ==  '' ? 'selected=selected' : '' }}>{{ text_insecure }}</option>
+                                <option value="deny" {{ X_Frame_Options  and  X_Frame_Options  ==  'deny' ? 'selected=selected' : '' }}>Deny</option>
+                                <option value="sameorigin" {{ X_Frame_Options  and  X_Frame_Options  ==  'sameorigin' ? 'selected=selected' : '' }}>Same Origin</option>          
+                              </select>
+                            </div>
+                          </div>
+                          </div>
+                         </fieldset>
+                         
+                         <fieldset>
+                        <div class="form-group">
+                        <div class="col-sm-1">&nbsp;</div>
+                            <div class="col-sm-10">
+                            <legend><i class="fa fa-shield"></i>&nbsp;&nbsp;{{ legend_Content_Security_Policy }}</legend>
+                            <div class="alert alert-info">{{ about_Content_Security_Policy }}</div>
+                             <div class="input-group">
+                             <label class="input-group-addon" style="min-width:200px; {{ CSP ? 'color: rgb(255, 255, 255);background-color: rgb(92, 184, 92);border-color: rgb(76, 174, 76);' : 'color: rgb(255, 255, 255);background-color: rgb(217, 83, 79);border-color: rgb(212, 63, 58);' }}" for="input-Content-Security-Policy">&nbsp;&nbsp;{{ entry_Content_Security_Policy }}&nbsp;&nbsp;<i class="fa fa-chevron-right"></i></label>
+                              <select name="module_security_headers_status[CSP]" id="input-Content-Security-Policy" class="form-control">
+                              <option value="" {{ CSP  and  CSP  ==  '' ? 'selected=selected' : '' }}>{{ text_insecure }}</option>
+                                <option value="block-all-mixed-content;" {{ CSP  and  CSP  ==  'block-all-mixed-content;' ? 'selected=selected' : '' }}>Block All Mixed Content</option>
+                                <option value="upgrade-insecure-requests;" {{ CSP  and  CSP  ==  'upgrade-insecure-requests;' ? 'selected=selected' : '' }}>Upgrade Insecure Requests</option>          
+                              </select>
+                            </div>
+                          </div>
+                          </div>
+                         </fieldset>
+                         
+                          <fieldset>
+                          <div class="form-group">
+                          <div class="col-sm-1">&nbsp;</div>
+                            <div class="col-sm-10">
+                            <legend><i class="fa fa-shield"></i>&nbsp;&nbsp;{{ legend_X_Content_Type_Options }}</legend>
+                            <div class="alert alert-info">{{ about_X_Content_Type_Options }}</div>
+                            <div class="alert alert-warning">{{ warning_X_Content_Type_Options }}</div>
+                             <div class="input-group">
+                             <label class="input-group-addon" style="min-width:200px; {{ X_Content_Type_Options ? 'color: rgb(255, 255, 255);background-color: rgb(92, 184, 92);border-color: rgb(76, 174, 76);' : 'color: rgb(255, 255, 255);background-color: rgb(217, 83, 79);border-color: rgb(212, 63, 58);' }}" for="input-X-Content-Type-Options">&nbsp;&nbsp;{{ entry_X_Content_Type_Options }}&nbsp;&nbsp;<i class="fa fa-chevron-right"></i></label>
+                              <select name="module_security_headers_status[X_Content_Type_Options]" id="input-X-Content-Type-Options" class="form-control">
+                              <option value="" {{ X_Content_Type_Options  and  X_Content_Type_Options  ==  '' ? 'selected=selected' : '' }}>{{ text_insecure }}</option>
+                                <option value="nosniff" {{ X_Content_Type_Options  and  X_Content_Type_Options  ==  'nosniff' ? 'selected=selected' : '' }}>No Sniff</option>
+                              </select>
+                            </div>
+                          </div>
+                          </div>
+                          </fieldset>
+                          
+                          
+                           <fieldset>
+                          <div class="form-group">
+                          <div class="col-sm-1">&nbsp;</div>
+                            <div class="col-sm-10">
+                            <legend><i class="fa fa-shield"></i>&nbsp;&nbsp;{{ legend_Referrer_Policy }}</legend>
+                            <div class="alert alert-info">{{ about_Referrer_Policy }}</div>
+                            <div class="alert alert-warning">{{ warning_Referrer_Policy }}</div>
+                             <div class="input-group">
+                             <label class="input-group-addon" style="min-width:200px; {{ Referrer_Policy ? 'color: rgb(255, 255, 255);background-color: rgb(92, 184, 92);border-color: rgb(76, 174, 76);' : 'color: rgb(255, 255, 255);background-color: rgb(217, 83, 79);border-color: rgb(212, 63, 58);' }}" for="input-Referrer-Policy">&nbsp;&nbsp;{{ entry_Referrer_Policy }}&nbsp;&nbsp;<i class="fa fa-chevron-right"></i></label>
+                              <select name="module_security_headers_status[Referrer_Policy]" id="input-Referrer-Policy" class="form-control">
+                              <option value="" {{ Referrer_Policy  and  Referrer_Policy  ==  '' ? 'selected=selected' : '' }}>{{ text_insecure }}</option>
+                                <option value="no-referrer" {{ Referrer_Policy  and  Referrer_Policy  ==  'no-referrer' ? 'selected=selected' : '' }}>No Referrer</option>
+                                <option value="no-referrer-when-downgrade" {{ Referrer_Policy  and  Referrer_Policy  ==  'no-referrer-when-downgrade' ? 'selected=selected' : '' }}>No Referrer When Downgrade</option>
+                                <option value="origin" {{ Referrer_Policy  and  Referrer_Policy  ==  'origin' ? 'selected=selected' : '' }}>Origin</option>
+                                <option value="origin-when-cross-origin" {{ Referrer_Policy  and  Referrer_Policy  ==  'origin-when-cross-origin' ? 'selected=selected' : '' }}>Origin When Cross Origin</option>
+                                <option value="same-origin" {{ Referrer_Policy  and  Referrer_Policy  ==  'same-origin' ? 'selected=selected' : '' }}>Same Origin</option>
+                                <option value="strict-origin" {{ Referrer_Policy  and  Referrer_Policy  ==  'strict-origin' ? 'selected=selected' : '' }}>Strict Origin</option>
+                                <option value="strict-origin-when-cross-origin" {{ Referrer_Policy  and  Referrer_Policy  ==  'strict-origin-when-cross-origin' ? 'selected=selected' : '' }}>Strict Origin When Cross Origin</option>
+                                <option value="unsafe-url" {{ Referrer_Policy  and  Referrer_Policy  ==  'unsafe-url' ? 'selected=selected' : '' }}>Unsafe Url</option>
+                                
+                              </select>
+                            </div>
+                          </div>
+                          </div>
+                          </fieldset>
+                          
+                          
+                          <fieldset>
+                          <div class="form-group">
+                          <div class="col-sm-1">&nbsp;</div>
+                            <div class="col-sm-10">
+                            <legend><i class="fa fa-shield"></i>&nbsp;&nbsp;{{ legend_Strict_Transport_Security }}</legend>
+                            <div class="alert alert-info">{{ about_Strict_Transport_Security }}</div>
+                            <div class="alert alert-warning">{{ warning_Strict_Transport_Security }}</div>
+                             <div class="input-group">
+                             <label class="input-group-addon" style="min-width:200px; {{ Strict_Transport_Security ? 'color: rgb(255, 255, 255);background-color: rgb(92, 184, 92);border-color: rgb(76, 174, 76);' : 'color: rgb(255, 255, 255);background-color: rgb(217, 83, 79);border-color: rgb(212, 63, 58);' }}" for="input-Strict-Transport-Security">&nbsp;&nbsp;{{ entry_max_age }}&nbsp;&nbsp;<i class="fa fa-chevron-right"></i></label>
+                              <select name="module_security_headers_status[Strict_Transport_Security]" id="input-Strict-Transport-Security" class="form-control">
+                              <option value="" {{ Strict_Transport_Security  and  Strict_Transport_Security  ==  '' ? 'selected=selected' : '' }}>{{ text_insecure }}</option>
+                              <option disabled="disabled">In Minutes - Very Low Security</option>
+                              <option value="300" {{ Strict_Transport_Security  and  Strict_Transport_Security  ==  '300' ? 'selected=selected' : '' }}>5 Minutes</option>
+                              <option value="600" {{ Strict_Transport_Security  and  Strict_Transport_Security  ==  '600' ? 'selected=selected' : '' }}>10 Minutes</option>
+                              <option value="900" {{ Strict_Transport_Security  and  Strict_Transport_Security  ==  '900' ? 'selected=selected' : '' }}>15 Minutes</option>
+                              <option value="1800" {{ Strict_Transport_Security  and  Strict_Transport_Security  ==  '1800' ? 'selected=selected' : '' }}>30 Minutes</option>
+                                <option disabled="disabled">In Hours - Low Security</option>
+                                <option value="3600" {{ Strict_Transport_Security  and  Strict_Transport_Security  ==  '3600' ? 'selected=selected' : '' }}>1 Hour</option>
+                                <option value="86400" {{ Strict_Transport_Security  and  Strict_Transport_Security  ==  '86400' ? 'selected=selected' : '' }}>24 Hours</option>
+                                <option value="172800" {{ Strict_Transport_Security  and  Strict_Transport_Security  ==  '172800' ? 'selected=selected' : '' }}>48 Hours</option>
+                                <option disabled="disabled">In Weeks - Medium Security</option>
+                                <option value="604800" {{ Strict_Transport_Security  and  Strict_Transport_Security  ==  '604800' ? 'selected=selected' : '' }}>1 Week</option>
+                                <option value="1209600" {{ Strict_Transport_Security  and  Strict_Transport_Security  ==  '1209600' ? 'selected=selected' : '' }}>2 Weeks</option>
+                                <option disabled="disabled">In Months - Good Security</option>
+                                <option value="2629746" {{ Strict_Transport_Security  and  Strict_Transport_Security  ==  '2629746' ? 'selected=selected' : '' }}>1 Month</option>
+                                <option value="5259492" {{ Strict_Transport_Security  and  Strict_Transport_Security  ==  '5259492' ? 'selected=selected' : '' }}>2 Months</option>
+                                <option value="15778476" {{ Strict_Transport_Security  and  Strict_Transport_Security  ==  '15778476' ? 'selected=selected' : '' }}>6 Months</option>                              
+                                <option disabled="disabled">In Year - Extreme Security</option>
+                                <option disabled="disabled">Be careful</option>
+                                <option onclick="confirm('Are you sure? If you not, better select option Insecure.') ? $('#input-Strict-Transport-Security').select() : $('#input-Strict-Transport-Security').val($('#input-Strict-Transport-Security option:first').val());" value="31536000" {{ Strict_Transport_Security  and  Strict_Transport_Security  ==  '31536000' ? 'selected=selected' : '' }}>1 Year - Not Recommended for Beginners</option>
+                              </select>
+                            </div>
+                          </div>
+                          </div>
+                          </fieldset>
+                
+                
+                
+                <fieldset>
+                <div class="form-group">
+                <div class="col-sm-1">&nbsp;</div>
+                <div class="col-sm-10">
+                                <legend><i class="fa fa-shield"></i>&nbsp;&nbsp;{{ legend_Expect_CT }}</legend>
+                                <div class="alert alert-info">{{ about_Expect_CT }}</div>
+                                <div class="alert alert-warning">{{ warning_Expect_CT }}</div>
+
+		                <div class="col-sm-6">
+        		                <div class="input-group">
+                                        <label class="input-group-addon" style="min-width:200px; {{ Expect_CT.max_age ? 'color: rgb(255, 255, 255);background-color: rgb(92, 184, 92);border-color: rgb(76, 174, 76);' : 'color: rgb(255, 255, 255);background-color: rgb(217, 83, 79);border-color: rgb(212, 63, 58);' }}" for="input-Expect-CT">&nbsp;&nbsp;{{ entry_max_age }}&nbsp;&nbsp;<i class="fa fa-chevron-right"></i></label>
+                		                
+                		        <select name="module_security_headers_status[Expect_CT][max_age]" id="input-Expect-CT" class="form-control">
+                              <option value="" {{ Expect_CT.max_age  and  Expect_CT.max_age  ==  '' ? 'selected=selected' : '' }}>{{ text_insecure }}</option>
+                              <option disabled="disabled">In Minutes - Very Low Security</option>
+                              <option value="300" {{ Expect_CT.max_age  and  Expect_CT.max_age  ==  '300' ? 'selected=selected' : '' }}>5 Minutes</option>
+                              <option value="600" {{ Expect_CT.max_age  and  Expect_CT.max_age  ==  '600' ? 'selected=selected' : '' }}>10 Minutes</option>
+                              <option value="900" {{ Expect_CT.max_age  and  Expect_CT.max_age  ==  '900' ? 'selected=selected' : '' }}>15 Minutes</option>
+                              <option value="1800" {{ Expect_CT.max_age  and  Expect_CT.max_age  ==  '1800' ? 'selected=selected' : '' }}>30 Minutes</option>
+                                <option disabled="disabled">In Hours - Low Security</option>
+                                <option value="3600" {{ Expect_CT.max_age  and  Expect_CT.max_age  ==  '3600' ? 'selected=selected' : '' }}>1 Hour</option>
+                                <option value="86400" {{ Expect_CT.max_age  and  Expect_CT.max_age  ==  '86400' ? 'selected=selected' : '' }}>24 Hours</option>
+                                <option value="172800" {{ Expect_CT.max_age  and  Expect_CT.max_age  ==  '172800' ? 'selected=selected' : '' }}>48 Hours</option>
+                                <option disabled="disabled">In Weeks - Medium Security</option>
+                                <option value="604800" {{ Expect_CT.max_age  and  Expect_CT.max_age  ==  '604800' ? 'selected=selected' : '' }}>1 Week</option>
+                                <option value="1209600" {{ Expect_CT.max_age  and  Expect_CT.max_age  ==  '1209600' ? 'selected=selected' : '' }}>2 Weeks</option>
+                                <option disabled="disabled">In Months - Good Security</option>
+                                <option value="2629746" {{ Expect_CT.max_age  and  Expect_CT.max_age  ==  '2629746' ? 'selected=selected' : '' }}>1 Month</option>
+                                <option value="5259492" {{ Expect_CT.max_age  and  Expect_CT.max_age  ==  '5259492' ? 'selected=selected' : '' }}>2 Months</option>
+                                <option value="15778476" {{ Expect_CT.max_age  and  Expect_CT.max_age  ==  '15778476' ? 'selected=selected' : '' }}>6 Months</option>                                
+                                <option disabled="disabled">In Year - Extreme Security</option>
+                                <option disabled="disabled">Be careful</option>
+                                <option onclick="confirm('Are you sure? If you not, better select less value.') ? $('#input-Expect-CT').select() : $('#input-Expect-CT').val($('#input-Expect-CT option:first').val());" value="31536000" {{ Expect_CT.max_age  and  Expect_CT.max_age  ==  '31536000' ? 'selected=selected' : '' }}>1 Year - Not Recommended for Beginners</option>
+                              </select>
+                		                
+                		        </div>        
+		                </div>
+        		<div class="col-sm-6">
+                		{% if Expect_CT.report_uri and Expect_CT.report_uri %} 
+        		                <input type="text" placeholder="{{ placeholder_expect_ct_report_uri }} " name="module_security_headers_status[Expect_CT][report_uri]" class="form-control" value="{{ Expect_CT.report_uri }}">
+        		                {% else %}  
+        		                <input type="text" placeholder="{{ placeholder_expect_ct_report_uri }} " name="module_security_headers_status[Expect_CT][report_uri]" class="form-control" value="">
+		                {% endif %} 
+		                {% if expect_ct_report_uri %} 
+		                        <div class="text-danger">{{ expect_ct_report_uri }}</div>
+		                {% endif %} 
+        		</div>
+                </div>
+                </div>
+                </fieldset>
+                        
+                        
+                        <fieldset>
+                          <div class="form-group">
+                          <div class="col-sm-1">&nbsp;</div>
+                            <div class="col-sm-10">
+                            <legend><i class="fa fa-shield"></i>&nbsp;&nbsp;{{ legend_Feature_Policy }}</legend>
+                            <div class="alert alert-info">{{ about_Feature_Policy }}</div>
+                             
+                             <div class="form-group">
+                             <label class="col-sm-4 control-label" for="input-type_accelerometer"><span data-toggle="tooltip" title="{{ help_accelerometer }}">{{ type_accelerometer }}</span>&nbsp;&nbsp;<i class="fa fa-chevron-right"></i></label>
+                             <div class="col-sm-6">
+                              <select name="module_security_headers_status[Feature_Policy][accelerometer]" id="input-type_accelerometer" class="form-control">
+                              <option value="" {{ Feature_Policy.accelerometer  and  Feature_Policy.accelerometer  ==  '' ? 'selected=selected' : '' }}>{{ text_insecure }}</option>
+                              <option value="*" {{ Feature_Policy.accelerometer  and  Feature_Policy.accelerometer  ==  '*' ? 'selected=selected' : '' }}>All Sources</option>
+                              
+                                <option value="'none'" {{ Feature_Policy.accelerometer  and  Feature_Policy.accelerometer  ==  '\'none\'' ? 'selected=selected' : '' }}>None</option>
+                                <option value="'self'" {{ Feature_Policy.accelerometer  and  Feature_Policy.accelerometer  ==  '\'self\'' ? 'selected=selected' : '' }}>Self</option>
+                              </select>
+                            </div>
+                            </div>
+                            
+                            <div class="form-group">
+                             <label class="col-sm-4 control-label" for="input-type_ambient_light_sensor"><span data-toggle="tooltip" title="{{ help_ambient_light_sensor }}">{{ type_ambient_light_sensor }}</span>&nbsp;&nbsp;<i class="fa fa-chevron-right"></i></label>
+                             <div class="col-sm-6">
+                              <select name="module_security_headers_status[Feature_Policy][ambient_light_sensor]" id="input-type_ambient_light_sensor" class="form-control">
+                              <option value="" {{ Feature_Policy.ambient_light_sensor  and  Feature_Policy.ambient_light_sensor  ==  '' ? 'selected=selected' : '' }}>{{ text_insecure }}</option>
+                              <option value="*" {{ Feature_Policy.ambient_light_sensor  and  Feature_Policy.ambient_light_sensor  ==  '*' ? 'selected=selected' : '' }}>All Sources</option>
+                              
+                                <option value="'none'" {{ Feature_Policy.ambient_light_sensor  and  Feature_Policy.ambient_light_sensor  ==  '\'none\'' ? 'selected=selected' : '' }}>None</option>
+                                <option value="'self'" {{ Feature_Policy.ambient_light_sensor  and  Feature_Policy.ambient_light_sensor  ==  '\'self\'' ? 'selected=selected' : '' }}>Self</option>
+                              </select>
+                            </div>
+                            </div>
+                            
+                            <div class="form-group">
+                             <label class="col-sm-4 control-label" for="input-type_autoplay"><span data-toggle="tooltip" title="{{ help_autoplay }}">{{ type_autoplay }}</span>&nbsp;&nbsp;<i class="fa fa-chevron-right"></i></label>
+                             <div class="col-sm-6">
+                              <select name="module_security_headers_status[Feature_Policy][autoplay]" id="input-type_autoplay" class="form-control">
+                              <option value="" {{ Feature_Policy.autoplay  and  Feature_Policy.autoplay  ==  '' ? 'selected=selected' : '' }}>{{ text_insecure }}</option>
+                              <option value="*" {{ Feature_Policy.autoplay  and  Feature_Policy.autoplay  ==  '*' ? 'selected=selected' : '' }}>All Sources</option>
+                              
+                                <option value="'none'" {{ Feature_Policy.autoplay  and  Feature_Policy.autoplay  ==  '\'none\'' ? 'selected=selected' : '' }}>None</option>
+                                <option value="'self'" {{ Feature_Policy.autoplay  and  Feature_Policy.autoplay  ==  '\'self\'' ? 'selected=selected' : '' }}>Self</option>
+                              </select>
+                            </div>
+                            </div>
+                            
+                            <div class="form-group">
+                             <label class="col-sm-4 control-label" for="input-type_camera"><span data-toggle="tooltip" title="{{ help_camera }}">{{ type_camera }}</span>&nbsp;&nbsp;<i class="fa fa-chevron-right"></i></label>
+                             <div class="col-sm-6">
+                              <select name="module_security_headers_status[Feature_Policy][camera]" id="input-type_camera" class="form-control">
+                              <option value="" {{ Feature_Policy.camera  and  Feature_Policy.camera  ==  '' ? 'selected=selected' : '' }}>{{ text_insecure }}</option>
+                              <option value="*" {{ Feature_Policy.camera  and  Feature_Policy.camera  ==  '*' ? 'selected=selected' : '' }}>All Sources</option>
+                              
+                                <option value="'none'" {{ Feature_Policy.camera  and  Feature_Policy.camera  ==  '\'none\'' ? 'selected=selected' : '' }}>None</option>
+                                <option value="'self'" {{ Feature_Policy.camera  and  Feature_Policy.camera  ==  '\'self\'' ? 'selected=selected' : '' }}>Self</option>
+                              </select>
+                            </div>
+                            </div>
+                            
+                            <div class="form-group">
+                             <label class="col-sm-4 control-label" for="input-type_fullscreen"><span data-toggle="tooltip" title="{{ help_fullscreen }}">{{ type_fullscreen }}</span>&nbsp;&nbsp;<i class="fa fa-chevron-right"></i></label>
+                             <div class="col-sm-6">
+                              <select name="module_security_headers_status[Feature_Policy][fullscreen]" id="input-type_fullscreen" class="form-control">
+                              <option value="" {{ Feature_Policy.fullscreen  and  Feature_Policy.fullscreen  ==  '' ? 'selected=selected' : '' }}>{{ text_insecure }}</option>
+                              <option value="*" {{ Feature_Policy.fullscreen  and  Feature_Policy.fullscreen  ==  '*' ? 'selected=selected' : '' }}>All Sources</option>
+                              
+                                <option value="'none'" {{ Feature_Policy.fullscreen  and  Feature_Policy.fullscreen  ==  '\'none\'' ? 'selected=selected' : '' }}>None</option>
+                                <option value="'self'" {{ Feature_Policy.fullscreen  and  Feature_Policy.fullscreen  ==  '\'self\'' ? 'selected=selected' : '' }}>Self</option>
+                              </select>
+                            </div>
+                            </div>
+                            
+                            <div class="form-group">
+                             <label class="col-sm-4 control-label" for="input-type_display_capture"><span data-toggle="tooltip" title="{{ help_display_capture }}">{{ type_display_capture }}</span>&nbsp;&nbsp;<i class="fa fa-chevron-right"></i></label>
+                             <div class="col-sm-6">
+                              <select name="module_security_headers_status[Feature_Policy][display_capture]" id="input-type_display_capture" class="form-control">
+                              <option value="" {{ Feature_Policy.display_capture  and  Feature_Policy.display_capture  ==  '' ? 'selected=selected' : '' }}>{{ text_insecure }}</option>
+                              <option value="*" {{ Feature_Policy.display_capture  and  Feature_Policy.display_capture  ==  '*' ? 'selected=selected' : '' }}>All Sources</option>
+                              
+                                <option value="'none'" {{ Feature_Policy.display_capture  and  Feature_Policy.display_capture  ==  '\'none\'' ? 'selected=selected' : '' }}>None</option>
+                                <option value="'self'" {{ Feature_Policy.display_capture  and  Feature_Policy.display_capture  ==  '\'self\'' ? 'selected=selected' : '' }}>Self</option>
+                              </select>
+                            </div>
+                            </div>
+                            
+                            <div class="form-group">
+                             <label class="col-sm-4 control-label" for="input-type_document_domain"><span data-toggle="tooltip" title="{{ help_document_domain }}">{{ type_document_domain }}</span>&nbsp;&nbsp;<i class="fa fa-chevron-right"></i></label>
+                             <div class="col-sm-6">
+                              <select name="module_security_headers_status[Feature_Policy][document_domain]" id="input-type_document_domain" class="form-control">
+                              <option value="" {{ Feature_Policy.document_domain  and  Feature_Policy.document_domain  ==  '' ? 'selected=selected' : '' }}>{{ text_insecure }}</option>
+                              <option value="*" {{ Feature_Policy.document_domain  and  Feature_Policy.document_domain  ==  '*' ? 'selected=selected' : '' }}>All Sources</option>
+                              
+                                <option value="'none'" {{ Feature_Policy.document_domain  and  Feature_Policy.document_domain  ==  '\'none\'' ? 'selected=selected' : '' }}>None</option>
+                                <option value="'self'" {{ Feature_Policy.document_domain  and  Feature_Policy.document_domain  ==  '\'self\'' ? 'selected=selected' : '' }}>Self</option>
+                              </select>
+                            </div>
+                            </div>
+                            
+                            <div class="form-group">
+                             <label class="col-sm-4 control-label" for="input-type_encrypted_media"><span data-toggle="tooltip" title="{{ help_encrypted_media }}">{{ type_encrypted_media }}</span>&nbsp;&nbsp;<i class="fa fa-chevron-right"></i></label>
+                             <div class="col-sm-6">
+                              <select name="module_security_headers_status[Feature_Policy][encrypted_media]" id="input-type_encrypted_media" class="form-control">
+                              <option value="" {{ Feature_Policy.encrypted_media  and  Feature_Policy.encrypted_media  ==  '' ? 'selected=selected' : '' }}>{{ text_insecure }}</option>
+                              <option value="*" {{ Feature_Policy.encrypted_media  and  Feature_Policy.encrypted_media  ==  '*' ? 'selected=selected' : '' }}>All Sources</option>
+                              
+                                <option value="'none'" {{ Feature_Policy.encrypted_media  and  Feature_Policy.encrypted_media  ==  '\'none\'' ? 'selected=selected' : '' }}>None</option>
+                                <option value="'self'" {{ Feature_Policy.encrypted_media  and  Feature_Policy.encrypted_media  ==  '\'self\'' ? 'selected=selected' : '' }}>Self</option>
+                              </select>
+                            </div>
+                            </div>
+                            
+                            <div class="form-group">
+                             <label class="col-sm-4 control-label" for="input-type_geolocation"><span data-toggle="tooltip" title="{{ help_geolocation }}">{{ type_geolocation }}</span>&nbsp;&nbsp;<i class="fa fa-chevron-right"></i></label>
+                             <div class="col-sm-6">
+                              <select name="module_security_headers_status[Feature_Policy][geolocation]" id="input-type_geolocation" class="form-control">
+                              <option value="" {{ Feature_Policy.geolocation  and  Feature_Policy.geolocation  ==  '' ? 'selected=selected' : '' }}>{{ text_insecure }}</option>
+                              <option value="*" {{ Feature_Policy.geolocation  and  Feature_Policy.geolocation  ==  '*' ? 'selected=selected' : '' }}>All Sources</option>
+                              
+                                <option value="'none'" {{ Feature_Policy.geolocation  and  Feature_Policy.geolocation  ==  '\'none\'' ? 'selected=selected' : '' }}>None</option>
+                                <option value="'self'" {{ Feature_Policy.geolocation  and  Feature_Policy.geolocation  ==  '\'self\'' ? 'selected=selected' : '' }}>Self</option>
+                              </select>
+                            </div>
+                            </div>
+                            
+                            <div class="form-group">
+                             <label class="col-sm-4 control-label" for="input-type_gyroscope"><span data-toggle="tooltip" title="{{ help_gyroscope }}">{{ type_gyroscope }}</span>&nbsp;&nbsp;<i class="fa fa-chevron-right"></i></label>
+                             <div class="col-sm-6">
+                              <select name="module_security_headers_status[Feature_Policy][gyroscope]" id="input-type_gyroscope" class="form-control">
+                              <option value="" {{ Feature_Policy.gyroscope  and  Feature_Policy.gyroscope  ==  '' ? 'selected=selected' : '' }}>{{ text_insecure }}</option>
+                              <option value="*" {{ Feature_Policy.gyroscope  and  Feature_Policy.gyroscope  ==  '*' ? 'selected=selected' : '' }}>All Sources</option>
+                              
+                                <option value="'none'" {{ Feature_Policy.gyroscope  and  Feature_Policy.gyroscope  ==  '\'none\'' ? 'selected=selected' : '' }}>None</option>
+                                <option value="'self'" {{ Feature_Policy.gyroscope  and  Feature_Policy.gyroscope  ==  '\'self\'' ? 'selected=selected' : '' }}>Self</option>
+                              </select>
+                            </div>
+                            </div>
+                            
+                            <div class="form-group">
+                             <label class="col-sm-4 control-label" for="input-type_layout_animations"><span data-toggle="tooltip" title="{{ help_layout_animations }}">{{ type_layout_animations }}</span>&nbsp;&nbsp;<i class="fa fa-chevron-right"></i></label>
+                             <div class="col-sm-6">
+                              <select name="module_security_headers_status[Feature_Policy][layout_animations]" id="input-type_layout_animations" class="form-control">
+                              <option value="" {{ Feature_Policy.layout_animations  and  Feature_Policy.layout_animations  ==  '' ? 'selected=selected' : '' }}>{{ text_insecure }}</option>
+                              <option value="*" {{ Feature_Policy.layout_animations  and  Feature_Policy.layout_animations  ==  '*' ? 'selected=selected' : '' }}>All Sources</option>
+                              
+                                <option value="'none'" {{ Feature_Policy.layout_animations  and  Feature_Policy.layout_animations  ==  '\'none\'' ? 'selected=selected' : '' }}>None</option>
+                                <option value="'self'" {{ Feature_Policy.layout_animations  and  Feature_Policy.layout_animations  ==  '\'self\'' ? 'selected=selected' : '' }}>Self</option>
+                              </select>
+                            </div>
+                            </div>
+                            
+                            <div class="form-group">
+                             <label class="col-sm-4 control-label" for="input-type_legacy_image_format"><span data-toggle="tooltip" title="{{ help_legacy_image_format }}">{{ type_legacy_image_format }}</span>&nbsp;&nbsp;<i class="fa fa-chevron-right"></i></label>
+                             <div class="col-sm-6">
+                              <select name="module_security_headers_status[Feature_Policy][legacy_image_format]" id="input-type_legacy_image_format" class="form-control">
+                              <option value="" {{ Feature_Policy.legacy_image_format  and  Feature_Policy.legacy_image_format  ==  '' ? 'selected=selected' : '' }}>{{ text_insecure }}</option>
+                              <option value="*" {{ Feature_Policy.legacy_image_format  and  Feature_Policy.legacy_image_format  ==  '*' ? 'selected=selected' : '' }}>All Sources</option>
+                              
+                                <option value="'none'" {{ Feature_Policy.legacy_image_format  and  Feature_Policy.legacy_image_format  ==  '\'none\'' ? 'selected=selected' : '' }}>None</option>
+                                <option value="'self'" {{ Feature_Policy.legacy_image_format  and  Feature_Policy.legacy_image_format  ==  '\'self\'' ? 'selected=selected' : '' }}>Self</option>
+                              </select>
+                            </div>
+                            </div>
+                            
+                            <div class="form-group">
+                             <label class="col-sm-4 control-label" for="input-type_magnetometer"><span data-toggle="tooltip" title="{{ help_magnetometer }}">{{ type_magnetometer }}</span>&nbsp;&nbsp;<i class="fa fa-chevron-right"></i></label>
+                             <div class="col-sm-6">
+                              <select name="module_security_headers_status[Feature_Policy][magnetometer]" id="input-type_magnetometer" class="form-control">
+                              <option value="" {{ Feature_Policy.magnetometer  and  Feature_Policy.magnetometer  ==  '' ? 'selected=selected' : '' }}>{{ text_insecure }}</option>
+                              <option value="*" {{ Feature_Policy.magnetometer  and  Feature_Policy.magnetometer  ==  '*' ? 'selected=selected' : '' }}>All Sources</option>
+                              
+                                <option value="'none'" {{ Feature_Policy.magnetometer  and  Feature_Policy.magnetometer  ==  '\'none\'' ? 'selected=selected' : '' }}>None</option>
+                                <option value="'self'" {{ Feature_Policy.magnetometer  and  Feature_Policy.magnetometer  ==  '\'self\'' ? 'selected=selected' : '' }}>Self</option>
+                              </select>
+                            </div>
+                            </div>
+                            
+                            <div class="form-group">
+                             <label class="col-sm-4 control-label" for="input-type_microphone"><span data-toggle="tooltip" title="{{ help_microphone }}">{{ type_microphone }}</span>&nbsp;&nbsp;<i class="fa fa-chevron-right"></i></label>
+                             <div class="col-sm-6">
+                              <select name="module_security_headers_status[Feature_Policy][microphone]" id="input-type_microphone" class="form-control">
+                              <option value="" {{ Feature_Policy.microphone  and  Feature_Policy.microphone  ==  '' ? 'selected=selected' : '' }}>{{ text_insecure }}</option>
+                              <option value="*" {{ Feature_Policy.microphone  and  Feature_Policy.microphone  ==  '*' ? 'selected=selected' : '' }}>All Sources</option>
+                              
+                                <option value="'none'" {{ Feature_Policy.microphone  and  Feature_Policy.microphone  ==  '\'none\'' ? 'selected=selected' : '' }}>None</option>
+                                <option value="'self'" {{ Feature_Policy.microphone  and  Feature_Policy.microphone  ==  '\'self\'' ? 'selected=selected' : '' }}>Self</option>
+                              </select>
+                            </div>
+                            </div>
+                            
+                            <div class="form-group">
+                             <label class="col-sm-4 control-label" for="input-type_midi"><span data-toggle="tooltip" title="{{ help_midi }}">{{ type_midi }}</span>&nbsp;&nbsp;<i class="fa fa-chevron-right"></i></label>
+                             <div class="col-sm-6">
+                              <select name="module_security_headers_status[Feature_Policy][midi]" id="input-type_midi" class="form-control">
+                              <option value="" {{ Feature_Policy.midi  and  Feature_Policy.midi  ==  '' ? 'selected=selected' : '' }}>{{ text_insecure }}</option>
+                              <option value="*" {{ Feature_Policy.midi  and  Feature_Policy.midi  ==  '*' ? 'selected=selected' : '' }}>All Sources</option>
+                              
+                                <option value="'none'" {{ Feature_Policy.midi  and  Feature_Policy.midi  ==  '\'none\'' ? 'selected=selected' : '' }}>None</option>
+                                <option value="'self'" {{ Feature_Policy.midi  and  Feature_Policy.midi  ==  '\'self\'' ? 'selected=selected' : '' }}>Self</option>
+                              </select>
+                            </div>
+                            </div>
+                            
+                            <div class="form-group">
+                             <label class="col-sm-4 control-label" for="input-type_oversized_images"><span data-toggle="tooltip" title="{{ help_oversized_images }}">{{ type_oversized_images }}</span>&nbsp;&nbsp;<i class="fa fa-chevron-right"></i></label>
+                             <div class="col-sm-6">
+                              <select name="module_security_headers_status[Feature_Policy][oversized_images]" id="input-type_oversized_images" class="form-control">
+                              <option value="" {{ Feature_Policy.oversized_images  and  Feature_Policy.oversized_images  ==  '' ? 'selected=selected' : '' }}>{{ text_insecure }}</option>
+                              <option value="*" {{ Feature_Policy.oversized_images  and  Feature_Policy.oversized_images  ==  '*' ? 'selected=selected' : '' }}>All Sources</option>
+                              
+                                <option value="'none'" {{ Feature_Policy.oversized_images  and  Feature_Policy.oversized_images  ==  '\'none\'' ? 'selected=selected' : '' }}>None</option>
+                                <option value="'self'" {{ Feature_Policy.oversized_images  and  Feature_Policy.oversized_images  ==  '\'self\'' ? 'selected=selected' : '' }}>Self</option>
+                              </select>
+                            </div>
+                            </div>
+                            
+                            <div class="form-group">
+                             <label class="col-sm-4 control-label" for="input-type_payment"><span data-toggle="tooltip" title="{{ help_payment }}">{{ type_payment }}</span>&nbsp;&nbsp;<i class="fa fa-chevron-right"></i></label>
+                             <div class="col-sm-6">
+                              <select name="module_security_headers_status[Feature_Policy][payment]" id="input-type_payment" class="form-control">
+                              <option value="" {{ Feature_Policy.payment  and  Feature_Policy.payment  ==  '' ? 'selected=selected' : '' }}>{{ text_insecure }}</option>
+                              <option value="*" {{ Feature_Policy.payment  and  Feature_Policy.payment  ==  '*' ? 'selected=selected' : '' }}>All Sources</option>
+                              
+                                <option value="'none'" {{ Feature_Policy.payment  and  Feature_Policy.payment  ==  '\'none\'' ? 'selected=selected' : '' }}>None</option>
+                                <option value="'self'" {{ Feature_Policy.payment  and  Feature_Policy.payment  ==  '\'self\'' ? 'selected=selected' : '' }}>Self</option>
+                              </select>
+                            </div>
+                            </div>
+                            
+                            <div class="form-group">
+                             <label class="col-sm-4 control-label" for="input-type_picture_in_picture"><span data-toggle="tooltip" title="{{ help_picture_in_picture }}">{{ type_picture_in_picture }}</span>&nbsp;&nbsp;<i class="fa fa-chevron-right"></i></label>
+                             <div class="col-sm-6">
+                              <select name="module_security_headers_status[Feature_Policy][picture_in_picture]" id="input-type_picture_in_picture" class="form-control">
+                              <option value="" {{ Feature_Policy.picture_in_picture  and  Feature_Policy.picture_in_picture  ==  '' ? 'selected=selected' : '' }}>{{ text_insecure }}</option>
+                              <option value="*" {{ Feature_Policy.picture_in_picture  and  Feature_Policy.picture_in_picture  ==  '*' ? 'selected=selected' : '' }}>All Sources</option>
+                              
+                                <option value="'none'" {{ Feature_Policy.picture_in_picture  and  Feature_Policy.picture_in_picture  ==  '\'none\'' ? 'selected=selected' : '' }}>None</option>
+                                <option value="'self'" {{ Feature_Policy.picture_in_picture  and  Feature_Policy.picture_in_picture  ==  '\'self\'' ? 'selected=selected' : '' }}>Self</option>
+                              </select>
+                            </div>
+                            </div>
+                            
+                            <div class="form-group">
+                             <label class="col-sm-4 control-label" for="input-type_speaker"><span data-toggle="tooltip" title="{{ help_speaker }}">{{ type_speaker }}</span>&nbsp;&nbsp;<i class="fa fa-chevron-right"></i></label>
+                             <div class="col-sm-6">
+                              <select name="module_security_headers_status[Feature_Policy][speaker]" id="input-type_speaker" class="form-control">
+                              <option value="" {{ Feature_Policy.speaker  and  Feature_Policy.speaker  ==  '' ? 'selected=selected' : '' }}>{{ text_insecure }}</option>
+                              <option value="*" {{ Feature_Policy.speaker  and  Feature_Policy.speaker  ==  '*' ? 'selected=selected' : '' }}>All Sources</option>
+                              
+                                <option value="'none'" {{ Feature_Policy.speaker  and  Feature_Policy.speaker  ==  '\'none\'' ? 'selected=selected' : '' }}>None</option>
+                                <option value="'self'" {{ Feature_Policy.speaker  and  Feature_Policy.speaker  ==  '\'self\'' ? 'selected=selected' : '' }}>Self</option>
+                              </select>
+                            </div>
+                            </div>
+                            
+                            <div class="form-group">
+                             <label class="col-sm-4 control-label" for="input-type_sync_xhr"><span data-toggle="tooltip" title="{{ help_sync_xhr }}">{{ type_sync_xhr }}</span>&nbsp;&nbsp;<i class="fa fa-chevron-right"></i></label>
+                             <div class="col-sm-6">
+                              <select name="module_security_headers_status[Feature_Policy][sync_xhr]" id="input-type_speaker" class="form-control">
+                              <option value="" {{ Feature_Policy.sync_xhr  and  Feature_Policy.sync_xhr  ==  '' ? 'selected=selected' : '' }}>{{ text_insecure }}</option>
+                              <option value="*" {{ Feature_Policy.sync_xhr  and  Feature_Policy.sync_xhr  ==  '*' ? 'selected=selected' : '' }}>All Sources</option>
+                              
+                                <option value="'none'" {{ Feature_Policy.sync_xhr  and  Feature_Policy.sync_xhr  ==  '\'none\'' ? 'selected=selected' : '' }}>None</option>
+                                <option value="'self'" {{ Feature_Policy.sync_xhr  and  Feature_Policy.sync_xhr  ==  '\'self\'' ? 'selected=selected' : '' }}>Self</option>
+                              </select>
+                            </div>
+                            </div>
+                            
+                            <div class="form-group">
+                             <label class="col-sm-4 control-label" for="input-type_unoptimized_images"><span data-toggle="tooltip" title="{{ help_unoptimized_images }}">{{ type_unoptimized_images }}</span>&nbsp;&nbsp;<i class="fa fa-chevron-right"></i></label>
+                             <div class="col-sm-6">
+                              <select name="module_security_headers_status[Feature_Policy][unoptimized_images]" id="input-type_unoptimized_images" class="form-control">
+                              <option value="" {{ Feature_Policy.unoptimized_images  and  Feature_Policy.unoptimized_images  ==  '' ? 'selected=selected' : '' }}>{{ text_insecure }}</option>
+                              <option value="*" {{ Feature_Policy.unoptimized_images  and  Feature_Policy.unoptimized_images  ==  '*' ? 'selected=selected' : '' }}>All Sources</option>
+                              
+                                <option value="'none'" {{ Feature_Policy.unoptimized_images  and  Feature_Policy.unoptimized_images  ==  '\'none\'' ? 'selected=selected' : '' }}>None</option>
+                                <option value="'self'" {{ Feature_Policy.unoptimized_images  and  Feature_Policy.unoptimized_images  ==  '\'self\'' ? 'selected=selected' : '' }}>Self</option>
+                              </select>
+                            </div>
+                            </div>
+                            
+                            <div class="form-group">
+                             <label class="col-sm-4 control-label" for="input-type_unsized_media"><span data-toggle="tooltip" title="{{ help_unsized_media }}">{{ type_unsized_media }}</span>&nbsp;&nbsp;<i class="fa fa-chevron-right"></i></label>
+                             <div class="col-sm-6">
+                              <select name="module_security_headers_status[Feature_Policy][unsized_media]" id="input-type_unsized_media" class="form-control">
+                              <option value="" {{ Feature_Policy.unsized_media  and  Feature_Policy.unsized_media  ==  '' ? 'selected=selected' : '' }}>{{ text_insecure }}</option>
+                              <option value="*" {{ Feature_Policy.unsized_media  and  Feature_Policy.unsized_media  ==  '*' ? 'selected=selected' : '' }}>All Sources</option>
+                              
+                                <option value="'none'" {{ Feature_Policy.unsized_media  and  Feature_Policy.unsized_media  ==  '\'none\'' ? 'selected=selected' : '' }}>None</option>
+                                <option value="'self'" {{ Feature_Policy.unsized_media  and  Feature_Policy.unsized_media  ==  '\'self\'' ? 'selected=selected' : '' }}>Self</option>
+                              </select>
+                            </div>
+                            </div>
+                            
+                            <div class="form-group">
+                             <label class="col-sm-4 control-label" for="input-type_usb"><span data-toggle="tooltip" title="{{ help_usb }}">{{ type_usb }}</span>&nbsp;&nbsp;<i class="fa fa-chevron-right"></i></label>
+                             <div class="col-sm-6">
+                              <select name="module_security_headers_status[Feature_Policy][usb]" id="input-type_usb" class="form-control">
+                              <option value="" {{ Feature_Policy.usb  and  Feature_Policy.usb  ==  '' ? 'selected=selected' : '' }}>{{ text_insecure }}</option>
+                              <option value="*" {{ Feature_Policy.usb  and  Feature_Policy.usb  ==  '*' ? 'selected=selected' : '' }}>All Sources</option>
+                              
+                                <option value="'none'" {{ Feature_Policy.usb  and  Feature_Policy.usb  ==  '\'none\'' ? 'selected=selected' : '' }}>None</option>
+                                <option value="'self'" {{ Feature_Policy.usb  and  Feature_Policy.usb  ==  '\'self\'' ? 'selected=selected' : '' }}>Self</option>
+                              </select>
+                            </div>
+                            </div>
+                            
+                            <div class="form-group">
+                             <label class="col-sm-4 control-label" for="input-type_vr"><span data-toggle="tooltip" title="{{ help_vr }}">{{ type_vr }}</span>&nbsp;&nbsp;<i class="fa fa-chevron-right"></i></label>
+                             <div class="col-sm-6">
+                              <select name="module_security_headers_status[Feature_Policy][vr]" id="input-type_vr" class="form-control">
+                              <option value="" {{ Feature_Policy.vr  and  Feature_Policy.vr  ==  '' ? 'selected=selected' : '' }}>{{ text_insecure }}</option>
+                              <option value="*" {{ Feature_Policy.vr  and  Feature_Policy.vr  ==  '*' ? 'selected=selected' : '' }}>All Sources</option>
+                              
+                                <option value="'none'" {{ Feature_Policy.vr  and  Feature_Policy.vr  ==  '\'none\'' ? 'selected=selected' : '' }}>None</option>
+                                <option value="'self'" {{ Feature_Policy.vr  and  Feature_Policy.vr  ==  '\'self\'' ? 'selected=selected' : '' }}>Self</option>
+                              </select>
+                            </div>
+                            </div>
+                            
+                            <div class="form-group">
+                             <label class="col-sm-4 control-label" for="input-type_vibrate"><span data-toggle="tooltip" title="{{ help_vibrate }}">{{ type_vibrate }}</span>&nbsp;&nbsp;<i class="fa fa-chevron-right"></i></label>
+                             <div class="col-sm-6">
+                              <select name="module_security_headers_status[Feature_Policy][vibrate]" id="input-type_vibrate" class="form-control">
+                              <option value="" {{ Feature_Policy.vibrate  and  Feature_Policy.vibrate  ==  '' ? 'selected=selected' : '' }}>{{ text_insecure }}</option>
+                              <option value="*" {{ Feature_Policy.vibrate  and  Feature_Policy.vibrate  ==  '*' ? 'selected=selected' : '' }}>All Sources</option>
+                              
+                                <option value="'none'" {{ Feature_Policy.vibrate  and  Feature_Policy.vibrate  ==  '\'none\'' ? 'selected=selected' : '' }}>None</option>
+                                <option value="'self'" {{ Feature_Policy.vibrate  and  Feature_Policy.vibrate  ==  '\'self\'' ? 'selected=selected' : '' }}>Self</option>
+                              </select>
+                            </div>
+                            </div>
+                            
+                            <div class="form-group">
+                             <label class="col-sm-4 control-label" for="input-type_webauthn"><span data-toggle="tooltip" title="{{ help_webauthn }}">{{ type_webauthn }}</span>&nbsp;&nbsp;<i class="fa fa-chevron-right"></i></label>
+                             <div class="col-sm-6">
+                              <select name="module_security_headers_status[Feature_Policy][webauthn]" id="input-type_webauthn" class="form-control">
+                              <option value="" {{ Feature_Policy.webauthn  and  Feature_Policy.webauthn  ==  '' ? 'selected=selected' : '' }}>{{ text_insecure }}</option>
+                              <option value="*" {{ Feature_Policy.webauthn  and  Feature_Policy.webauthn  ==  '*' ? 'selected=selected' : '' }}>All Sources</option>
+                              
+                                <option value="'none'" {{ Feature_Policy.webauthn  and  Feature_Policy.webauthn  ==  '\'none\'' ? 'selected=selected' : '' }}>None</option>
+                                <option value="'self'" {{ Feature_Policy.webauthn  and  Feature_Policy.webauthn  ==  '\'self\'' ? 'selected=selected' : '' }}>Self</option>
+                              </select>
+                            </div>
+                            </div>
+                            
+                          </div>
+                          </div>
+                          </fieldset>
+                        
+
+                        </form>
+                    </div>
+                    <div class="panel-footer text-center">Extension by:&nbsp;&nbsp;<a href="mailto:todor.donev@gmail.com">Todor Donev</a></div>
+                </div>
+            </div>
+        </div>
+        {{ footer }}  

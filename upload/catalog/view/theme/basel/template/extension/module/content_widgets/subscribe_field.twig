@@ -1,0 +1,22 @@
+{% set subscribe_module = widget_module|default(module) %}
+<div class="newsletter-wrap{% if newsletter_consent_mode %} newsletter-wrap-consent{% endif %}">
+<div class="{% if newsletter_consent_mode %}sign-up-field sign-up-field-inline{% else %}input-group sign-up-field{% endif %}">
+<span class="sign-up-respond" id="subscribe-respond{{ subscribe_module }}"></span>
+<input type="email" id="subscribe-module{{ subscribe_module }}" name="email" class="form-control" placeholder="{{ basel_subscribe_email }}" />
+{% if newsletter_consent_mode %}
+<div class="newsletter-submit-wrap">
+<button type="button" class="btn btn-neutral nowrap" onclick="subscribe({{ subscribe_module }});"><span class="nowrap">{{ basel_subscribe_btn }}</span></button>
+</div>
+{% else %}
+<span class="input-group-btn">
+<button type="button" class="btn btn-neutral nowrap" onclick="subscribe({{ subscribe_module }});"><span class="nowrap">{{ basel_subscribe_btn }}</span></button>
+</span>
+{% endif %}
+</div>
+{% if newsletter_consent_mode %}
+<label class="newsletter-consent" for="subscribe-consent-{{ subscribe_module }}">
+<input type="checkbox" id="subscribe-consent-{{ subscribe_module }}" name="newsletter_consent" value="1" data-error="{{ basel_subscribe_consent_error }}" />
+<span>{{ basel_subscribe_consent_label }}</span>
+</label>
+{% endif %}
+</div>

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<modification>
+    <name>{name}</name>
+    <version>{version}</version>
+    <author>HuntBee OpenCart Services</author>
+    <link>https://www.huntbee.com</link>
+	<code>seo_reviews_ocmod</code>
+    
+	<file path="catalog/controller/product/product.php">
+        <operation>
+            <search><![CDATA[$data['reviews'] = sprintf($this->language->get('text_reviews'), (int)$product_info['reviews']);]]></search>
+            <add position="after"><![CDATA[
+                $data['seo_reviews_status'] = $this->config->get('seo_reviews_status');
+                $data['seo_reviews'] = '';
+				if ($product_info['reviews'] > 0 && $data['seo_reviews_status']) {
+				    $this->load->model('extension/module/seo_reviews');
+                    $data['seo_reviews'] = $this->model_extension_module_seo_reviews->getReviewPage($data['product_id']);
+                }
+				]]>
+            </add>
+        </operation>
+        
+        <operation error="skip">
+            <search><![CDATA[$results = $this->model_catalog_review->getReviewsByProductId($this->request->get['product_id'], ($page - 1) * 5, 5);]]></search>
+            <add position="replace"><![CDATA[
+                $reviews_count =  ($this->config->get('seo_reviews_count')) ? $this->config->get('seo_reviews_count') : 5;
+                $results = $this->model_catalog_review->getReviewsByProductId($this->request->get['product_id'], ($page - 1) * $reviews_count, $reviews_count);
+            ]]>
+            </add>
+        </operation>
+        
+        <operation error="skip">
+            <search><![CDATA[$pagination->limit = 5;]]></search>
+            <add position="replace"><![CDATA[$pagination->limit = $reviews_count;]]></add>
+        </operation>
+        
+        <operation error="skip">
+            <search><![CDATA[$data['results'] = sprintf($this->language->get('text_pagination'), ($review_total) ? (($page - 1) * 5) + 1 : 0, ((($page - 1) * 5) > ($review_total - 5)) ? $review_total : ((($page - 1) * 5) + 5), $review_total, ceil($review_total / 5));]]></search>
+            <add position="replace"><![CDATA[$data['results'] = sprintf($this->language->get('text_pagination'), ($review_total) ? (($page - 1) * $reviews_count) + 1 : 0, ((($page - 1) * $reviews_count) > ($review_total - $reviews_count)) ? $review_total : ((($page - 1) * $reviews_count) + $reviews_count), $review_total, ceil($review_total / $reviews_count));]]></add>
+        </operation>
+    </file>
+    
+    <file path="catalog/view/theme/*/template/product/product.twig">
+        <operation>
+            <search><![CDATA[$('#review').load('index.php?route=product/product/review&product_id={{ product_id }}');]]></search>
+            <add position="replace"><![CDATA[
+            {% if seo_reviews_status %}
+            //$('#review').load('index.php?route=product/product/review&product_id={{ product_id }}');
+            {% else %}
+            $('#review').load('index.php?route=product/product/review&product_id={{ product_id }}');
+            {% endif %}
+            ]]>
+            </add>
+        </operation>
+        <operation error="skip">
+            <search><![CDATA[<div id="review"></div>]]></search>
+            <add position="replace"><![CDATA[<div id="review">{{ seo_reviews }}</div>]]>
+            </add>
+        </operation>
+    </file>
+    
+    <!--journal3 patch-->
+    <file path="catalog/controller/journal3/{blocks,product_tabs}.php" error="skip">
+        <operation>
+            <search><![CDATA[$data['reviews'] = sprintf($this->language->get('text_reviews'), (int)Arr::get($product_info, 'reviews'));]]></search>
+            <add position="after"><![CDATA[
+                $data['seo_reviews_status'] = $this->config->get('seo_reviews_status');
+                $data['seo_reviews'] = '';
+				if ($product_info['rating'] > 0 && $data['seo_reviews_status']) {
+				    $this->load->model('extension/module/seo_reviews');
+                    $data['seo_reviews'] = $this->model_extension_module_seo_reviews->getReviewPage($this->request->get['product_id']);
+                }
+				]]>
+            </add>
+        </operation>
+    </file>
+    
+    <file path="catalog/view/theme/journal3/template/journal3/module/product_blocks_reviews.twig" error="skip">
+        <operation error="skip">
+            <search><![CDATA[<div id="review"></div>]]></search>
+            <add position="replace"><![CDATA[<div id="review">{{ seo_reviews }}</div>]]>
+            </add>
+        </operation>
+    </file>
+
+</modification>

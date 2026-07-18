@@ -1,0 +1,33 @@
+<div class="table-responsive">
+<table class="table table-bordered table-hover table-condensed table-striped">
+<thead>
+	<tr>
+		<td class="text-center">{{ col_id }}</td>
+		<td class="text-left">{{ col_name }}</td>
+		<td class="text-left">{{ col_value }}</td>
+		<td class="text-center">{{ col_characters }}</td>
+	</tr>
+</thead>
+<tbody>
+{% if records %} 
+	{% for record in records %} 
+		<tr>
+			<td class="text-center col-sm-1"><a href="{{ record.edit }}" target="_blank">{{ record.id }}</a></td>
+			<td class="text-left col-sm-2"><a href="{{ record.edit }}" target="_blank">{{ record.name }}</a></td>
+			<td class="text-left col-sm-8">{{ record.value }}</td>
+			<td class="text-center col-sm-1">{{ record.characters }}</td>
+		</tr>
+	{% endfor %} 
+{% else %} 
+	<tr>
+		<td colspan="3">{{ text_no_records }}</td>
+	</tr>
+{% endif %}
+</tbody>
+</table>
+</div>
+
+<div class="row">
+  <div class="col-sm-6 text-left">{{ pagination }}</div>
+  <div class="col-sm-6 text-right">{{ results }}</div>
+</div>

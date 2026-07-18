@@ -1,0 +1,50 @@
+<div class="row">
+    {% if total_items %}
+    <div class="col-sm-6">
+        <div class="well">
+            <span class="text" style="font-size:16px;"><b>{{ text_total_items }}</b>: {{ total_items }}</span>
+        </div>
+    </div>
+    {% endif %}
+
+    <div class="col-sm-6">
+        <div class="well">
+            <span class="text" style="font-size:16px;"><b>{{ text_page_seo_score }}</b>: {{ total_seo_score }}%</span>
+        </div>
+    </div>
+</div>
+
+<div class="table-responsive">
+    <table class="table table-bordered table-striped table-hover">
+        <thead>
+            <tr>
+                <td class="text-left col-sm-2">{{ col_checklist }}</td>
+                <td class="text-center col-sm-2">{{ col_status }}</td>
+                <td class="text-left col-sm-6">{{ col_analysis }}</td>
+                <td class="text-center col-sm-2">{{ col_seo_score }}</td>                
+            </tr>
+        </thead>
+        <tbody>
+            {% for key, list in checklist %}
+            <tr>                
+                <td class="text-left">{{ list.title }}</td>
+                <td class="text-center">
+                    {% if list.status %}
+                        <span class="text-success"><i class="fa fa-check-circle fa-2x" aria-hidden="true"></i></span>
+                    {% else %}
+                        <span class="text-danger"><i class="fa fa-times-circle fa-2x" aria-hidden="true"></i></span>
+                    {% endif %}
+                </td>
+                <td class="text-left">
+                    {{ list.analysis }}
+                    {% if not list.status and list.report_button %}
+                        <a class="btn btn-danger btn-xs" onclick="openReport('{{ page_type }}', '{{ key }}')" id="btn_{{ key }}">{{ button_view }}</a>
+                    {% endif %}
+                </td>
+                <td class="text-center">{{ list.seo_score }}%</td>                
+            </tr>
+           {% endfor %}
+        </tbody>
+    </table>
+</div>
+

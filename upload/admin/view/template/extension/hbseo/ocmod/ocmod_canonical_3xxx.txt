@@ -1,0 +1,553 @@
+<?xml version="1.0" encoding="utf-8"?>
+<modification>
+    <name>SEO - Canonical URL [3xxx]</name>
+    <version>{huntbee_version}</version>
+    <author>HuntBee OpenCart Services</author>
+    <link>https://www.huntbee.com</link>
+	<code>huntbee_seo_canonical_ocmod</code>
+	
+	<file path="admin/controller/catalog/product.php">
+		<operation>
+            <search><![CDATA[$data['product_categories'] = array();]]></search>
+            <add position="after"><![CDATA[
+                $data['canonical_path'] = array();
+
+                $url = new Url(HTTP_CATALOG, $this->config->get('config_secure') ? HTTP_CATALOG : HTTPS_CATALOG);
+        		if ($this->config->get('config_seo_url')) {
+        				require_once('../catalog/controller/startup/seo_url.php');
+        				$rewriter = new ControllerStartupSeoUrl($this->registry);
+        				$url->addRewrite($rewriter);
+        		}
+        		
+        		$data['selected_canonical_path'] = '';
+        		
+        		if (isset($this->request->get['product_id'])) {
+        		    $query_canonical =  $this->db->query("SELECT path FROM " . DB_PREFIX . "product_canonical WHERE product_id = '".(int)$this->request->get['product_id']."' LIMIT 1");
+        		    if ($query_canonical->row) {
+                        $data['selected_canonical_path'] = $query_canonical->row['path'];
+                    }
+        		    $data['canonical_path'][] = array('path' => 'E', 'url' =>$url->link('product/product', 'product_id='.$this->request->get['product_id']) );
+        		}
+            ]]></add>
+        </operation>
+        
+        <operation>
+            <search><![CDATA[$category_info = $this->model_catalog_category->getCategory($category_id);]]></search>
+            <add position="after"><![CDATA[
+                $canonical_paths = $this->model_catalog_category->getCategoryCanonical($category_id);
+    			
+    			if ($canonical_paths) {
+    				if ($canonical_paths['path']) {
+    					$paths = $canonical_paths['path'].'_'.$canonical_paths['category_id'];
+					}else{
+						$paths = $canonical_paths['category_id'];
+					}
+    				$data['canonical_path'][] = array('path' => $paths, 'url' => $url->link('product/product', 'path='.$paths.'&product_id='.$this->request->get['product_id']) );
+    			}
+            ]]>
+            </add>
+        </operation>
+	</file>
+	
+	<file path="admin/model/catalog/category.php">
+		<operation>
+            <search><![CDATA[public function getCategory($category_id)]]></search>
+            <add position="before"><![CDATA[
+                public function getCategoryCanonical($category_id) {
+            		$query = $this->db->query("SELECT DISTINCT *, (SELECT GROUP_CONCAT(cd1.category_id ORDER BY level SEPARATOR '_') FROM " . DB_PREFIX . "category_path cp LEFT JOIN " . DB_PREFIX . "category_description cd1 ON (cp.path_id = cd1.category_id AND cp.category_id != cp.path_id) WHERE cp.category_id = c.category_id AND cd1.language_id = '" . (int)$this->config->get('config_language_id') . "' GROUP BY cp.category_id) AS path FROM " . DB_PREFIX . "category c LEFT JOIN " . DB_PREFIX . "category_description cd2 ON (c.category_id = cd2.category_id) WHERE c.category_id = '" . (int)$category_id . "' AND cd2.language_id = '" . (int)$this->config->get('config_language_id') . "'");
+            
+            		return $query->row;
+            	}
+            ]]>
+            </add>
+        </operation>
+        
+        <operation>
+            <search><![CDATA[$category_id = $this->db->getLastId();]]></search>
+            <add position="after"><![CDATA[
+                $this->db->query("DELETE FROM " . DB_PREFIX . "category_canonical WHERE category_id = '" . (int)$category_id . "'");
+                if (!empty($data['canonical'])) {
+                    $this->db->query("INSERT INTO " . DB_PREFIX . "category_canonical (category_id, path) VALUES ('" . (int)$category_id . "', '".$this->db->escape($data['canonical'])."')");
+                }
+            ]]>
+            </add>
+        </operation>
+		<operation>
+            <search><![CDATA[public function editCategory($category_id, $data) {]]></search>
+            <add position="after"><![CDATA[
+                $this->db->query("DELETE FROM " . DB_PREFIX . "category_canonical WHERE category_id = '" . (int)$category_id . "'");
+                if (!empty($data['canonical'])) {
+                    $this->db->query("INSERT INTO " . DB_PREFIX . "category_canonical (category_id, path) VALUES ('" . (int)$category_id . "', '".$this->db->escape($data['canonical'])."')");
+                }
+            ]]> 
+            </add>
+        </operation>
+	</file>
+	
+	<file path="admin/model/catalog/product.php">
+	    <operation>
+            <search><![CDATA[$product_id = $this->db->getLastId();]]></search>
+            <add position="after"><![CDATA[
+                $this->db->query("DELETE FROM " . DB_PREFIX . "product_canonical WHERE product_id = '" . (int)$product_id . "'");
+                if (!empty($data['canonical'])) {
+                    $this->db->query("INSERT INTO " . DB_PREFIX . "product_canonical (product_id, path) VALUES ('" . (int)$product_id . "', '".$this->db->escape($data['canonical'])."')");
+                };
+            ]]>
+            </add>
+        </operation>
+		<operation>
+            <search><![CDATA[public function editProduct($product_id, $data) {]]></search>
+            <add position="after"><![CDATA[
+                $this->db->query("DELETE FROM " . DB_PREFIX . "product_canonical WHERE product_id = '" . (int)$product_id . "'");
+                if (!empty($data['canonical'])) {
+                    $this->db->query("INSERT INTO " . DB_PREFIX . "product_canonical (product_id, path) VALUES ('" . (int)$product_id . "', '".$this->db->escape($data['canonical'])."')");
+                }
+            ]]>
+            </add>
+        </operation>
+	</file>
+	
+	<file path="admin/view/template/catalog/product_form.twig">
+		<operation>
+            <search><![CDATA[<label class="col-sm-2 control-label" for="input-filter"><span data-toggle="tooltip" title="{{ help_filter }}">{{ entry_filter }}</span></label>]]></search>
+            <add position="before"><![CDATA[
+
+			  	 <label class="col-sm-2 control-label" for="input-filter">Choose a Canonical Path</label>
+				 <div class="col-sm-10">
+				    {% if (selected_canonical_path == '') %} 
+				        <input type="radio" name="choose_canonical" value="" onclick="$('#canonical').val(this.value);"  checked="checked"  />&nbsp;Auto<br />
+				    {% else %} 
+					    <input type="radio" name="choose_canonical" value="" onclick="$('#canonical').val(this.value);" />&nbsp;Auto<br />
+					{% endif %} 
+						
+				 	{% for path in canonical_path %} 
+				 	    {% if (selected_canonical_path == path['path']) %} 
+				 	        <input type="radio" name="choose_canonical" value="{{ path['path'] }}" onclick="$('#canonical').val(this.value);" checked="checked" />&nbsp;{{ path['url'] }}<br />
+				 	    {% else %} 
+						    <input type="radio" name="choose_canonical" value="{{ path['path'] }}" onclick="$('#canonical').val(this.value);" />&nbsp;{{ path['url'] }}<br />
+						{% endif %} 
+					{% endfor %} 
+					
+					<input type="hidden" name="canonical" id="canonical" value="{{ selected_canonical_path }}" class="form-control" />
+				 </div>
+			  </div>
+
+			  <div class="form-group">
+            ]]>
+            </add>
+        </operation>
+	</file>
+	
+	<file path="admin/controller/catalog/category.php">
+		<operation>
+            <search><![CDATA[if (isset($this->request->get['category_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {]]></search>
+            <add position="before"><![CDATA[
+                $data['canonical_path'] = array();
+
+                $url = new Url(HTTP_CATALOG, $this->config->get('config_secure') ? HTTP_CATALOG : HTTPS_CATALOG);
+        		if ($this->config->get('config_seo_url')) {
+        				require_once('../catalog/controller/startup/seo_url.php');
+        				$rewriter = new ControllerStartupSeoUrl($this->registry);
+        				$url->addRewrite($rewriter);
+        		}
+        		
+        		$data['selected_canonical_path'] = '';
+        		
+        		if (isset($this->request->get['category_id'])) {
+        		    $query_canonical =  $this->db->query("SELECT path FROM " . DB_PREFIX . "category_canonical WHERE category_id = '".(int)$this->request->get['category_id']."' LIMIT 1");
+                    if ($query_canonical->row) {
+                        $data['selected_canonical_path'] = $query_canonical->row['path'];
+                    }
+                    
+        		    $data['canonical_path'][] = array('path' => 'E', 'url' =>$url->link('product/category', 'path='.$this->request->get['category_id']) );
+        		    
+        		    $canonical_paths = $this->model_catalog_category->getCategoryCanonical($this->request->get['category_id']);
+    			
+        			if ($canonical_paths) {
+        				if ($canonical_paths['path']) {
+        					$paths = $canonical_paths['path'].'_'.$canonical_paths['category_id'];
+    					}else{
+    						$paths = $canonical_paths['category_id'];
+    					}
+					
+        				$data['canonical_path'][] = array('path' => $paths, 'url' => $url->link('product/category', 'path='.$paths) );
+        			}
+        		}
+        		
+        		
+            ]]>
+            </add>
+        </operation>
+	</file>
+	
+	<file path="admin/view/template/catalog/category_form.twig">
+		<operation>
+            <search><![CDATA[<label class="col-sm-2 control-label" for="input-filter"><span data-toggle="tooltip" title="{{ help_filter }}">{{ entry_filter }}</span></label>]]></search>
+            <add position="before"><![CDATA[
+
+			  	 <label class="col-sm-2 control-label" for="input-filter">Choose a Canonical Path</label>
+				 <div class="col-sm-10">
+				    {% if (selected_canonical_path == '') %} 
+				        <input type="radio" name="choose_canonical" value="" onclick="$('#canonical').val(this.value);"  checked="checked"  />&nbsp;Auto<br />
+				    {% else %} 
+					    <input type="radio" name="choose_canonical" value="" onclick="$('#canonical').val(this.value);" />&nbsp;Auto<br />
+					{% endif %} 
+						
+				 	{% for path in canonical_path %} 
+				 	    {% if (selected_canonical_path == path['path']) %} 
+				 	        <input type="radio" name="choose_canonical" value="{{ path['path'] }}" onclick="$('#canonical').val(this.value);" checked="checked" />&nbsp;{{ path['url'] }}<br />
+				 	    {% else %} 
+						    <input type="radio" name="choose_canonical" value="{{ path['path'] }}" onclick="$('#canonical').val(this.value);" />&nbsp;{{ path['url'] }}<br />
+						{% endif %} 
+					{% endfor %} 
+					
+					<input type="hidden" name="canonical" id="canonical" value="{{ selected_canonical_path }}" class="form-control" />
+				 </div>
+			  </div>
+
+			  <div class="form-group">
+            ]]>
+            </add>
+        </operation>
+	</file>
+	
+	<file path="system/library/document.php">
+		<operation>
+            <search><![CDATA[private $scripts = array();]]></search>
+            <add position="after"><![CDATA[
+                private $db;
+            	public function __construct() {
+            		$this->db = new DB(DB_DRIVER, DB_HOSTNAME, DB_USERNAME, DB_PASSWORD, DB_DATABASE);
+            	}
+            ]]>
+            </add>
+        </operation>
+        
+        <operation>
+            <search><![CDATA[$this->links[$href] = array(]]></search>
+            <add position="before"><![CDATA[
+        //huntbee canonical  start  
+        $replaced_canonical = false;
+        if ($rel == 'canonical' || $rel == 'next' || $rel == 'prev') {
+			$http_protocol = (isset($_SERVER['HTTPS']) && (($_SERVER['HTTPS'] == 'on') || ($_SERVER['HTTPS'] == '1'))) ? "https://"  : "http://";
+			$current_url = $http_protocol.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
+			$current_url = preg_replace('/\?.*/', '', $current_url);
+		
+			$custom_canonical = $this->db->query("SELECT canonical FROM ".DB_PREFIX."custom_canonical WHERE `url` = '".$this->db->escape($current_url)."' LIMIT 1");
+			if ($custom_canonical->row) {
+				$replaced_canonical = str_replace($current_url, $custom_canonical->row['canonical'], $href);
+			}
+		}
+		
+		if ($replaced_canonical) 				
+				$this->links[$href] = array('href' => $replaced_canonical,	'rel'  => $rel);
+		else
+		//huntbee canonical end
+            ]]>
+            </add>
+        </operation>
+        
+	</file>
+	
+	<!--PRODUCT CANONICAL-->
+	<file path="catalog/controller/product/product.php">
+		<operation>
+            <search><![CDATA[$this->document->addLink($this->url->link('product/product', 'product_id=' . $this->request->get['product_id']), 'canonical');]]></search>
+            <add position="replace">
+            <![CDATA[
+            if ($this->config->get('hb_canonical_status')) {
+			    $this->load->model('extension/module/hb_canonical');
+			    $this->model_extension_module_hb_canonical->product_canonical($this->request->get['product_id']);
+    		}else{
+    		    $this->document->addLink($this->url->link('product/product', 'product_id=' . $this->request->get['product_id']), 'canonical');
+    		}
+            ]]>
+            </add>
+        </operation>
+	</file>
+		
+<!-- CATEGORY CANONICAL -->
+	<file path="catalog/controller/product/category.php">
+		<operation>
+            <search><![CDATA[if ($page == 1) {]]></search>
+            <add position="replace">
+            <![CDATA[
+            /*if ($page == 1) {
+            ]]>
+            </add>
+        </operation>
+		<operation>
+            <search><![CDATA[$data['sort'] = $sort;]]></search>
+            <add position="before">
+            <![CDATA[
+            */
+            ]]>
+            </add>
+        </operation>
+        
+       <operation>
+            <search><![CDATA[$data['pagination'] = $pagination->render();]]></search>
+            <add position="after">
+                <![CDATA[
+               	if ($this->config->get('hb_canonical_status')) {
+                    $this->load->model('extension/module/hb_canonical');
+			        $this->model_extension_module_hb_canonical->category_canonical($category_id, $pagination->page, $pagination->limit, $pagination->total);
+    			}else{
+    			    if ($pagination->page == 1){
+    			        $this->document->addLink($this->url->link('product/category', 'path=' . $category_id), 'canonical');
+				    }else{
+				        $this->document->addLink($this->url->link('product/category', 'path=' . $category_id . '&page=' . $pagination->page), 'canonical');
+				    }
+				    if ($pagination->limit && ceil($pagination->total / $pagination->limit) > $pagination->page) {
+    				    $this->document->addLink($this->url->link('product/category', 'path=' . $category_id . '&page=' . ($pagination->page + 1)), 'next');
+    				}
+    				if ($pagination->page > 1) {
+    				    if ($pagination->page == 2) {
+    				        $this->document->addLink($this->url->link('product/category', 'path=' . $category_id), 'prev');
+    				    }else{
+    				        $this->document->addLink($this->url->link('product/category', 'path=' . $category_id . '&page=' . ($pagination->page - 1)), 'prev');
+    				    }
+        			}
+        		}
+				]]>
+            </add>
+        </operation>
+    </file>
+	
+	<!-- Brand CANONICAL -->
+	<file path="catalog/controller/product/manufacturer.php">
+	    <operation>
+            <search><![CDATA[$results = $this->model_catalog_manufacturer->getManufacturers();]]></search>
+            <add position="before">
+            <![CDATA[
+                $this->document->addLink($this->url->link('product/manufacturer'), 'canonical');
+            ]]>
+            </add>
+        </operation>
+		<operation>
+            <search><![CDATA[if ($page == 1) {]]></search>
+            <add position="replace">
+            <![CDATA[
+            /*if ($page == 1) {
+            ]]>
+            </add>
+        </operation>
+		<operation>
+            <search><![CDATA[$data['sort'] = $sort;]]></search>
+            <add position="before">
+            <![CDATA[
+            */
+            ]]>
+            </add>
+        </operation>        
+		<operation>
+            <search><![CDATA[$data['pagination'] = $pagination->render();]]></search>
+            <add position="after">
+                <![CDATA[
+				$pagenum = '';
+    			if (isset($this->request->get['page'])){
+                    $pagenum= '&page='.$this->request->get['page'];
+                }
+                
+                if ($pagenum == 1) {
+    			    $this->document->addLink($this->url->link('product/manufacturer/info', 'manufacturer_id=' . $this->request->get['manufacturer_id'], true), 'canonical');
+    			}else{
+    			    $this->document->addLink($this->url->link('product/manufacturer/info', 'manufacturer_id=' . $this->request->get['manufacturer_id'].$pagenum, true), 'canonical');
+    			}
+                	
+    			if ($pagination->limit && ceil($pagination->total / $pagination->limit) > $pagination->page) {
+    				$this->document->addLink($this->url->link('product/manufacturer/info', 'manufacturer_id=' . $this->request->get['manufacturer_id'] . '&page=' . ($pagination->page + 1)), 'next');
+    			}
+
+    			if ($pagination->page > 1) {
+    			    if ($pagination->page == 2) {
+    				    $this->document->addLink($this->url->link('product/manufacturer/info', 'manufacturer_id=' . $this->request->get['manufacturer_id']), 'prev');
+    				}else{
+    				    $this->document->addLink($this->url->link('product/manufacturer/info', 'manufacturer_id=' . $this->request->get['manufacturer_id']. '&page=' . ($pagination->page - 1)), 'prev');
+    				}
+    			}
+				]]>
+            </add>
+        </operation>
+    </file>
+	
+	<!-- INFORMATION CANONICAL -->
+	<file path="catalog/controller/information/information.php">
+		
+		<operation>
+            <search><![CDATA[$this->document->setKeywords($information_info['meta_keyword']);]]></search>
+            <add position="after">
+                <![CDATA[
+				$this->document->addLink($this->url->link('information/information', 'information_id=' . $information_id), 'canonical');]]>
+            </add>
+        </operation>
+    </file> 
+    
+    <file path="catalog/controller/information/contact.php">
+		<operation>
+            <search><![CDATA[$data['button_submit'] = $this->language->get('button_submit');]]></search>
+            <add position="after"><![CDATA[
+				$this->document->addLink($this->url->link('information/contact'), 'canonical');]]>
+            </add>
+        </operation>
+    </file> 
+	
+	<file path="catalog/controller/product/search.php">
+	    <operation>
+            <search><![CDATA[$this->load->model('tool/image');]]></search>
+            <add position="after"><![CDATA[
+            if (isset($this->request->get['tag']) === false and isset($this->request->get['search']) === false){
+                $this->document->addLink($this->url->link('product/search'), 'canonical');
+            }
+            ]]></add>
+        </operation>
+
+		<operation>
+            <search><![CDATA[if (isset($this->request->get['search']) && $this->config->get('config_customer_search')) {]]></search>
+            <add position="before"><![CDATA[           
+            
+            if (isset($this->request->get['tag'])){
+                $canonical_query = '&tag='.$this->request->get['tag'];
+            }elseif (isset($this->request->get['search'])){
+                $canonical_query = '&search='.$this->request->get['search'];
+            }else{
+                $canonical_query = '';
+            }
+            
+            
+    		if (isset($this->request->get['page'])){
+                $pagenum= '&page='.$this->request->get['page'];
+            }else{
+                $pagenum = '';
+            }
+            
+            if ($pagenum == 1) {
+			    $this->document->addLink($this->url->link('product/search', $canonical_query, true), 'canonical');
+			}else{
+			    $this->document->addLink($this->url->link('product/search', $canonical_query.$pagenum, true), 'canonical');
+			}
+            	
+			if ($pagination->limit && ceil($pagination->total / $pagination->limit) > $pagination->page) {
+				$this->document->addLink($this->url->link('product/search', $canonical_query. '&page=' . ($pagination->page + 1)), 'next');
+			}
+
+			if ($pagination->page > 1) {
+			    if ($pagination->page == 2) {
+			        $this->document->addLink($this->url->link('product/search', $canonical_query), 'prev');
+			    }else{
+			        $this->document->addLink($this->url->link('product/search', $canonical_query. '&page=' . ($pagination->page - 1)), 'prev');
+			    }
+    		}
+            
+            ]]>
+            </add>
+        </operation> 
+    </file> 
+    
+    <file path="catalog/controller/product/compare.php">
+		<operation>
+            <search><![CDATA[$this->document->setTitle($this->language->get('heading_title'));]]></search>
+            <add position="after"><![CDATA[
+				$this->document->addLink($this->url->link('product/compare'), 'canonical');]]>
+            </add>
+        </operation>
+    </file> 
+    
+	<!-- SPECIAL SEO -->
+	<file path="catalog/controller/product/special.php">
+		<operation>
+            <search><![CDATA[if ($page == 1) {]]></search>
+            <add position="replace">
+            <![CDATA[
+            /*if ($page == 1) {
+            ]]>
+            </add>
+        </operation>
+		<operation>
+            <search><![CDATA[$data['sort'] = $sort;]]></search>
+            <add position="before">
+            <![CDATA[
+            */
+            ]]>
+            </add>
+        </operation>
+		
+		<operation>
+            <search><![CDATA[$data['pagination'] = $pagination->render();]]></search>
+            <add position="after">
+                <![CDATA[
+                    $pagenum = '';
+
+        			if (isset($this->request->get['page'])){
+                        $pagenum= '&page='.$this->request->get['page'];
+                    }
+        			if ($pagenum == 1) {
+        			    $this->document->addLink($this->url->link('product/special'), 'canonical');
+        			}else{
+        			    $this->document->addLink($this->url->link('product/special', $pagenum), 'canonical');
+        			}
+        			
+    	
+        			if ($pagination->limit && ceil($pagination->total / $pagination->limit) > $pagination->page) {
+        				$this->document->addLink($this->url->link('product/special', '&page=' . ($pagination->page + 1)), 'next');
+        			}
+        
+        			if ($pagination->page > 1) {
+        			    if ($pagination->page == 2) {
+        			        $this->document->addLink($this->url->link('product/special'), 'prev');
+        			    }else{
+        				    $this->document->addLink($this->url->link('product/special', '&page=' . ($pagination->page - 1)), 'prev');
+        				}
+        			}
+				]]>
+            </add>
+        </operation>
+    </file>
+	
+	<file path="catalog/controller/common/home.php">
+		<operation>
+            <search><![CDATA[if (isset($this->request->get['route'])) {]]></search>
+            <add position="replace"><![CDATA[if (isset($this->request->get['route']) || 1 == 1) {]]></add>
+        </operation>
+        <operation>
+            <search><![CDATA[$this->document->addLink($this->config->get('config_url'), 'canonical');]]></search>
+            <add position="replace"><![CDATA[$this->document->addLink($this->url->link('common/home'), 'canonical');]]></add>
+        </operation>
+    </file> 
+	
+	<file path="catalog/controller/account/login.php">
+		<operation>
+            <search><![CDATA[$this->document->setTitle($this->language->get('heading_title'));]]></search>
+            <add position="after"><![CDATA[
+				$this->document->addLink($this->url->link('account/login'), 'canonical');]]>
+            </add>
+        </operation>
+    </file> 
+  
+	<file path="catalog/controller/account/register.php">
+		<operation>
+            <search><![CDATA[$this->document->setTitle($this->language->get('heading_title'));]]></search>
+            <add position="after"><![CDATA[
+				$this->document->addLink($this->url->link('account/register'), 'canonical');]]>
+            </add>
+        </operation>
+    </file>
+
+	<file path="catalog/controller/account/forgotten.php">
+		<operation>
+            <search><![CDATA[$this->document->setTitle($this->language->get('heading_title'));]]></search>
+            <add position="after"><![CDATA[
+				$this->document->addLink($this->url->link('account/forgotten'), 'canonical');]]>
+            </add>
+        </operation>
+    </file>
+	
+	<file path="catalog/controller/checkout/cart.php">
+		<operation>
+            <search><![CDATA[$this->document->setTitle($this->language->get('heading_title'));]]></search>
+            <add position="after"><![CDATA[
+				$this->document->addLink($this->url->link('checkout/cart'), 'canonical');]]>
+            </add>
+        </operation>
+    </file>
+</modification>

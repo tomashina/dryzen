@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<modification>
+    <name>Base Plugin from HuntBee [3xxx]</name>
+    <version>{huntbee_version}</version>
+    <author>HuntBee OpenCart Services</author>
+    <link>http://www.huntbee.com</link>
+	<code>huntbee_base_plugin</code>
+				
+    <file path="admin/controller/startup/permission.php">
+    	<operation>
+            <search><![CDATA['extension/payment',]]></search>
+            <add position="replace"><![CDATA['extension/payment','extension/hbapps','extension/hbseo',]]></add>
+        </operation>
+    </file>
+	
+	<!-- MENU LINKS -->
+		 <file path="admin/controller/common/column_left.php">
+			<operation>
+                <search><![CDATA[$design = array();]]></search>
+                <add position="before"><![CDATA[
+                $hbapps = array();
+                $hbapps_menu = $this->load->controller('extension/extension/hbapps/menu');
+                
+				if (!empty($hbapps_menu)){
+    				$data['menus'][] = array(
+    					'id'       => 'menu-hbapps',
+    					'icon'	   => 'fa-windows', 
+    					'name'	   => $this->language->get('text_hbapps'),
+    					'href'     => '',
+    					'children' => $hbapps_menu
+    				);	
+    			}else{
+					$data['menus'][] = array(
+    					'id'       => 'menu-hbapps',
+    					'icon'	   => 'fa-windows', 
+    					'name'	   => $this->language->get('text_hbapps'),
+    					'href'     => $this->url->link('marketplace/extension', 'user_token=' . $this->session->data['user_token'] . '&type=hbapps', true),
+    					'children' => array()
+    				);
+				}
+			
+    			$hbseo = array();
+    			$hbseo_menu = $this->load->controller('extension/extension/hbseo/menu');
+				if (!empty($hbseo_menu)){
+    				$data['menus'][] = array(
+    					'id'       => 'menu-hbseo',
+    					'icon'	   => 'fa-google', 
+    					'name'	   => $this->language->get('text_hbseo'),
+    					'href'     => '',
+    					'children' => $hbseo_menu
+    				);	
+    			}else{
+					$data['menus'][] = array(
+    					'id'       => 'menu-hbseo',
+    					'icon'	   => 'fa-google', 
+    					'name'	   => $this->language->get('text_hbseo'),
+    					'href'     => $this->url->link('marketplace/extension', 'user_token=' . $this->session->data['user_token'] . '&type=hbseo', true),
+    					'children' => array()
+    				);
+				}
+				]]></add>
+            </operation>
+        </file>		
+		
+		<file path="admin/language/*/common/column_left.php">
+            <operation>
+                <search><![CDATA[$_['text_modification']]]></search>
+                <add position="before"><![CDATA[
+					$_['text_hbapps']      = 'Productivity Apps';
+					$_['text_hbseo']       = 'SEO Extensions';
+				]]></add>
+            </operation>
+        </file>
+</modification>

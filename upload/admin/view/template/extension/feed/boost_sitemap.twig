@@ -1,0 +1,335 @@
+{{ header }}
+{{ column_left }}
+<div id="content">
+  <div class="page-header">
+    <div class="container-fluid">
+      <div class="pull-right">
+        <button type="submit" form="form-feed" data-toggle="tooltip" title="{{ button_save }}" class="btn btn-success"><i class="fa fa-save"></i></button>
+        <a onclick="$('#form-feed').attr('action', '{{ continue }}');$('#form-feed').submit();" data-toggle="tooltip" title="{{ button_save_continue }}" class="btn btn-primary"><i class="fa fa-check"></i></a>
+		<a href="{{ cancel }}" data-toggle="tooltip" title="{{ button_cancel }}" class="btn btn-default"><i class="fa fa-reply"></i></a>
+	  </div>
+      <h1>{{ heading_title }}</h1>
+      <ul class="breadcrumb">
+        {% for breadcrumb in breadcrumbs %}
+        <li><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+  <div class="container-fluid">
+    <div id="message"></div>
+    {% if error_warning %}
+    <div class="alert alert-danger alert-dismissible"><i class="fa fa-exclamation-circle"></i> {{ error_warning }}
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+    </div>
+    {% endif %}
+    {% if success %}
+    <div class="alert alert-success alert-dismissible"><i class="fa fa-check-circle"></i> {{ success }}
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+    </div>
+    {% endif %}
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title"><i class="fa fa-pencil"></i> {{ text_edit }}</h3>
+      </div>
+      <div class="panel-body">
+        <form action="{{ action }}" method="post" enctype="multipart/form-data" id="form-feed" class="form-horizontal">
+          <ul class="nav nav-tabs">
+            <li class="active"><a href="#tab-general" data-toggle="tab">{{ tab_general }}</a></li>
+            <li><a href="#tab-custom-link" data-toggle="tab">{{ tab_custom_link }}</a></li>
+            <li><a href="#tab-setting" data-toggle="tab">{{ tab_setting }}</a></li>
+            <li><a href="#tab-raw-file" data-toggle="tab">{{ tab_raw_file }}</a></li>
+          </ul>
+          <div class="tab-content">
+            <div class="tab-pane active" id="tab-general">
+              <div class="form-group">
+	            <label class="col-sm-2 control-label" for="input-status">{{ entry_status }}</label>
+	            <div class="col-sm-4">
+				  <div class="btn-group btn-toggle" data-toggle="buttons">
+	                {% if feed_boost_sitemap_status %}
+	                  <label class="btn btn-success btn-md active"><input type="radio" name="feed_boost_sitemap_status" value="1" checked="checked">{{ text_enabled }}</label>
+					  <label class="btn btn-default btn-md"><input type="radio" name="feed_boost_sitemap_status"  value="0">{{ text_disabled }}</label>
+			        {% else %}
+				      <label class="btn btn-default btn-md"><input type="radio" name="feed_boost_sitemap_status" value="1">{{ text_enabled }}</label>
+				      <label class="btn btn-success btn-md active"><input type="radio" name="feed_boost_sitemap_status" value="0" checked="checked">{{ text_disabled }}</label>
+				    {% endif %}
+	              </div>
+				</div>
+	          </div>
+	          <div class="form-group">
+	            <div class="col-sm-12">
+	              <table class="table table-bordered">
+	                <thead>
+	                  <tr>
+	                    <th>{{ column_store }}</th>
+	                    <th>{{ column_sitemap_index }}</th>
+	                    <th>{{ column_ping_to }}</th>
+	                  </tr>
+	                </thead>
+	                <tbody>
+	                  {% for feed in data_feed %}
+	                  <tr>
+	                    <td>{{ feed.store_name }}</td>
+	                    <td><a target="_blank" href="{{ feed.feed }}" target="_blank">{{ feed.feed }}</a></td>
+	                    <td><a class="btn btn-danger" href="http://www.google.com/ping?sitemap={{ feed.feed }}">Google</a> <a class="btn btn-info" href="http://www.bing.com/ping?sitemap={{ feed.feed }}">Bing</a></td>
+	                  </tr>
+	                  {% endfor %}
+	                </tbody>
+	              </table>
+	            </div>
+	          </div>
+            </div>
+			
+            <div class="tab-pane" id="tab-custom-link">
+              <div class="row">
+			    <div class="form-group col-sm-6">
+			      <label class="col-sm-3 control-label">{{ entry_url }}</label>
+	              <div class="col-sm-9">
+	                <input type="text" class="form-control" name="custom_link_url" value="">
+	              </div>
+	            </div>
+	            <div class="form-group col-sm-6">
+	              <label class="col-sm-3 control-label">{{ entry_frequency }}</label>
+	              <div class="col-sm-9">
+	                <select name="custom_link_frequency" class="form-control">
+	                  <option value="always">{{ text_always }}</option>
+	                  <option value="hourly">{{ text_hourly }}</option>
+	                  <option value="daily">{{ text_daily }}</option>
+	                  <option value="weekly">{{ text_weekly }}</option>
+	                  <option value="monthly">{{ text_monthly }}</option>
+	                  <option value="yearly">{{ text_yearly }}</option>
+	                  <option value="never">{{ text_never }}</option>
+	                </select>
+	              </div>
+	            </div>
+			  </div>
+			  <div class="row">
+			    <div class="form-group col-sm-6">
+	              <label class="col-sm-3 control-label">{{ entry_priority }}</label>
+	              <div class="col-sm-9">
+	                <select name="custom_link_priority" class="form-control">
+	                  <option value="0.1">0.1</option>
+	                  <option value="0.2">0.2</option>
+	                  <option value="0.3">0.3</option>
+	                  <option value="0.4">0.4</option>
+	                  <option value="0.5">0.5</option>
+	                  <option value="0.6">0.6</option>
+	                  <option value="0.7">0.7</option>
+	                  <option value="0.8">0.8</option>
+	                  <option value="0.9">0.9</option>
+	                  <option value="1.0">1.0</option>
+	                </select>
+	              </div>
+	            </div>
+	            <div class="form-group col-sm-6">
+	              <label class="col-sm-3 control-label">{{ entry_store }}</label>
+	              <div class="col-sm-9">
+	                <select name="custom_link_store_id" class="form-control">
+	                  {% for store in stores %}
+	                    <option value="{{ store.store_id }}">{{ store.name }}</option>
+	                  {% endfor %}
+	                </select>
+	              </div>
+	            </div>
+			  </div>
+			  <div class="row">
+			    <div class="form-group col-sm-6">
+	              <label class="col-sm-3 control-label"></label>
+	              <div class="col-sm-9">
+                    <button type="button" class="btn btn-success" onclick="addCustomLink(this, '{{ custom_link }}');"><i class="fa fa-plus-circle"></i> {{ button_add_link }}</button>
+                    <button type="button" class="btn btn-danger" onclick="confirm('{{ text_confirm }}') ? deleteCustomLink(this, '{{ delete_custom_link }}') : false;"><i class="fa fa-trash-o"></i> {{ button_delete }}</button>
+                    <button type="button" class="btn btn-default" onclick="getCustomLinks();"><i class="fa fa-refresh"></i> {{ button_refresh }}</button>
+                  </div>
+	            </div>
+			  </div>
+			  <table class="table table-bordered">
+	            <thead>
+			    <tr>
+			      <th><input type="checkbox" onclick="$('input[name*=\'custom_link_ids\']').prop('checked', this.checked);" /></th>
+			      <th>{{ column_store }}</th>
+			      <th>{{ column_link }}</th>
+			      <th>{{ column_frequency }}</th>
+			      <th>{{ column_priority }}</th>
+			    </tr>
+			    </thead>
+			    <tbody id="custom-link">
+			    </tbody>
+			  </table>
+            </div>
+            
+			<div class="tab-pane" id="tab-setting">
+               <div class="form-group">
+                 <label class="col-sm-3 control-label"><span data-toggle="tooltip" title="{{ help_item }}">{{ entry_item }}</span></label>
+                 <div class="col-sm-9">
+                   {% for key, value in items %}
+                     <div class="checkbox">
+                       <label>
+                       {% if key in feed_boost_sitemap_item %}
+                       <input type="checkbox" name="feed_boost_sitemap_item[]" value="{{ key }}" checked="checked" /> {{ value }}
+                       {% else %}
+                       <input type="checkbox" name="feed_boost_sitemap_item[]" value="{{ key }}" /> {{ value }}
+                       {% endif %}
+                       </label>
+                     </div>
+                   {% endfor %}
+                 </div>
+               </div>
+			   <div class="form-group">
+	             <label class="col-sm-3 control-label" for="input-data-feed">{{ entry_item_limit }}</label>
+	             <div class="col-sm-3">
+	               <input type="text" class="form-control" name="feed_boost_sitemap_item_limit" value="{{ feed_boost_sitemap_item_limit | default('1000') }}">
+	             </div>
+	           </div>
+	           <div class="form-group">
+                 <label class="col-sm-3 control-label"></label>
+                 <div class="col-sm-9">
+                   <button type="button" class="btn btn-success" onclick="confirm('{{ text_overwrite }}') ? generateFiles(this, '{{ generate }}') : false;"><i class="fa fa-sitemap"></i> {{ button_generate_file }}</button>
+                 </div>
+               </div>
+            </div>
+            <div class="tab-pane" id="tab-raw-file">
+              <div style="margin-bottom:20px">
+			    <button type="button" class="btn btn-danger" onclick="confirm('{{ text_confirm }}') ? deleteFiles(this, '{{ delete }}') : false;"><i class="fa fa-trash-o"></i> {{ button_delete }}</button>
+			  </div>
+			  <table class="table table-bordered">
+			    <tr>
+			      <th><input type="checkbox" onclick="$('input[name*=\'selected\']').prop('checked', this.checked);" /></th>
+			      <th>{{ column_file_path }}</th>
+			      <th>{{ column_file_size }}</th>
+			      <th>{{ column_file_created }}</th>
+			    </tr>
+			    {% if xml_files %}
+			      {% for file in xml_files %}
+			        <tr>
+			          <td><input type="checkbox" name="selected[]" value="{{ file.path }}" /></td>
+			          <td><a href="{{ file.url }}" target="_blank">{{ file.path }}</a></td>
+			          <td>{{ file.size }}</td>
+			          <td>{{ file.datetime }}</td>
+			        </tr>
+			      {% endfor %}
+			    {% else %}
+			      <tr>
+			        <td colspan="4" class="text-center">{{ text_empty }}</td>
+			      </tr>
+			    {% endif %}
+			  </table>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<script type="text/javascript">
+	$('.btn-toggle').click(function() {
+		$(this).find('.btn').toggleClass('active');
+		if ($(this).find('.btn-primary').size()>0) {
+			$(this).find('.btn').toggleClass('btn-primary');
+		}
+		if ($(this).find('.btn-danger').size()>0) {
+			$(this).find('.btn').toggleClass('btn-danger');
+		}
+		if ($(this).find('.btn-success').size()>0) {
+			$(this).find('.btn').toggleClass('btn-success');
+		}
+		if ($(this).find('.btn-info').size()>0) {
+			$(this).find('.btn').toggleClass('btn-info');
+		}
+		$(this).find('.btn').toggleClass('btn-default');
+	});
+</script>
+<script>
+	$(document).ready(function() {
+		getCustomLinks();
+	});
+	
+	function deleteFiles(elem, action) {
+		var $btn = $(elem);
+		$.ajax({
+			url: action,
+			data: $('#form-feed').serialize(),
+			dataType: 'json',
+			type: 'post',
+			beforeSend: function() {
+				$btn.button('loading');
+			},
+			complete: function() {
+				$btn.button('reset');
+			},
+			success: function() {
+				location.reload(true);
+			}
+		});
+	}
+	
+	function generateFiles(elem, action) {
+		var $btn = $(elem);
+		$.ajax({
+			url: action,
+			data: $('#form-feed').serialize(),
+			dataType: 'json',
+			type: 'post',
+			beforeSend: function() {
+				$btn.button('loading');
+			},
+			complete: function() {
+				$btn.button('reset');
+			},
+			success: function() {
+				location.reload(true);
+			}
+		});
+	}
+	
+	function getCustomLinks() {
+		$.ajax({
+			url: "{{ custom_link }}",
+			dataType: 'html',
+			success: function(html) {
+				$('#custom-link').html(html);
+			}
+		});
+	}
+	
+	function addCustomLink(elem, action) {
+		var $btn = $(elem);
+		$.ajax({
+			url: action,
+			data: 'custom_link_url=' + $('input[name=\'custom_link_url\']').val() + '&custom_link_frequency=' + $('select[name=\'custom_link_frequency\']').val() + '&custom_link_priority=' + $('select[name=\'custom_link_priority\']').val() + '&custom_link_store_id=' + $('select[name=\'custom_link_store_id\']').val(),
+			dataType: 'json',
+			type: 'post',
+			beforeSend: function() {
+				$btn.button('loading');
+			},
+			complete: function() {
+				$btn.button('reset');
+			},
+			success: function() {
+				location.reload(true);
+			}
+		});
+		
+		$('input[name=\'custom_link_url\']').val('');
+		getCustomLinks();
+	}
+	
+	function deleteCustomLink(elem, action) {
+		var $btn = $(elem);
+		$.ajax({
+			url: action,
+			data: $('#form-feed').serialize(),
+			dataType: 'json',
+			type: 'post',
+			beforeSend: function() {
+				$btn.button('loading');
+			},
+			complete: function() {
+				$btn.button('reset');
+			},
+			success: function() {
+				getCustomLinks();
+			}
+		});
+	}
+</script>
+{{ footer }}

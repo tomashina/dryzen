@@ -1,0 +1,22 @@
+.cke_top {
+	position: relative!important;
+}
+a.cke_button.cke_button__maximize {
+	position: absolute;
+	top: 0px;
+	right: 5px;
+}
+
+/* colored background for image and video buttons */
+a.cke_button.cke_button__image, a.cke_button.cke_button__video, a.cke_button.cke_button__html5video, a.cke_button.cke_button__html5audio, a.cke_button.cke_button__youtube {
+	background: rgba(234,143,14,0.2);
+}
+a.cke_button.cke_button__cl_bs_grid {
+	background: rgba(111,84,153,0.4);
+}
+a.cke_button.cke_button__image:hover, a.cke_button.cke_button__video:hover, a.cke_button.cke_button__html5video:hover, a.cke_button.cke_button__html5audio:hover, a.cke_button.cke_button__youtube:hover {
+	background: rgba(234,143,14,0.6);
+}
+a.cke_button.cke_button__cl_bs_grid:hover {
+	background: rgba(111,84,153,0.6);
+}

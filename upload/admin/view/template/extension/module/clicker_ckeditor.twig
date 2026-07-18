@@ -1,0 +1,506 @@
+{{ header }}{{ column_left }}
+<div id="content">
+	<div class="page-header">
+		<div class="container-fluid">
+			<div class="pull-right">
+				<button type="submit" form="form-module" data-toggle="tooltip" title="{{ button_save }}" class="btn btn-primary"><i class="fa fa-save"></i></button>
+				<a href="{{ cancel }}" data-toggle="tooltip" title="{{ button_cancel }}" class="btn btn-default"><i class="fa fa-reply"></i></a></div>
+			<h1>{{ heading_title }}</h1>
+			<ul class="breadcrumb">
+				{% for breadcrumb in breadcrumbs %}
+				<li><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+				{% endfor %}
+			</ul>
+		</div>
+	</div>
+	<div class="container-fluid">
+		{% if error_warning %}
+		<div class="alert alert-danger alert-dismissible"><i class="fa fa-exclamation-circle"></i> {{ error_warning }}
+			<button type="button" class="close" data-dismiss="alert">&times;</button>
+		</div>
+		{% endif %}
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h3 class="panel-title"><i class="fa fa-pencil"></i> {{ text_edit }}</h3>
+			</div>
+			<div class="panel-body">
+				<form action="{{ action }}" method="post" enctype="multipart/form-data" id="form-module" class="form-horizontal">
+					<ul class="nav nav-tabs">
+						<li class="nav-item active"><a href="#tab-main" data-toggle="tab" class="nav-link active">{{ tab_main }}</a></li>
+						<li class="nav-item"><a href="#tab-codemirror" data-toggle="tab" class="nav-link">{{ tab_codemirror }}</a></li>
+						<li class="nav-item"><a href="#tab-advanced" data-toggle="tab" class="nav-link">{{ tab_advanced }}</a></li>
+						<li class="nav-item"><a href="#tab-about" data-toggle="tab" class="nav-link">{{ tab_about }}</a></li>
+					</ul>
+					<div class="tab-content">
+						<div class="tab-pane active" id="tab-main">
+							<div class="form-group">
+								<label class="col-md-3 control-label" for="input-status">{{ entry_status }}</label>
+								<div class="col-md-3">
+									<div class="btn-group btn-group-toggle" data-toggle="buttons">
+										{% if module_clicker_ckeditor_status == 1 %}
+										<label class="btn btn-default btn-success active"><input type="radio" name="module_clicker_ckeditor_status" value="1" checked="checked"/> CKEditor</label>
+										<label class="btn btn-default btn-warning"><input type="radio" name="module_clicker_ckeditor_status" value="0"/> Summernote</label>
+										{% else %}
+										<label class="btn btn-default btn-success"><input type="radio" name="module_clicker_ckeditor_status" value="1"/> CKEditor</label>
+										<label class="btn btn-default btn-warning active"><input type="radio" name="module_clicker_ckeditor_status" value="0" checked="checked"/> Summernote</label>
+										{% endif %}
+									</div>
+								</div>
+								<label class="col-md-3 control-label" for="input-toolbar">{{ entry_toolbar }}</label>
+								<div class="col-md-3">
+									<div class="btn-group btn-group-toggle" data-toggle="buttons">
+										{% if settings.toolbar == 'full' %}
+										<label class="btn btn-default btn-success active"><input type="radio" name="module_clicker_ckeditor_settings[toolbar]" value="full" checked="checked"/> {{ text_full }}</label>
+										<label class="btn btn-default btn-danger"><input type="radio" name="module_clicker_ckeditor_settings[toolbar]" value="basic"/> {{ text_basic }}</label>
+										{% else %}
+										<label class="btn btn-default btn-success"><input type="radio" name="module_clicker_ckeditor_settings[toolbar]" value="full"/> {{ text_full }}</label>
+										<label class="btn btn-default btn-danger active"><input type="radio" name="module_clicker_ckeditor_settings[toolbar]" value="basic" checked="checked"/> {{ text_basic }}</label>
+										{% endif %}
+									</div>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label class="col-md-3 control-label" for="input-height">{{ entry_height }}</label>
+								<div class="col-md-9">
+									<input type="number" min="100" name="module_clicker_ckeditor_settings[height]" id="input-height" class="form-control" value="{{ settings.height ? settings.height : 300 }}">
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label class="col-md-3 control-label" for="input-resize_enabled"><span data-toggle="tooltip" title="{{ help_resize }}">{{ entry_resize }}</span></label>
+								<div class="col-md-3">
+									<div class="btn-group btn-group-toggle" data-toggle="buttons">
+										{% if settings.resize_enabled == 'true' %}
+										<label class="btn btn-default btn-success active"><input type="radio" name="module_clicker_ckeditor_settings[resize_enabled]" value="true" checked="checked"/> {{ text_on }}</label>
+										<label class="btn btn-default btn-danger"><input type="radio" name="module_clicker_ckeditor_settings[resize_enabled]" value="false"/> {{ text_off }}</label>
+										{% else %}
+										<label class="btn btn-default btn-success"><input type="radio" name="module_clicker_ckeditor_settings[resize_enabled]" value="true"/> {{ text_on }}</label>
+										<label class="btn btn-default btn-danger active"><input type="radio" name="module_clicker_ckeditor_settings[resize_enabled]" value="false" checked="checked"/> {{ text_off }}</label>
+										{% endif %}
+									</div>
+								</div>
+								<label class="col-md-3 control-label" for="input-resize_dir">{{ entry_resize_dir }}</label>
+								<div class="col-md-3">
+									<select name="module_clicker_ckeditor_settings[resize_dir]" id="input-resize_dir" class="form-control">
+										<option value="vertical" {% if settings.resize_dir == 'vertical' %}selected="selected"{% endif %}>{{ text_vertical }}</option>
+										<option value="horizontal" {% if settings.resize_dir == 'horizontal' %}selected="selected"{% endif %}>{{ text_horizontal }}</option>
+										<option value="both" {% if settings.resize_dir == 'both' %}selected="selected"{% endif %}>{{ text_both }}</option>
+									</select>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label class="col-md-3 control-label" for="input-enterMode"><span data-toggle="tooltip" title="{{ help_enter_mode }}">{{ entry_enter_mode }}</span></label>
+								<div class="col-md-3">
+									<select name="module_clicker_ckeditor_settings[enterMode]" id="input-enterMode" class="form-control">
+										<option value="1" {% if settings.enterMode == 1 %}selected="selected"{% endif %}>&#x3C;p&#x3E; {{ text_paragraph }}</option>
+										<option value="2" {% if settings.enterMode == 2 %}selected="selected"{% endif %}>&#x3C;br&#x3E; {{ text_br }}</option>
+										<option value="3" {% if settings.enterMode == 3 %}selected="selected"{% endif %}>&#x3C;div&#x3E; {{ text_div }}</option>
+									</select>
+								</div>
+								<label class="col-md-3 control-label" for="input-shiftEnterMode"><span data-toggle="tooltip" title="{{ help_senter_mode }}">{{ entry_senter_mode }}</span></label>
+								<div class="col-md-3">
+									<select name="module_clicker_ckeditor_settings[shiftEnterMode]" id="input-shiftEnterMode" class="form-control">
+										<option value="1" {% if settings.shiftEnterMode == 1 %}selected="selected"{% endif %}>&#x3C;p&#x3E; {{ text_paragraph }}</option>
+										<option value="2" {% if settings.shiftEnterMode == 2 %}selected="selected"{% endif %}>&#x3C;br&#x3E; {{ text_br }}</option>
+										<option value="3" {% if settings.shiftEnterMode == 3 %}selected="selected"{% endif %}>&#x3C;div&#x3E; {{ text_div }}</option>
+									</select>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label class="col-md-3 control-label" for="input-ck_language">{{ entry_ck_language }}</label>
+								<div class="col-md-9">
+									<select name="module_clicker_ckeditor_settings[language]" id="input-ck_language" class="form-control">
+										{% if settings.codemirror['theme'] == '' %}
+										<option value="" selected="selected">{{ text_auto }}</option>
+										{% else %}
+										<option value="">{{ text_auto }}</option>
+										{% endif %}
+										{% for ck_language in ck_languages %}
+										{% if settings.language == ck_language.id %}
+										<option value="{{ ck_language.id }}" selected="selected">{{ ck_language.title }}</option>
+										{% else %}
+										<option value="{{ ck_language.id }}">{{ ck_language.title }}</option>
+										{% endif %}
+										{% endfor %}
+									</select>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label class="col-md-3 control-label" for="input-ck_skin">{{ entry_ck_skin }}</label>
+								<div class="col-md-9">
+									<select name="module_clicker_ckeditor_settings[skin]" id="input-ck_skin" class="form-control" onchange="CKSkinPreview();">
+										{% for ck_skin in ck_skins %}
+										{% if settings.skin == ck_skin.id %}
+										<option value="{{ ck_skin.id }}" selected="selected">{{ ck_skin.title }}</option>
+										{% else %}
+										<option value="{{ ck_skin.id }}">{{ ck_skin.title }}</option>
+										{% endif %}
+										{% endfor %}
+									</select>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label class="col-md-3 control-label" for="input-ck_skin">{{ entry_ck_skin_preview }}</label>
+								<div class="col-md-9">
+									<img id="ck_skin_preview" class="img-fluid" src="" alt="{{ entry_ck_skin_preview }}" style="max-width: 100%;">
+								</div>
+							</div>
+
+							<legend>{{ text_autogrow }}</legend>
+
+							<div class="form-group">
+								<label class="col-md-3 control-label" for="input-autoGrow_status"><span data-toggle="tooltip" title="{{ help_autogrow }}">{{ text_autogrow }}</span></label>
+								<div class="col-md-9">
+									<div class="btn-group btn-group-toggle" data-toggle="buttons">
+										{% if settings.autoGrow_status == 'true' %}
+										<label class="btn btn-default btn-success active"><input type="radio" name="module_clicker_ckeditor_settings[autoGrow_status]" value="true" checked="checked"/> {{ text_on }}</label>
+										<label class="btn btn-default btn-danger"><input type="radio" name="module_clicker_ckeditor_settings[autoGrow_status]" value="false"/> {{ text_off }}</label>
+										{% else %}
+										<label class="btn btn-default btn-success"><input type="radio" name="module_clicker_ckeditor_settings[autoGrow_status]" value="true"/> {{ text_on }}</label>
+										<label class="btn btn-default btn-danger active"><input type="radio" name="module_clicker_ckeditor_settings[autoGrow_status]" value="false" checked="checked"/> {{ text_off }}</label>
+										{% endif %}
+									</div>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label class="col-md-3 control-label" for="input-autoGrow_minHeight">{{ entry_min_height }}</label>
+								<div class="col-md-3">
+									<input type="number" min="0" name="module_clicker_ckeditor_settings[autoGrow_minHeight]" id="input-autoGrow_minHeight" class="form-control" value="{{ settings.autoGrow_minHeight ? settings.autoGrow_minHeight : 300 }}">
+								</div>
+								<label class="col-md-3 control-label" for="input-autoGrow_maxHeight">{{ entry_max_height }}</label>
+								<div class="col-md-3">
+									<input type="number" min="0" name="module_clicker_ckeditor_settings[autoGrow_maxHeight]" id="input-autoGrow_maxHeight" class="form-control" value="{{ settings.autoGrow_maxHeight ? settings.autoGrow_maxHeight : '' }}">
+								</div>
+							</div>
+
+							<legend>{{ text_other }}</legend>
+
+							<div class="form-group">
+								<label class="col-md-3 control-label" for="input-startupOutlineBlocks"><span data-toggle="tooltip" title="{{ help_outline_blocks }}">{{ entry_outline_blocks }}</span></label>
+								<div class="col-md-3">
+									<div class="btn-group btn-group-toggle" data-toggle="buttons">
+										{% if settings.startupOutlineBlocks == 'true' %}
+										<label class="btn btn-default btn-success active"><input type="radio" name="module_clicker_ckeditor_settings[startupOutlineBlocks]" value="true" checked="checked"/> {{ text_on }}</label>
+										<label class="btn btn-default btn-danger"><input type="radio" name="module_clicker_ckeditor_settings[startupOutlineBlocks]" value="false"/> {{ text_off }}</label>
+										{% else %}
+										<label class="btn btn-default btn-success"><input type="radio" name="module_clicker_ckeditor_settings[startupOutlineBlocks]" value="true"/> {{ text_on }}</label>
+										<label class="btn btn-default btn-danger active"><input type="radio" name="module_clicker_ckeditor_settings[startupOutlineBlocks]" value="false" checked="checked"/> {{ text_off }}</label>
+										{% endif %}
+									</div>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label class="col-md-3 control-label" for="input-leaflet_maps_google_api_key">{{ entry_maps_google_api_key }}</label>
+								<div class="col-md-6">
+									<input type="text" name="module_clicker_ckeditor_settings[leaflet_maps_google_api_key]" id="input-leaflet_maps_google_api_key" class="form-control" value="{{ settings.leaflet_maps_google_api_key ? settings.leaflet_maps_google_api_key : '' }}">
+								</div>
+								<div class="col-md-3">
+									<a class="btn btn-info" href="https://developers.google.com/maps/documentation/javascript/get-api-key" target="_blank">{{ text_documentation }}</a>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label class="col-md-3 control-label" for="input-forcePastePopup"><span data-toggle="tooltip" title="{{ help_force_paste_popup }}">{{ entry_force_paste_popup }}</span></label>
+								<div class="col-md-3">
+									<div class="btn-group btn-group-toggle" data-toggle="buttons">
+										{% if settings.forcePastePopup == 'true' %}
+										<label class="btn btn-default btn-success active"><input type="radio" name="module_clicker_ckeditor_settings[forcePastePopup]" value="true" checked="checked"/> {{ text_on }}</label>
+										<label class="btn btn-default btn-danger"><input type="radio" name="module_clicker_ckeditor_settings[forcePastePopup]" value="false"/> {{ text_off }}</label>
+										{% else %}
+										<label class="btn btn-default btn-success"><input type="radio" name="module_clicker_ckeditor_settings[forcePastePopup]" value="true"/> {{ text_on }}</label>
+										<label class="btn btn-default btn-danger active"><input type="radio" name="module_clicker_ckeditor_settings[forcePastePopup]" value="false" checked="checked"/> {{ text_off }}</label>
+										{% endif %}
+									</div>
+								</div>
+								<label class="col-md-3 control-label" for="input-forceDomainRemove"><span data-toggle="tooltip" title="{{ help_force_domain_remove }}">{{ entry_force_domain_remove }}</span></label>
+								<div class="col-md-3">
+									<div class="btn-group btn-group-toggle" data-toggle="buttons">
+										{% if settings.forceDomainRemove == 'true' %}
+										<label class="btn btn-default btn-success active"><input type="radio" name="module_clicker_ckeditor_settings[forceDomainRemove]" value="true" checked="checked"/> {{ text_on }}</label>
+										<label class="btn btn-default btn-danger"><input type="radio" name="module_clicker_ckeditor_settings[forceDomainRemove]" value="false"/> {{ text_off }}</label>
+										{% else %}
+										<label class="btn btn-default btn-success"><input type="radio" name="module_clicker_ckeditor_settings[forceDomainRemove]" value="true"/> {{ text_on }}</label>
+										<label class="btn btn-default btn-danger active"><input type="radio" name="module_clicker_ckeditor_settings[forceDomainRemove]" value="false" checked="checked"/> {{ text_off }}</label>
+										{% endif %}
+									</div>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label class="col-md-3 control-label" for="input-disableNativeSpellChecker"><span data-toggle="tooltip" title="{{ help_native_spell_checker }}">{{ entry_native_spell_checker }}</span></label>
+								<div class="col-md-3">
+									<div class="btn-group btn-group-toggle" data-toggle="buttons">
+										{% if settings.disableNativeSpellChecker == 'false' %}
+										<label class="btn btn-default btn-success active"><input type="radio" name="module_clicker_ckeditor_settings[disableNativeSpellChecker]" value="false" checked="checked"/> {{ text_on }}</label>
+										<label class="btn btn-default btn-danger"><input type="radio" name="module_clicker_ckeditor_settings[disableNativeSpellChecker]" value="true"/> {{ text_off }}</label>
+										{% else %}
+										<label class="btn btn-default btn-success"><input type="radio" name="module_clicker_ckeditor_settings[disableNativeSpellChecker]" value="false"/> {{ text_on }}</label>
+										<label class="btn btn-default btn-danger active"><input type="radio" name="module_clicker_ckeditor_settings[disableNativeSpellChecker]" value="true" checked="checked"/> {{ text_off }}</label>
+										{% endif %}
+									</div>
+								</div>
+								<label class="col-md-3 control-label" for="input-browserContextMenuOnCtrl"><span data-toggle="tooltip" title="{{ help_browser_menu_on_ctrl }}">{{ entry_browser_menu_on_ctrl }}</span></label>
+								<div class="col-md-3">
+									<div class="btn-group btn-group-toggle" data-toggle="buttons">
+										{% if settings.browserContextMenuOnCtrl == 'true' %}
+										<label class="btn btn-default btn-success active"><input type="radio" name="module_clicker_ckeditor_settings[browserContextMenuOnCtrl]" value="true" checked="checked"/> {{ text_on }}</label>
+										<label class="btn btn-default btn-danger"><input type="radio" name="module_clicker_ckeditor_settings[browserContextMenuOnCtrl]" value="false"/> {{ text_off }}</label>
+										{% else %}
+										<label class="btn btn-default btn-success"><input type="radio" name="module_clicker_ckeditor_settings[browserContextMenuOnCtrl]" value="true"/> {{ text_on }}</label>
+										<label class="btn btn-default btn-danger active"><input type="radio" name="module_clicker_ckeditor_settings[browserContextMenuOnCtrl]" value="false" checked="checked"/> {{ text_off }}</label>
+										{% endif %}
+									</div>
+								</div>
+							</div>
+
+						</div>
+
+						<div class="tab-pane" id="tab-codemirror">
+							<div class="form-group">
+								<label class="col-md-3 control-label" for="input-cm_theme">{{ entry_cm_theme }}</label>
+								<div class="col-md-9">
+									<select name="module_clicker_ckeditor_settings[codemirror][theme]" id="input-cm_theme" class="form-control">
+										{% if settings.codemirror['theme'] == 'default' %}
+										<option value="default" selected="selected">{{ text_default }}</option>
+										{% else %}
+										<option value="default">{{ text_default }}</option>
+										{% endif %}
+										{% for cm_theme in cm_themes %}
+										{% if settings.codemirror['theme'] == cm_theme.id %}
+										<option value="{{ cm_theme.id }}" selected="selected">{{ cm_theme.title }}</option>
+										{% else %}
+										<option value="{{ cm_theme.id }}">{{ cm_theme.title }}</option>
+										{% endif %}
+										{% endfor %}
+									</select>
+								</div>
+							</div>
+						</div>
+
+						<div class="tab-pane" id="tab-advanced">
+							<div class="alert alert-warning alert-dismissible"><i class="fa fa-exclamation-circle"></i> {{ help_reset_settings }}
+								<button type="button" class="close" data-dismiss="alert">&times;</button>
+							</div>
+
+							<legend>{{ text_fonts }}</legend>
+
+							<div class="form-group">
+								<label class="col-md-3 control-label" for="input-font_names"><span data-toggle="tooltip" title="{{ help_font_names }}">{{ entry_font_names }}</span></label>
+								<div class="col-md-9">
+									<textarea rows="10" name="module_clicker_ckeditor_settings[font_names]" id="input-font_names" class="form-control">{{ settings.font_names ? settings.font_names : '' }}</textarea>
+								</div>
+							</div>
+
+							<legend>{{ text_content }}</legend>
+
+							<div class="form-group">
+								<label class="col-md-3 control-label" for="input-autoParagraph"><span data-toggle="tooltip" title="{{ help_auto_paragraph }}">{{ entry_auto_paragraph }}</span></label>
+								<div class="col-md-3">
+									<div class="btn-group btn-group-toggle" data-toggle="buttons">
+										{% if settings.autoParagraph == 'true' %}
+										<label class="btn btn-default btn-success active"><input type="radio" name="module_clicker_ckeditor_settings[autoParagraph]" value="true" checked="checked"/> {{ text_on }}</label>
+										<label class="btn btn-default btn-danger"><input type="radio" name="module_clicker_ckeditor_settings[autoParagraph]" value="false"/> {{ text_off }}</label>
+										{% else %}
+										<label class="btn btn-default btn-success"><input type="radio" name="module_clicker_ckeditor_settings[autoParagraph]" value="true"/> {{ text_on }}</label>
+										<label class="btn btn-default btn-danger active"><input type="radio" name="module_clicker_ckeditor_settings[autoParagraph]" value="false" checked="checked"/> {{ text_off }}</label>
+										{% endif %}
+									</div>
+								</div>
+								<label class="col-md-3 control-label" for="input-fillEmptyBlocks"><span data-toggle="tooltip" title="{{ help_fill_empty_blocks }}">{{ entry_fill_empty_blocks }}</span></label>
+								<div class="col-md-3">
+									<div class="btn-group btn-group-toggle" data-toggle="buttons">
+										{% if settings.fillEmptyBlocks == 'true' %}
+										<label class="btn btn-default btn-success active"><input type="radio" name="module_clicker_ckeditor_settings[fillEmptyBlocks]" value="true" checked="checked"/> {{ text_on }}</label>
+										<label class="btn btn-default btn-danger"><input type="radio" name="module_clicker_ckeditor_settings[fillEmptyBlocks]" value="false"/> {{ text_off }}</label>
+										{% else %}
+										<label class="btn btn-default btn-success"><input type="radio" name="module_clicker_ckeditor_settings[fillEmptyBlocks]" value="true"/> {{ text_on }}</label>
+										<label class="btn btn-default btn-danger active"><input type="radio" name="module_clicker_ckeditor_settings[fillEmptyBlocks]" value="false" checked="checked"/> {{ text_off }}</label>
+										{% endif %}
+									</div>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label class="col-md-3 control-label" for="input-allowedContent"><span data-toggle="tooltip" title="{{ help_allowed_content }}">{{ entry_allowed_content }}</span></label>
+								<div class="col-md-3">
+									<div class="btn-group btn-group-toggle" data-toggle="buttons">
+										{% if settings.allowedContent == 'true' %}
+										<label class="btn btn-default btn-success active"><input type="radio" name="module_clicker_ckeditor_settings[allowedContent]" value="true" checked="checked"/> {{ text_on }}</label>
+										<label class="btn btn-default btn-danger"><input type="radio" name="module_clicker_ckeditor_settings[allowedContent]" value="false"/> {{ text_off }}</label>
+										{% else %}
+										<label class="btn btn-default btn-success"><input type="radio" name="module_clicker_ckeditor_settings[allowedContent]" value="true"/> {{ text_on }}</label>
+										<label class="btn btn-default btn-danger active"><input type="radio" name="module_clicker_ckeditor_settings[allowedContent]" value="false" checked="checked"/> {{ text_off }}</label>
+										{% endif %}
+									</div>
+								</div>
+								<label class="col-md-3 control-label" for="input-extraAllowedContent"><span data-toggle="tooltip" title="{{ help_extra_allowed_content }}">{{ entry_extra_allowed_content }}</span></label>
+								<div class="col-md-3">
+									<input type="text" name="module_clicker_ckeditor_settings[extraAllowedContent]" id="input-extraAllowedContent" class="form-control" value="{{ settings.extraAllowedContent ? settings.extraAllowedContent : '*{*}' }}">
+								</div>
+							</div>
+
+							<legend>{{ text_plugins }}</legend>
+
+							<div class="form-group">
+								<label class="col-md-3 control-label" for="input-extraPlugins"><span data-toggle="tooltip" title="{{ help_extra_plugins }}">{{ entry_extra_plugins }}</span></label>
+								<div class="col-md-9">
+									<input type="text" name="module_clicker_ckeditor_settings[extraPlugins]" id="input-extraPlugins" class="form-control" value="{{ settings.extraPlugins ? settings.extraPlugins : '' }}">
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label class="col-md-3 control-label" for="input-removePlugins"><span data-toggle="tooltip" title="{{ help_remove_plugins }}">{{ entry_remove_plugins }}</span></label>
+								<div class="col-md-9">
+									<input type="text" name="module_clicker_ckeditor_settings[removePlugins]" id="input-removePlugins" class="form-control" value="{{ settings.removePlugins ? settings.removePlugins : '' }}">
+								</div>
+							</div>
+
+							<legend>{{ text_html_entities }}</legend>
+
+							<div class="form-group">
+								<label class="col-md-3 control-label" for="input-entities"><span data-toggle="tooltip" title="{{ help_entities }}">{{ entry_entities }}</span></label>
+								<div class="col-md-3">
+									<div class="btn-group btn-group-toggle" data-toggle="buttons">
+										{% if settings.entities == 'true' %}
+										<label class="btn btn-default btn-success active"><input type="radio" name="module_clicker_ckeditor_settings[entities]" value="true" checked="checked"/> {{ text_on }}</label>
+										<label class="btn btn-default btn-danger"><input type="radio" name="module_clicker_ckeditor_settings[entities]" value="false"/> {{ text_off }}</label>
+										{% else %}
+										<label class="btn btn-default btn-success"><input type="radio" name="module_clicker_ckeditor_settings[entities]" value="true"/> {{ text_on }}</label>
+										<label class="btn btn-default btn-danger active"><input type="radio" name="module_clicker_ckeditor_settings[entities]" value="false" checked="checked"/> {{ text_off }}</label>
+										{% endif %}
+									</div>
+								</div>
+								<label class="col-md-3 control-label" for="input-entities_additional"><span data-toggle="tooltip" title="{{ help_entities_additional  }}">{{ entry_entities_additional }}</span></label>
+								<div class="col-md-3">
+									<input type="text" name="module_clicker_ckeditor_settings[entities_additional]" id="input-entities_additional" class="form-control" value="{{ settings.entities_additional ? settings.entities_additional : '#1049' }}">
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label class="col-md-3 control-label" for="input-entities_latin"><span data-toggle="tooltip" title="{{ help_entities_latin }}">{{ entry_entities_latin }}</span></label>
+								<div class="col-md-3">
+									<div class="btn-group btn-group-toggle" data-toggle="buttons">
+										{% if settings.entities_latin == 'true' %}
+										<label class="btn btn-default btn-success active"><input type="radio" name="module_clicker_ckeditor_settings[entities_latin]" value="true" checked="checked"/> {{ text_on }}</label>
+										<label class="btn btn-default btn-danger"><input type="radio" name="module_clicker_ckeditor_settings[entities_latin]" value="false"/> {{ text_off }}</label>
+										{% else %}
+										<label class="btn btn-default btn-success"><input type="radio" name="module_clicker_ckeditor_settings[entities_latin]" value="true"/> {{ text_on }}</label>
+										<label class="btn btn-default btn-danger active"><input type="radio" name="module_clicker_ckeditor_settings[entities_latin]" value="false" checked="checked"/> {{ text_off }}</label>
+										{% endif %}
+									</div>
+								</div>
+
+								<label class="col-md-3 control-label" for="input-entities_greek"><span data-toggle="tooltip" title="{{ help_entities_greek }}">{{ entry_entities_greek }}</span></label>
+								<div class="col-md-3">
+									<div class="btn-group btn-group-toggle" data-toggle="buttons">
+										{% if settings.entities_greek == 'true' %}
+										<label class="btn btn-default btn-success active"><input type="radio" name="module_clicker_ckeditor_settings[entities_greek]" value="true" checked="checked"/> {{ text_on }}</label>
+										<label class="btn btn-default btn-danger"><input type="radio" name="module_clicker_ckeditor_settings[entities_greek]" value="false"/> {{ text_off }}</label>
+										{% else %}
+										<label class="btn btn-default btn-success"><input type="radio" name="module_clicker_ckeditor_settings[entities_greek]" value="true"/> {{ text_on }}</label>
+										<label class="btn btn-default btn-danger active"><input type="radio" name="module_clicker_ckeditor_settings[entities_greek]" value="false" checked="checked"/> {{ text_off }}</label>
+										{% endif %}
+									</div>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label class="col-md-3 control-label" for="input-entities_processNumerical"><span data-toggle="tooltip" title="{{ help_entities_processNumerical }}">{{ entry_entities_processNumerical }}</span></label>
+								<div class="col-md-9">
+									<div class="btn-group btn-group-toggle" data-toggle="buttons">
+										{% if settings.entities_processNumerical == 'true' %}
+										<label class="btn btn-default btn-success active"><input type="radio" name="module_clicker_ckeditor_settings[entities_processNumerical]" value="true" checked="checked"/> {{ text_on }}</label>
+										<label class="btn btn-default btn-warning"><input type="radio" name="module_clicker_ckeditor_settings[entities_processNumerical]" value="force"/> {{ text_force }}</label>
+										<label class="btn btn-default btn-danger"><input type="radio" name="module_clicker_ckeditor_settings[entities_processNumerical]" value="false"/> {{ text_off }}</label>
+										{% elseif settings.entities_processNumerical == 'force' %}
+										<label class="btn btn-default btn-success"><input type="radio" name="module_clicker_ckeditor_settings[entities_processNumerical]" value="true"/> {{ text_on }}</label>
+										<label class="btn btn-default btn-warning active"><input type="radio" name="module_clicker_ckeditor_settings[entities_processNumerical]" value="force" checked="checked"/> {{ text_force }}</label>
+										<label class="btn btn-default btn-danger"><input type="radio" name="module_clicker_ckeditor_settings[entities_processNumerical]" value="false"/> {{ text_off }}</label>
+										{% else %}
+										<label class="btn btn-default btn-success"><input type="radio" name="module_clicker_ckeditor_settings[entities_processNumerical]" value="true"/> {{ text_on }}</label>
+										<label class="btn btn-default btn-warning"><input type="radio" name="module_clicker_ckeditor_settings[entities_processNumerical]" value="force"/> {{ text_force }}</label>
+										<label class="btn btn-default btn-danger active"><input type="radio" name="module_clicker_ckeditor_settings[entities_processNumerical]" value="false" checked="checked"/> {{ text_off }}</label>
+										{% endif %}
+									</div>
+								</div>
+							</div>
+
+							<legend>{{ text_config }}</legend>
+
+							<div class="form-group">
+								<label class="col-md-3 control-label" for="input-custom_css"><span data-toggle="tooltip" title="{{ help_custom_css }}">{{ entry_custom_css }}</span></label>
+								<div class="col-md-9">
+									<textarea rows="10" name="module_clicker_ckeditor_settings[customCss]" id="input-custom_css" class="form-control" placeholder="{{ help_custom_css }}">{{ settings.customCss ? settings.customCss : '' }}</textarea>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label class="col-md-3 control-label" for="input-custom_config"><span data-toggle="tooltip" title="{{ help_custom_config }}">{{ entry_custom_config }}</span></label>
+								<div class="col-md-9">
+									<textarea rows="10" name="module_clicker_ckeditor_settings[customConfigJson]" id="input-custom_config" class="form-control" placeholder="{{ help_custom_config }}">{{ settings.customConfigJson ? settings.customConfigJson : '' }}</textarea>
+								</div>
+							</div>
+
+						</div>
+
+						<div class="tab-pane" id="tab-about">
+							<div class="row form-group">
+								<label class="col-md-3 control-label">Product</label>
+								<label class="col-md-9 control-label" style="text-align: left; font-weight: normal;">
+									CKEditor Full integration v.{{ version }} by Cl!cker
+								</label>
+							</div>
+
+							<div class="row form-group">
+								<label class="col-md-3 control-label">Support</label>
+								<div class="col-md-9">
+									<a class="btn btn-primary" href="https://opencart.click/open-ticket" target="_blank">Open Ticket</a>
+								</div>
+							</div>
+
+							<div class="row form-group">
+								<label class="col-md-3 control-label">Email</label>
+								<label class="col-md-9 control-label" style="text-align: left; font-weight: normal;">
+									info@clicker.com.ua
+								</label>
+							</div>
+
+							<div class="row form-group">
+								<label class="col-md-3 control-label">Our extensions</label>
+								<label class="col-md-9 control-label" style="text-align: left; font-weight: normal;">
+									<a href="https://www.opencart.com/index.php?route=marketplace/extension&filter_member=Cl!cker" target="_blank">OpenCart Marketplace</a> or <a href="https://opencart.click" target="_blank">opencart.click</a>
+								</label>
+							</div>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+
+<style>
+.btn-group-toggle > .btn {
+	opacity: 0.5;
+}
+.btn-group-toggle > .btn.active {
+	opacity: 1;
+}
+</style>
+
+<script>
+$(document).ready(function() {
+	CKSkinPreview();
+});
+function CKSkinPreview() {
+	$('#ck_skin_preview').attr('src', 'view/javascript/clicker_ckeditor/clicker/skins-preview/' + $('#input-ck_skin').val() + '.png');
+}
+</script>
+{{ footer }}

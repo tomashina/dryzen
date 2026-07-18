@@ -1,0 +1,514 @@
+{{ header }}{{ column_left }} 
+<!--Main Content block start-->
+
+<div id="content">
+  <!--Header Start-->
+  <div class="page-header">
+    <div class="container-fluid">
+      <div class="pull-right">
+	    <button type="submit" form="form-translate" data-toggle="tooltip" title="{{ button_save }}" class="btn btn-primary"><i class="fa fa-save"></i>&nbsp;{{ button_save }}</button>
+		<a href="{{ doc_link }}" target="_blank" class="btn btn-default"><i class="fa fa-book"></i>&nbsp;{{ button_doc }}</a>
+		<a href="{{ cancel }}" data-toggle="tooltip" title="{{ button_cancel }}" class="btn btn-default"><i class="fa fa-reply"></i></a>
+	  </div>
+      <h1>{{ heading_title }}</h1>
+      <ul class="breadcrumb">
+        {% for breadcrumb in breadcrumbs %} 
+        <li><a href="{{ breadcrumb['href'] }}">{{ breadcrumb['text'] }}</a></li>
+        {% endfor %} 
+      </ul>
+    </div>
+  </div>
+  <!--Header End-->
+  <!--Container 1 start -->
+  <div class="container-fluid">
+    <!--Start - Error / Success Message if any -->
+	{% if total_languages == 1 %}
+		<div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i>&nbsp;This tool is only for website having more than 1 language. Features will not appear.</div>
+	{% endif %}
+
+	<div class="alert alert-warning"><i class="fa fa-exclamation-triangle"></i> {{ text_caution }}</div>
+
+    {% if (error_warning) %} 
+    <div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i> {{ error_warning }} 
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+    </div>
+    {% endif %} 
+    {% if (success) %} 
+    <div class="alert alert-success"><i class="fa fa-check-circle"></i> {{ success }} 
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+    </div>
+    {% endif %} 
+    <!--End - Error / Success Message if any -->
+	<div id="msgoutput"></div>
+	
+    <!--Panel Content Start-->
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title"><i class="fa fa-language"></i> {{ heading_title }}</h3>
+      </div>
+      <div class="panel-body">
+			<!--Tabs UL Starts-->
+			<ul class="nav nav-tabs" id="tabs">
+                <li class="active"><a href="#tab-products" onclick="loadBlock('products');" data-toggle="tab"><i class="fa fa-tachometer" aria-hidden="true"></i>&nbsp;{{ tab_products }}</a></li>
+				<li><a href="#tab-categories" onclick="loadBlock('categories');" data-toggle="tab"><i class="fa fa-tachometer" aria-hidden="true"></i>&nbsp;{{ tab_categories }}</a></li>
+				<li><a href="#tab-informations" onclick="loadBlock('informations');" data-toggle="tab"><i class="fa fa-tachometer" aria-hidden="true"></i>&nbsp;{{ tab_informations }}</a></li>
+				{% if onpage_extension %}
+				<li><a href="#tab-manufacturers" onclick="loadBlock('manufacturers');" data-toggle="tab"><i class="fa fa-tachometer" aria-hidden="true"></i>&nbsp;{{ tab_manufacturers }}</a></li>
+				{% endif %}
+				{% if total_languages > 1 %}
+				<li><a href="#tab-clear-products" onclick="loadBlock('clear_products');" data-toggle="tab"><i class="fa fa-trash" aria-hidden="true"></i>&nbsp;{{ tab_selective_clear }} - {{ tab_products }}</a></li>
+				<li><a href="#tab-clear-categories" onclick="loadBlock('clear_categories');" data-toggle="tab"><i class="fa fa-trash" aria-hidden="true"></i>&nbsp;{{ tab_selective_clear }} - {{ tab_categories }}</a></li>
+				<li><a href="#tab-clear-informations" onclick="loadBlock('clear_informations');" data-toggle="tab"><i class="fa fa-trash" aria-hidden="true"></i>&nbsp;{{ tab_selective_clear }} - {{ tab_informations }}</a></li>
+				{% if onpage_extension %}
+				<li><a href="#tab-clear-manufacturers" onclick="loadBlock('clear_manufacturers');" data-toggle="tab"><i class="fa fa-trash" aria-hidden="true"></i>&nbsp;{{ tab_selective_clear }} - {{ tab_manufacturers }}</a></li>
+				{% endif %}
+				<li><a href="#tab-setting" data-toggle="tab"><i class="fa fa-cogs" aria-hidden="true"></i> {{ tab_setting }}</a></li>
+				<li><a href="#tab-logs" onclick="loadBlock('logs');" data-toggle="tab"><i class="fa fa-book"></i>&nbsp;{{ tab_log }}</a></li>
+				{% endif %}
+	        </ul>
+			  <!--Tabs UL Ends-->
+			<div class="tab-content">
+
+			  	<div class="tab-pane active" id="tab-products">
+					<div id="products-block" class="ajax-block"></div>
+				</div>
+				
+				<div class="tab-pane" id="tab-categories">
+					<div id="categories-block" class="ajax-block"></div>
+				</div>
+
+				<div class="tab-pane" id="tab-informations">
+					<div id="informations-block" class="ajax-block"></div>
+				</div>	
+
+				<!-- Manufacturers Tab -->
+				{% if onpage_extension %}
+				<div class="tab-pane" id="tab-manufacturers">
+					<div id="manufacturers-block" class="ajax-block"></div>
+				</div>
+				{% endif %}
+
+				<div class="tab-pane" id="tab-clear-products">
+					<div class="row" style="margin-bottom:10px;">
+						<div class="col-sm-10">
+							<div class="input-group">
+								<input type="text" id="search-clear_products-value" class="form-control" placeholder="{{ text_search_product }}">
+								<span class="input-group-addon btn" id="search-products-button" onclick="searchRecord('clear_products');"><i class="fa fa-search"></i></span>
+							</div>
+						</div>
+						<div class="col-sm-2">
+							<div class="pull-right">
+								<a id="button-clear-products" class="btn btn-danger"><i class="fa fa-trash"></i>&nbsp;{{ button_clear }}</a>
+							</div>							
+						</div>
+					</div>
+
+					<div id="clear_products-block" class="ajax-block"></div>
+				</div>
+				
+				<div class="tab-pane" id="tab-clear-categories">
+					<div class="row" style="margin-bottom:10px;">
+						<div class="col-sm-10">
+							<div class="input-group">
+								<input type="text" id="search-clear_categories-value" class="form-control" placeholder="{{ text_search_category }}">
+								<span class="input-group-addon btn" id="search-categories-button" onclick="searchRecord('clear_categories');"><i class="fa fa-search"></i></span>
+							</div>
+						</div>
+						<div class="col-sm-2">
+							<div class="pull-right">
+								<a id="button-clear-categories" class="btn btn-danger"><i class="fa fa-trash"></i>&nbsp;{{ button_clear }}</a>
+							</div>							
+						</div>
+					</div>
+
+					<div id="clear_categories-block" class="ajax-block"></div>
+				</div>
+
+				<div class="tab-pane" id="tab-clear-informations">
+					<div class="row" style="margin-bottom:10px;">
+						<div class="col-sm-10">
+							<div class="input-group">
+								<input type="text" id="search-clear_informations-value" class="form-control" placeholder="{{ text_search_information }}">
+								<span class="input-group-addon btn" id="search-informations-button" onclick="searchRecord('clear_informations');"><i class="fa fa-search"></i></span>
+							</div>
+						</div>
+						<div class="col-sm-2">
+							<div class="pull-right">
+								<a id="button-clear-informations" class="btn btn-danger"><i class="fa fa-trash"></i>&nbsp;{{ button_clear }}</a>
+							</div>							
+						</div>
+					</div>
+
+					<div id="clear_informations-block" class="ajax-block"></div>
+				</div>	
+
+				{% if onpage_extension %}
+				<div class="tab-pane" id="tab-clear-manufacturers">
+					<div class="row" style="margin-bottom:10px;">
+						<div class="col-sm-10">
+							<div class="input-group">
+								<input type="text" id="search-clear_manufacturers-value" class="form-control" placeholder="{{ text_search_information }}">
+								<span class="input-group-addon btn" id="search-manufacturers-button" onclick="searchRecord('clear_manufacturers');"><i class="fa fa-search"></i></span>
+							</div>
+						</div>
+						<div class="col-sm-2">
+							<div class="pull-right">
+								<a id="button-clear-manufacturers" class="btn btn-danger"><i class="fa fa-trash"></i>&nbsp;{{ button_clear }}</a>
+							</div>							
+						</div>
+					</div>
+
+					<div id="clear_manufacturers-block" class="ajax-block"></div>
+				</div>
+				{% endif %}
+
+				<div class="tab-pane" id="tab-setting">
+					<form action="{{ action }}" method="post" enctype="multipart/form-data" id="form-translate" class="form-horizontal">
+					<div class="form-group">
+						<label class="col-sm-3 control-label">{{ col_master_language }}</label>						
+						<div class="col-sm-3">
+							<select id="hb_translate_master_language" name="hb_translate_master_language" class="form-control">
+							{% for language in languages %} 
+								<option value="{{ language.language_id }}" {{ hb_translate_master_language == language.language_id? 'selected':'' }}>{{ language.name }}</option>
+							{% endfor %}								
+							</select>
+						</div>
+					</div>	
+
+					<div class="form-group">
+						<label class="col-sm-3 control-label">{{ col_api }}</label>
+						<div class="col-sm-9">
+							<input type="text" name="hb_translate_api" class="form-control" value="{{ hb_translate_api }}"  />
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label class="col-sm-3 control-label">{{ col_cron_enable }}</label>
+						<div class="col-sm-9">
+							<input type="checkbox" data-toggle="toggle" data-onstyle="success" name="hb_translate_cron_enable" class="form-control" value="1" {{ hb_translate_cron_enable == '1'? 'checked':'' }} />
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label class="col-sm-3 control-label">{{ col_batch_count }}</label>
+						<div class="col-sm-3">
+							<input type="number" name="hb_translate_batch_count" class="form-control" value="{{ hb_translate_batch_count }}"  />
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label class="col-sm-3 control-label">{{ col_fields }}</label>
+						<div class="col-sm-9">
+							{% for type in types %}
+							<div class="col-sm-4">
+								<table class="table table-bordered table-condensed">
+									<thead>
+										<tr>
+											<td colspan="2">{{ type.table_name }}</td>
+										</tr>	
+									</thead>
+									<tbody>
+										{% for key, value in type.columns %}
+											<tr>
+												<td>{{ value }}</td>
+												<td><center><input type="checkbox" data-toggle="toggle" data-size="small" data-onstyle="success" name="hb_translate_fields_{{ type.id }}[]" class="form-control btn-sm" value="{{ key }}" {% if key in attribute(_context, 'hb_translate_fields_' ~ type.id) %}checked{% endif %} /></center></td>
+											</tr>
+										{% endfor %}
+									</tbody>
+								</table>
+							</div>
+							{% endfor %}
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label class="col-sm-3 control-label">{{ col_cron_command }}</label>
+						<div class="col-sm-9">
+							<div class="input-group">
+								<span class="input-group-addon"><i class="fa fa-clock-o"></i></span>
+								<input type="hidden" name="hb_translate_cron_key" class="form-control" value="{{ hb_translate_cron_key }}"  />
+								<textarea class="form-control" readonly>{{ cron_command }}</textarea>
+							</div>
+						</div>
+					</div>	
+				</form>			
+				</div><!--tab setting end-->
+
+				<div class="tab-pane" id="tab-logs">
+					<div id="logs-block"></div>
+		
+					<div class="pull-right" style="margin-top:10px;">
+						<a onclick="confirm('{{ text_confirm }}') ? location.href='{{ clear }}' : false;" data-toggle="tooltip" title="{{ button_clear_logs }}" class="btn btn-danger"><i class="fa fa-eraser"></i>&nbsp;{{ button_clear_logs }}</a>
+					</div>
+				</div>			
+			</div><!--tab-content block end-->
+      </div>
+    </div>
+    <!--Panel Content End-->
+    <!--Huntbee copyrights-->
+    <div class="container-fluid">
+      <center>
+        <span class="help">{{ heading_title }} - {{ extension_version }} &copy; <a href="https://www.huntbee.com/">WWW.HUNTBEE.COM</a> | <a href="https://www.huntbee.com/get-support">SUPPORT</a></span>
+      </center>
+    </div>
+    <!--Huntbee copyrights end-->
+  </div>
+  <!--Container 1 start -->
+</div>
+<!--Main Content block end-->
+<style type="text/css"> <!--addtional css-->
+a {cursor:pointer;}
+</style>
+
+<style type="text/css">
+.loaddiv{margin:100px;color:#0099CC;}
+body{font-family: sans-serif; }
+</style>
+
+<link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+<script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function() {
+	loadBlock('products');
+});
+</script>
+
+<script>
+// Optimized JavaScript to trigger search buttons when Enter key is pressed
+const searchHandlers = [
+    { input: "search-clear_products-value", button: "search-products-button" },
+    { input: "search-clear_categories-value", button: "search-categories-button" },
+    { input: "search-clear_informations-value", button: "search-informations-button" },
+    { input: "search-clear_manufacturers-value", button: "search-manufacturers-button" }
+];
+
+searchHandlers.forEach(({ input, button }) => {
+    const inputElement = document.getElementById(input);
+    if (inputElement) {
+        inputElement.addEventListener("keydown", (event) => {
+            if (event.key === "Enter") {
+                event.preventDefault();
+                const buttonElement = document.getElementById(button);
+                if (buttonElement) {
+                    buttonElement.click();
+                }
+            }
+        });
+    }
+});
+</script>
+
+<script type="text/javascript">
+function loadBlock(name){
+	$('.ajax-block').html('');
+	$('#'+name+'-block').html('<center><div class="loaddiv"><i class="fa fa-circle-o-notch fa-spin fa-3x fa-fw"></i></div></center>');
+	$('#'+name+'-block').load('index.php?route={{ base_route }}/hb_translate/'+name+'&user_token={{ user_token }}');
+}
+
+$('#clear_products-block').delegate('.pagination a', 'click', function(e) {
+	e.preventDefault();
+	$('#clear_products-block').load(this.href);
+});
+
+$('#clear_categories-block').delegate('.pagination a', 'click', function(e) {
+	e.preventDefault();
+	$('#clear_categories-block').load(this.href);
+});
+
+$('#clear_informations-block').delegate('.pagination a', 'click', function(e) {
+	e.preventDefault();
+	$('#clear_informations-block').load(this.href);
+});
+
+$('#clear_manufacturers-block').delegate('.pagination a', 'click', function(e) {
+	e.preventDefault();
+	$('#clear_manufacturers-block').load(this.href);
+});
+
+function searchRecord(item) {
+	var search_value = $('#search-'+item+'-value').val();
+	$('#'+item+'-block').fadeOut().load('index.php?route={{ base_route }}/hb_translate/'+item+'&user_token={{ user_token }}&search='+encodeURIComponent(search_value)).fadeIn('slow');
+}
+
+$('#button-clear-products').on('click', function() {
+	$('#button-clear-product').html('<center><i class="fa fa-circle-o-notch fa-spin fa-fw"></i></center>');
+	var arraydata = $('input[name="selected[]"]:checked').map(function(){
+        return this.value;
+    }).get()
+	
+	$.ajax({
+		type: 'post',
+		url: 'index.php?route={{ base_route }}/hb_translate/clear&user_token={{ user_token }}&type=product',
+		data: {selected : arraydata},
+		dataType: 'json',
+		success: function(json) {
+			if (json['success']) {
+				$('#msgoutput').html('<div class="alert alert-success"><i class="fa fa-check"></i>&nbsp;'+json['success']+'<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+				$('#button-clear-products').html('<i class="fa fa-check"></i>&nbsp;{{ button_clear }}');
+				searchRecord('clear_products');
+			}
+
+			if (json['error']) {
+				$('#msgoutput').html('<div class="alert alert-danger">'+json['error']+'<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+			}
+		},			
+		error: function(xhr, ajaxOptions, thrownError) {
+			alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+		}
+	 });	
+});
+
+$('#button-clear-categories').on('click', function() {
+	$('#button-clear-categories').html('<center><i class="fa fa-circle-o-notch fa-spin fa-fw"></i></center>');
+	var arraydata = $('input[name="selected[]"]:checked').map(function(){
+        return this.value;
+    }).get()
+	
+	$.ajax({
+		type: 'post',
+		url: 'index.php?route={{ base_route }}/hb_translate/clear&user_token={{ user_token }}&type=category',
+		data: {selected : arraydata},
+		dataType: 'json',
+		success: function(json) {
+			if (json['success']) {
+				$('#msgoutput').html('<div class="alert alert-success"><i class="fa fa-check"></i>&nbsp;'+json['success']+'<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+				$('#button-clear-categories').html('<i class="fa fa-check"></i>&nbsp;{{ button_clear }}');
+				searchRecord('clear_categories');
+			}
+
+			if (json['error']) {
+				$('#msgoutput').html('<div class="alert alert-danger">'+json['error']+'<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+			}
+		},			
+		error: function(xhr, ajaxOptions, thrownError) {
+			alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+		}
+	 });	
+});
+
+$('#button-clear-informations').on('click', function() {
+	$('#button-clear-informations').html('<center><i class="fa fa-circle-o-notch fa-spin fa-fw"></i></center>');
+	var arraydata = $('input[name="selected[]"]:checked').map(function(){
+        return this.value;
+    }).get()
+	
+	$.ajax({
+		type: 'post',
+		url: 'index.php?route={{ base_route }}/hb_translate/clear&user_token={{ user_token }}&type=information',
+		data: {selected : arraydata},
+		dataType: 'json',
+		success: function(json) {
+			if (json['success']) {
+				$('#msgoutput').html('<div class="alert alert-success"><i class="fa fa-check"></i>&nbsp;'+json['success']+'<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+				$('#button-clear-informations').html('<i class="fa fa-check"></i>&nbsp;{{ button_clear }}');
+				searchRecord('clear_informations');
+			}
+
+			if (json['error']) {
+				$('#msgoutput').html('<div class="alert alert-danger">'+json['error']+'<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+			}
+		},			
+		error: function(xhr, ajaxOptions, thrownError) {
+			alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+		}
+	 });	
+});
+
+$('#button-clear-manufacturers').on('click', function() {
+	$('#button-clear-manufacturers').html('<center><i class="fa fa-circle-o-notch fa-spin fa-fw"></i></center>');
+	var arraydata = $('input[name="selected[]"]:checked').map(function(){
+		return this.value;
+	}).get()
+	
+	$.ajax({
+		type: 'post',
+		url: 'index.php?route={{ base_route }}/hb_translate/clear&user_token={{ user_token }}&type=manufacturer',
+		data: {selected : arraydata},
+		dataType: 'json',
+		success: function(json) {
+			if (json['success']) {
+				$('#msgoutput').html('<div class="alert alert-success"><i class="fa fa-check"></i>&nbsp;'+json['success']+'<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+				$('#button-clear-manufacturers').html('<i class="fa fa-check"></i>&nbsp;{{ button_clear }}');
+				searchRecord('clear_manufacturers');
+			}
+
+			if (json['error']) {
+				$('#msgoutput').html('<div class="alert alert-danger">'+json['error']+'<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+			}
+		},			
+		error: function(xhr, ajaxOptions, thrownError) {
+			alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+		}
+	 });	
+});
+
+function clear_data(type, column){
+	if (confirm("{{ text_confirm }}")) {
+		$('#msgoutput').html('<center><i class="fa fa-circle-o-notch fa-spin fa-fw"></i></center>');
+		$('#button_bulk_clear_'+column).html('<center><i class="fa fa-circle-o-notch fa-spin fa-fw"></i></center>');
+		$.ajax({
+			type: 'post',
+			url: 'index.php?route={{ base_route }}/hb_translate/bulk_clear&user_token={{ user_token }}',
+			data: {type: type, column : column},
+			dataType: 'json',
+			success: function(json) {
+				if (json['success']) {
+					$('#msgoutput').html('<div class="alert alert-success"><i class="fa fa-check"></i>&nbsp;'+json['success']+'<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+					$('#button_bulk_clear_'+column).html('<i class="fa fa-check"></i>&nbsp;{{ button_clear }}');
+					showCount(type, column);
+				}
+	
+				if (json['error']) {
+					$('#msgoutput').html('<div class="alert alert-danger">'+json['error']+'<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+					$('#button_bulk_clear_'+column).html('<i class="fa fa-trash"></i>&nbsp;{{ button_clear }}');
+				}
+			},			
+			error: function(xhr, ajaxOptions, thrownError) {
+				alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+			}
+		});
+	} else {
+		return false;
+	}	
+}
+
+function showCount(type, column){
+	{% for language in languages %}
+		$('#cell_'+type+'_'+column+'_'+{{ language.language_id }}).load('index.php?route={{ base_route }}/hb_translate/show_count&user_token={{ user_token }}&type='+type+'&column='+column+'&language_id='+{{ language.language_id }});
+	{% endfor %}
+}
+
+function generate(type, column, previous_total){
+	$('#button_bulk_generate_'+column).html('<i class="fa fa-circle-o-notch fa-spin fa-fw"></i>&nbsp;{{ button_generate }}');
+	$.ajax({
+		type: 'post',
+		url: '../index.php?route=extension/module/hb_translate/generate',
+		data: {type: type, column : column, previous_total: previous_total, authkey: "{{ hb_translate_cron_key }}"},
+		dataType: 'json',
+		success: function(json) {
+			console.log(json);
+			if (json['success']) {
+				$('#msgoutput').html('<div class="alert alert-success"><i class="fa fa-check"></i>&nbsp;'+json['success']+'<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+				showCount(type, column);
+
+				if (json['next']) {
+					generate(type, column, json['previous_total']);
+				}else{
+					$('#button_bulk_generate_'+column).html('<i class="fa fa-check"></i>&nbsp;{{ button_generate }}');
+				}
+			}
+
+			if (json['error']) {
+				$('#msgoutput').html('<div class="alert alert-danger">'+json['error']+'<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+				$('#button_bulk_generate_'+column).html('<i class="fa fa-times"></i>&nbsp;{{ button_generate }}');
+			}			
+		},			
+		error: function(xhr, ajaxOptions, thrownError) {
+			alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+		}
+	});
+}
+</script>
+
+{{ footer }}

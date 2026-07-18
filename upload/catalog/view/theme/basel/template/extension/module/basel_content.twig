@@ -1,0 +1,190 @@
+{% if block_full_width %}
+</div>
+{% endif %}
+<div class="widget cm_module" style="{{ module_margins }}" id="mod{{ module }}">
+{% if block_title %}
+<!-- Block Title -->
+<div class="widget-title">
+{% if title_preline %}<p class="pre-line">{{ title_preline }}</p>{% endif %}
+{% if title %}
+<p class="main-title"><span>{{ title }}</span></p>
+<p class="widget-title-separator"><i class="icon-line-cross"></i></p>
+{% endif %}
+{% if title_subline %}
+<p class="sub-line"><span>{{ title_subline }}</span></p>
+{% endif %}
+</div>
+{% endif %}
+<div class="cm_block_wrapper">
+{% if bg_video %}<div class="vid-holder"></div>{% endif %}
+<div class="cm_block {{ module }}" style="{{ block_style }};">
+<div class="{% if not content_full_width and block_full_width %}container{% endif %}">
+{% if columns %}
+<div class="cm_content" style="{{ content_style }};">
+<div class="row {% if content_no_margin %}marginless{% endif %}">
+{% for column in columns %}
+
+<div class="{{ column.column_class }} type-{{ column.type }} cm_column {% if equal_height %}eq_height{% endif %}">    
+{% if column.type == "img" %}
+    {% if column.data2 %}
+    <!-- Banner type -->
+   <a href="{{ column.data5 }}" >
+    <div class="banner_wrap">
+    <div class="zoom_image_wrap"> <img class="zoom_image" src="{{ column.data2 }}" alt=" {{ column.data1|striptags }}" /></div>
+    <div class="effect-holder"></div>
+    <div class="banner_overlay">
+        <div class="cm_item_wrapper">
+            <div class="cm_item {{ column.data7 }} pointer">
+                  {{ column.data1 }}
+            </div>
+        </div>
+    </div>
+    </div>
+</a>
+    {% endif %}
+    {% if column.data4 %}
+       <a href="{{ column.data6 }}" >
+    <div class="banner_wrap">
+    <div class="zoom_image_wrap"><img class="zoom_image" src="{{ column.data4 }}" alt="" /></div>
+    <div class="effect-holder"></div>
+    <div class="banner_overlay">
+        <div class="cm_item_wrapper ">
+            <div class="cm_item {{ column.data8 }}">
+                {{ column.data3 }}
+            </div>
+        </div>
+    </div>
+    </div>
+
+    </a>
+    {% endif %}
+{% elseif column.type == "tm" %}
+    <!-- Testimonial type -->
+    {% if testimonials %}
+    <div class="grid-holder {{ column.data8 }} tm_module grid{{ column.data7 }}">
+    {% for testimonial in testimonials %}
+    <div class="item single-testimonial">
+        <div class="testimonial-wrap">
+        {% if testimonial.image %}
+        <p><img src="{{ testimonial.image }}" alt=""/></p>
+        {% endif %}
+        <p>{{ testimonial.description }}</p>
+        <p><b>{{ testimonial.name }}</b>{% if testimonial.org %} - {{ testimonial.org }}{% endif %}</p> 
+        </div>    
+    </div>
+    {% endfor %}
+    </div>
+    {% else %}
+    No testimonials found
+    {% endif %}
+{% else %}
+    <!-- HTML/Newsletter type -->
+    <div class="cm_item_wrapper">
+        <div class="cm_item {{ column.data7 }}">
+            {{ column.data1 }}
+        </div>
+    </div>
+{% endif %}
+</div>    
+
+
+{% endfor %}
+
+</div>
+</div>
+{% endif %}
+</div>
+</div>
+</div>
+</div>
+{% if block_full_width %}
+<div class="container">
+{% endif %}
+{% if para_status and bg_img %}
+<script>
+$(window).load(function(){
+$('.cm_block.{{ module }}').parallax("50%", 0.{{ para_status }});
+})
+</script>
+{% endif %}
+{% if bg_video %}
+<script>
+$('.vid-holder').tuber({
+videoId: '{{ video_id }}',
+isBackground: false
+});
+</script>
+{% endif %}
+
+{% if columns %}
+{% for column in columns %}
+{% if column.type == "tm" %}
+<script>
+<!--
+$('.grid-holder.tm_module').slick({
+  adaptiveHeight: false,
+  dots: true,
+  {% if direction == 'rtl' %}
+  rtl: true,
+  {% endif %}
+  arrows: false,
+  respondTo: 'min',
+  autoplay: true,
+  autoplaySpeed: 3000, // brzina izmjene slajdova
+  infinite: true, // omogućuje beskonačno vrtjenje u krug
+  {% if column.data7 == '3' %}
+  slidesToShow: 3,
+  slidesToScroll: 3,
+  responsive: [{ breakpoint: 960, settings: { slidesToShow: 1, slidesToScroll: 1 } }],
+  {% elseif column.data7 == '2' %}
+  slidesToShow: 2,
+  slidesToScroll: 2,
+  responsive: [{ breakpoint: 960, settings: { slidesToShow: 1, slidesToScroll: 1 } }],
+  {% elseif column.data7 == '1' %}
+  slidesToShow: 1,
+  slidesToScroll: 1,
+  responsive: []
+  {% endif %}
+}).parents('.cm_block_wrapper').addClass('has-testimonials');
+//-->
+</script>
+<script>
+function equalizeTestimonials() {
+  var maxHeight = 0;
+  var wraps = $('.block .single-testimonial .testimonial-wrap');
+
+  // resetiraj visine prije mjerenja
+  wraps.css({
+    'height': 'auto',
+    'display': 'flex',
+    'align-items': 'center', // centriranje po vertikali
+    'justify-content': 'center', // dodatno centriranje (ako želiš i horizontalno)
+    'text-align': 'center', // centriraj tekst
+    'flex-direction': 'column' // za sigurnost ako ima više elemenata unutar wrapa
+  });
+
+  // izračunaj najveću visinu
+  wraps.each(function() {
+    var h = $(this).outerHeight();
+    if (h > maxHeight) maxHeight = h;
+  });
+
+  // primijeni maksimalnu visinu na sve
+  wraps.css('height', maxHeight + 'px');
+}
+
+// pokreni kad se slick inicijalizira i kad se promijeni slajd
+$('.grid-holder.tm_module').on('setPosition', function() {
+  equalizeTestimonials();
+});
+
+// ponovno izjednači kad se promijeni veličina prozora
+$(window).on('resize', equalizeTestimonials);
+
+// pokreni jednom kad se sve učita
+$(window).on('load', equalizeTestimonials);
+
+</script>
+{% endif %}
+{% endfor %}
+{% endif %}

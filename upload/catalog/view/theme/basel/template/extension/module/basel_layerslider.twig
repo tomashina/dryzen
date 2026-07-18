@@ -1,0 +1,66 @@
+{% if fullwidth %}
+</div>
+{% endif %}
+<div class="widget" style="margin-top:25px;margin-bottom:{{ margin_bottom }};">
+<div id="masterslider{{ module }}" class="master-slider widget {{ nav_buttons }}" >
+{% for section in sections %}
+{% if section.sort_order > 0 %}
+<div class="ms-slide {% if section.slide_kenburn is defined %} kenburn {{ section.slide_kenburn }}{% endif %}" data-delay="{{ section.duration }}" {% if section.bg_color|length %} style="background-color:{{ section.bg_color }}"{% endif %}>
+{% if section.is_bg %}
+<img src="{{ section.thumb_image }}" data-src="{{ section.thumb_image }}" class="slide-bg" alt="">
+{% endif %}
+{% for key, group in section.groups %}
+{% if group.type == 'text' %}
+<!-- Text layer -->
+    <div class="ms-layer ms-caption" style="font-family:{{ group.font }};font-weight:{{ group.fontweight }};font-size:{{ group.fontsize }};color:{{ group.color }};{% if group.bg|length %}background-color:{{ group.bg }}{% endif %};padding:{{ group.padding }};border-radius:{{ group.radius }};white-space:nowrap; {{ group.customcss }};"
+    data-origin = "ml" data-type = "text" data-offset-x = "{{ group.left }}" data-offset-y = "{{ group.top }}" data-parallax = "{{ group.p_index }}" data-duration = "{{ group.durationin }}" data-delay = "{{ group.start }}" data-effect = "{{ group.transitionin }}" data-ease = "{{ group.easingin }}" data-hide-effect = "{{ group.transitionout }}" data-hide-duration = "{{ group.durationout }}" data-hide-ease = "{{ group.easingout }}" data-hide-time = "{{ group.end }}" > {{ group.description }}
+    </div>
+{% endif %}
+{% if group.type == 'image' %}
+<!-- Image layer -->
+    <img src="{{ group.image }}" alt="" data-src="{{ group.image }}" class="ms-layer image" 
+    {% if group.minheight is defined %} style="min-height:{{ group.minheight }}px" {% endif %}
+    data-origin = "ml" data-type = "image" data-offset-x = "{{ group.left }}" data-offset-y = "{{ group.top }}" data-parallax = "{{ group.p_index }}" data-duration = "{{ group.durationin }}" data-delay = "{{ group.start }}" data-effect = "{{ group.transitionin }}" data-ease = "{{ group.easingin }}" data-hide-effect = "{{ group.transitionout }}" data-hide-duration = "{{ group.durationout }}" data-hide-ease = "{{ group.easingout }}" data-hide-time = "{{ group.end }}" />
+{% endif %}
+{% if group.type == 'button' %}
+<!-- Button layer -->
+    <a class="ms-layer ms-btn {{ group.button_class }}{% if group.button_target %} external{% endif %}" href="{{ group.button_href }}" style="white-space:nowrap;" 
+    data-origin = "ml" data-type = "button" data-offset-x = "{{ group.left }}" data-offset-y = "{{ group.top }}" data-parallax = "{{ group.p_index }}" data-duration = "{{ group.durationin }}" data-delay = "{{ group.start }}" data-effect = "{{ group.transitionin }}" data-ease = "{{ group.easingin }}" data-hide-effect = "{{ group.transitionout }}" data-hide-duration = "{{ group.durationout }}" data-hide-ease = "{{ group.easingout }}" data-hide-time = "{{ group.end }}" >
+    <span>{{ group.description }}</span></a>
+{% endif %}
+{% endfor %}<!-- foreach groups -->
+{% if section.link %}
+<a href="{{ section.link }}" class="ls-link {% if section.link_new_window %} external{% endif %}"></a>
+{% endif %}
+</div><!-- .ls-slide ends -->
+{% endif %}
+{% endfor %}<!-- foreach sections ends -->
+</div><!-- id masterslider ends -->
+</div><!-- .widget -->
+<script>
+$(document).ready(function(){
+var slider = new MasterSlider();
+slider.setup('masterslider{{ module }}' , {
+	width:{{ width }},
+	height:{{ height }},
+	minHeight:{{ minheight }},
+	layout:"fillwidth",
+	grabCursor:false,
+	centerControls:false,
+	autoplay:true,
+	hideLayers:true,
+	instantStartLayers:true,
+	overPause:false,
+	{% if loop %}loop:true,{% endif %}
+	speed:{{ speed }},
+	view:"{{ slide_transition }}"
+});
+{% if nav_buttons %}slider.control('arrows' , {autohide:false});{% endif %}
+{% if nav_bullets %}slider.control('bullets' , {autohide:false});{% endif %}
+{% if nav_timer_bar %}slider.control('timebar' , {width:5});{% endif %}
+setTimeout("$('body').addClass('ms_ready');", 400);
+});
+</script>
+{% if fullwidth %}
+<div class="container">
+{% endif %}

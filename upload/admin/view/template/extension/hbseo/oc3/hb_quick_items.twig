@@ -1,0 +1,193 @@
+<style>
+/* Editable field: focus and general styles */
+.editable-field {
+    display: inline-block; /* Makes the span behave like a block for vertical centering */
+    vertical-align: middle; /* Aligns content vertically */
+    height: 100%; /* Ensures it fills the parent td */
+    line-height: 1.5; /* Adjust based on the cell height */
+    padding: 5px; /* Adds some padding for better clickability */
+    min-height: 20px; /* Ensures the cell doesn't collapse if empty */
+    width: 100%; /* Ensure it spans full width of the cell */
+    box-sizing: border-box; /* Includes padding in width calculation */
+}
+
+/* Placeholder or empty cells */
+.editable-field:empty:before {
+    content: "\00a0"; /* Adds a non-breaking space for caret visibility */
+}
+
+/* Editable field: focus state */
+.editable-field:focus {
+    outline: none;
+    color: red;
+    background-color: transparent;
+}
+
+/* Error highlight */
+.editable-error {
+    background-color: #ffe6e6; /* Light red for error indication */
+    border: 1px solid red;
+}
+
+.desc-short,
+.desc-full {
+    display: none; /* Default state for both */
+}
+
+.desc-short {
+    display: block; /* Initial state for short description */
+}
+
+.desc-full {
+    display: none; /* Hidden by default */
+}
+</style>
+
+<div class="table-responsive">
+    <table class="table table-bordered table-condensed table-hover">
+        <thead>
+            <tr>
+                <td class="text-center" width="80">{{ col_item_id }}</td>
+                {% for key, value in columns %}
+                    <td class="text-left col-{{ key }}">{{ value }}</td>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% if (records) %}
+                {% for record in records %}
+                    <tr>
+                        <td class="text-center"><a href="{{ record.href}}" target="_blank">{{ record.item_id }}</a></td>
+                        {% for key, value in columns %}
+                                {% if key == 'description' %}
+                                <td class="text-left col-{{ key }}" ondblclick="openDescEditor('{{ type }}', '{{ record.item_id }}')">
+                                    <div class="desc-short" id="short-desc{{ record.item_id }}" style="display: block;" >
+                                        {{ record.short_description }}{% if record.description|length > 200 %}...{% endif %}
+                                    </div>
+                                    <div class="desc-full" id="full-desc{{ record.item_id }}" style="display: none;">
+                                        {{ record.description }} <!-- Full description with HTML content -->
+                                    </div>
+                                    {% if record.description|length > 200 %}
+                                        <a href="javascript:void(0);" class="view-more-toggle" data-id="{{ record.item_id }}">{{ text_view_more }}</a>
+                                    {% endif %}
+                                </td>
+                                {% else %}
+                                <td class="text-left col-{{ key }}">
+                                    <span class="editable-field" contenteditable="true" data-key="{{ key }}" data-id="{{ record.item_id }}">
+                                        {{ record[key] }}
+                                    </span>
+                                </td>
+                                {% endif %}
+                            
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            {% else %}
+                <tr>
+                    <td class="text-center" colspan="{{ columns|length + 2 }}">{{ text_no_records }}</td>
+                </tr>
+            {% endif %}
+        </tbody>
+    </table>
+</div>
+
+<div class="row">
+	<div class="col-sm-6 text-left">{{ pagination }}</div>
+	<div class="col-sm-6 text-right">{{ results }}</div>
+</div>
+
+<script type="text/javascript">
+$(document).ready(function () {
+    // Initialize table columns based on checkbox states
+    $("input[type='checkbox']").each(function () {
+        const columnClass = `.col-${$(this).attr("id").replace("field_", "")}`;
+        if (!$(this).is(":checked")) {
+            $(columnClass).addClass("hidden");
+        }
+    });
+
+    // Toggle visibility of columns on checkbox change
+    $("input[type='checkbox']").on("change", function () {
+        const columnClass = `.col-${$(this).attr("id").replace("field_", "")}`;
+        if ($(this).is(":checked")) {
+            $(columnClass).removeClass("hidden"); // Show column
+        } else {
+            $(columnClass).addClass("hidden"); // Hide column
+        }
+    });
+
+    $(".view-more-toggle").on("click", function () {
+        const itemId = $(this).data("id");
+        const shortDesc = $(`#short-desc${itemId}`);
+        const fullDesc = $(`#full-desc${itemId}`);
+        const toggleButton = $(this);
+
+        // Toggle the visibility of the short and full descriptions
+        if (shortDesc.is(":visible")) {
+            shortDesc.hide();
+            fullDesc.show();
+            toggleButton.text("{{ text_view_less }}");
+        } else {
+            shortDesc.show();
+            fullDesc.hide();
+            toggleButton.text("{{ text_view_more }}");
+        }
+    });
+
+
+    // Editable field logic
+    $(".editable-field")
+        .on("focus", function () {
+            // Handle empty cells (ensure placeholder clears on focus)
+            if ($(this).text().trim() === "") {
+                $(this).html(""); // Clear placeholder
+            }
+
+            // Store the original value on focus
+            $(this).data("original-value", $(this).text().trim());
+        })
+        .on("blur", function () {
+            const field = $(this);
+            const newValue = field.text().trim() || ""; // Get updated value (handle empty cells)
+            const originalValue = field.data("original-value"); // Get original value
+            const recordId = field.data("id");
+            const key = field.data("key");
+
+            // Restore placeholder if left empty
+            if (newValue === "") {
+                field.html("&nbsp;");
+            }
+
+            // Only proceed if the value has changed
+            if (newValue === originalValue) {
+                field.removeClass("editable-error"); // Ensure no error class is applied
+                return;
+            }
+
+            // Remove error class on input (if previously applied)
+            field.removeClass("editable-error");
+
+            // Send the update request
+            $.ajax({
+                url: 'index.php?route={{ base_route }}/hb_quick/save_changes&user_token={{ user_token }}&language_id={{ language_id }}',
+                method: "POST",
+                data: { type: "{{ type }}", id: recordId, key: key, value: newValue },
+                success: function (json) {
+                    console.log(`Saving ${key} for record ${recordId}`);
+                    if (json.success) {
+                        $.notify({ icon: "fa fa-check", message: json.success }, { type: "success" });
+                        field.removeClass("editable-error"); // Clear error highlight on success
+                    } else if (json.error) {
+                        $.notify({ icon: "fa fa-exclamation", message: json.error }, { type: "danger" });
+                        field.addClass("editable-error"); // Add error highlight
+                    }
+                },
+                error: function () {
+                    console.error(`Error saving ${key} for record ${recordId}`);
+                    field.addClass("editable-error"); // Add error highlight on AJAX failure
+                },
+            });
+        });
+});
+</script>
+

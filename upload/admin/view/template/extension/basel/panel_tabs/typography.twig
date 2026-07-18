@@ -1,0 +1,432 @@
+<legend>Typography</legend>
+
+<div class="form-group">
+    <label class="col-sm-2 control-label"><span data-toggle="tooltip" title="Use custom fonts instead of the default ones">Override default font styles</span></label>
+    <div class="col-sm-10 toggle-btn">
+    <label><input type="radio" name="settings[basel][basel_typo_status]" class="typo-select" value="0" {% if basel_typo_status == '0' %} checked="checked"{% endif %} /><span>Disabled</span></label>
+    <label><input type="radio" name="settings[basel][basel_typo_status]" class="typo-select" value="1" {% if basel_typo_status == '1' %} checked="checked"{% endif %} /><span>Enabled</span></label>
+    </div>                   
+</div>
+
+<div id="basel_typo_holder"{% if basel_typo_status %} style="display:block"{% else %} style="display:none"{% endif %}>
+<legend class="sub">Google Font List</legend>
+
+
+<div class="col-sm-offset-2" style="margin-bottom:10px;">
+<div class="bs-callout bs-callout-info bs-callout-sm">
+When you add new fonts to the list, please save the module before you can start using them in the font settings
+</div>
+</div>
+<div class="row">
+<div class="col-sm-2"></div>
+<div class="col-sm-10">
+ <table id="fonts" class="table table-clean">
+    <thead>
+      <tr>
+        <td width="49%"><span data-toggle="tooltip" title="For example: Roboto:400,600">Font Import</span></td>
+        <td width="49%"><span data-toggle="tooltip" title="For example: 'Roboto', sans-serif">Font Name</span></td>
+        <td width="2%"></td>
+      </tr>
+    </thead>
+    <tbody>
+     {% set font_row = 1 %}
+     {% if basel_fonts is defined %}
+      {% for basel_font in basel_fonts %}
+      <tr id="font-row{{ font_row }}">
+        <td class="first">
+        <div style="margin-bottom:5px;">
+        <input type="text" class="form-control" name="settings[basel][basel_fonts][{{ font_row }}][import]" value="{{ basel_font.import ? basel_font.import }}" />
+        </div>
+        </td>
+        <td class="first">
+        <input type="text" class="form-control" name="settings[basel][basel_fonts][{{ font_row }}][name]" value="{{ basel_font.name ? basel_font.name }}" />
+        </td>
+        <td class="text-right">
+        <button type="button" onclick="$('#font-row{{ font_row }}').remove();" data-toggle="tooltip" title="{{ button_remove }}" class="btn btn-danger"><i class="fa fa-minus-circle"></i></button>
+        </td>
+      </tr>
+      {% set font_row = font_row + 1 %}
+    {% endfor %}
+   {% endif %}
+    </tbody>
+    <tfoot>
+      <tr>
+        <td colspan="2"></td>
+        <td class="text-right"><button type="button" onclick="addFontRow();" data-toggle="tooltip" title="{{ button_add }}" class="btn btn-primary"><i class="fa fa-plus-circle"></i></button></td>
+      </tr>
+    </tfoot>
+  </table>
+ </div>
+ </div>
+ 
+<legend>Font settings</legend>
+<legend class="sub">General</legend>
+
+<div class="form-group">
+<label class="col-sm-2 control-label">Body font</label>
+<div class="col-sm-10">
+    <select name="settings[basel][body_font_fam]" class="form-control">
+    <option disabled style="font-weight:bold">System Fonts</option>
+    {% for key, system_font in system_fonts %}
+    <option value="{{ key }}"{% if body_font_fam == key %}selected="selected"{% endif %}>
+    {{ system_font }}</option>
+    {% endfor %}
+    <option disabled style="font-weight:bold">Google Webfonts</option>
+    {% for basel_font in basel_fonts %}
+    <option value="{{ basel_font.name }}" {% if body_font_fam == basel_font.name %}selected="selected"{% endif %}>{{ basel_font.name }}</option>
+    {% endfor %}
+    </select>
+</div>                   
+</div>
+
+<div class="form-group">
+    <label class="col-sm-2 control-label"><span data-toggle="tooltip" title="Disable if your custom font dont support, or looks bad in italic">Keep italics</span></label>
+    <div class="col-sm-10 toggle-btn">
+    <label><input type="radio" name="settings[basel][body_font_italic_status]" value="0" {% if body_font_italic_status == '0' %} checked="checked"{% endif %} /><span>Disabled</span></label>
+    <label><input type="radio" name="settings[basel][body_font_italic_status]"  value="1" {% if body_font_italic_status == '1' %} checked="checked"{% endif %} /><span>Enabled</span></label>
+    </div>                   
+</div>
+
+<div class="form-group">
+    <label class="col-sm-2 control-label"><span data-toggle="tooltip" title="Select default font weight for bold text">Bold font weight</span></label>
+    <div class="col-sm-10 form-inline">
+    <input class="form-control" style="width:160px" name="settings[basel][body_font_bold_weight]" value="{{ body_font_bold_weight ? body_font_bold_weight : '600' }}" />
+    </div>                   
+</div>
+
+<div class="form-group">
+<label class="col-sm-2 control-label"><span data-toggle="tooltip" title="Contrast font is used on item names, in some widgets etc.">Contrast font</span></label>
+<div class="col-sm-10">
+    <select name="settings[basel][contrast_font_fam]" class="form-control">
+    <option disabled style="font-weight:bold">System Fonts</option>
+    {% for key, system_font in system_fonts %}
+    <option value="{{ key }}" {% if contrast_font_fam == key %}selected="selected"{% endif %}>
+    {{ system_font }}</option>
+    {% endfor %}
+    <option disabled style="font-weight:bold">Google Webfonts</option>
+    {% for basel_font in basel_fonts %}
+    <option value="{{ basel_font.name }}" {% if contrast_font_fam == basel_font.name %}selected="selected"{% endif %}>{{ basel_font.name }}</option>
+    {% endfor %}
+    </select>
+</div>                   
+</div>
+
+<legend class="sub">Font size adjustment</legend>
+<div class="form-group">
+    <label class="col-sm-2 control-label"><span data-toggle="tooltip" title="Use this to adjust if your font looks bigger or smaller than desirably">Larger font size (16px)</span></label>
+    <div class="col-sm-10 form-inline">
+    <input class="form-control" style="width:160px" name="settings[basel][body_font_size_16]" value="{{ body_font_size_16 ? body_font_size_16 : '16px' }}" />
+    </div>                   
+</div>
+
+<div class="form-group">
+    <label class="col-sm-2 control-label"><span data-toggle="tooltip" title="Use this to adjust if your font looks bigger or smaller than desirably">Large font size (15px)</span></label>
+    <div class="col-sm-10 form-inline">
+    <input class="form-control" style="width:160px" name="settings[basel][body_font_size_15]" value="{{ body_font_size_15 ? body_font_size_15 : '15px' }}" />
+    </div>                   
+</div>
+
+<div class="form-group">
+    <label class="col-sm-2 control-label"><span data-toggle="tooltip" title="Use this to adjust if your font looks bigger or smaller than desirably">Normal font size (14px)</span></label>
+    <div class="col-sm-10 form-inline">
+    <input class="form-control" style="width:160px" name="settings[basel][body_font_size_14]" value="{{ body_font_size_14 ? body_font_size_14 : '14px' }}" />
+    </div>                   
+</div>
+
+<div class="form-group">
+    <label class="col-sm-2 control-label"><span data-toggle="tooltip" title="Use this to adjust if your font looks bigger or smaller than desirably">Small font size (13px)</span></label>
+    <div class="col-sm-10 form-inline">
+    <input class="form-control" style="width:160px" name="settings[basel][body_font_size_13]" value="{{ body_font_size_13 ? body_font_size_13 : '13px' }}" />
+    </div>                   
+</div>
+
+<div class="form-group">
+    <label class="col-sm-2 control-label"><span data-toggle="tooltip" title="Use this to adjust if your font looks bigger or smaller than desirably">Tiny font size (12px)</span></label>
+    <div class="col-sm-10 form-inline">
+    <input class="form-control" style="width:160px" name="settings[basel][body_font_size_12]" value="{{ body_font_size_12 ? body_font_size_12 : '12px' }}" />
+    </div>                   
+</div>
+
+<legend class="sub">Headings</legend>
+
+<div class="form-group">
+<label class="col-sm-2 control-label">Headings font</label>
+<div class="col-sm-10">
+    <select name="settings[basel][headings_fam]" class="form-control">
+    <option disabled style="font-weight:bold">System Fonts</option>
+    {% for key, system_font in system_fonts %}
+    <option value="{{ key }}" 
+    {% if headings_fam == key %}selected="selected"{% endif %}>
+    {{ system_font }}</option>
+    {% endfor %}
+    <option disabled style="font-weight:bold">Google Webfonts</option>
+    {% for basel_font in basel_fonts %}
+    <option value="{{ basel_font.name }}" {% if headings_fam == basel_font.name %}selected="selected"{% endif %}>{{ basel_font.name }}</option>
+    {% endfor %}
+    </select>
+</div>                   
+</div>
+
+<div class="form-group">
+    <label class="col-sm-2 control-label">Headings font weight</label>
+    <div class="col-sm-10 form-inline">
+    <input class="form-control" style="width:160px" name="settings[basel][headings_weight]" value="{{ headings_weight ? headings_weight : '600' }}" />
+    </div>                   
+</div>
+
+<div class="form-group">
+    <label class="col-sm-2 control-label">Smaller headings size</label>
+    <div class="col-sm-10 form-inline">
+    <input class="form-control" style="width:160px" name="settings[basel][headings_size_sm]" value="{{ headings_size_sm ? headings_size_sm : '20px' }}" />
+    </div>                   
+</div>
+
+<div class="form-group">
+    <label class="col-sm-2 control-label">Largeer headings size</label>
+    <div class="col-sm-10 form-inline">
+    <input class="form-control" style="width:160px" name="settings[basel][headings_size_lg]" value="{{ headings_size_lg ? headings_size_lg : '28px' }}" />
+    </div>                   
+</div>
+
+<legend class="sub">Page titles / H1</legend>
+<div class="form-group">
+    <label class="col-sm-2 control-label"><br /><span data-toggle="tooltip" title="Inline titles are page titles that are not moved to the breadcrumb">Inline titles</span></label>
+    <div class="col-sm-10">
+    <div class="row">
+        <div class="col-sm-4">
+        <label>Font family</label>
+        <select name="settings[basel][h1_inline_fam]" class="form-control">
+        <option disabled style="font-weight:bold">System Fonts</option>
+        {% for key, system_font in system_fonts %}
+        <option value="{{ key }}" 
+        {% if h1_inline_fam == key %}selected="selected"{% endif %}>
+        {{ system_font }}</option>
+        {% endfor %}
+        <option disabled style="font-weight:bold">Google Webfonts</option>
+        {% for basel_font in basel_fonts %}
+        <option value="{{ basel_font.name }}" {% if h1_inline_fam == basel_font.name %}selected="selected"{% endif %}>{{ basel_font.name }}</option>
+        {% endfor %}
+        </select>
+        </div>
+        <div class="col-sm-2">
+        <label>Font size</label>
+        <input class="form-control" name="settings[basel][h1_inline_size]" value="{{ h1_inline_size ? h1_inline_size : '34px' }}" />
+        </div>
+        <div class="col-sm-2">
+        <label>Font weight</label>
+        <input class="form-control" name="settings[basel][h1_inline_weight]" value="{{ h1_inline_weight ? h1_inline_weight : '600' }}" />
+        </div>
+        <div class="col-sm-2">
+        <label>Text transform</label>
+        <select name="settings[basel][h1_inline_trans]" class="form-control">
+        <option value="none"{% if h1_inline_trans == 'none' %} selected="selected"{% endif %}>None</option>
+        <option value="uppercase"{% if h1_inline_trans == 'uppercase' %} selected="selected"{% endif %}>Uppercase</option>
+        <option value="lowercase"{% if h1_inline_trans == 'lowercase' %} selected="selected"{% endif %}>Lowercase</option>
+        <option value="capitalize"{% if h1_inline_trans == 'capitalize' %} selected="selected"{% endif %}>Capitalize</option>
+        </select>
+        </div>
+        <div class="col-sm-2">
+        <label>Letter spcaing</label>
+        <input class="form-control" name="settings[basel][h1_inline_ls]" value="{{ h1_inline_ls ? h1_inline_ls : '0px' }}" />
+        </div>
+    </div>
+    </div>                   
+</div>
+
+<div class="form-group">
+    <label class="col-sm-2 control-label"><br />Titles inside breadcrumb</label>
+    <div class="col-sm-10">
+    <div class="row">
+        <div class="col-sm-4">
+        <label>Font family</label>
+        <select name="settings[basel][h1_breadcrumb_fam]" class="form-control">
+        <option disabled style="font-weight:bold">System Fonts</option>
+        {% for key, system_font in system_fonts %}
+        <option value="{{ key }}" 
+        {% if h1_breadcrumb_fam == key %}selected="selected"{% endif %}>
+        {{ system_font }}</option>
+        {% endfor %}
+        <option disabled style="font-weight:bold">Google Webfonts</option>
+        {% for basel_font in basel_fonts %}
+        <option value="{{ basel_font.name }}" {% if h1_breadcrumb_fam == basel_font.name %}selected="selected"{% endif %}>{{ basel_font.name }}</option>
+        {% endfor %}
+        </select>
+        </div>
+        <div class="col-sm-2">
+        <label>Font size</label>
+        <input class="form-control" name="settings[basel][h1_breadcrumb_size]" value="{{ h1_breadcrumb_size ? h1_breadcrumb_size : '34px' }}" />
+        </div>
+        <div class="col-sm-2">
+        <label>Font weight</label>
+        <input class="form-control" name="settings[basel][h1_breadcrumb_weight]" value="{{ h1_breadcrumb_weight ? h1_breadcrumb_weight : '600' }}" />
+        </div>
+        <div class="col-sm-2">
+        <label>Text transform</label>
+        <select name="settings[basel][h1_breadcrumb_trans]" class="form-control">
+        <option value="none"{% if h1_breadcrumb_trans == 'none' %} selected="selected"{% endif %}>None</option>
+        <option value="uppercase"{% if h1_breadcrumb_trans == 'uppercase' %} selected="selected"{% endif %}>Uppercase</option>
+        <option value="lowercase"{% if h1_breadcrumb_trans == 'lowercase' %} selected="selected"{% endif %}>Lowercase</option>
+        <option value="capitalize"{% if h1_breadcrumb_trans == 'capitalize' %} selected="selected"{% endif %}>Capitalize</option>
+        </select>
+        </div>
+        <div class="col-sm-2">
+        <label>Letter spcaing</label>
+        <input class="form-control" name="settings[basel][h1_breadcrumb_ls]" value="{{ h1_breadcrumb_ls ? h1_breadcrumb_ls : '0px' }}" />
+        </div>
+    </div>
+    </div>                   
+</div>
+
+<legend class="sub">Widgets Titles / Module Titles</legend>
+<div class="form-group">
+    <label class="col-sm-2 control-label"><br /><span data-toggle="tooltip" title="Widgets not positioned in column areas">Widgets in content</span></label>
+    <div class="col-sm-10">
+    <div class="row">
+        <div class="col-sm-4">
+        <label>Font family</label>
+        <select name="settings[basel][widget_lg_fam]" class="form-control">
+        <option disabled style="font-weight:bold">System Fonts</option>
+        {% for key, system_font in system_fonts %}
+        <option value="{{ key }}" 
+        {% if widget_lg_fam == key %}selected="selected"{% endif %}>
+        {{ system_font }}</option>
+        {% endfor %}
+        <option disabled style="font-weight:bold">Google Webfonts</option>
+        {% for basel_font in basel_fonts %}
+        <option value="{{ basel_font.name }}" {% if widget_lg_fam == basel_font.name %}selected="selected"{% endif %}>{{ basel_font.name }}</option>
+        {% endfor %}
+        </select>
+        </div>
+        <div class="col-sm-2">
+        <label>Font size</label>
+        <input class="form-control" name="settings[basel][widget_lg_size]" value="{{ widget_lg_size ? widget_lg_size : '26px' }}" />
+        </div>
+        <div class="col-sm-2">
+        <label>Font weight</label>
+        <input class="form-control" name="settings[basel][widget_lg_weight]" value="{{ widget_lg_weight ? widget_lg_weight : '600' }}" />
+        </div>
+        <div class="col-sm-2">
+        <label>Text transform</label>
+        <select name="settings[basel][widget_lg_trans]" class="form-control">
+        <option value="none"{% if widget_lg_trans == 'none' %} selected="selected"{% endif %}>None</option>
+        <option value="uppercase"{% if widget_lg_trans == 'uppercase' %} selected="selected"{% endif %}>Uppercase</option>
+        <option value="lowercase"{% if widget_lg_trans == 'lowercase' %} selected="selected"{% endif %}>Lowercase</option>
+        <option value="capitalize"{% if widget_lg_trans == 'capitalize' %} selected="selected"{% endif %}>Capitalize</option>
+        </select>
+        </div>
+        <div class="col-sm-2">
+        <label>Letter spcaing</label>
+        <input class="form-control" name="settings[basel][widget_lg_ls]" value="{{ widget_lg_ls ? widget_lg_ls : '0px' }}" />
+        </div>
+    </div>
+    </div>                   
+</div>
+
+<div class="form-group">
+    <label class="col-sm-2 control-label"><br />Widgets in column</label>
+    <div class="col-sm-10">
+    <div class="row">
+        <div class="col-sm-4">
+        <label>Font family</label>
+        <select name="settings[basel][widget_sm_fam]" class="form-control">
+        <option disabled style="font-weight:bold">System Fonts</option>
+        {% for key, system_font in system_fonts %}
+        <option value="{{ key }}" 
+        {% if widget_sm_fam == key %}selected="selected"{% endif %}>
+        {{ system_font }}</option>
+        {% endfor %}
+        <option disabled style="font-weight:bold">Google Webfonts</option>
+        {% for basel_font in basel_fonts %}
+        <option value="{{ basel_font.name }}" {% if widget_sm_fam == basel_font.name %}selected="selected"{% endif %}>{{ basel_font.name }}</option>
+        {% endfor %}
+        </select>
+        </div>
+        <div class="col-sm-2">
+        <label>Font size</label>
+        <input class="form-control" name="settings[basel][widget_sm_size]" value="{{ widget_sm_size ? widget_sm_size : '16px' }}" />
+        </div>
+        <div class="col-sm-2">
+        <label>Font weight</label>
+        <input class="form-control" name="settings[basel][widget_sm_weight]" value="{{ widget_sm_weight ? widget_sm_weight : '600' }}" />
+        </div>
+        <div class="col-sm-2">
+        <label>Text transform</label>
+        <select name="settings[basel][widget_sm_trans]" class="form-control">
+        <option value="none"{% if widget_sm_trans == 'none' %} selected="selected"{% endif %}>None</option>
+        <option value="uppercase"{% if widget_sm_trans == 'uppercase' %} selected="selected"{% endif %}>Uppercase</option>
+        <option value="lowercase"{% if widget_sm_trans == 'lowercase' %} selected="selected"{% endif %}>Lowercase</option>
+        <option value="capitalize"{% if widget_sm_trans == 'capitalize' %} selected="selected"{% endif %}>Capitalize</option>
+        </select>
+        </div>
+        <div class="col-sm-2">
+        <label>Letter spcaing</label>
+        <input class="form-control" name="settings[basel][widget_sm_ls]" value="{{ widget_sm_ls ? widget_sm_ls : '0.75px' }}" />
+        </div>
+    </div>
+    </div>                   
+</div>
+
+<legend class="sub">Main Menu In Header</legend>
+<div class="form-group">
+    <label class="col-sm-2 control-label"><br />Main menu</label>
+    <div class="col-sm-10">
+    <div class="row">
+        <div class="col-sm-4">
+        <label>Font family</label>
+        <select name="settings[basel][menu_font_fam]" class="form-control">
+        <option disabled style="font-weight:bold">System Fonts</option>
+        {% for key, system_font in system_fonts %}
+        <option value="{{ key }}" 
+        {% if menu_font_fam == key %}selected="selected"{% endif %}>
+        {{ system_font }}</option>
+        {% endfor %}
+        <option disabled style="font-weight:bold">Google Webfonts</option>
+        {% for basel_font in basel_fonts %}
+        <option value="{{ basel_font.name }}" {% if menu_font_fam == basel_font.name %}selected="selected"{% endif %}>{{ basel_font.name }}</option>
+        {% endfor %}
+        </select>
+        </div>
+        <div class="col-sm-2">
+        <label>Font size</label>
+        <input class="form-control" name="settings[basel][menu_font_size]" value="{{ menu_font_size ? menu_font_size : '14px' }}" />
+        </div>
+        <div class="col-sm-2">
+        <label>Font weight</label>
+        <input class="form-control" name="settings[basel][menu_font_weight]" value="{{ menu_font_weight ? menu_font_weight : '400' }}" />
+        </div>
+        <div class="col-sm-2">
+        <label>Text transform</label>
+        <select name="settings[basel][menu_font_trans]" class="form-control">
+        <option value="none"{% if menu_font_trans == 'none' %} selected="selected"{% endif %}>None</option>
+        <option value="uppercase"{% if menu_font_trans == 'uppercase' %} selected="selected"{% endif %}>Uppercase</option>
+        <option value="lowercase"{% if menu_font_trans == 'lowercase' %} selected="selected"{% endif %}>Lowercase</option>
+        <option value="capitalize"{% if menu_font_trans == 'capitalize' %} selected="selected"{% endif %}>Capitalize</option>
+        </select>
+        </div>
+        <div class="col-sm-2">
+        <label>Letter spcaing</label>
+        <input class="form-control" name="settings[basel][menu_font_ls]" value="{{ menu_font_ls ? menu_font_ls : '0.5px' }}" />
+        </div>
+    </div>
+    </div>                   
+</div> 
+
+</div><!-- #basel_typo_holder ends -->
+
+
+<script type="text/javascript"><!--
+var font_row = {{ font_row }};
+function addFontRow() {
+	html  = '<tr id="font-row' + font_row + '">';
+	html += '<td class="first">';
+	html += '<input type="text" class="form-control" name="settings[basel][basel_fonts][' + font_row + '][import]" />';
+	html += '</td>';
+	html += '<td class="first">';
+	html += '<input type="text" class="form-control" name="settings[basel][basel_fonts][' + font_row + '][name]" />';
+	html += '</td>';
+	html += '<td class="text-right"><button type="button" onclick="$(\'#font-row' + font_row  + '\').remove();" data-toggle="tooltip" title="{{ button_remove }}" class="btn btn-danger"><i class="fa fa-minus-circle"></i></button></td>';
+	html += '</tr>';
+	$('#fonts tbody').append(html);
+	font_row++;
+}
+//--></script>

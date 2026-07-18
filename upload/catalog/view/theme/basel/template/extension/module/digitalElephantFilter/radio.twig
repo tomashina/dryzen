@@ -1,0 +1,35 @@
+<div class="digitalElephantFilter_type_radio">
+    <!--
+	<label class="radio-inline">
+        <input
+                type="radio"
+                name="{{ inputs_data[0]['input_name'] }}[{{ section['id'] }}][]"
+                value="0"
+        >
+        <span>{{ text_all }}</span>
+    </label>
+	-->
+    {% for input_data in inputs_data %}
+        <label class="radio-inline">
+            {% set attr_checked = '' %}
+
+            {% if check_data_on_active[input_data['input_name']][section['id']] and input_data['input_value'] in check_data_on_active[input_data['input_name']][section['id']] %}
+                {% set attr_checked = 'checked="checked"' %}
+            {% endif %}
+
+            {% if input_data['is_enable'] %}
+                {% set attr_disabled = '' %}
+            {% else %}
+                {% set attr_disabled = 'disabled="disabled"' %}
+            {% endif %}
+            <input
+                    type="radio"
+                    name="{{ input_data['input_name'] }}[{{ section['id'] }}][]"
+                    value="{{ input_data['input_value'] }}"
+                    {{ attr_checked }}
+                    {{ attr_disabled }}
+            >
+			<span>{{ input_data['input_label'] }}</span>
+        </label>
+    {% endfor %}
+</div>

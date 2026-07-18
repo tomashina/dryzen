@@ -1,0 +1,39 @@
+<div class="table-responsive">
+    <table class="table table-bordered table-condensed table-hover">
+        <thead>
+            <tr>
+                <td width="1" style="text-align: center;"><input type="checkbox" onclick="$('input[name*=\'selected\']').prop('checked', this.checked);" /></td>
+                <td class="text-center" width="80">{{ col_product_id }}</td>
+                <td class="text-left">{{ col_name }}</td>
+                <td class="text-left">{{ col_model }}</td>
+                <td class="text-left">{{ col_tags }}</td>                
+            </tr>
+        </thead>
+        <tbody>
+            {% if (records) %}
+                {% for record in records %}
+                    <tr>
+                        <td style="text-align: center;">
+                            <input type="checkbox" name="selected[]" value="{{ record.product_id }}" />
+                        </td>
+                        <td class="text-center"><a href="{{ record.href}}" target="_blank">{{ record.product_id }}</a></td>
+                        <td class="text-left">{{ record.name }}</td>
+                        <td class="text-left">{{ record.model }}</td>
+                        <td class="text-left col-sm-8">{{ record.tag }}</td>
+                    </tr>
+                {% endfor %}
+            {% else %}
+                <tr>
+                    <td class="text-center" colspan="5">{{ text_no_records }}</td>
+                </tr>
+            {% endif %}
+        </tbody>
+    </table>
+</div>
+
+<div class="row">
+	<div class="col-sm-6 text-left">{{ pagination }}</div>
+	<div class="col-sm-6 text-right">{{ results }}</div>
+</div>
+
+

@@ -1,0 +1,153 @@
+<div class="header-wrapper header2 fixed-header-possible">
+
+{% if top_line_style %}
+<div class="top_line">
+  <div class="container {{ top_line_width }}">
+    <div class="table">
+        <div class="table-cell left sm-text-center xs-text-left">
+            <div class="promo-message">{{ promo_message }}</div>
+        </div>
+        <div class="table-cell text-right">
+            <div class="links ">
+            <ul>
+            {% include 'basel/template/common/static_links.twig' %}
+            </ul>
+            {% if lang_curr_title %}
+            <div class="setting-ul">
+            <div class="setting-li dropdown-wrapper from-left lang-curr-trigger nowrap"><a>
+            <span>{{ lang_curr_title }}</span>
+            </a>
+            <div class="dropdown-content dropdown-right lang-curr-wrapper">
+            {{ language }}
+            {{ currency }}
+            </div>
+            </div>
+            </div>
+            {% endif %}
+            </div>
+        </div>
+    </div> <!-- .table ends -->
+  </div> <!-- .container ends -->
+</div> <!-- .top_line ends -->
+{% endif %}
+<span class="table header-main sticky-header-placeholder">&nbsp;</span>
+<div class="sticky-header outer-container header-style">
+  <div class="container {{ main_header_width }}">
+    <div class="table header-main {{ main_menu_align }}">
+    
+    <div class="table-cell text-left w20 logo">
+        {% if logo %}
+        <div id="logo">
+             <h1 style="visibility: hidden;font-size: 0px; margin: 0px;">{{ name }}</h1>
+        <a href="{{ home }}"><img src="image/worlofbeauty-logo-black.svg" title="{{ name }}" alt="{{ name }}" /></a>
+        </div>
+        {% endif %}
+    </div>
+
+
+         {% if header_search %}
+     
+           <div class="table-cell text-center w40  hidden-xs hidden-sm">
+     
+      
+        <div class="search-dropdown-holder">
+        <div class="search-holder">
+        {{ basel_search }}
+        </div>
+        </div>
+    
+        </div>
+       
+        
+             
+      
+        {% endif %}
+  
+    
+    
+    
+    <div class="table-cell w20 shortcuts text-right"> 
+       
+       <div class="font-zero">
+
+
+           <div class="icon-element is_wishlist">
+
+
+           {% if logged %}
+           
+         <a class="shortcut-wrapper wishlist" title="Korisnički račun" href="{{ login }}"><i class="icon-user icon"></i></a><a class="shortcut-wrapper wishlist" title="Odjava" href="{{ logout }}"> Odjava  <div class="wishlist-hover"></div>
+        </a>
+
+          {% else %}
+
+             <a class="shortcut-wrapper wishlist" title="Korisnički račun" href="{{ login }}">
+                 <div class="wishlist-hover"><i class="icon-user icon"></i></div>
+        </a>
+          
+          {% endif %}
+        
+        </div>
+        
+       
+        
+       
+        
+        <div class="icon-element catalog_hide">
+        <div id="cart" class="dropdown-wrapper from-top">
+        <a href="{{ shopping_cart }}" class="shortcut-wrapper cart">
+        <i id="cart-icon" class="global-cart icon"></i> <span id="cart-total" class="nowrap">
+        <span class="counter cart-total-items">{{ cart_items }}</span> <span class="slash hidden-md hidden-sm hidden-xs">/</span>&nbsp;<b class="cart-total-amount hidden-sm hidden-xs">{{ cart_amount }}</b>
+        </span>
+        </a>
+        <div class="dropdown-content dropdown-right hidden-sm hidden-xs">
+        {{ cart }}
+        </div>
+        </div>
+        </div>
+        
+        <div class="icon-element">
+        <a class="shortcut-wrapper menu-trigger hidden-md hidden-lg">
+        <i class="icon-line-menu icon"></i>
+        </a>
+        </div>
+        
+       </div>
+        
+    </div>
+    
+    </div> <!-- .table.header_main ends -->
+  </div> <!-- .container ends -->
+</div> <!-- .sticky ends -->
+
+<div class="sticky-header slidedown outer-container menu-style menu-style-contrast hidden-xs hidden-sm">
+
+
+<div class="container {{ main_header_width }}">
+
+        <div class="main-menu gmenu">
+        
+        {% if primary_menu %}
+        <ul class="categories ">
+
+          <li class="round-logo"><a href="{{ home }}"><img src="image/nicole-marie-box.svg"  alt="NM" title="NM"></a></li>
+          {% if primary_menu == 'oc' %}
+            <!-- Default menu -->
+            {{ default_menu }}
+          {% elseif primary_menu is defined %} 
+            <!-- Mega menu -->
+            {% for key, row in primary_menu_desktop %}
+            {% include 'basel/template/common/menus/mega_menu.twig' %}
+            {% endfor %}
+          {% endif %}
+        
+        
+        </ul>
+        {% endif %}
+
+        </div>
+        
+</div>
+</div>
+
+</div> <!-- .header_wrapper ends -->

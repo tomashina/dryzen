@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="utf-8"?>
+<modification>
+    <name>{name}</name>
+    <version>{version}</version>
+    <author>HuntBee OpenCart Services</author>
+    <link>https://www.huntbee.com</link>
+	<code>huntbee_seo_snippet_ocmod</code>
+	
+	<file path="system/library/document.php">
+        <operation>
+            <search><![CDATA[public function addLink($href, $rel) {]]></search>
+            <add position="before"><![CDATA[public function setOpengraph($meta, $content) {
+                    $this->opengraph[] = array(
+                        'meta'   => $meta,
+                        'content' => $content
+                     );
+                }
+                
+                public function getOpengraph() {
+                    return $this->opengraph;
+                }
+
+				public function setTwittercard($name, $content) {
+                    $this->twittercard[] = array(
+                        'name'   => $name,
+                        'content' => $content
+                     );
+                }
+                
+                public function getTwittercard() {
+                    return $this->twittercard;
+                }
+                
+                public function setStructureddata($content) {
+                    $this->structureddata[] = array(
+                        'content' => $content
+                     );
+                }
+                
+                public function getStructureddata() {
+                    return $this->structureddata;
+                }]]>
+            </add>
+        </operation>
+        <operation>
+            <search><![CDATA[private $keywords;]]></search>
+            <add position="after"><![CDATA[private $opengraph = array();
+				private $twittercard = array();
+				private $structureddata = array();]]></add>
+        </operation>
+    </file>
+    
+	<file path="catalog/controller/common/header.php">
+        <operation>
+            <search><![CDATA[$data['title'] = $this->document->getTitle();]]></search>
+            <add position="after"><![CDATA[
+				if (is_array($this->document->getOpengraph())) { 
+				   $data['opengraphs'] = $this->document->getOpengraph();
+				}else{
+					$data['opengraphs'] = '';
+				}
+				if (is_array($this->document->getTwittercard())) { 
+				   $data['twittercards'] = $this->document->getTwittercard();
+				}else{
+					$data['twittercards'] = '';
+				}
+				
+				if (is_array($this->document->getStructureddata())) { 
+				    $data['jsonld_data'] = $this->document->getStructureddata();
+				}else{
+				    $data['jsonld_data'] = '';
+				}
+				]]>
+            </add>
+        </operation>
+    </file>
+    
+    <file path="catalog/view/theme/*/template/common/header.tpl">
+        <operation>
+            <search><![CDATA[</head>]]></search>
+            <add position="before"><![CDATA[
+				<?php if (is_array($opengraphs)) { ?>
+                    <?php foreach ($opengraphs as $opengraph) { ?>
+                    <meta property="<?php echo $opengraph['meta'] ?>" content="<?php echo $opengraph['content']; ?>" />
+                    <?php } ?>
+                <?php } ?>
+                
+                <?php if (is_array($twittercards)) { ?>
+                    <?php foreach ($twittercards as $twittercard) { ?>
+                    <meta name="<?php echo $twittercard['name'] ?>" content="<?php echo $twittercard['content']; ?>" />
+                    <?php } ?>
+                <?php } ?>
+                
+                <?php if (is_array($jsonld_data)) { ?>
+                    <?php foreach ($jsonld_data as $jsonld) { ?>
+                    <?php echo $jsonld['content']; ?>
+                    <?php } ?>
+                <?php } ?>
+				]]>
+            </add>
+        </operation>
+    </file>
+    
+    <file path="catalog/controller/common/home.php">
+		<operation>
+			<search><![CDATA[$data['header'] = $this->load->controller('common/header');]]></search>
+			<add position="before"><![CDATA[
+			$this->load->model('extension/module/hb_seo_snippets');	
+			$this->model_extension_module_hb_seo_snippets->home_social();
+            $this->model_extension_module_hb_seo_snippets->knowledge_graph();
+		    $this->model_extension_module_hb_seo_snippets->site_search();
+			$this->model_extension_module_hb_seo_snippets->local_business();
+			]]></add>
+		</operation>		
+	</file>
+	
+    <file path="catalog/controller/product/product.php">
+        <operation>
+            <search><![CDATA[$data['recurrings']]]></search>
+            <add position="after"><![CDATA[
+			$this->load->model('extension/module/hb_seo_snippets');
+			$this->model_extension_module_hb_seo_snippets->product_sd($product_info, $data);
+			$bcsd_options['type'] = 'product';
+			$bcsd_options['id'] = $product_id;
+			$bcsd_options['title'] = $product_info['name'];
+			$this->model_extension_module_hb_seo_snippets->breadcrumbs_sd($data['breadcrumbs'], $bcsd_options);
+
+			]]></add>
+        </operation>
+    </file>
+    
+	
+	<file path="catalog/controller/product/{manufacturer,special}.php">
+		<operation>
+			<search><![CDATA[$data['header'] = $this->load->controller('common/header');]]></search>
+			<add position="before"><![CDATA[
+			    $this->load->model('extension/module/hb_seo_snippets');
+			    $this->model_extension_module_hb_seo_snippets->breadcrumbs_sd($data['breadcrumbs']);
+			]]></add>
+		</operation>		
+	</file>
+	<file path="catalog/controller/product/category.php">
+		<operation>
+			<search><![CDATA[$pagination = new Pagination();]]></search>
+			<add position="before"><![CDATA[
+			    $this->load->model('extension/module/hb_seo_snippets');
+		    	$this->model_extension_module_hb_seo_snippets->itemlist($data['products']);
+		    	$this->model_extension_module_hb_seo_snippets->category_social($category_info);
+			]]></add>
+		</operation>
+		<operation>
+			<search><![CDATA[$data['header'] = $this->load->controller('common/header');]]></search>
+			<add position="before"><![CDATA[
+			    $this->load->model('extension/module/hb_seo_snippets');
+				$bcsd_options['type'] = 'category';
+				$bcsd_options['id'] = $category_id;
+				$bcsd_options['title'] = $category_info['name'];
+			    $this->model_extension_module_hb_seo_snippets->breadcrumbs_sd($data['breadcrumbs'], $bcsd_options);
+			]]></add>
+		</operation>		
+	</file>
+	<file path="catalog/controller/account/{login,register}.php">
+		<operation>
+			<search><![CDATA[$data['header'] = $this->load->controller('common/header');]]></search>
+			<add position="before"><![CDATA[
+			    $this->load->model('extension/module/hb_seo_snippets');
+			    $this->model_extension_module_hb_seo_snippets->breadcrumbs_sd($data['breadcrumbs']);
+			]]></add>
+		</operation>		
+	</file>
+	<file path="catalog/controller/affiliate/{login,register}.php">
+		<operation>
+			<search><![CDATA[$data['header'] = $this->load->controller('common/header');]]></search>
+			<add position="before"><![CDATA[
+			    $this->load->model('extension/module/hb_seo_snippets');
+			    $this->model_extension_module_hb_seo_snippets->breadcrumbs_sd($data['breadcrumbs']);
+			]]></add>
+		</operation>		
+	</file>
+	<file path="catalog/controller/information/{information,sitemap}.php">
+		<operation>
+			<search><![CDATA[$data['header'] = $this->load->controller('common/header');]]></search>
+			<add position="before"><![CDATA[
+			    $this->load->model('extension/module/hb_seo_snippets');
+			    $this->model_extension_module_hb_seo_snippets->breadcrumbs_sd($data['breadcrumbs']);
+			]]></add>
+		</operation>		
+	</file>
+	
+	<file path="catalog/controller/information/information.php">
+		<operation>
+			<search><![CDATA[$this->document->setKeywords($information_info['meta_keyword']);]]></search>
+			<add position="after"><![CDATA[
+			    $this->load->model('extension/module/hb_seo_snippets');
+			    $this->model_extension_module_hb_seo_snippets->information_social($information_info);
+			]]></add>
+		</operation>		
+	</file>
+	
+	<file path="catalog/controller/information/contact.php">
+        <operation error="log">
+            <search><![CDATA[$data['header'] = $this->load->controller('common/header');]]></search>
+            <add position="before">
+                <![CDATA[
+                $this->load->model('extension/module/hb_seo_snippets');
+			    $this->model_extension_module_hb_seo_snippets->breadcrumbs_sd($data['breadcrumbs']);
+			    $this->model_extension_module_hb_seo_snippets->local_business();
+				]]>
+            </add>
+        </operation>
+    </file>
+    
+		
+</modification>

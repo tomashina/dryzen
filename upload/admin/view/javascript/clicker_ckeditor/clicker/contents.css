@@ -1,0 +1,15 @@
+/*
+prevent breaking CKEditor content with external styles
+*/
+
+body.cke_editable {
+	margin: 0;
+	padding: 10px;
+}
+body.cke_editable .row {
+	margin-left: -10px;
+	margin-right: -10px;
+}
+body.cke_editable p {
+	margin-bottom: 20px;
+}

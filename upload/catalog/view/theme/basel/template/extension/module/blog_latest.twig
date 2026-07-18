@@ -1,0 +1,101 @@
+<div class="widget blog-widget grid{% if contrast %} contrast-bg{% endif %}" {% if use_margin %} style="margin-bottom:{{ margin }}"{% endif %}>
+{% if block_title %}
+    <div class="widget-title">
+        {% if title_preline %}<p class="pre-line">{{ title_preline }}</p>{% endif %}
+        {% if title %} 
+            <p class="main-title"><span>{{ title }}</span></p>
+            <p class="widget-title-separator"><i class="icon-line-cross"></i></p>
+        {% endif %}
+        {% if title_subline %}
+        <p class="sub-line"><span>{{ title_subline }}</span></p>
+        {% endif %}
+    </div>
+{% endif %}
+    {% if posts %}
+    <div class="grid-holder blog grid{{ columns }}{% if carousel %} carousel{% endif %} module{{ module }}{% if carousel_a and rows > 1 %} sticky-arrows{% endif %}">
+            {% for blog in posts %}
+                <div class="item single-blog">
+                  {% if blog.image and thumb %}
+                    <div class="banner_wrap hover-zoom hover-darken"{% if columns == 'list' %} style="width:{{img_width}}px"{% endif %}>
+                    <img class="zoom_image" src="{{ blog.image }}" alt="{{ blog.title }}" title="{{ blog.title }}" />
+                    <a href="{{ blog.href }}" class="effect-holder"></a>
+                    {% if date_added_status %}
+                    <div class="date_added"><span class="day">{{ blog.date_added_day }}</span><b class="month">{{ blog.date_added_month }}</b></div>
+                    {% endif %}
+                    {% if blog.tags %}
+                    <div class="tags-wrapper">
+                    <div class="tags primary-bg-color">
+                    {% for tag in blog.tags|slice(0,2) %}
+                    <a href="index.php?route=extension/blog/home&tag={{ tag|trim }}">{{ tag|trim }}</a>
+                    {% endfor %}
+                    </div>
+                    </div>
+                    {% endif %}
+                    </div>
+                  {% endif %}
+                <div class="summary">
+                <h3 class="blog-title"><a href="{{ blog.href }}">{{ blog.title }}</a></h3>
+            
+                {% if blog.short_description %}
+                <p class="short-description">{{ blog.short_description }}</p>
+                {% endif %}
+                </div>
+                </div>
+            {% endfor %}
+        </div> <!-- .grid-holder ends -->
+        {% if use_button %}
+        <div class="widget_bottom_btn{% if carousel and carousel_b %} has-dots{% endif %}">
+        <a class="btn btn-outline" href="{{ blog_show_all }}">{{ text_show_all }}</a>
+        </div>
+        {% endif %}
+    {% endif %}
+    <div class="clearfix"></div>
+</div>
+
+{% if carousel %}
+<script><!--
+$('.grid-holder.blog.module{{ module }}').slick({
+{% if carousel_a %}
+prevArrow: "<a class=\"arrow-left icon-arrow-left\"></a>",
+nextArrow: "<a class=\"arrow-right icon-arrow-right\"></a>",
+{% else %}
+arrows: false,
+{% endif %}
+{% if direction == 'rtl' %}
+rtl: true,
+{% endif %}
+{% if carousel_b %}
+dots:true,
+{% endif %}
+respondTo:'min',
+rows:{{ rows }},
+{% if columns == '4' %}
+slidesToShow:4,slidesToScroll:4,responsive:[{breakpoint:960,settings:{slidesToShow:3,slidesToScroll:3}},{breakpoint:600,settings:{slidesToShow:2,slidesToScroll:2}},
+{% elseif columns == '3' %}
+slidesToShow:3,slidesToScroll:3,responsive:[{breakpoint:600,settings:{slidesToShow:2,slidesToScroll:2}},
+{% elseif columns == '2' %}
+slidesToShow:2,slidesToScroll:2,responsive:[
+{% elseif columns == '1' or columns == 'list' %}
+adaptiveHeight:true,slidesToShow:1,slidesToScroll:1,responsive:[
+{% endif %}
+{breakpoint:420,settings:{slidesToShow:1,slidesToScroll:1}}
+]
+});
+$("[data-toggle='tooltip").tooltip();
+{% if carousel_a and rows > 1 %}
+$(document).ready(function() {
+var c_o = $('.module{{ module }}').offset().top;
+var c_o_b = $('.module{{ module }}').offset().top + $('.module{{ module }}').outerHeight(true) - 100;
+var sticky_arrows = function(){
+var m_o = $(window).scrollTop() + ($(window).height()/2);
+if (m_o > c_o && m_o < c_o_b) {
+$('.grid-holder.blog.module{{ module }} .slick-arrow').addClass('visible').css('top', m_o - c_o + 'px');
+} else {
+$('.grid-holder.blog.module{{ module }} .slick-arrow').removeClass('visible');
+}
+};
+$(window).scroll(function() {sticky_arrows();});
+});
+{% endif %}
+//--></script>
+{% endif %}

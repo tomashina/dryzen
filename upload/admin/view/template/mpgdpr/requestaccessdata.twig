@@ -1,0 +1,493 @@
+{{ header }}{{ column_left }}
+<div id="content" class="mp-content">
+  <div class="page-header">
+    <div class="container-fluid">
+      <div class="pull-right">
+        <button type="button" data-toggle="tooltip" title="{{ button_delete }}" class="btn btn-danger" onclick="confirm('{{ text_confirm }}') ? $('#form-requestaccessdata').submit() : false;"><i class="fa fa-trash-o"></i></button>
+      </div>
+      <h1>{{ heading_title }}</h1>
+      <ul class="breadcrumb">
+        {% for breadcrumb in breadcrumbs %}
+        <li><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+  <div class="container-fluid">
+    {% if error_warning %}
+    <div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i> {{ error_warning }}
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+    </div>
+    {% endif %}
+    {% if success %}
+    <div class="alert alert-success"><i class="fa fa-check-circle"></i> {{ success }}
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+    </div>
+    {% endif %}
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title"><i class="fa fa-list"></i> {{ text_list }}</h3>
+      </div>
+      <div class="panel-body">
+        <div class="well">
+          <div class="row">
+            <div class="col-sm-4">
+              <div class="form-group">
+                <label class="control-label" for="input-email">{{ entry_email }}</label>
+                <input type="text" name="filter_email" value="{{ filter_email }}" placeholder="{{ entry_email }}" id="input-email" class="form-control" />
+              </div>
+              <div class="form-group">
+                <label class="control-label" for="input-request_id">{{ entry_request_id }}</label>
+                <input type="text" name="filter_request_id" value="{{ filter_request_id }}" placeholder="{{ entry_request_id }}" id="input-request_id" class="form-control" />
+              </div>
+              <div class="form-group">
+                <label class="control-label" for="input-status">{{ entry_status }}</label>
+                <select name="filter_status" id="input-status" class="form-control">
+                  <option value="*">{{ text_all }}</option>
+                  {% for requestaccess_status in requestaccess_statuses %}
+                  <option value="{{ requestaccess_status.value }}" {% if filter_status==requestaccess_status.value %}selected="selected"{% endif %}>{{ requestaccess_status.text }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+            </div>
+            <div class="col-sm-4">
+             <div class="form-group">
+                <label class="control-label" for="input-filter_date_send">{{ entry_date_send }}</label>
+                <div class="input-group date">
+                  <input type="text" name="filter_date_send" value="{{ filter_date_send }}" placeholder="{{ entry_date_send }}" data-date-format="YYYY-MM-DD" id="input-filter_date_send" class="form-control" /><span class="input-group-btn"><button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button></span>
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="row">
+                  <div class="col-sm-6">
+                    <label class="control-label" for="input-time_lap_value">{{ entry_time_lap_value }}</label>
+                    <input type="text" name="filter_time_lap_value" value="{{ filter_time_lap_value }}" placeholder="{{ entry_time_lap_value }}" id="input-time_lap_value" class="form-control" />
+                  </div>
+                  <div class="col-sm-6">
+                    <label class="control-label" for="input-time_lap">{{ entry_time_lap }}</label>
+                    <select name="filter_time_lap" id="input-time_lap" class="form-control">
+                      <option value="*"></option>
+                      <option value="DAY" {% if filter_time_lap=='DAY' %}selected="selected"{% endif %}>{{ entry_days }}</option>
+                      <option value="WEEK" {% if filter_time_lap=='WEEK' %}selected="selected"{% endif %}>{{ entry_weeks }}</option>
+                      <option value="MONTH" {% if filter_time_lap=='MONTH' %}selected="selected"{% endif %}>{{ entry_months }}</option>
+                      <option value="YEAR" {% if filter_time_lap=='YEAR' %}selected="selected"{% endif %}>{{ entry_years }}</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-4">
+              <div class="form-group">
+                <label class="control-label" for="input-date_start">{{ entry_date_start }}</label>
+                <div class="input-group date">
+                  <input type="text" name="filter_date_start" value="{{ filter_date_start }}" placeholder="{{ entry_date_start }}" data-date-format="YYYY-MM-DD" id="input-date_start" class="form-control" /><span class="input-group-btn"><button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button></span>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="control-label" for="input-date_end">{{ entry_date_end }}</label>
+                <div class="input-group date">
+                  <input type="text" name="filter_date_end" value="{{ filter_date_end }}" placeholder="{{ entry_date_end }}" data-date-format="YYYY-MM-DD" id="input-date_end" class="form-control" /><span class="input-group-btn"><button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button></span>
+                </div>
+              </div>
+              <button type="button" id="button-filter" class="btn btn-primary pull-right"><i class="fa fa-filter"></i> {{ button_filter }}</button>
+            </div>
+          </div>
+        </div>
+        <form action="{{ delete }}" method="post" enctype="multipart/form-data" id="form-requestaccessdata">
+          <div class="table-responsive">
+            <table class="table table-bordered table-hover">
+              <thead>
+                <tr>
+                  <td style="width: 1px;" class="text-center"><input type="checkbox" onclick="$('input[name*=\'selected\']').prop('checked', this.checked);" /></td>
+                  <td class="text-left">{{ column_request_id }}</td>
+                  <td class="text-left">{{ column_email }}</td>
+                  <td class="text-left">{{ column_status }}</td>
+                  <td class="text-left">{{ column_date_send }}</td>
+                  <td class="text-left">{{ column_date }}</td>
+                  <td class="text-right">{{ column_action }}</td>
+                </tr>
+              </thead>
+              <tbody>
+                {% if requests %}
+                {% for request in requests %}
+                <tr class="requestid" id="requestid-{{ request.mpgdpr_datarequest_id }}">
+                  <td class="text-center">{% if request.mpgdpr_datarequest_id in selected %}
+                  <input type="checkbox" name="selected[]" value="{{ request.mpgdpr_datarequest_id }}" checked="checked" />
+                  {% else %}
+                  <input type="checkbox" name="selected[]" value="{{ request.mpgdpr_datarequest_id }}" />
+                  {% endif %}</td>
+                  <td class="text-left">{{ request.mpgdpr_datarequest_id }}</td>
+                  <td class="text-left">{{ request.email }}</td>
+                  <td class="text-left status_text">{{ request.status_text }}</td>
+                  <td class="text-left date_send">{{ request.date_send }}</td>
+                  <td class="text-left">{{ request.date_added }}</td>
+                  <td class="text-right">
+                    {% if request.status == requestaccess_confirmed %}
+                    <button type="button" class="btn btn-warning sendreportaction" data-toggle="tooltip" title="{{ button_sendreport }}"><i class="fa fa-paper-plane"></i></button>
+                    <button type="button" class="btn btn-danger denyaction" data-toggle="tooltip" title="{{ button_deny }}"><i class="fa fa-minus-circle"></i></button>
+                    {% else %}
+                    <button disabled="disabled" type="button" class="btn btn-warning" data-toggle="tooltip" title="{{ button_sendreport }}"><i class="fa fa-paper-plane"></i></button>
+                    <button disabled="disabled" type="button" class="btn btn-danger" data-toggle="tooltip" title="{{ button_deny }}"><i class="fa fa-minus-circle"></i></button>
+                    {% endif %}
+                  </td>
+                </tr>
+                {% endfor %}
+                {% else %}
+                <tr>
+                  <td class="text-center" colspan="9">{{ text_no_results }}</td>
+                </tr>
+                {% endif %}
+              </tbody>
+            </table>
+          </div>
+        </form>
+        <div class="row">
+          <div class="col-sm-6 text-left">{{ pagination }}</div>
+          <div class="col-sm-6 text-right">{{ results }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- modal popup for sendreport start -->
+  <div class="modal fade" id="modal-sendreport" tabindex="-1" role="dialog" aria-labelledby="sendreportLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h5 class="modal-title" id="sendreportLabel">{{ text_send_report }}</h5>
+        </div>
+        <div class="modal-body">
+          <div class="upload-report requestid" data-id="">
+            <h4>{{ text_request_id }}-(<span class="request_id"></span>)</h4>
+            <div class="row">
+              <label class="col-sm-12 control-label" for="input-mpgdpr_download"><span data-toggle="tooltip" title="{{ help_download }}">{{ entry_download }}</span></label>
+              <div class="col-sm-12">
+                <button type="button" id="button-upload" data-loading-text="{{ text_loading }}" class="btn btn-default btn-block"><i class="fa fa-upload"></i> {{ button_upload }}</button>
+                <input type="hidden" name="attachment" value="{{ last_upload_code }}" id="input-attachment" />
+              </div>
+            </div>
+            <div class="row">
+              <label class="col-sm-12 control-label" for="input-date_send">{{ entry_date_send }}</label>
+              <div class="col-sm-12 ">
+                <div class="input-group date">
+                  <input readonly="readonly" type="text" name="date_send" value="" placeholder="{{ entry_date_send }}" data-date-format="YYYY-MM-DD" id="input-date_send" class="form-control" /><span class="input-group-btn"><button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-reply"></i> {{ button_cancel }}</button>
+          <button type="button" class="btn btn-warning dosendreportaction"><i class="fa fa-paper-plane"></i> {{ button_sendreport }}</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- modal popup for sendreport end -->
+  <!-- modal popup for deny start -->
+  <div class="modal fade" id="modal-deny" tabindex="-1" role="dialog" aria-labelledby="denyLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h5 class="modal-title" id="denyLabel">{{ text_deny_reason }}</h5>
+        </div>
+        <div class="modal-body">
+          <div class="deny-reason requestid" data-id="">
+            <h4>{{ text_request_id }}-(<span class="request_id"></span>)</h4>
+            <div class="row">
+             <label class="col-sm-12 control-label" for="input-denyreason">{{ entry_denyreason }}</label>
+                <div class="col-sm-12">
+                  <textarea name="denyreason" id="input-denyreason" class="form-control" placeholder="{{ entry_denyreason }}"></textarea>
+                </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-reply"></i> {{ button_cancel }}</button>
+          <button type="button" class="btn btn-danger dodenyaction"><i class="fa fa-minus-circle"></i> {{ button_deny }}</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- modal popup for deny end -->
+
+  <script type="text/javascript"><!--
+$('#button-filter').on('click', function() {
+  url = 'index.php?route=mpgdpr/requestaccessdata&{{ var_token }}={{ token }}';
+
+  var filter_status = $('select[name=\'filter_status\']').val();
+  if (filter_status != '*') {
+    url += '&filter_status=' + encodeURIComponent(filter_status);
+  }
+
+  var filter_email = $('input[name=\'filter_email\']').val();
+  if (filter_email) {
+    url += '&filter_email=' + encodeURIComponent(filter_email);
+  }
+
+  var filter_request_id = $('input[name=\'filter_request_id\']').val();
+  if (filter_request_id) {
+    url += '&filter_request_id=' + encodeURIComponent(filter_request_id);
+  }
+
+  var filter_date_send = $('input[name=\'filter_date_send\']').val();
+  if (filter_date_send) {
+    url += '&filter_date_send=' + encodeURIComponent(filter_date_send);
+  }
+
+  var filter_date_start = $('input[name=\'filter_date_start\']').val();
+  if (filter_date_start) {
+    url += '&filter_date_start=' + encodeURIComponent(filter_date_start);
+  }
+
+  var filter_date_end = $('input[name=\'filter_date_end\']').val();
+  if (filter_date_end) {
+    url += '&filter_date_end=' + encodeURIComponent(filter_date_end);
+  }
+
+  var filter_time_lap = $('select[name=\'filter_time_lap\']').val();
+  if (filter_time_lap != '*') {
+    url += '&filter_time_lap=' + encodeURIComponent(filter_time_lap);
+  }
+
+  var filter_time_lap_value = $('input[name=\'filter_time_lap_value\']').val();
+  if (filter_time_lap_value) {
+    url += '&filter_time_lap_value=' + encodeURIComponent(filter_time_lap_value);
+  }
+  
+  location = url;
+});
+// show modal popup as per the action
+$('.sendreportaction').on('click', function() {
+  var $this = $(this);
+  var go = true;
+  
+  if(go) {  
+    var $tr = $this.parents('.requestid');
+    var requestid = $tr.attr('id').replace('requestid-','');
+    $('#modal-sendreport').find('.request_id').html(requestid);
+    $('#modal-sendreport').find('.requestid').attr('data-id', requestid);
+    $('#modal-sendreport').modal('show');
+  }
+});
+
+$('#modal-sendreport').on('hidden.bs.modal', function() {
+  $(this).find('.request_id').html('');
+  $(this).find('.requestid').attr('data-id', '');
+});
+
+$('.denyaction').on('click', function() {
+  var $this = $(this);
+  var go = true;
+  
+  if(go) {  
+    var $tr = $this.parents('.requestid');
+    var requestid = $tr.attr('id').replace('requestid-','');
+    
+    $('#modal-deny').find('.request_id').html(requestid);
+    $('#modal-deny').find('.requestid').attr('data-id', requestid);
+    
+    $('#modal-deny').modal('show');
+  }
+});
+
+$('#modal-deny').on('hidden.bs.modal', function() {
+  $(this).find('.request_id').html('');
+  $(this).find('.requestid').attr('data-id', '');
+});
+
+$('.dosendreportaction').on('click', function() {
+  var $this = $(this);
+  $('.alert, .text-danger').remove();
+  var go = true;
+  
+  if(go) {
+    var data = [];
+    var requestid = $('#modal-sendreport').find('.requestid').attr('data-id');
+    data.push('mpgdpr_datarequest_id=' + requestid);
+    var oldclass = $this.find('i').attr('class');
+
+    var form_data =  $('#modal-sendreport').find('.upload-report input').serialize();    
+    data.push(form_data);
+
+    $.ajax({
+      url: 'index.php?route=mpgdpr/requestaccessdata/sendReportAction&{{ var_token }}={{ token }}&o=1',
+      type: 'post',
+      data: data.join('&'),
+      dataType: 'json',
+      beforeSend: function() {
+        $this.find('i').removeClass(oldclass).addClass('fa fa-spinner fa-spin');
+        // $this.button('loading');
+        $this.attr('disabled','disabled');
+      },
+      complete: function() {
+        $this.find('i').removeClass('fa fa-spinner fa-spin');
+        // $this.button('reset');
+        $this.removeAttr('disabled');
+         $this.find('i').addClass(oldclass);
+      },
+      success: function(json) {
+        $('.alert, .text-danger').remove();
+
+        if (json['error']) {
+          $('#modal-sendreport').find('.modal-header').before('<div class="alert alert-danger"><i class="fa fa-check-circle"></i> ' + json['error'] + ' <button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+        }
+        if (json['attachment']) {
+          // $('#modal-sendreport').find('.modal-header').before('<div class="alert alert-danger"><i class="fa fa-check-circle"></i> ' + json['attachment'] + ' <button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+          $('#button-upload').parent().append('<div class="text-danger">' + json['attachment'] + '</div>');
+        }
+        if (json['date_send']) {
+          // $('#modal-sendreport').find('.modal-header').before('<div class="alert alert-danger"><i class="fa fa-check-circle"></i> ' + json['date_send'] + ' <button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+          $('#input-date_send').parent().parent().append('<div class="text-danger">' + json['date_send'] + '</div>');
+        }
+        
+        if (json['success']) {
+          $('#modal-sendreport').find('.modal-header').before('<div class="alert alert-success"><i class="fa fa-check-circle"></i> ' + json['success'] + ' <button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+
+          setTimeout(function() {
+            // disable further action and disable the buttons
+            $('#requestid-'+requestid).find('.sendreportaction').attr('disabled','disabled').removeClass('sendreportaction');
+            $('#requestid-'+requestid).find('.denyaction').attr('disabled','disabled').removeClass('denyaction');
+            $('#requestid-'+requestid).find('.date_send').html($('#input-date_send').val());
+            $('#requestid-'+requestid).find('.status_text').html(json['text_reportsend']);
+
+            $('#modal-sendreport').modal('hide');
+            
+          }, 1000);
+        }
+        // $('html, body').animate({ scrollTop: 0 }, 'slow');
+      },
+      error: function(xhr, ajaxOptions, thrownError) {
+        alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+      }
+    });
+  }
+});
+
+$('.dodenyaction').on('click', function() {
+  var $this = $(this);
+  $('.alert, .text-danger').remove();
+  var go = true;
+  
+  if(go) {
+    var data = [];
+    var requestid = $('#modal-deny').find('.requestid').attr('data-id');
+    data.push('mpgdpr_datarequest_id=' + requestid);
+    
+    var oldclass = $this.find('i').attr('class');
+    var form_data =  $('#modal-deny').find('.deny-reason textarea').serialize();    
+    data.push(form_data);
+    $.ajax({
+      url: 'index.php?route=mpgdpr/requestaccessdata/denyAction&{{ var_token }}={{ token }}&o=1',
+      type: 'post',
+      data: data.join('&'),
+      dataType: 'json',
+      beforeSend: function() {
+        $this.find('i').removeClass(oldclass).addClass('fa fa-spinner fa-spin');
+        // $this.button('loading');
+        $this.attr('disabled','disabled');
+      },
+      complete: function() {
+        $this.find('i').removeClass('fa fa-spinner fa-spin');
+        // $this.button('reset');
+        $this.removeAttr('disabled');
+         $this.find('i').addClass(oldclass);
+      },
+      success: function(json) {
+        $('.alert, .text-danger').remove();
+
+        if (json['error']) {
+          $('#modal-deny').find('.modal-header').before('<div class="alert alert-danger"><i class="fa fa-check-circle"></i> ' + json['error'] + ' <button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+        }
+        if (json['denyreason']) {
+          $('#modal-deny').find('.modal-header').before('<div class="alert alert-danger"><i class="fa fa-check-circle"></i> ' + json['denyreason'] + ' <button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+          $('#modal-deny').find('.deny-reason').append('<div class="text-danger">' + json['denyreason'] + '</div>');
+        }
+        
+        if (json['success']) {
+          $('#modal-deny').find('.modal-header').before('<div class="alert alert-success"><i class="fa fa-check-circle"></i> ' + json['success'] + ' <button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+
+          setTimeout(function() {
+            // disable further action and disable the buttons
+             $('#requestid-'+requestid).find('.sendreportaction').attr('disabled','disabled').removeClass('sendreportaction');
+              $('#requestid-'+requestid).find('.denyaction').attr('disabled','disabled').removeClass('denyaction');
+              $('#requestid-'+requestid).find('.status_text').html(json['text_deny']);
+              $('#modal-deny').modal('hide');
+          }, 1000);
+
+        }
+        // $('html, body').animate({ scrollTop: 0 }, 'slow');
+      },
+      error: function(xhr, ajaxOptions, thrownError) {
+        alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+      }
+    });
+  }
+});
+
+
+$('button[id=button-upload]').on('click', function() {
+  var node = this;
+  $('.alert, .text-danger, .text-success').remove();
+  $('#form-upload').remove();
+
+  $('body').prepend('<form enctype="multipart/form-data" id="form-upload" style="display: none;"><input type="file" name="file" /></form>');
+
+  $('#form-upload input[name=\'file\']').trigger('click');
+
+  if (typeof timer != 'undefined') {
+      clearInterval(timer);
+  }
+
+  timer = setInterval(function() {
+    if ($('#form-upload input[name=\'file\']').val() != '') {
+      clearInterval(timer);
+
+      $.ajax({
+        url: 'index.php?route=mpgdpr/requestaccessdata/uploadAttachment&{{ var_token }}={{ token }}',
+        type: 'post',
+        dataType: 'json',
+        data: new FormData($('#form-upload')[0]),
+        cache: false,
+        contentType: false,
+        processData: false,
+        beforeSend: function() {
+          $(node).button('loading');
+        },
+        complete: function() {
+          $(node).button('reset');
+        },
+        success: function(json) {
+          $('.text-danger, text-success').remove();
+
+          if (json['error']) {
+            $(node).parent().find('input').after('<div class="text-danger">' + json['error'] + '</div>');
+          }
+
+          if (json['success']) {
+            alert(json['success']);
+
+            $(node).parent().find('input').val(json['code']);
+            $(node).parent().find('input').after('<div class="text-success">' + json['filename'] + '</div>');
+          }
+        },
+        error: function(xhr, ajaxOptions, thrownError) {
+          alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+        }
+      });
+    }
+  }, 500);
+});
+
+//--></script> 
+  <script src="view/javascript/jquery/datetimepicker/bootstrap-datetimepicker.min.js" type="text/javascript"></script>
+  <link href="view/javascript/jquery/datetimepicker/bootstrap-datetimepicker.min.css" type="text/css" rel="stylesheet" media="screen" />
+  <script type="text/javascript"><!--
+$('.date').datetimepicker({
+  pickTime: false
+});
+//--></script>
+</div>
+{{ footer }}

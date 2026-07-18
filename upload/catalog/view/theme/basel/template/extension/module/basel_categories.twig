@@ -1,0 +1,101 @@
+<div class="widget category-widget grid{% if contrast %} contrast-bg{% endif %}" {% if use_margin %}style="margin-bottom:{{ margin }}"{% endif %}>
+    {% if block_title %}
+    <div class="widget-title">
+        {% if title_preline %}<p class="pre-line">{{ title_preline }}</p>{% endif %}
+        {% if title %} 
+            <p class="main-title"><span>{{ title }}</span></p>
+            <p class="widget-title-separator"><i class="icon-line-cross"></i></p>
+        {% endif %}
+        {% if title_subline %}
+        <p class="sub-line"><span>{{ title_subline }}</span></p>
+        {% endif %}
+    </div>
+	{% endif %}
+
+    {% if categories %}
+        <div class="grid-holder category grid{{ columns }} {% if carousel %}carousel{% endif %} module{{ module }}">
+        
+        {% if view_subs %}
+        
+              {% for category in categories %}
+
+                <div class="item single-category has-subs">
+                <div class="table">
+                <div class="table-cell v-top img-cell"><img src="{{ category.thumb }}" alt="{{ category.name }}" /></div>
+                
+                <div class="table-cell w100 v-top">
+                <h5><b><a href="{{ category.href }}">{{ category.name }}</a></b></h5>
+                {% if category.children %}
+                <ul class="list-unstyled">
+                {% for child in category.children %}
+                <li><a class="hover_uline" href="{{ child.href }}">{{ child.name }}</a></li>
+                {% endfor %}
+                </ul>
+                {% endif %}
+                </div>
+                </div>
+                </div><!-- .single-category ends -->
+              {% endfor %}
+              
+        {% else %}
+        	  
+              {% for category in categories %}
+                <div class="item single-category no-subs">
+                <div class="banner_wrap hover-zoom">
+				<a href="{{ category.href }}"><img class="zoom_image" src="{{ category.thumb }}" alt="{{ category.name }}" /></a>
+					{% if count %}
+					<div class="overlay">
+					<a class="table w100 h100" href="{{ category.href }}">
+					<b class="table-cell text-center">{{ category.products }}</b>
+					</a>
+					</div>
+					{% endif %}
+                </div>
+                <p class="name contrast-heading">{{ category.name }}</p>
+                <a class="u-lined" href="{{ category.href }}">{{ basel_text_view_products }}</a>
+                </div><!-- .single-category ends -->
+              {% endfor %}
+              
+        {% endif %}
+          
+        </div> <!-- .grid-holder ends -->
+    {% endif %}
+    
+    <div class="clearfix"></div>
+</div>
+
+{% if carousel %}
+<script>
+$('.grid-holder.category.module{{ module }}').slick({
+{% if carousel_a %}
+prevArrow: "<a class=\"arrow-left icon-arrow-left\"></a>",
+nextArrow: "<a class=\"arrow-right icon-arrow-right\"></a>",
+{% else %}
+arrows: false,
+{% endif %}
+{% if direction == 'rtl' %}
+rtl: true,
+{% endif %}
+{% if carousel_b %}
+dots:true,
+{% endif %}
+respondTo:'min',
+rows:{{ rows }},
+{% if columns == '6' %}
+slidesToShow:6,slidesToScroll:6,responsive:[{breakpoint:1100,settings:{slidesToShow:5,slidesToScroll:5}},{breakpoint:960,settings:{slidesToShow:3,slidesToScroll:3}},{breakpoint:600,settings:{slidesToShow:2,slidesToScroll:2}},
+{% elseif columns == '5' %}
+slidesToShow:5,slidesToScroll:5,responsive:[{breakpoint:1100,settings:{slidesToShow:4,slidesToScroll:4}},{breakpoint:960,settings:{slidesToShow:3,slidesToScroll:3}},{breakpoint:600,settings:{slidesToShow:2,slidesToScroll:2}},
+{% elseif columns == '4' %}
+slidesToShow:4,slidesToScroll:4,responsive:[{breakpoint:960,settings:{slidesToShow:3,slidesToScroll:3}},{breakpoint:600,settings:{slidesToShow:2,slidesToScroll:2}},
+{% elseif columns == '3' %}
+slidesToShow:3,slidesToScroll:3,responsive:[{breakpoint:600,settings:{slidesToShow:2,slidesToScroll:2}},
+{% elseif columns == '2' %}
+slidesToShow:2,slidesToScroll:2,responsive:[
+{% elseif columns == '1' or columns == 'list' %}
+adaptiveHeight:true,slidesToShow:1,slidesToScroll:1,responsive:[
+{% endif %}
+{breakpoint:420,settings:{slidesToShow:1,slidesToScroll:1}}
+]
+});
+</script>
+{% endif %}

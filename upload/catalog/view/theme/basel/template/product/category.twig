@@ -1,0 +1,129 @@
+{{ header }}
+<div class="container dryzen-shop-shell">
+  
+  <ul class="breadcrumb">
+    {% for breadcrumb in breadcrumbs %}
+    <li><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+    {% endfor %}
+  </ul>
+  
+  <div class="row">
+  
+  {{ column_left }}
+    {% if column_left and column_right %}
+    {% set class = 'col-sm-6' %}
+    {% elseif column_left or column_right %}
+    {% set class = 'col-md-9 col-sm-8' %}
+    {% else %}
+    {% set class = 'col-sm-12' %}
+    {% endif %}
+    
+    <div id="content" class="dryzen-shop-content {{ class }}" style="min-height:unset">
+    {{ content_top }}
+      <div class="dryzen-category-intro{% if thumb and category_thumb_status %} has-thumb{% endif %}">
+        <div class="dryzen-category-copy">
+          <h1 id="page-title">{{ heading_title }}</h1>
+          {% if description %}
+          <div class="dryzen-category-description">{{ description }}</div>
+          {% endif %}
+        </div>
+
+        {% if thumb and category_thumb_status %}
+        <div class="dryzen-category-media">
+          <img class="category-main-thumb" src="{{ thumb }}" alt="{{ heading_title }}" title="{{ heading_title }}" />
+        </div>
+        {% endif %}
+      </div>
+      
+     {% if categories and category_subs_status %}
+                <h3 class="lined-title hidden-xs"><span>{{ text_refine }}</span></h3>
+                <div class="grid-holder categories carousel grid-holder grid6 prod_module0 carousel mb-3">
+                    {% for category in categories %}
+                        <div class="item single-product">
+                            <a href="{{ category.href }}"><img src="{{ category.thumb }}" alt="{{ category.name }}" title="{{ category.name }}" /></a>
+                            <a href="{{ category.href }}">{{ category.name }}</a></div>
+                    {% endfor %}
+                </div>
+
+                <script>
+                    $('.grid-holder.prod_module0').slick({
+                        prevArrow: false,
+                        nextArrow: false,
+                        dots:true,
+                        respondTo:'min',
+
+                        rows:1,
+                        slidesToShow:6,slidesToScroll:2,responsive:[{breakpoint:1280,settings:{slidesToShow:6,slidesToScroll:2}},{breakpoint:960,settings:{slidesToShow:5,slidesToScroll:2}},{breakpoint:600,settings:{slidesToShow:2,slidesToScroll:1}},
+                        ]
+                    });
+                    $('.product-style2 .single-product .icon').attr('data-placement', 'top');
+                    $('[data-toggle=\'tooltip\']').tooltip({container: 'body'});
+                </script>
+            {% endif %}
+	      
+      {% if products %}
+      <div id="product-view" class="grid dryzen-shop-results">
+      
+      <div class="table filter dryzen-shop-toolbar hidden">
+
+                <div class="table-cell nowrap hidden-sm hidden-md hidden-lg"><a class="filter-trigger-btn"></a></div>
+      
+          
+     <div class="table-cell nowrap hidden">
+         <span>{{ text_limit }}</span>
+          <select id="input-limit" class="form-control input-sm inline" onchange="location = this.value;">
+            {% for limits in limits %}
+            {% if limits.value == limit %}
+            <option value="{{ limits.href }}" selected="selected">{{ limits.text }}</option>
+            {% else %}
+            <option value="{{ limits.href }}">{{ limits.text }}</option>
+            {% endif %}
+            {% endfor %}
+          </select>
+          </div> 
+          
+          <div class="table-cell w100">
+          <a href="{{ compare }}" id="compare-total" class="hidden-xs">{{ text_compare }}</a>
+          </div>
+          
+          <div class="table-cell nowrap text-right">
+          <div class="sort-select">
+          <span class="hidden-xs">{{ text_sort }}</span>
+          <select id="input-sort" class="form-control input-sm inline" onchange="location = this.value;">
+            {% for sorts in sorts %}
+            {% if sorts.value == '%s-%s'|format(sort, order) %}
+            <option value="{{ sorts.href }}" selected="selected"> {{ sorts.text }}</option>
+            {% else %}
+            <option value="{{ sorts.href }}" >{{ sorts.text }}</option>
+            {% endif %}
+            {% endfor %}
+          </select>
+          </div>
+          </div>
+          
+         
+      
+      </div>
+      
+      <div class="grid-holder product-holder grid{{ basel_prod_grid }} dryzen-product-grid">
+        {% for product in products %}
+        {% include 'basel/template/product/single_product.twig' %}
+        {% endfor %}
+      </div>
+      </div> <!-- #product-view ends -->
+      
+      <div class="row pagination-holder dryzen-shop-pagination">
+        <div class="col-sm-6 xs-text-center pagination-navigation">{{ pagination }}</div>
+        <div class="col-sm-6 text-right xs-text-center"><span class="pagination-text">{{ results }}</span></div>
+      </div>
+      
+      {% endif %}
+      
+      {% if not products %}
+      <p>{{ text_empty }}</p>
+      {% endif %}
+      
+      {{ content_bottom }}</div>
+    {{ column_right }}</div>
+</div>
+{{ footer }}

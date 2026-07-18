@@ -1,0 +1,123 @@
+{% include 'extension/module/msmart_search/_header.twig' %}
+
+<br />
+
+<ul class="nav nav-tabs">
+	{% for type,items in groups %} 
+		<li{{ type == 'products' ? ' class="active"' : '' }}><a data-toggle="tab" href="#tab-{{ type }}">{{ attribute(_context, 'text_' ~ type) }}</a></li>
+	{% endfor %} 
+</ul>
+
+<div class="tab-content">
+	{% for type,items in groups %} 
+		<div class="tab-pane{{ type == 'products' ? ' active' : '' }}" id="tab-{{ type }}">
+			{% for group,items2 in items %} 
+				<h3>{{ attribute(_context, 'text_'~group) }}</h3>
+				<table class="table table-bordered table-hover table-striped">
+					<thead>
+						{{ items2['thead'] }}
+					</thead>
+					<tbody>
+						{{ items2['tbody'] }}
+					</tbody>
+				</table>
+			{% endfor %}
+			<div class="hide" id="preview-query-{{ type }} }">
+				<strong>{{ text_preview_conditions }} }:</strong><br /><br />
+				<code style="padding: 3px 6px; display: block; white-space: normal;"></code><br />
+				{{ type == 'products' ? text_preview_conditions_guide : '' }} }}
+			</div>
+		</div>
+	 {% endfor %}
+</div>
+
+<div class="hide" id="preview-query">
+	<strong>{{ text_preview_conditions }}:</strong><br /><br />
+	<code style="padding: 3px 6px; display: block; white-space: normal;"></code><br />
+	{{ text_preview_conditions_guide }} 
+</div>
+
+<script type="text/javascript">	
+	(function(){
+		$('input[data-field]').on('change keyup', function(){
+			var s = $(this).val() === '',
+				type = $(this).attr('data-type');
+
+			$('#status-'+type+'-'+$(this).attr('data-field')).removeClass(s?'fa-check':'fa-remove').addClass(s?'fa-remove':'fa-check');
+			
+			preview( type );
+		});
+		
+		function ksort(obj){
+			var keys = Object.keys(obj).sort(), 
+				sortedObj = {};
+
+			for(var i in keys) {
+				sortedObj[keys[i]] = obj[keys[i]];
+			}
+
+			return sortedObj;
+		}
+	
+		function preview( type ) {
+			var groups = {},
+				preview = [],
+				i, j;
+			
+			function each( split ) {
+				split = split ? '1' : '0';
+				
+				$('input[data-field][data-type="' + type + '"]').each(function(){
+					var val = $(this).val(),
+						field = $(this).attr('data-field');
+
+					if( val !== '' ) {
+						var phrase = [ 'search phrase' ],
+							words = [];
+						
+						if( split == '1' ) {
+							phrase = phrase[0].split(' ');
+						}
+						
+						for( i = 0; i < phrase.length; i++ ) {
+							words.push( field + " LIKE '%" + phrase[i] + "%'" );
+						}
+						
+						if( typeof groups[split] == 'undefined' ) {
+							groups[split] = {};
+						}
+						
+						if( typeof groups[split][val] == 'undefined' ) {
+							groups[split][val] = [];
+						}
+
+						groups[split][val].push( words.join( ' AND ' ) );
+					}
+				});
+				
+				return each;
+			}
+			
+			each()( true );
+			
+			for( i in groups ) {
+				groups[i] = ksort( groups[i] );
+			}
+			
+			for( i in groups['0'] ) {
+				preview.push( ( preview.length + 1 ) + ') (' + groups['0'][i].join( ') OR (' ) + ')' );
+				preview.push( ( preview.length + 1 ) + ') (' + groups['1'][i].join( ') OR (' ) + ')' );
+			}
+			
+			$('#preview-query-'+type)[preview.length?'removeClass':'addClass']('hide').find('code').html( preview.join( '<br />' ) );
+		}
+		
+		{% for type,items in groups %} 
+			preview('{{ type }}');
+		{% endfor %} 
+	})();
+</script>
+
+<div class="clearfix"></div>
+
+{% include 'extension/module/msmart_search/_footer.twig' %}

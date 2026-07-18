@@ -1,0 +1,94 @@
+<div class="table-responsive">
+	<table class="table table-bordered table-condensed dashboard-table">
+		<thead>
+			<tr>
+                <td class="col-sm-2"></td>
+                <td class="col-sm-6"></td>
+                <td class="col-sm-1"></td>
+                <td class="col-sm-1 text-right">{{ text_available_keywords }}</td>
+                <td class="col-sm-1 text-right">{{ text_total_keywords }}</td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr> 
+                <td colspan="5" class="text-left table-keyword-header"><h4>{{ text_product_keyword }}</h4></td>
+            </tr>
+            {% for language in languages %}
+            <tr>
+                <td class="text-center"><img src="language/{{ language.code }}/{{ language.code }}.png" title="{{ language.name }}"/>&nbsp;{{ language.name }}</td>
+                <td class="text-center">                
+                    <div class="progress">
+                        <div id="product_progress_bar{{ language.language_id }}" class="progress-bar progress-bar-{{ product_bar_color_class[language['language_id']] }}" role="progressbar" style="width: {{ percent_product_count[language['language_id']] }}%" aria-valuenow="{{ percent_product_count[language['language_id']] }}" aria-valuemin="0" aria-valuemax="100">{{ percent_product_count[language['language_id']] }}%</div>
+                    </div>    
+                </td>
+                <td class="text-center">
+                    <a class="btn btn-success btn-sm" onclick="generateKeywords('product', '{{ language.language_id }}');" data-bs-toggle="tooltip" title="{{ button_generate }}"><i class="fa fa-bolt"></i></a>
+                    <a class="btn btn-danger btn-sm" onclick="confirm('{{ text_confirm_delete }}') ? clearKeywords('product_id=', '{{ language.language_id }}') : false;" data-bs-toggle="tooltip" title="{{ button_clear }}"><i class="fa fa-trash"></i></a>
+                </td>
+                <td class="text-right"><span id="product_count{{ language.language_id }}">{{ available_product_count[language['language_id']] }}</span></td>
+                <td class="text-right">{{ total_product_count[language['language_id']] }}</td>
+            </tr>
+            {% endfor %}
+            
+            <tr> 
+                <td colspan="5" class="text-left table-keyword-header"><h4>{{ text_category_keyword }}</h4></td>
+            </tr>
+            {% for language in languages %}
+            <tr>
+                <td class="text-center"><img src="language/{{ language.code }}/{{ language.code }}.png" title="{{ language.name }}"/>&nbsp;{{ language.name }}</td>
+                <td class="text-center">                
+                    <div class="progress">
+                        <div id="category_progress_bar{{ language.language_id }}" class="progress-bar progress-bar-{{ category_bar_color_class[language['language_id']] }}" role="progressbar" style="width: {{ percent_category_count[language['language_id']] }}%" aria-valuenow="{{ percent_category_count[language['language_id']] }}" aria-valuemin="0" aria-valuemax="100">{{ percent_category_count[language['language_id']] }}%</div>
+                    </div>
+                </td>
+                <td class="text-center">
+                    <a class="btn btn-success btn-sm" onclick="generateKeywords('category', '{{ language.language_id }}');" data-bs-toggle="tooltip" title="{{ button_generate }}"><i class="fa fa-bolt"></i></a>
+                    <a class="btn btn-danger btn-sm" onclick="confirm('{{ text_confirm_delete }}') ? clearKeywords('category_id=', '{{ language.language_id }}') : false;" data-bs-toggle="tooltip" title="{{ button_clear }}"><i class="fa fa-trash"></i></a>
+                </td>
+                <td class="text-right"><span id="category_count{{ language.language_id }}">{{ available_category_count[language['language_id']] }}</span></td>
+                <td class="text-right">{{ total_category_count[language['language_id']] }}</td>
+            </tr>
+            {% endfor %}
+
+            <tr> 
+                <td colspan="5" class="text-left table-keyword-header"><h4>{{ text_manufacturer_keyword }}</h4></td>
+            </tr>
+            {% for language in languages %}
+            <tr>
+                <td class="text-center"><img src="language/{{ language.code }}/{{ language.code }}.png" title="{{ language.name }}"/>&nbsp;{{ language.name }}</td>
+                <td class="text-center">                
+                    <div class="progress">
+                        <div id="manufacturer_progress_bar{{ language.language_id }}" class="progress-bar progress-bar-{{ brand_bar_color_class[language['language_id']] }}" role="progressbar" style="width: {{ percent_brand_count[language['language_id']] }}%" aria-valuenow="{{ percent_brand_count[language['language_id']] }}" aria-valuemin="0" aria-valuemax="100">{{ percent_brand_count[language['language_id']] }}%</div>
+                    </div>
+                </td>
+                <td class="text-center">
+                    <a class="btn btn-success btn-sm" onclick="generateKeywords('manufacturer', '{{ language.language_id }}');" data-bs-toggle="tooltip" title="{{ button_generate }}"><i class="fa fa-bolt"></i></a>
+                    <a class="btn btn-danger btn-sm" onclick="confirm('{{ text_confirm_delete }}') ? clearKeywords('manufacturer_id=', '{{ language.language_id }}') : false;" data-bs-toggle="tooltip" title="{{ button_clear }}"><i class="fa fa-trash"></i></a>
+                </td>
+                <td class="text-right"><span id="manufacturer_count{{ language.language_id }}">{{ available_brand_count[language['language_id']] }}</span></td>
+                <td class="text-right">{{ total_brand_count[language['language_id']] }}</td>
+            </tr>
+            {% endfor %}
+
+            <tr> 
+                <td colspan="5" class="text-left table-keyword-header"><h4>{{ text_information_keyword }}</h4></td>
+            </tr>
+            {% for language in languages %}
+            <tr>
+                <td class="text-center"><img src="language/{{ language.code }}/{{ language.code }}.png" title="{{ language.name }}"/>&nbsp;{{ language.name }}</td>
+                <td class="text-center">                
+                    <div class="progress">
+                        <div id="information_progress_bar{{ language.language_id }}" class="progress-bar progress-bar-{{ information_bar_color_class[language['language_id']] }}" role="progressbar" style="width: {{ percent_information_count[language['language_id']] }}%" aria-valuenow="{{ percent_information_count[language['language_id']] }}" aria-valuemin="0" aria-valuemax="100">{{ percent_information_count[language['language_id']] }}%</div>
+                    </div>
+                </td>
+                <td class="text-center">
+                    <a class="btn btn-success btn-sm" onclick="generateKeywords('information', '{{ language.language_id }}');" data-bs-toggle="tooltip" title="{{ button_generate }}"><i class="fa fa-bolt"></i></a>
+                    <a class="btn btn-danger btn-sm" onclick="confirm('{{ text_confirm_delete }}') ? clearKeywords('information_id=', '{{ language.language_id }}') : false;" data-bs-toggle="tooltip" title="{{ button_clear }}"><i class="fa fa-trash"></i></a>
+                </td>
+                <td class="text-right"><span id="information_count{{ language.language_id }}">{{ available_information_count[language['language_id']] }}</span></td>
+                <td class="text-right">{{ total_information_count[language['language_id']] }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>

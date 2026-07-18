@@ -1,0 +1,51 @@
+<script>
+	
+	(function($, ro_data){
+		
+		var ro_texts = {};
+		ro_texts['text_ro_clear_options'] 		= '{{ (text_ro_clear_options ?? false) ? text_ro_clear_options|e : '' }}';
+		ro_texts['entry_stock_control_error'] 	= '{{ (entry_stock_control_error ?? false) ? entry_stock_control_error|e : '' }}';
+		ro_texts['text_stock'] 					= '{{ (text_stock ?? false) ? text_stock|e : '' }}';
+		ro_texts['stock'] 						= '{{ (stock ?? false) ? stock|e : '' }}';
+		ro_texts['stock_status'] 				= '{{ (stock_status ?? false) ? stock_status|e : '' }}';
+		ro_texts['product_model'] 				= '{{ (model ?? false) ? model|e : ro_product_model|e }}';
+	
+		var ro_params = {};
+		ro_params['ro_settings'] 		= {{ ro_settings|json_encode }};
+		ro_params['ro_texts'] 			= ro_texts;
+		ro_params['product_id']			= {{ ro_product_id }};
+		ro_params['ro_data'] 			= ro_data;
+		ro_params['ro_theme_name'] 		= '{{ ro_theme_name }}';
+		{% if (key_of_getROProductThemeMethods ?? false) %}
+			ro_params['key_of_getROProductThemeMethods'] 		= '{{ key_of_getROProductThemeMethods }}';
+		{% endif %}
+		{% if ( ros_to_select ?? false ) %}
+			ro_params['ros_to_select'] 	= {{ ros_to_select|json_encode }};
+		{% elseif ( ro_filter_name ?? false ) %}
+			ro_params['filter_name'] 	= '{{ ro_filter_name }}';
+		{% elseif ( ro_search ?? false ) %}
+			ro_params['filter_name'] 	= '{{ ro_search }}';
+		{% endif %}
+		{% if ( poip_ov ?? false) %}
+			ro_params['poip_ov'] 		= '{{ poip_ov }}';
+		{% endif %}
+		
+		let $container_of_options = $('{{ ro_container_selector ?? 'body' }}');
+		if ( typeof(ro_getProductContainer) == 'function' ) {
+			$container_of_options = ro_getProductContainer({{ ro_product_id }}, $container_of_options);
+		}
+		{% if ro_custom_params ?? false %}
+			$.extend(ro_params, {{ ro_custom_params|json_encode }});
+		{% endif %}
+			
+		if ( typeof(liveopencartInitRO) == 'function' ) {
+			liveopencartInitRO($container_of_options, ro_params, ro_data);
+		} else {
+			$().ready(function(){
+				liveopencartInitRO($container_of_options, ro_params, ro_data);
+			});
+		}
+		
+	})(jQuery, {{ ro_data ? ro_data|json_encode : false }});
+		
+</script>

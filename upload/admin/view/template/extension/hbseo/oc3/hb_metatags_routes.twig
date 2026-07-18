@@ -1,0 +1,30 @@
+<table class="table table-bordered table-condensed table-hover">
+	<thead>
+		<tr>
+			<td>{{ text_route }}</td>
+			<td>{{ text_meta_title }}</td>
+			<td>{{ text_meta_description }}</td>
+			<td>{{ text_meta_keywords }}</td>
+			<td class="text-right">{{ text_date_added }}</td>
+			<td class="text-center">{{ text_action }}</td>
+		</tr>
+	</thead>
+	<tbody>
+	{% if (records) %} 
+		{% for record in records %} 
+			<tr>
+				<td>{{ record.route }}</td>
+				<td>{{ record.meta_title }}</td>
+				<td>{{ record.meta_description }}</td>
+				<td>{{ record.meta_keyword }}</td>
+				<td class="text-right">{{ record.date_added }}</td>
+				<td class="text-center"><a class="btn btn-sm btn-danger" onclick="deleteMeta({{ record.id }}, {{ language_id }})"><i class="fa fa-trash"></i>&nbsp;{{ button_delete }}</a></td>
+			</tr>
+		{% endfor %}<!--endfor-->
+	{% else %}<!--endfor-->
+		<tr>
+			<td  class="text-center" colspan="6">{{ text_no_records }}</td>
+		</tr>
+	{% endif %}<!--endif-->
+	</tbody>
+</table>

@@ -1,0 +1,3 @@
+Add in config.js
+
+config.extraPlugins = 'imagecaptioned';

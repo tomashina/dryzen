@@ -1,0 +1,61 @@
+<div class="form-group">
+    <label class="col-sm-2 control-label">{{ text_on_display_totals }}</label>
+    <label class="col-sm-1 control-label">
+        {% set checked = '' %}
+        {% if DEF_settings['is_display_total'] %}
+            {% set checked = ' checked="checked"' %}
+        {% endif %}
+        <input type="checkbox"
+               class="form-control checkbox-inline"
+               name="DEF_settings[is_display_total]"
+            {{ checked }}
+            >
+    </label>
+</div>
+
+<div class="form-group">
+    <label class="col-sm-2 control-label">{{ text_on_group_attributes }}</label>
+
+    <label class="col-sm-1 control-label">
+        {% set checked = '' %}
+        {% if DEF_settings['is_group_attributes'] %}
+            {% set checked = ' checked="checked"' %}
+        {% endif %}
+        <input type="checkbox"
+               class="form-control checkbox-inline"
+               name="DEF_settings[is_group_attributes]"
+            {{ checked }}
+            >
+    </label>
+</div>
+
+<div class="form-group">
+    <label class="col-sm-2 control-label">{{ text_on_button_apply }}</label>
+
+    <label class="col-sm-1 control-label">
+        {% set checked = '' %}
+        {% if DEF_settings['is_button_apply'] %}
+            {% set checked = ' checked="checked"' %}
+        {% endif %}
+        <input type="checkbox"
+               class="form-control checkbox-inline"
+               name="DEF_settings[is_button_apply]"
+            {{ checked }}
+            >
+    </label>
+</div>
+<div class="form-group">
+    <label class="col-sm-2 control-label">{{ text_on_button_clear }}</label>
+
+    <label class="col-sm-1 control-label">
+        {% set checked = '' %}
+        {% if DEF_settings['is_button_clear'] %}
+            {% set checked = ' checked="checked"' %}
+        {% endif %}
+        <input type="checkbox"
+               class="form-control checkbox-inline"
+               name="DEF_settings[is_button_clear]"
+            {{ checked }}
+            >
+    </label>
+</div>

@@ -1,0 +1,512 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<modification>
+    <extension_install_id>Basel Theme</extension_install_id>
+	<name>Basel Theme</name>
+    <version>1.3.1.0</version>
+    <author>Openthemer.com</author>
+	<code>basel_theme</code>
+	
+	<file path="catalog/controller/common/header.php">
+        <operation error="log">
+            <search><![CDATA[
+			$data['title'] = $this->document->getTitle();
+			]]></search>
+            <add position="after"><![CDATA[
+			if ($this->config->get('theme_default_directory') == 'basel') {
+			include(DIR_APPLICATION . 'controller/extension/basel/header_helper.php');
+			}
+			]]></add>
+        </operation>
+    </file>
+	
+	<file path="catalog/controller/common/footer.php">
+        <operation error="log">
+            <search><![CDATA[
+			$this->load->model('catalog/information');
+			]]></search>
+            <add position="before"><![CDATA[
+			// Basel Features
+			if ($this->config->get('theme_default_directory') == 'basel') {
+			include(DIR_APPLICATION . 'controller/extension/basel/footer_helper.php');
+			}
+			]]></add>
+        </operation>
+    </file>
+	
+	<file path="catalog/controller/product/product.php">
+		<operation error="log">
+		<search><![CDATA[$data['products'] = array();]]></search>
+		<add position="before"><![CDATA[
+		if ($this->config->get('theme_default_directory') == 'basel') {
+		include(DIR_APPLICATION . 'controller/extension/basel/product_helper.php');
+		}
+		]]></add>
+		</operation>
+		<operation error="log">
+		<search><![CDATA[$data['thumb'] = $]]></search>
+		<add position="before"><![CDATA[
+		$data['thumb_sm'] = $this->model_tool_image->resize($product_info['image'], $this->config->get('theme_default_image_additional_width'), $this->config->get('theme_default_image_additional_height'));
+		]]></add>
+		</operation>
+		<operation error="log">
+		<search><![CDATA['thumb' => $]]></search>
+		<add position="before"><![CDATA[
+		'thumb_lg' => $this->model_tool_image->resize($result['image'], $this->config->get('theme_default_image_thumb_width'), $this->config->get('theme_default_image_thumb_height')),
+		]]></add>
+		</operation>
+    </file>
+	
+	<file path="catalog/controller/product/category.php">
+		<operation error="log">
+		<search><![CDATA[$data['categories'][] = array(]]></search>
+		<add position="before"><![CDATA[
+		//Basel start
+		if ($result['image']) {
+		$image = $this->model_tool_image->resize($result['image'], $this->config->get('subcat_image_width'), $this->config->get('subcat_image_height'));
+		} else {
+		$image = $this->model_tool_image->resize('placeholder.png', $this->config->get('subcat_image_width'), $this->config->get('subcat_image_height'));
+		}
+		]]></add>
+		</operation>
+		<operation error="log">
+		<search><![CDATA[$data['categories'][] = array(]]></search>
+		<add position="after"><![CDATA[
+		//Basel start
+		'thumb' => $image,
+		]]></add>
+		</operation>
+		<operation error="log">
+		<search><![CDATA[$data['categories'][] = array(]]></search>
+		<add position="after"><![CDATA[
+		//Basel start
+		'thumb' => $image,
+		]]></add>
+		</operation>
+    </file>
+
+	<file path="catalog/controller/product/{category,product,manufacturer,search,special}.php">
+		<operation error="log">
+		<search><![CDATA[$data['column_left'] = $this->load->controller('common/column_left');]]></search>
+		<add position="before"><![CDATA[
+		//Basel start
+		if ($this->config->get('theme_default_directory') == 'basel') {
+		$data['position_category_top'] = $this->load->controller('extension/basel/position_category_top');
+		}
+		]]></add>
+		</operation>
+		<operation error="log">
+		<search><![CDATA[$this->load->model('catalog/product');]]></search>
+		<add position="after"><![CDATA[
+		// Basel start
+		$this->load->model('extension/basel/basel');
+		$this->load->language('basel/basel_theme');
+		$data['basel_button_quickview'] = $this->language->get('basel_button_quickview');
+		$data['basel_text_new'] = $this->language->get('basel_text_new');
+		$data['basel_text_days'] = $this->language->get('basel_text_days');
+		$data['basel_text_hours'] = $this->language->get('basel_text_hours');
+		$data['basel_text_mins'] = $this->language->get('basel_text_mins');
+		$data['basel_text_secs'] = $this->language->get('basel_text_secs');
+		$data['category_thumb_status'] = $this->config->get('category_thumb_status');
+		$data['category_subs_status'] = $this->config->get('category_subs_status');
+		$data['countdown_status'] = $this->config->get('countdown_status');
+		$data['salebadge_status'] = $this->config->get('salebadge_status');
+		$data['basel_subs_grid'] = $this->config->get('basel_subs_grid');
+		$data['basel_prod_grid'] = $this->config->get('basel_prod_grid');
+		$data['basel_list_style'] = $this->config->get('basel_list_style');
+		$data['stock_badge_status'] = $this->config->get('stock_badge_status');
+		$data['basel_text_out_of_stock'] = $this->language->get('basel_text_out_of_stock');
+		$data['default_button_cart'] = $this->language->get('button_cart');
+		$data['direction'] = $this->language->get('direction');
+		if ($this->language->get('direction') == 'rtl') { $data['tooltip_align'] = 'right'; } else { $data['tooltip_align'] = 'left'; }
+		// Basel end
+		]]></add>
+		</operation>
+		<operation error="log">
+		<search><![CDATA[if ((float)$result['special']) {]]></search>
+		<add position="before"><![CDATA[
+		$image2 = $this->model_catalog_product->getProductImages($result['product_id']);
+		if(isset($image2[0]['image']) && !empty($image2[0]['image']) && $this->config->get('basel_thumb_swap')){
+			if (isset($this->request->get['route']) == 'product/product' && isset($this->request->get['product_id'])) {
+			$image2 = $this->model_tool_image->resize($image2[0]['image'], $this->config->get('theme_default_image_related_width'), $this->config->get('theme_default_image_related_height'));
+			} else {
+			$image2 = $this->model_tool_image->resize($image2[0]['image'], $this->config->get('theme_default_image_product_width'), $this->config->get('theme_default_image_product_height'));
+			}
+		} else {
+			$image2 = false;
+		}
+		if ((float)$result['special']) {
+			$date_end = $this->model_extension_basel_basel->getSpecialEndDate($result['product_id']);
+		} else {
+			$date_end = false;
+		}
+		if ( (float)$result['special'] && ($this->config->get('salebadge_status')) ) {
+			if ($this->config->get('salebadge_status') == '2') {
+				$sale_badge = '-' . number_format(((($this->tax->calculate($result['price'], $result['tax_class_id'], $this->config->get('config_tax')))-($this->tax->calculate($result['special'], $result['tax_class_id'], $this->config->get('config_tax'))))/(($this->tax->calculate($result['price'], $result['tax_class_id'], $this->config->get('config_tax')))/100)), 0, ',', '.') . '%';
+			} else {
+				$sale_badge = $this->language->get('basel_text_sale');
+			}		
+		} else {
+			$sale_badge = false;
+		}
+		if (strtotime($result['date_available']) > strtotime('-' . $this->config->get('newlabel_status') . ' day')) {
+			$is_new = true;
+		} else {
+			$is_new = false;
+		}
+		]]></add>
+		</operation>
+		<operation error="log">
+		<search><![CDATA['thumb'       => $image,]]></search>
+		<add position="before"><![CDATA[
+		'thumb2'  => $image2,
+		'quantity'  => $result['quantity'],
+		'sale_badge' => $sale_badge,
+		'sale_end_date' => $date_end['date_end'] ?? '',
+		'new_label'  => $is_new,
+		]]></add>
+		</operation>
+    </file>
+	
+	<file path="catalog/controller/information/contact.php">
+		<operation error="log">
+		<search><![CDATA[$data['store'] = $this->config->get('config_name');]]></search>
+		<add position="before"><![CDATA[
+		$data['basel_map_style'] = $this->config->get('basel_map_style');
+		$data['basel_map_lat'] = $this->config->get('basel_map_lat');
+		$data['basel_map_lon'] = $this->config->get('basel_map_lon');
+		if ($this->config->get('basel_map_style')) {
+		$this->document->addScript('https://maps.google.com/maps/api/js?sensor=false&libraries=geometry&v=3.24&key=' . $this->config->get('basel_map_api') . '');
+		$this->document->addScript('catalog/view/theme/basel/js/maplace.min.js');
+		}
+		]]></add>
+		</operation>
+    </file>
+	
+	<file path="catalog/controller/startup/seo_url.php">
+		<operation>
+			<search><![CDATA[
+			if ($query->row['query'] && $url[0]
+			]]></search>
+			<add position="before"><![CDATA[
+			if ($url[0] == 'blog_id') {$this->request->get['blog_id'] = $url[1]; }
+			if ($url[0] == 'blog_category_id') {
+			if (!isset($this->request->get['blogpath'])) {
+			$this->request->get['blogpath'] = $url[1];
+				} else {
+			$this->request->get['blogpath'] .= '_' . $url[1];
+			}}
+			]]></add>
+		</operation>
+		<operation>
+			<search><![CDATA[
+			!= 'category_id' && $url[0]
+			]]></search>
+			<add position="replace"><![CDATA[
+			!= 'category_id' && $url[0] != 'blog_category_id' && $url[0] != 'blog_id' && $url[0] 
+			]]></add>
+		</operation>
+		<operation>
+			<search><![CDATA[
+			$this->request->get['route'] = 'product/product';
+			]]></search>
+			<add position="after"><![CDATA[
+			} elseif (isset($this->request->get['blog_id'])) {
+			$this->request->get['route'] = 'extension/blog/blog';
+			} elseif ($this->request->get['_route_'] ==  'extension_blog_home') { 
+			$this->request->get['route'] = 'extension/blog/home';
+			]]></add>
+		</operation>
+		<operation>
+			<search><![CDATA[
+			$this->request->get['route'] = 'product/category';
+			]]></search>
+			<add position="after"><![CDATA[
+			} elseif (isset($this->request->get['blogpath'])) {
+			$this->request->get['route'] = 'extension/blog/category';
+			]]></add>
+		</operation>
+		<operation>
+			<search><![CDATA[
+			($data['route'] == 'information/information' && $key == 'information_id'))
+			]]></search>
+			<add position="replace"><![CDATA[
+			($data['route'] == 'information/information' && $key == 'information_id') || ($data['route'] == 'extension/blog/blog' && $key == 'blog_id'))
+			]]></add>
+		</operation>
+		<operation>
+			<search><![CDATA[
+			} elseif ($key == 'path') {
+			]]></search>
+			<add position="before"><![CDATA[
+			} elseif ($key == 'blogpath') {
+			$blog_categories = explode('_', $value);
+			foreach ($blog_categories as $category) {
+			$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "seo_url WHERE `query` = 'blog_category_id=" . (int)$category . "'");
+			if ($query->num_rows) {
+			$url .= '/' . $query->row['keyword'];
+			} else {
+			$url = '';
+			break;
+			}}
+			unset($data[$key]);
+			} elseif (isset($data['route']) && $data['route'] ==   'extension/blog/home') {
+			$blog_home = $this->db->query("SELECT * FROM " . DB_PREFIX . "seo_url WHERE `query` = 'extension/blog/home'");
+			if ($blog_home->num_rows) {
+			$url .= '/' . $blog_home->row['keyword'];
+			} else {
+			$url = '';
+			}
+			]]></add>
+		</operation>
+	</file>
+	
+	<file path="admin/view/template/common/filemanager.twig">
+	<operation>
+	<search><![CDATA[.val($(this).parent().find('input').val());]]></search>
+	<add position="replace"><![CDATA[.val($(this).parent().find('input').val()).trigger('change');]]></add>
+	</operation>
+	</file>
+	
+	<file path="admin/controller/design/layout.php">
+		<operation error="log">
+		<search><![CDATA[design/layout_form]]></search>
+		<add position="replace"><![CDATA[extension/basel/basel_layout_form]]></add>
+		</operation>
+    </file>
+	
+	<file path="admin/controller/common/column_left.php">
+        <operation error="log">
+            <search><![CDATA[
+			if ($marketplace) {
+			]]></search>
+            <add position="before"><![CDATA[
+			// Basel
+			$basel = array();
+			if ($this->user->hasPermission('access', 'extension/basel/basel')) {
+				$basel[] = array(
+					'name'	   => 'Theme Settings',
+					'href'     => $this->url->link('extension/basel/basel', 'user_token=' . $this->session->data['user_token'], true),
+					'children' => array()		
+				);	
+			}
+			if ($this->user->hasPermission('access', 'extension/basel/question')) {
+				$basel[] = array(
+					'name'	   => 'Product Questions',
+					'href'     => $this->url->link('extension/basel/question', 'user_token=' . $this->session->data['user_token'], true),
+					'children' => array()		
+				);	
+			}
+			if ($this->user->hasPermission('access', 'extension/basel/product_tabs')) {
+				$basel[] = array(
+					'name'	   => 'Product Tabs',
+					'href'     => $this->url->link('extension/basel/product_tabs', 'user_token=' . $this->session->data['user_token'], true),
+					'children' => array()		
+				);	
+			}
+			if ($this->user->hasPermission('access', 'extension/basel/testimonial')) {
+				$basel[] = array(
+					'name'	   => 'Testimonials',
+					'href'     => $this->url->link('extension/basel/testimonial', 'user_token=' . $this->session->data['user_token'], true),
+					'children' => array()		
+				);	
+			}
+			if ($this->user->hasPermission('access', 'extension/basel/subscriber')) {
+				$basel[] = array(
+					'name'	   => 'Mail Subscribers',
+					'href'     => $this->url->link('extension/basel/subscriber', 'user_token=' . $this->session->data['user_token'], true),
+					'children' => array()		
+				);	
+			}
+			if ($this->user->hasPermission('access', 'extension/basel/productgroups')) {
+				$basel[] = array(
+					'name'	   => 'Product Groups',
+					'href'     => $this->url->link('extension/basel/productgroups', 'user_token=' . $this->session->data['user_token'], true),
+					'children' => array()		
+				);	
+			}
+			if ($basel) {
+				$marketplace[] = array(
+					'name'	   => 'Basel Theme',
+					'href'     => '',
+					'children' => $basel	
+				);
+			}
+ 
+			// Blog	
+			$blog = array();
+			if ($this->user->hasPermission('access', 'extension/blog/blog_setting')) {
+				$blog[] = array(
+					'name'	   => 'Blog Settings',
+					'href'     => $this->url->link('extension/blog/blog_setting', 'user_token=' . $this->session->data['user_token'], true),
+					'children' => array()		
+				);	
+			}
+			if ($this->user->hasPermission('access', 'extension/blog/blog')) {
+				$blog[] = array(
+					'name'	   => 'Blog Posts',
+					'href'     => $this->url->link('extension/blog/blog', 'user_token=' . $this->session->data['user_token'], true),
+					'children' => array()		
+				);	
+			}
+			if ($this->user->hasPermission('access', 'extension/blog/blog_comment')) {
+				$blog[] = array(
+					'name'	   => 'Blog Comments',
+					'href'     => $this->url->link('extension/blog/blog_comment', 'user_token=' . $this->session->data['user_token'], true),
+					'children' => array()		
+				);	
+			}
+			if ($this->user->hasPermission('access', 'extension/blog/blog_category')) {
+				$blog[] = array(
+					'name'	   => 'Blog Categories',
+					'href'     => $this->url->link('extension/blog/blog_category', 'user_token=' . $this->session->data['user_token'], true),
+					'children' => array()		
+				);	
+			}
+			
+			
+			if ($blog) {
+				$marketplace[] = array(
+					'name'	   => 'Blog',
+					'href'     => '',
+					'children' => $blog	
+				);
+			}
+			]]></add>
+        </operation>
+    </file>
+	<file path="catalog/controller/common/content_top.php">
+		<operation>
+			<search><![CDATA[
+			$layout_id = 0;
+			]]></search>
+			<add position="after"><![CDATA[
+			if ($route == 'extension/blog/blog' && isset($this->request->get['blog_id'])) { $this->load->model('extension/blog/blog');
+			$layout_id = $this->model_extension_blog_blog->getBlogLayoutId($this->request->get['blog_id']);}
+			if ($route == 'extension/blog/category' && isset($this->request->get['blogpath'])) { $this->load->model('extension/blog/blog_category');
+			$layout_id = $this->model_extension_blog_blog_category->getBlogCategoryLayoutId($this->request->get['blogpath']);}
+			]]></add>
+		</operation>
+	</file>
+	<file path="catalog/controller/common/content_bottom.php">
+		<operation>
+			<search><![CDATA[
+			$layout_id = 0;
+			]]></search>
+			<add position="after"><![CDATA[
+			if ($route == 'extension/blog/blog' && isset($this->request->get['blog_id'])) { $this->load->model('extension/blog/blog');
+			$layout_id = $this->model_extension_blog_blog->getBlogLayoutId($this->request->get['blog_id']);}
+			if ($route == 'extension/blog/category' && isset($this->request->get['blogpath'])) { $this->load->model('extension/blog/blog_category');
+			$layout_id = $this->model_extension_blog_blog_category->getBlogCategoryLayoutId($this->request->get['blogpath']);}
+			]]></add>
+		</operation>
+	</file>
+	<file path="catalog/controller/common/column_left.php">
+		<operation>
+			<search><![CDATA[
+			$layout_id = 0;
+			]]></search>
+			<add position="after"><![CDATA[
+			if ($route == 'extension/blog/blog' && isset($this->request->get['blog_id'])) { $this->load->model('extension/blog/blog');
+			$layout_id = $this->model_extension_blog_blog->getBlogLayoutId($this->request->get['blog_id']);}
+			if ($route == 'extension/blog/category' && isset($this->request->get['blogpath'])) { $this->load->model('extension/blog/blog_category');
+			$layout_id = $this->model_extension_blog_blog_category->getBlogCategoryLayoutId($this->request->get['blogpath']);}
+			]]></add>
+		</operation>
+	</file>
+	<file path="catalog/controller/common/column_right.php">
+		<operation>
+			<search><![CDATA[
+			$layout_id = 0;
+			]]></search>
+			<add position="after"><![CDATA[
+			if ($route == 'extension/blog/blog' && isset($this->request->get['blog_id'])) { $this->load->model('extension/blog/blog');
+			$layout_id = $this->model_extension_blog_blog->getBlogLayoutId($this->request->get['blog_id']);}
+			if ($route == 'extension/blog/category' && isset($this->request->get['blogpath'])) { $this->load->model('extension/blog/blog_category');
+			$layout_id = $this->model_extension_blog_blog_category->getBlogCategoryLayoutId($this->request->get['blogpath']);}
+			]]></add>
+		</operation>
+	</file>
+	
+	<file path="catalog/controller/extension/module/category.php">
+		<operation>
+			<search><![CDATA[
+			if ($category['category_id'] == $data['category_id']) {
+			]]></search>
+			<add position="replace"><![CDATA[
+			if ($this->config->get('theme_default_directory') == 'basel') {
+			]]></add>
+		</operation>
+		<operation>
+			<search><![CDATA[
+			foreach($children as $child) {
+			]]></search>
+			<add position="after"><![CDATA[
+			$grandchildren_data = array();
+			$grandchildren = $this->model_catalog_category->getCategories($child['category_id']);
+			foreach ($grandchildren as $grandchild) {
+				if ($this->config->get('config_product_count')) {
+				$total = ' (' . $this->model_catalog_product->getTotalProducts(array('filter_category_id'  => $grandchild['category_id'])). ')'; } else { $total = ''; }
+				$grandchildren_data[] = array(
+				'name' => $grandchild['name'] . $total,
+				'href' => $this->url->link('product/category', 'path=' . $category['category_id'] . '_' . $child['category_id'] . '_' . $grandchild['category_id'])
+				);
+			 }
+			]]></add>
+		</operation>
+		<operation>
+			<search><![CDATA[
+			'category_id' => $child['category_id'],
+			]]></search>
+			<add position="after"><![CDATA[
+			'grandchildren'	=> $grandchildren_data,
+			]]></add>
+		</operation>
+	</file>
+	<file path="admin/controller/startup/permission.php">
+	<operation>
+	<search><![CDATA[$extension = array(]]></search>
+	<add position="after"><![CDATA['extension/basel','extension/blog',]]></add>
+	</operation>
+	</file>
+	<file path="admin/model/customer/customer.php">
+		<operation>
+			<search index="0"><![CDATA[
+				return $query->rows;
+			]]></search>
+			<add position="replace" ><![CDATA[
+				if (!empty($data['filter_newsletter'])) {
+					$subscriber_list = $this->db->query("SELECT email FROM " . DB_PREFIX . "newsletter" );
+					return array_merge($subscriber_list->rows, $query->rows);
+				} else {
+					return $query->rows;
+				}
+			]]></add>
+		</operation>
+	</file>
+	<file path="catalog/model/account/customer.php">
+		<operation>
+			<search><![CDATA[
+				public function addCustomer($data) {
+			]]></search>
+			<add position="after"><![CDATA[
+				if (!empty($data['email'])) {
+					$this->db->query("DELETE FROM " . DB_PREFIX . "newsletter WHERE email = '" . $this->db->escape($data['email']) . "'");
+				}
+			]]></add>
+		</operation>
+	</file>
+	
+	<file path="system/library/template/twig.php">
+		<operation>
+			<search><![CDATA[
+				$loader = new \Twig\Loader\ArrayLoader(array($filename . '.twig' => $code));
+			]]></search>
+			<add position="replace"><![CDATA[
+				$loader1 = new \Twig_Loader_Array(array($filename . '.twig' => $code));
+				$loader2 = new \Twig_Loader_Filesystem(array(DIR_TEMPLATE)); // to find further includes
+				$loader = new \Twig_Loader_Chain(array($loader1, $loader2));
+			]]></add>
+		</operation>
+	</file>
+	
+</modification>

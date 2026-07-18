@@ -1,0 +1,77 @@
+<div class="table-responsive">
+<table class="table table-bordered table-hover">
+<thead>
+	<tr>
+		{% if type == 'category' %}
+		<td class="text-center">{{ col_category_id }}</td>
+		<td class="text-left">{{ col_name }}</td>
+		{% elseif type == 'information' %}
+		<td class="text-center">{{ col_information_id }}</td>
+		<td class="text-left">{{ col_title }}</td>
+		{% else %}
+    	<td class="text-center">{{ col_product_id }}</td>
+		<td class="text-left">{{ col_name }}</td>
+		<td class="text-left">{{ col_model }}</td>
+		{% endif %}		
+		
+		<td class="text-left">{{ col_redirect_page_type }}</td>
+		<td class="text-left">{{ col_redirect }}</td>
+		<td class="text-center">{{ col_redirect_type }}</td>
+		<td class="text-center">{{ col_hits }}</td>
+		<td class="text-center">{{ col_action }}</td>
+    </tr>
+</thead>
+<tbody>
+    {% if (records) %} 
+		{% for record in records %} 
+			<tr>
+			<td class="text-center">{{ record.item_id }}</td>
+			<td class="text-left">{{ record.name }}</td>
+			
+			{% if type == 'product' %}
+			<td class="text-left">{{ record.model }}</td>
+			{% endif %}
+
+			<td class="text-left">
+				<div class="editable-cell" id="cell-pagetype-{{ record.item_id }}"></div>
+				<div class="cellvalue" id="pagetypevalue{{ record.item_id }}">{{ record.pagetype }}</div>
+			</td>
+			<td class="text-left">
+				<div class="editable-cell" id="cell-redirect-{{ record.item_id }}"></div>
+				<div class="cellvalue" id="redirectvalue{{ record.item_id }}">{{ record.redirect }}</div>				
+			</td>
+			<td class="text-center">
+				<div class="editable-cell" id="cell-redirect-type-{{ record.item_id }}"></div>
+				<div class="cellvalue" id="redirecttypevalue{{ record.item_id }}">{{ record.redirect_type }}</div>	
+			</td>
+			<td class="text-center">
+				{% if record.redirect_hits > 0 %}
+				<a class="btn btn-sm btn-default" onclick="hitsModal('{{ type }}','{{ record.item_id }}','{{ record.name }}');">{{ record.redirect_hits }}</a>
+				{% endif %}
+			</td>
+			<td class="text-center">
+				<a class="btn btn-sm btn-primary row-editbutton" id="row-editbutton{{ record.item_id }}" onclick="editRow('{{ type }}', '{{ record.item_id }}')"><i class="fa fa-pencil"></i></a>
+				<a class="btn btn-sm btn-success row-savebutton" id="row-savebutton{{ record.item_id }}" onclick="saveRow('{{ type }}', '{{ record.item_id }}')"><i class="fa fa-save"></i></a>
+			</td>
+			</tr>
+		{% endfor %} 
+    {% else %} 
+    		<tr>
+              <td class="text-center" colspan="8">{{ text_no_records }}</td>
+            </tr> 
+    {% endif %} 
+</tbody>    
+
+</table>
+</div>
+
+<div class="row">
+	<div class="col-sm-6 text-left">{{ pagination }}</div>
+	<div class="col-sm-6 text-right">{{ results }}</div>
+</div>
+
+<script type="text/javascript">
+$(document).ready(function() {
+	$('.row-savebutton').hide();
+});
+</script>

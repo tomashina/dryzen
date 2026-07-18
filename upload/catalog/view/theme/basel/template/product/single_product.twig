@@ -1,0 +1,97 @@
+<div class="item single-product">
+    <div class="edge">
+<div class="image" {% if columns == 'list' %}style="width:{{ img_width }}px"{% endif %}>
+    <a href="{{ product.href }}">
+    <img src="{{ product.thumb }}" alt="{{ product.name }}" title="{{ product.name }}" />
+    {% if product.thumb2 %}
+    <img class="thumb2" src="{{ product.thumb2 }}" alt="{{ product.name }}" title="{{ product.name }}" />
+    {% endif %}
+    </a>
+{% if product.price and product.special and salebadge_status %}
+    <div class="sale-counter id{{ product.product_id }}"></div>
+    <span class="badge sale_badge"><i>{{ product.sale_badge }}</i></span>
+{% endif %}
+{% if product.new_label %}
+    <span class="badge new_badge"><i>{{ basel_text_new }}</i></span>
+{% endif %}
+
+{% if ((product.quantity < 1) and (stock_badge_status)) %}
+ <span class="badge out_of_stock_badge"><i>{{ basel_text_out_of_stock }}</i></span>
+    {% set button_cart = basel_text_out_of_stock %}
+{% else %}
+	{% set button_cart = default_button_cart %}
+{% endif %}
+<a class="img-overlay" href="{{ product.href }}"></a>
+
+<div class="icons-wrapper">
+<a class="icon is_wishlist" data-toggle="tooltip" data-placement="{{ tooltip_align }}"  data-title="{{ button_wishlist }}" onclick="wishlist.add('{{ product.product_id }}');"><span class="icon-heart"></span></a>
+<a class="icon is_compare" onclick="compare.add('{{ product.product_id }}');" data-toggle="tooltip" data-placement="{{ tooltip_align }}" data-title="{{ button_compare }}"><span class="icon-refresh"></span></a>
+<a class="icon is_quickview hidden-xs" onclick="quickview('{{ product.product_id }}');" data-toggle="tooltip" data-placement="{{ tooltip_align }}" data-title="{{ basel_button_quickview }}"><span class="icon-magnifier-add"></span></a>
+</div> <!-- .icons-wrapper -->
+</div><!-- .image ends -->
+<div class="caption">
+<a class="product-name" href="{{ product.href }}">{{ product.name }}</a>
+
+            <span style="display:block;font-size:14px">{{ product.subtitle }}</span>
+{% if product.rating %}      
+    <div class="rating">
+    <span class="rating_stars rating r{{ product.rating }}">
+    <i class="fa fa-star-o"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i>
+    </span>
+    </div>
+{% endif %}
+<div class="price-wrapper">
+{% if product.price %}
+<div class="pwrap">
+<div class="price">
+    {% if product.special %}
+    <span class="price-old">{{ product.price }}</span><span class="price-new">{{ product.special }}</span>
+    {% else %}
+    <span>{{ product.price }}   </span>
+    {% endif %}
+    {% if product.tax %}
+    <span class="price-tax">{{ text_tax }} {{ product.tax }}</span>
+    {% endif %}
+
+    
+</div>
+
+
+ </div>
+
+<!-- .price -->
+{% endif %}
+<p class="description">{% if product.description %}{{ product.description }}{% endif %}</p>
+
+{% if ((product.quantity < 1) and (stock_badge_status)) %}
+  <a class="btn  {% if basel_list_style == '6' %}btn-contrast{% else %}btn-outline{% endif %}" ><span class="global-cart"></span> {{ button_cart }}</a>
+    {% set button_cart = basel_text_out_of_stock %}
+{% else %}
+ <a class="btn  {% if basel_list_style == '6' %}btn-contrast{% else %}btn-outline{% endif %}" onclick="cart.add('{{ product.product_id }}', '{{ product.minimum }}');"><span class="global-cart"></span> {{ button_cart }}</a>
+{% endif %}
+
+
+
+<!-- .price-wrapper -->
+
+
+</div>
+
+</div><!-- .caption-->
+{% if product.sale_end_date and countdown_status %}
+<script>
+  $(function() {
+	$(".sale-counter.id{{ product.product_id }}").countdown("{{ product.sale_end_date }}").on('update.countdown', function(event) {
+  var $this = $(this).html(event.strftime(''
+    + '<div>'
+    + '%D<i>{{ basel_text_days }}</i></div><div>'
+    + '%H <i>{{ basel_text_hours }}</i></div><div>'
+    + '%M <i>{{ basel_text_mins }}</i></div><div>'
+    + '%S <i>{{ basel_text_secs }}</i></div></div>'));
+});
+});
+</script>
+{% endif %}
+
+   </div>
+</div><!-- .single-product ends -->

@@ -1,0 +1,137 @@
+{{ header }}{{ column_left }}
+<div id="content">
+ <ul class="breadcrumb">
+       {% for breadcrumb in breadcrumbs %}
+    <li><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+    {% endfor %}
+  </ul>
+    <div class="page-header">
+        <div class="container-fluid">
+             <div class="pull-right">
+        <button type="submit" form="form-payment" data-toggle="tooltip" title="{{ button_save }}" class="btn btn-primary"><i class="fa fa-save"></i></button>
+        <a href="{{ cancel }}" data-toggle="tooltip" title="{{ button_cancel }}" class="btn btn-default"><i class="fa fa-reply"></i></a></div>
+          <h1><i class="fa fa-credit-card"></i> {{ heading_title }}</h1>
+          
+        </div>
+    </div>
+
+
+    <div class="container-fluid">
+            <div class="panel-body">
+                <form action="{{ action }}" method="post" enctype="multipart/form-data" id="form-payment" class="form-horizontal">
+                    <div class="form-group required">
+                        <label class="col-sm-2 control-label" for="input-merchant">{{ entry_merchant }}</label>
+                        <div class="col-sm-10">
+                            <input type="text" name="payment_corvuspay_merchant" value="{{ payment_corvuspay_merchant}}" placeholder="{{ entry_merchant }}" id="input-merchant" class="form-control" />
+                           {% if error_merchant %}
+                            <span class="error">{{ error_merchant }}</span>
+                            {% endif %} 
+                        </div>
+                    </div>
+                    <div class="form-group required">
+                        <label class="col-sm-2 control-label" for="input-password">{{ entry_password }}</label>
+                        <div class="col-sm-10">
+                            <input type="text" name="payment_corvuspay_password" value="{{ payment_corvuspay_password }}" placeholder="{{ entry_password }}" id="input-password" class="form-control" />
+                             {% if error_password  %}
+                            <span class="error"> {{ error_password }}</span>
+                          {% endif %} 
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label" for="input-authorisationtype">{{ entry_authorisationtype }}</label>
+                        <div class="col-sm-10">
+                            <select name="payment_corvuspay_authorisationtype" id="input-authorisationtype" class="form-control">
+                                {% if payment_corvuspay_authorisationtype %}
+                                <option value="1" selected="selected">{{ entry_authorisationtype1 }}</option>
+                                <option value="0">{{ entry_authorisationtype0 }}</option>
+                                 {% else %}
+                                <option value="1">{{ entry_authorisationtype1 }}</option>
+                                <option value="0" selected="selected">{{ entry_authorisationtype0 }}</option>
+                                {% endif %} 
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label" for="input-callback"><span data-toggle="tooltip" title="{{ help_entry_callback }}">{{ entry_callback }}</span></label>
+                        <div class="col-sm-10">
+                            <input type="text" name="callback" value="{{ callback }}" id="input-callback" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label" for="input-test">{{ entry_test }}</label>
+                        <div class="col-sm-10">
+                            <select name="payment_corvuspay_test" id="input-test" class="form-control">
+                                {% if payment_corvuspay_test == '0' %}
+                                <option value="0" selected="selected">{{ text_off }}</option>
+                               {% else %}
+                                <option value="0">{{ text_off }}</option>
+                                {% endif %} 
+                                {% if payment_corvuspay_test == '100' %}
+                                <option value="100" selected="selected">{{ text_successful }}</option>
+                               {% else %}
+                                <option value="100">{{ text_successful }}</option>
+                                 {% endif %} 
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label" for="input-total"><span data-toggle="tooltip" title="{{ help_entry_total }}">{{ entry_total }}</span></label>
+                        <div class="col-sm-10">
+                            <input type="text" name="payment_corvuspay_total" value="{{ payment_corvuspay_total }}" id="input-total" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label" for="input-order-status">{{ entry_order_status }}</label>
+                        <div class="col-sm-10">
+                            <select name="payment_corvuspay_order_status_id" id="input-order-status" class="form-control">
+                                {% for order_status in order_statuses %}
+                                  {% if order_status.order_status_id == payment_corvuspay_order_status_id %}
+                                <option value="{{ order_status.order_status_id }}" selected="selected">{{ order_status.name }}</option>
+                              {% else %}
+                                <option value="{{ order_status.order_status_id }}">{{ order_status.name }}</option>
+                            {% endif %}
+                             {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label" for="input-geo-zone">{{ entry_geo_zone }}</label>
+                        <div class="col-sm-10">
+                            <select name="payment_corvuspay_geo_zone_id" id="input-geo-zone" class="form-control">
+                                <option value="0">{{ text_all_zones }}</option>
+                                 {% for geo_zone in geo_zones %}
+                                  {% if geo_zone.geo_zone_id == payment_corvuspay_geo_zone_id %}
+                                <option value="{{ geo_zone.geo_zone_id }}" selected="selected">{{ geo_zone.name }}</option>
+                                  {% else %}
+                                <option value="{{ geo_zone.geo_zone_id }}">{{ geo_zone.name }}</option>
+                              {% endif %}
+                             {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label" for="input-status">{{ entry_status }}</label>
+                        <div class="col-sm-10">
+                            <select name="payment_corvuspay_status" id="input-status" class="form-control">
+                                 {% if payment_corvuspay_status %}
+                                <option value="1" selected="selected">{{ text_enabled }}</option>
+                                <option value="0">{{ text_disabled }}</option>
+                                {% else %}
+                                <option value="1">{{ text_enabled }}</option>
+                                <option value="0" selected="selected">{{ text_disabled }}</option>
+                                {% endif %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label" for="input-sort">{{ entry_sort_order }}</label>
+                        <div class="col-sm-10">
+                            <input type="text" name="payment_corvuspay_sort_order" value="{{ payment_corvuspay_sort_order }}" id="input-sort" class="form-control" />
+                        </div>
+                    </div>
+                </form>
+            </div>
+     
+    </div>
+</div>
+{{ footer }}

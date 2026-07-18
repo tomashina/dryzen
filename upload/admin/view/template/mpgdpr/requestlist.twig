@@ -1,0 +1,255 @@
+{{ header }}{{ column_left }}
+<div id="content" class="mp-content">
+  <div class="page-header">
+    <div class="container-fluid">
+      <div class="pull-right">
+        <button type="button" data-toggle="tooltip" title="{{ button_delete }}" class="btn btn-danger" onclick="confirm('{{ text_confirm }}') ? $('#form-category').submit() : false;"><i class="fa fa-trash-o"></i></button>
+      </div>
+      <h1>{{ heading_title }}</h1>
+      <ul class="breadcrumb">
+        {% for breadcrumb in breadcrumbs %}
+        <li><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+  <div class="container-fluid">
+    {% if error_warning %}
+    <div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i> {{ error_warning }}
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+    </div>
+    {% endif %}
+    {% if success %}
+    <div class="alert alert-success"><i class="fa fa-check-circle"></i> {{ success }}
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+    </div>
+    {% endif %}
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title"><i class="fa fa-list"></i> {{ text_list }}</h3>
+      </div>
+      <div class="panel-body">
+        <div class="well">
+          <div class="row">
+            <div class="col-sm-4">
+              <div class="form-group">
+                <label class="control-label" for="input-request_id">{{ entry_request_id }}</label>
+                <input type="text" name="filter_request_id" value="{{ filter_request_id }}" placeholder="{{ entry_request_id }}" id="input-request_id" class="form-control" />
+              </div>
+              <div class="form-group">
+                <label class="control-label" for="input-type">{{ entry_type }}</label>
+                <select name="filter_type" id="input-type" class="form-control">
+                  <option value="*"></option>
+                  {% for request_type in request_types %}
+                  {% set sel = '' %}
+                  {% if request_type.code==filter_type %}
+                  {% set sel = 'selected="selected"' %}
+                  {% endif %}
+                  <option value="{{ request_type.code }}" {{ sel }}>{{ request_type.value }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="control-label" for="input-email">{{ entry_email }}</label>
+                <input type="text" name="filter_email" value="{{ filter_email }}" placeholder="{{ entry_email }}" id="input-email" class="form-control" />
+              </div>
+            </div>
+            <div class="col-sm-4">
+              <div class="form-group">
+                <label class="control-label" for="input-useragent">{{ entry_useragent }}</label>
+                <input type="text" name="filter_useragent" value="{{ filter_useragent }}" placeholder="{{ entry_useragent }}" id="input-useragent" class="form-control" />
+              </div>
+              <div class="form-group">
+                <label class="control-label" for="input-server_ip">{{ entry_server_ip }}</label>
+                <input type="text" name="filter_server_ip" value="{{ filter_server_ip }}" placeholder="{{ entry_server_ip }}" id="input-server_ip" class="form-control" />
+              </div>
+              <div class="form-group">
+                <label class="control-label" for="input-client_ip">{{ entry_client_ip }}</label>
+                <input type="text" name="filter_client_ip" value="{{ filter_client_ip }}" placeholder="{{ entry_client_ip }}" id="input-client_ip" class="form-control" />
+              </div>
+            </div>
+            <div class="col-sm-4">
+              <div class="form-group">
+                <label class="control-label" for="input-date_start">{{ entry_date_start }}</label>
+                <div class="input-group date">
+                  <input type="text" name="filter_date_start" value="{{ filter_date_start }}" placeholder="{{ entry_date_start }}" data-date-format="YYYY-MM-DD" id="input-date_start" class="form-control" /><span class="input-group-btn"><button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button></span>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="control-label" for="input-date_end">{{ entry_date_end }}</label>
+                <div class="input-group date">
+                  <input type="text" name="filter_date_end" value="{{ filter_date_end }}" placeholder="{{ entry_date_end }}" data-date-format="YYYY-MM-DD" id="input-date_end" class="form-control" /><span class="input-group-btn"><button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button></span>
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="row">
+                  <div class="col-sm-6">
+                    <label class="control-label" for="input-time_lap_value">{{ entry_time_lap_value }}</label>
+                    <input type="text" name="filter_time_lap_value" value="{{ filter_time_lap_value }}" placeholder="{{ entry_time_lap_value }}" id="input-time_lap_value" class="form-control" />
+                  </div>
+                  <div class="col-sm-6">
+                    <label class="control-label" for="input-time_lap">{{ entry_time_lap }}</label>
+                    <select name="filter_time_lap" id="input-time_lap" class="form-control">
+                      <option value="*"></option>
+                      <option value="DAY" {% if filter_time_lap=='DAY' %}selected="selected"{% endif %}>{{ entry_days }}</option>
+                      <option value="WEEK" {% if filter_time_lap=='WEEK' %}selected="selected"{% endif %}>{{ entry_weeks }}</option>
+                      <option value="MONTH" {% if filter_time_lap=='MONTH' %}selected="selected"{% endif %}>{{ entry_months }}</option>
+                      <option value="YEAR" {% if filter_time_lap=='YEAR' %}selected="selected"{% endif %}>{{ entry_years }}</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <button type="button" id="button-filter" class="btn btn-primary pull-right"><i class="fa fa-filter"></i> {{ button_filter }}</button>
+            </div>
+          </div>
+        </div>
+        <form action="{{ delete }}" method="post" enctype="multipart/form-data" id="form-category">
+          <div class="table-responsive">
+            <table class="table table-bordered table-hover">
+              <thead>
+                <tr>
+                  <td style="width: 1px;" class="text-center"><input type="checkbox" onclick="$('input[name*=\'selected\']').prop('checked', this.checked);" /></td>
+                  <td class="text-left">{{ column_request_id }}</td>
+                  <td class="text-left">{{ column_type }}</td>
+                  <!-- /*13 sep 2019 gdpr session starts*/ -->
+                  <td class="text-left">{{ column_custom_string }}</td>
+                  <!-- /*13 sep 2019 gdpr session ends*/ -->
+                  <td class="text-left">{{ column_email }}</td>
+                  <td class="text-left">{{ column_other }}</td>
+                </tr>
+              </thead>
+              <tbody>
+                {% if requests %}
+                {% for request in requests %}
+                <tr>
+                  <td class="text-center">{% if request.mpgdpr_requestlist_id in selected %}
+                    <input type="checkbox" name="selected[]" value="{{ request.mpgdpr_requestlist_id }}" checked="checked" />
+                    {% else %}
+                    <input type="checkbox" name="selected[]" value="{{ request.mpgdpr_requestlist_id }}" />
+                    {% endif %}</td>
+                  <td class="text-left">{{ request.mpgdpr_requestlist_id }}</td>
+                  <td class="text-left">{{ request.type }}</td>
+                  <!-- /*13 sep 2019 gdpr session starts*/ -->
+                  <td class="text-left">{{ request.custom_string }}</td>
+                  <!-- /*13 sep 2019 gdpr session ends*/ -->
+                  <td class="text-left">{{ request.email }}</td>
+                  <td class="text-left">
+                    <table class="table table-bordered table-hover">
+                      <tr>
+                        <td>{{ column_server_ip }}</td>
+                        <td>{{ request.server_ip }}</td>
+                      </tr>
+                      <tr>
+                        <td>{{ column_client_ip }}</td>
+                        <td>{{ request.client_ip }}</td>
+                      </tr>
+                      <tr>
+                        <td>{{ column_useragent }}</td>
+                        <td>{{ request.useragent }}</td>
+                      </tr>
+                      <tr>
+                        <td>{{ column_acceptlanguage }}</td>
+                        <td>{{ request.acceptlanguage }}</td>
+                      </tr>
+                      <!-- /*13 sep 2019 gdpr session starts*/ -->
+                      <tr>
+                        <td>{{ column_date }}</td>
+                        <td>{{ request.date_added }}</td>
+                      </tr>
+                      <!-- /*13 sep 2019 gdpr session ends*/ -->
+                    </table>
+                  </td>
+                </tr>
+                {% endfor %}
+                {% else %}
+                <tr>
+                  <td class="text-center" colspan="9">{{ text_no_results }}</td>
+                </tr>
+                {% endif %}
+              </tbody>
+            </table>
+          </div>
+        </form>
+        <div class="row">
+          <div class="col-sm-6 text-left">{{ pagination }}</div>
+          <div class="col-sm-6 text-right">{{ results }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script type="text/javascript"><!--
+$('#button-filter').on('click', function() {
+  url = 'index.php?route=mpgdpr/requestlist&{{ var_token }}={{ token }}';
+
+  var filter_request_id = $('input[name=\'filter_request_id\']').val();
+
+  if (filter_request_id) {
+    url += '&filter_request_id=' + encodeURIComponent(filter_request_id);
+  }
+
+  var filter_type = $('select[name=\'filter_type\']').val();
+
+  if (filter_type != '*') {
+    url += '&filter_type=' + encodeURIComponent(filter_type);
+  }
+
+  var filter_email = $('input[name=\'filter_email\']').val();
+
+  if (filter_email) {
+    url += '&filter_email=' + encodeURIComponent(filter_email);
+  }
+
+  var filter_useragent = $('input[name=\'filter_useragent\']').val();
+
+  if (filter_useragent) {
+    url += '&filter_useragent=' + encodeURIComponent(filter_useragent);
+  }
+
+  var filter_server_ip = $('input[name=\'filter_server_ip\']').val();
+
+  if (filter_server_ip) {
+    url += '&filter_server_ip=' + encodeURIComponent(filter_server_ip);
+  }
+
+  var filter_client_ip = $('input[name=\'filter_client_ip\']').val();
+
+  if (filter_client_ip) {
+    url += '&filter_client_ip=' + encodeURIComponent(filter_client_ip);
+  }
+
+  var filter_date_start = $('input[name=\'filter_date_start\']').val();
+
+  if (filter_date_start) {
+    url += '&filter_date_start=' + encodeURIComponent(filter_date_start);
+  }
+
+  var filter_date_end = $('input[name=\'filter_date_end\']').val();
+
+  if (filter_date_end) {
+    url += '&filter_date_end=' + encodeURIComponent(filter_date_end);
+  }
+
+  var filter_time_lap = $('select[name=\'filter_time_lap\']').val();
+
+  if (filter_time_lap != '*') {
+    url += '&filter_time_lap=' + encodeURIComponent(filter_time_lap);
+  }
+
+  var filter_time_lap_value = $('input[name=\'filter_time_lap_value\']').val();
+
+  if (filter_time_lap_value) {
+    url += '&filter_time_lap_value=' + encodeURIComponent(filter_time_lap_value);
+  }
+
+  location = url;
+});
+//--></script>
+  <script src="view/javascript/jquery/datetimepicker/bootstrap-datetimepicker.min.js" type="text/javascript"></script>
+  <link href="view/javascript/jquery/datetimepicker/bootstrap-datetimepicker.min.css" type="text/css" rel="stylesheet" media="screen" />
+  <script type="text/javascript"><!--
+$('.date').datetimepicker({
+  pickTime: false
+});
+//--></script>
+</div>
+{{ footer }}

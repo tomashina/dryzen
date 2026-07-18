@@ -1,0 +1,31 @@
+{% if currencies|length > 1 %}
+<div class="option">
+<h4>{{ text_currency }}</h4>
+{% for currency in currencies %}
+{% if currency.code == code %}
+<p><span class="anim-underline active">{{ currency.title }}</span></p>
+{% else %}
+<p><a class="anim-underline" onclick="$('input[name=\'code\']').attr('value', '{{ currency.code }}'); $('#form-currency').submit();">{{ currency.title }}</a></p>
+{% endif %}
+{% endfor %}
+<select name="currency-select" id="currency-select">
+{% for currency in currencies %}
+{% if currency.code == code %}
+<option value="{{ currency.code }}" selected="selected">{{ currency.code }}</option>
+{% else %}
+<option value="{{ currency.code }}">{{ currency.code }}</option>
+{% endif %}
+{% endfor %}
+</select>
+<form action="{{ action }}" method="post" enctype="multipart/form-data" id="form-currency">  
+<input type="hidden" name="code" id="curr-code" value="" />
+<input type="hidden" name="redirect" value="{{ redirect }}" />
+</form>
+<script>
+$(document).ready(function() {
+$('.mobile-lang-curr').addClass('has-c');
+$('#currency-select').appendTo('.mobile-lang-curr');
+});
+</script>
+</div>
+{% endif %}

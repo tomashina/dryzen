@@ -1,0 +1,307 @@
+{{ header }}{{ column_left }} 
+<!--Main Content block start-->
+
+<div id="content">
+  <!--Header Start-->
+  <div class="page-header">
+    <div class="container-fluid">
+      <div class="pull-right">
+        <button type="submit" form="form-language" data-toggle="tooltip" title="{{ button_save }}" class="btn btn-primary"><i class="fa fa-save"></i>&nbsp;{{ button_save}}</button>
+		<a class="btn btn-warning" data-toggle="modal" data-target="#add-meta"><i class="fa fa-plus"></i>&nbsp;{{ button_add_meta }}</a>
+		<a href="{{ doc_link }}" target="_blank" class="btn btn-default"><i class="fa fa-book"></i>&nbsp;{{ button_doc }}</a>
+		<a href="{{ cancel }}" data-toggle="tooltip" title="{{ button_cancel }}" class="btn btn-default"><i class="fa fa-reply"></i></a>
+	  </div>
+      <h1>{{ heading_title }}</h1>
+      <ul class="breadcrumb">
+        {% for breadcrumb in breadcrumbs %} 
+        <li><a href="{{ breadcrumb['href'] }}">{{ breadcrumb['text'] }}</a></li>
+        {% endfor %} 
+      </ul>
+    </div>
+  </div>
+  <!--Header End-->
+  <!--Container 1 start -->
+  <div class="container-fluid">
+    <!--Start - Error / Success Message if any -->
+    {% if (error_warning) %} 
+    <div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i> {{ error_warning }} 
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+    </div>
+    {% endif %} 
+    {% if (success) %} 
+    <div class="alert alert-success"><i class="fa fa-check-circle"></i> {{ success }} 
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+    </div>
+    {% endif %} 
+    <!--End - Error / Success Message if any -->
+	<div id="msgoutput"></div>
+    <!--Panel Content Start-->
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title"><i class="fa fa-code"></i> {{ heading_title }}</h3>
+			{% if (stores) %} 
+			<div class="pull-right">
+			<select id="store">
+				<option value="0" {{ store_id == 0?'selected':'' }}>Default Store</option>
+				{% for store in stores %} 
+					<option value="{{ store['store_id'] }}" {{ store_id == store['store_id']?'selected':'' }}>{{ store['name'] }}</option>
+				{% endfor %} 
+			</select>
+			</div>
+			{% endif %}
+      </div>
+      <div class="panel-body">
+        <form action="{{ action }}" method="post" enctype="multipart/form-data" id="form-language" class="form-horizontal">
+			<ul class="nav nav-tabs" id="languages">
+				{% for language in languages %} 
+				<li><a href="#language{{ language.language_id }}" data-toggle="tab"><img src="language/{{ language['code'] }}/{{ language['code'] }}.png" title="{{ language['name'] }}" /> {{ language['name'] }}</a></li>
+				{% endfor %} 
+			</ul>
+			
+			<div class="tab-content"> <!-- language tab content -->
+			{% for language in languages %} 
+			<div class="tab-pane" id="language{{ language.language_id }}">	
+				
+				<!--Tabs UL Starts-->
+				<ul class="nav nav-tabs" id="tabs">
+					<li class="active"><a href="#tab-home{{ language.language_id }}" data-toggle="tab"><i class="fa fa-home"></i> {{ tab_home }}</a></li>
+					<li><a href="#tab-pagination{{ language.language_id }}" data-toggle="tab"><i class="fa fa-files-o"></i> {{ tab_pagination }}</a></li>
+					<li><a href="#tab-search{{ language.language_id }}" data-toggle="tab"><i class="fa fa-search"></i> {{ tab_search }}</a></li>
+					<li><a href="#tab-tag{{ language.language_id }}" data-toggle="tab"><i class="fa fa-tags"></i> {{ tab_tag }}</a></li>	
+					<li><a href="#tab-route{{ language.language_id }}" onclick="load_routes_block({{ language.language_id }});" data-toggle="tab"><i class="fa fa-road"></i> {{ tab_route }}</a></li>
+	          	</ul>
+			  	<!--Tabs UL Ends-->
+
+			  	<div class="tab-content">
+			  		<div class="tab-pane active" id="tab-home{{ language.language_id }}">
+						<div class="form-group">
+							<label class="col-sm-3 control-label">{{ text_meta_title }}</label>
+							<div class="col-sm-9">
+							  <input type="text" name="hb_metatags_hmtitle{{ language.language_id }}" value="{{ hb_metatags_hmtitle[language.language_id] }}" class="form-control" />
+							</div>
+						 </div>
+						 <div class="form-group">
+							<label class="col-sm-3 control-label">{{ text_meta_description }}</label>
+							<div class="col-sm-9">
+							  <textarea rows="5" name="hb_metatags_hmdesc{{ language.language_id }}"  class="form-control">{{ hb_metatags_hmdesc[language.language_id] }}</textarea>
+							</div>
+						 </div>
+						 <div class="form-group">
+							<label class="col-sm-3 control-label">{{ text_meta_keywords }}</label>
+							<div class="col-sm-9">
+							  <textarea rows="5" name="hb_metatags_hmkeyword{{ language.language_id }}" class="form-control">{{ hb_metatags_hmkeyword[language.language_id] }}</textarea>
+							</div>
+						 </div>
+					</div>
+					
+					<div class="tab-pane" id="tab-pagination{{ language.language_id }}">
+						<div class="alert alert-info"><i class="fa fa-info-circle"></i>&nbsp;{{ help_duplicate_pages }}</div>
+						 <div class="form-group">
+							<label class="col-sm-3 control-label">{{ text_meta_title_template }}</label>
+							<div class="col-sm-9">
+								<textarea rows="5" name="hb_metatags_pgtitle{{ language.language_id }}"  class="form-control">{{ hb_metatags_pgtitle[language.language_id] }}</textarea>
+								<div class="alert alert-info">{{ help_meta_title_template }}</div>
+							</div>
+						 </div>
+						 <div class="form-group">
+							<label class="col-sm-3 control-label">{{ text_meta_description_template }}</label>
+							<div class="col-sm-9">
+							  	<textarea rows="5" name="hb_metatags_pgdesc{{ language.language_id }}" class="form-control">{{ hb_metatags_pgdesc[language.language_id] }}</textarea>
+								<div class="alert alert-info">{{ help_meta_description_template }}</div>
+							</div>
+						 </div>
+					</div>
+					
+					<div class="tab-pane" id="tab-search{{ language.language_id }}">
+						 <div class="form-group">
+							<label class="col-sm-3 control-label">{{ text_meta_title_template }}</label>
+							<div class="col-sm-9">
+								<textarea rows="5" name="hb_metatags_srtitle{{ language.language_id }}"  class="form-control">{{ hb_metatags_srtitle[language.language_id] }}</textarea>
+								<div class="alert alert-info">{{ help_meta_description_search }}</div>
+							</div>
+						 </div>
+						 <div class="form-group">
+							<label class="col-sm-3 control-label">{{ text_meta_description_template }}</label>
+							<div class="col-sm-9">
+								<textarea rows="5" name="hb_metatags_srdesc{{ language.language_id }}"  class="form-control">{{ hb_metatags_srdesc[language.language_id] }}</textarea>
+								<div class="alert alert-info">{{ help_meta_description_search }}</div>
+							</div>
+						 </div>
+						 <div class="form-group">
+							<label class="col-sm-3 control-label">{{ text_meta_keywords_template }}</label>
+							<div class="col-sm-9">
+							  	<textarea rows="5" name="hb_metatags_srkeyword{{ language.language_id }}" class="form-control">{{ hb_metatags_srkeyword[language.language_id] }}</textarea>
+								<div class="alert alert-info">{{ help_meta_keyword_search }}</div>
+							</div>
+						 </div>
+					</div>
+					
+					<div class="tab-pane" id="tab-tag{{ language.language_id }}">
+						 <div class="form-group">
+							<label class="col-sm-3 control-label">{{ text_meta_title_template }}</label>
+							<div class="col-sm-9">
+								<textarea rows="5" name="hb_metatags_tgtitle{{ language.language_id }}"  class="form-control">{{ hb_metatags_tgtitle[language.language_id] }}</textarea>
+								<div class="alert alert-info">{{ help_meta_description_search }}</div>
+							</div>
+						 </div>
+						 <div class="form-group">
+							<label class="col-sm-3 control-label">{{ text_meta_description_template }}</label>
+							<div class="col-sm-9">
+								<textarea rows="5" name="hb_metatags_tgdesc{{ language.language_id }}"  class="form-control">{{ hb_metatags_tgdesc[language.language_id] }}</textarea>
+								<div class="alert alert-info">{{ help_meta_description_search }}</div>
+							</div>
+						 </div>
+						 <div class="form-group">
+							<label class="col-sm-3 control-label">{{ text_meta_keywords_template }}</label>
+							<div class="col-sm-9">
+							  	<textarea rows="5" name="hb_metatags_tgkeyword{{ language.language_id }}" class="form-control">{{ hb_metatags_tgkeyword[language.language_id] }}</textarea>
+								<div class="alert alert-info">{{ help_meta_keyword_search }}</div>
+							</div>
+						 </div>
+					</div>
+					
+					<div class="tab-pane" id="tab-route{{ language.language_id }}">
+						<div id="route-block-{{ language.language_id }}"></div>
+					</div>
+	
+			  	</div><!--tab-content block end-->			
+			 
+			</div>
+			{% endfor %} 
+			</div> <!-- language tab content end-->	
+        </form>
+		
+		<!--ADD NEW META FORM START-->
+		<div class="modal fade" id="add-meta" tabindex="-1" role="dialog" aria-labelledby="add-metaLabel">
+		  <div class="modal-dialog modal-lg" role="document">
+			<div class="modal-content">
+			  <div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span>&times;</span></button>
+				<h4 class="modal-title"><i class="fa fa-code"></i> {{ text_add_meta }}</h4>
+			  </div>
+			  <div class="modal-body-1">
+				 <div class="form-group col-sm-6">
+					<label class="control-label">{{ text_route }}</label>
+					<input type="text" id="route" placeholder="{{ text_route_placeholder }}" class="form-control" />
+				  </div>
+				  <div class="form-group col-sm-6">
+					<label class="control-label">{{ text_language }}</label>
+					<select id="language_id" class="form-control">
+					{% for language in languages %} 
+						<option value="{{ language.language_id }}">{{ language['name'] }}</option>
+					{% endfor %} 
+					</select>
+				  </div>
+				  <div class="form-group col-sm-12">
+					<label class="control-label">{{ text_meta_title }}</label>
+					<textarea id="meta-title" class="form-control"></textarea>
+				  </div>
+				  <div class="form-group col-sm-12">
+					<label class="control-label">{{ text_meta_description }}</label>
+					<textarea id="meta-description" class="form-control"></textarea>
+				  </div>
+				  <div class="form-group col-sm-12">
+					<label class="control-label">{{ text_meta_keywords }}</label>
+					<textarea id="meta-keyword" class="form-control"></textarea>
+				  </div>
+			  </div>
+			  <div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">{{ button_close }}</button>
+				<button type="button" class="btn btn-primary" id="add-route-meta">{{ button_add }}</button>
+			  </div>
+			  <div id="addmeta-result" style="text-align:center;"></div>
+			</div>
+		  </div>
+		</div>
+		<!--ADD NEW META FORM END-->
+		
+      </div>
+    </div>
+    <!--Panel Content End-->
+   <!--Huntbee copyrights-->
+    <div class="container-fluid">
+      <center>
+        <span class="help">{{ heading_title }} - {{ extension_version }} &copy; <a href="https://www.huntbee.com/">HUNTBEE.COM</a> | <a href="https://www.huntbee.com/get-support">SUPPORT</a></span>
+      </center>
+    </div>
+    <!--Huntbee copyrights end-->
+  </div>
+  <!--Container 1 start -->
+</div>
+<!--Main Content block end-->
+
+<script type="text/javascript"><!--
+$('#languages a:first').tab('show');
+//--></script>
+
+<script type="text/javascript">
+function load_routes_block(language_id){
+	//$("#route-block-"+language_id).html('<center><div class="loaddiv"><i class="fa fa-circle-o-notch fa-spin fa-3x fa-fw"></i></div></center>');
+	$("#route-block-"+language_id).load("index.php?route={{ base_route }}/hb_metatags/routes&user_token={{ user_token }}&store_id={{ store_id }}&language_id="+language_id);
+}
+</script>
+
+<script type="text/javascript">
+$('#add-route-meta').on('click', function() {
+    const routeData = {
+        route: $('#route').val(),
+        meta_title: $('#meta-title').val(),
+        meta_description: $('#meta-description').val(),
+        meta_keyword: $('#meta-keyword').val(),
+        language_id: $('#language_id').val()
+    };
+
+    $('#addmeta-result').html('<center><div class="loaddiv"><i class="fa fa-circle-o-notch fa-spin fa-3x fa-fw"></i></div></center>');
+
+    $.ajax({
+        type: 'POST',
+        url: 'index.php?route={{ base_route }}/hb_metatags/add_meta&user_token={{ user_token }}&store_id={{ store_id }}',
+        data: routeData,
+        dataType: 'json',
+        success: function(json) {
+			if (json['success']) {
+				$('#addmeta-result').html('<div class="alert alert-success"><i class="fa fa-check"></i>&nbsp;'+json['success']+'<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+				load_routes_block(routeData.language_id);
+			}
+			if (json['error']) {
+				$('#addmeta-result').html('<div class="alert alert-danger">'+json['error']+'<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+			}
+		},			
+		error: function(xhr, ajaxOptions, thrownError) {
+			alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+        }
+    });
+});
+
+
+function deleteMeta(id, language_id){
+	if (!confirm("{{ text_confirm }}")) {
+		return false;
+	}
+
+	$('#msgoutput').html('<center><div class="loaddiv"><i class="fa fa-circle-o-notch fa-spin fa-3x fa-fw"></i></div></center>');
+	$.ajax({
+		type: 'post',
+		url: 'index.php?route={{ base_route }}/hb_metatags/delete_meta&user_token={{ user_token }}',
+		data: {id : id},
+		dataType: 'json',
+		success: function(json) {
+			if (json['success']) {
+				$('#msgoutput').html('<div class="alert alert-success"><i class="fa fa-check"></i>&nbsp;'+json['success']+'<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+				load_routes_block(language_id);
+			}
+			if (json['error']) {
+				$('#msgoutput').html('<div class="alert alert-danger">'+json['error']+'<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+			}
+		}
+	});
+}
+</script>
+
+<script type="text/javascript">
+$('#store').on('change', function() {
+	window.location.href = 'index.php?route={{ base_route }}/hb_metatags&user_token={{ user_token }}&store_id='+$('#store').val();
+});
+</script>
+
+{{ footer }}

@@ -1,0 +1,608 @@
+{{ header }}{{ column_left }}
+<div id="content" class="mp-content">
+  <div class="page-header">
+    <div class="container-fluid">
+      <div class="pull-right">
+        <button type="submit" form="form-gdpr" data-toggle="tooltip" title="{{ button_save }}" class="btn btn-primary"><i class="fa fa-refresh"></i> {{ button_save }}</button>
+      </div>
+      <h1>{{ heading_title }}</h1>
+      <ul class="breadcrumb">
+        {% for breadcrumb in breadcrumbs %}
+        <li><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+  <div class="container-fluid">
+    {% if success %}
+    <div class="alert alert-success"><i class="fa fa-exclamation-circle"></i> {{ success }}
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+    </div>
+    {% endif %}
+    {% if error_warning %}
+    <div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i> {{ error_warning }}
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+    </div>
+    {% endif %}
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title"><i class="fa fa-pencil"></i> {{ text_edit }}</h3>
+
+        <div class="pull-right">
+          <span>{{ text_store }}</span>
+          <button type="button" data-toggle="dropdown" class="btn btn-default btn-xs dropdown-toggle"><span>{{ store_name }} &nbsp; &nbsp; </span> <i class="fa fa-angle-down"></i></button>
+          <ul class="dropdown-menu pull-right">
+            {% for store in stores %}
+            <li><a href="index.php?route=mpgdpr/mpgdpr&{{ var_token }}={{ token }}&store_id={{ store.store_id }}">{{ store.name }}</a></li>
+            {% endfor %}
+          </ul>
+        </div><div class="cleafix"></div>
+      </div>
+      <div class="panel-body">
+        <form action="{{ action }}" method="post" enctype="multipart/form-data" id="form-gdpr" class="form-horizontal">
+          <ul class="nav nav-tabs">
+            <li class="active"><a href="#tab-general" data-toggle="tab"><i class="fa fa-cogs"></i> <span>{{ tab_general }}</span></a></li>
+            <li><a href="#tab-other" data-toggle="tab"><i class="fa fa-server"></i> <span>{{ tab_other }}</span></a></li>
+            <li><a href="#tab-cookieconsent" data-toggle="tab"><i class="fa fa-save"></i> <span>{{ tab_cookieconsent }}</span></a></li>
+            <li><a href="#tab-support" data-toggle="tab"><i class="fa fa-thumbs-up" aria-hidden="true"></i> {{ tab_modulepoints }}</a></li>
+          </ul>
+          <div class="tab-content">
+            <div class="tab-pane active" id="tab-general"> 
+              <div class="row">
+                <div class="col-sm-3">
+                  <ul class="nav nav-pills nav-stacked ostab">
+                    <li class="active"><a href="#tab-enable" data-toggle="tab"><i class="fa fa-cog"></i> <span>{{ tab_settings }}</span></a></li>
+                    <li><a href="#tab-captcha" data-toggle="tab"><i class="fa fa-shield"></i> <span>{{ legend_captcha }}</span></a></li>
+                    <li><a href="#tab-requesttime" data-toggle="tab"><i class="fa fa-desktop"></i> <span>{{ legend_requesttimeout }}</span></a></li>
+                    <li><a href="#tab-upload" data-toggle="tab"><i class="fa fa-file-o"></i> <span>{{ legend_upload }}</span></a></li>
+                  </ul>
+                </div>
+                <div class="col-sm-8">
+                  <div class="tab-content">
+                    <div class="tab-pane active" id="tab-enable">
+                      <div class="form-group mp-buttons">
+                        <label class="col-sm-2 control-label" for="input-status">{{ entry_status }} </label>
+                        <div class="col-sm-5">
+                          <div class="btn-group btn-group-justified" data-toggle="buttons">
+                            <label class="btn btn-primary {% if mpgdpr_status %}active{% endif %}">
+                              <input type="radio" name="mpgdpr_status" value="1" {% if mpgdpr_status %}checked="checked"{% endif %} />
+                            {{ text_enabled }}
+                           </label>
+                            <label class="btn btn-primary {% if not mpgdpr_status %}active{% endif %}">
+                              <input type="radio" name="mpgdpr_status" value="0" {% if not mpgdpr_status %}checked="checked"{% endif %} />
+                            {{ text_disabled }}
+                            </label>
+                          </div>
+                          <span class="help">{{ help_status }}</span> 
+                        </div>
+                      </div>
+                      <div class="form-group mp-buttons">
+                        <label class="col-sm-2 control-label" for="input-hasright_todelete">{{ entry_hasright_todelete }} </label>
+                        <div class="col-sm-5">
+                          <div class="btn-group btn-group-justified" data-toggle="buttons">
+                            <label class="btn btn-primary {% if mpgdpr_hasright_todelete %}active{% endif %}">
+                              <input type="radio" name="mpgdpr_hasright_todelete" value="1" {% if mpgdpr_hasright_todelete %}checked="checked"{% endif %} />
+                            {{ text_yes }}
+                           </label>
+                            <label class="btn btn-primary {% if not mpgdpr_hasright_todelete %}active{% endif %}">
+                              <input type="radio" name="mpgdpr_hasright_todelete" value="0" {% if not mpgdpr_hasright_todelete %}checked="checked"{% endif %} />
+                            {{ text_no }}
+                            </label>
+                          </div>
+                          <span class="help">{{ help_hasright_todelete }}</span>
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label class="col-sm-2 control-label" for="input-maxrequests">{{ entry_maxrequests }} </label>
+                        <div class="col-sm-5">
+                          <input type="text" name="mpgdpr_maxrequests" value="{{ mpgdpr_maxrequests }}" class="form-control" />
+
+                          <span class="help">{{ help_maxrequests }}</span>
+                        </div>
+                      </div>
+                      {#                      
+                      <div class="form-group">
+                        <label class="col-sm-2 control-label" for="input-keyword">{{ entry_keyword }} </label>
+                        <div class="col-sm-5">
+                          <input type="text" name="mpgdpr_keyword" value="{{ mpgdpr_keyword }}" class="form-control" />
+
+                          <span class="help">{{ help_keyword }}</span>
+                        </div>
+                      </div> #}
+                      <div class="form-group mp-buttons">
+                        <label class="col-sm-2 control-label" for="input-login_gdprforms">{{ entry_login_gdprforms }} </label>
+                        <div class="col-sm-5">
+                          <div class="btn-group btn-group-justified" data-toggle="buttons">
+                            <label class="btn btn-primary {% if mpgdpr_login_gdprforms %}active{% endif %}">
+                              <input type="radio" name="mpgdpr_login_gdprforms" value="1" {% if mpgdpr_login_gdprforms %}checked="checked"{% endif %} />
+                            {{ text_yes }}
+                           </label>
+                            <label class="btn btn-primary {% if not mpgdpr_login_gdprforms %}active{% endif %}">
+                              <input type="radio" name="mpgdpr_login_gdprforms" value="0" {% if not mpgdpr_login_gdprforms %}checked="checked"{% endif %} />
+                            {{ text_no }}
+                            </label>
+                          </div>
+                          <span class="help">{{ help_login_gdprforms }}</span>
+                        </div>
+                      </div>
+                      <h4 class="subtitle"><i class="fa fa-exclamation-triangle"></i> <small>{{ text_acceptpolicy_gdpr }}</small></h4>
+                      <div class="form-group mp-buttons">
+                        <label class="col-sm-2 control-label" for="input-acceptpolicy_customer">{{ entry_acceptpolicy_customer }} </label>
+                        <div class="col-sm-5">
+                          <div class="btn-group btn-group-justified" data-toggle="buttons">
+                            <label class="btn btn-primary {% if mpgdpr_acceptpolicy_customer %}active{% endif %}">
+                              <input type="radio" name="mpgdpr_acceptpolicy_customer" value="1" {% if mpgdpr_acceptpolicy_customer %}checked="checked"{% endif %} />
+                            {{ text_yes }}
+                           </label>
+                            <label class="btn btn-primary {% if not mpgdpr_acceptpolicy_customer %}active{% endif %}">
+                              <input type="radio" name="mpgdpr_acceptpolicy_customer" value="0" {% if not mpgdpr_acceptpolicy_customer %}checked="checked"{% endif %} />
+                            {{ text_no }}
+                            </label>
+                          </div>
+                          <span class="help">{{ help_acceptpolicy_customer }}</span>
+                        </div>
+                      </div>
+                      <div class="form-group required">
+                        <label class="col-sm-2 control-label" for="input-policy_customer">{{ entry_policy_customer }} </label>
+                        <div class="col-sm-5">
+                          <select name="mpgdpr_policy_customer" id="input-policy_customer" class="form-control">
+                            <option value="0">{{ text_default_page }}</option>
+                            {% for information_page in information_pages %}
+                            <option value="{{ information_page.information_id }}" {% if mpgdpr_policy_customer == information_page.information_id %}selected="selected"{% endif %}>{{ information_page.title }}</option>
+                            {% endfor %}
+                          </select>
+                          <span class="help">{{ help_policy_customer }}</span>
+                        </div>
+                      </div>
+                      <h4 class="subtitle"><i class="fa fa-exclamation-triangle"></i>  <small>{{ text_acceptpolicy_gdpr }}</small></h4>
+                      <div class="form-group mp-buttons">
+                        <label class="col-sm-2 control-label" for="input-acceptpolicy_contactus">{{ entry_acceptpolicy_contactus }} </label>
+                        <div class="col-sm-5">
+                          <div class="btn-group btn-group-justified" data-toggle="buttons">
+                            <label class="btn btn-primary {% if mpgdpr_acceptpolicy_contactus %}active{% endif %}">
+                              <input type="radio" name="mpgdpr_acceptpolicy_contactus" value="1" {% if mpgdpr_acceptpolicy_contactus %}checked="checked"{% endif %} />
+                            {{ text_yes }}
+                           </label>
+                            <label class="btn btn-primary {% if not mpgdpr_acceptpolicy_contactus %}active{% endif %}">
+                              <input type="radio" name="mpgdpr_acceptpolicy_contactus" value="0" {% if not mpgdpr_acceptpolicy_contactus %}checked="checked"{% endif %} />
+                            {{ text_no }}
+                            </label>
+                          </div>
+                          <span class="help">{{ help_acceptpolicy_contactus }}</span>
+                        </div>
+                      </div>
+                      <div class="form-group required">
+                        <label class="col-sm-2 control-label" for="input-policy_contactus">{{ entry_policy_contactus }} </label>
+                        <div class="col-sm-5">
+                          <select name="mpgdpr_policy_contactus" id="input-policy_contactus" class="form-control">
+                            <option value="0">{{ text_none }}</option>
+                            {% for information_page in information_pages %}
+                            <option value="{{ information_page.information_id }}" {% if mpgdpr_policy_contactus == information_page.information_id %}selected="selected"{% endif %} >{{ information_page.title }}</option>
+                            {% endfor %}
+                          </select>
+                          <span class="help">{{ help_policy_contactus }}</span>
+                        </div>
+                      </div>
+                      <h4 class="subtitle"><i class="fa fa-exclamation-triangle"></i>  <small>{{ text_acceptpolicy_gdpr }}</small></h4>
+                      <div class="form-group mp-buttons">
+                        <label class="col-sm-2 control-label" for="input-acceptpolicy_checkout">{{ entry_acceptpolicy_checkout }} </label>
+                        <div class="col-sm-5">
+                          <div class="btn-group btn-group-justified" data-toggle="buttons">
+                            <label class="btn btn-primary {% if mpgdpr_acceptpolicy_checkout %}active{% endif %}">
+                              <input type="radio" name="mpgdpr_acceptpolicy_checkout" value="1" {% if mpgdpr_acceptpolicy_checkout %}checked="checked"{% endif %} />
+                            {{ text_yes }}
+                           </label>
+                            <label class="btn btn-primary {% if not mpgdpr_acceptpolicy_checkout %}active{% endif %}">
+                              <input type="radio" name="mpgdpr_acceptpolicy_checkout" value="0" {% if not mpgdpr_acceptpolicy_checkout %}checked="checked"{% endif %} />
+                            {{ text_no }}
+                            </label>
+                          </div>
+                          <span class="help">{{ help_acceptpolicy_checkout }}</span>
+                        </div>
+                      </div>
+                      <div class="form-group required">
+                        <label class="col-sm-2 control-label" for="input-policy_checkout">{{ entry_policy_checkout }} </label>
+                        <div class="col-sm-5">
+                          <select name="mpgdpr_policy_checkout" id="input-policy_checkout" class="form-control">
+                            <option value="0">{{ text_default_page }}</option>
+                            {% for information_page in information_pages %}
+                            <option value="{{ information_page.information_id }}" {% if mpgdpr_policy_checkout == information_page.information_id %}selected="selected"{% endif %}>{{ information_page.title }}</option>
+                            {% endfor %}
+                          </select>
+                          <span class="help">{{ help_policy_checkout }}</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="tab-pane" id="tab-captcha">  
+                      <div class="form-group mp-buttons">
+                        <label class="col-sm-2 control-label" for="input-captcha_gdprforms">{{ entry_captcha_gdprforms }} </label>
+                        <div class="col-sm-5">
+                          <div class="btn-group btn-group-justified" data-toggle="buttons">
+                            <label class="btn btn-primary {% if mpgdpr_captcha_gdprforms %}active{% endif %}">
+                              <input type="radio" name="mpgdpr_captcha_gdprforms" value="1" {% if mpgdpr_captcha_gdprforms %}checked="checked"{% endif %} />
+                            {{ text_yes }}
+                           </label>
+                            <label class="btn btn-primary {% if not mpgdpr_captcha_gdprforms %}active{% endif %}">
+                              <input type="radio" name="mpgdpr_captcha_gdprforms" value="0" {% if not mpgdpr_captcha_gdprforms %}checked="checked"{% endif %} />
+                            {{ text_no }}
+                            </label>
+                          </div>
+                          <span class="help">{{ help_captcha_gdprforms }}</span>
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label class="col-sm-2 control-label">{{ entry_captcha }}</label>
+                        <div class="col-sm-5">
+                          <select name="mpgdpr_captcha" id="input-captcha" class="form-control">
+                            <option value="">{{ text_none }}</option>
+                            {% for captcha in captchas %}
+                            {% if captcha.value == mpgdpr_captcha %}
+                            <option value="{{ captcha.value }}" selected="selected">{{ captcha.text }}</option>
+                            {% else %}
+                            <option value="{{ captcha.value }}">{{ captcha.text }}</option>
+                            {% endif %}
+                            {% endfor %}
+                          </select>
+                          <span class="help">{{ help_captcha }}</span>
+                        </div>
+                      </div>
+                    </div> 
+                    <div class="tab-pane" id="tab-requesttime"> 
+                      <div class="form-group required">
+                        <label class="col-sm-2 control-label" for="input-requestget_personaldata">{{ entry_requestget_personaldata }}</label>
+                        <div class="col-sm-5">
+                          <input type="number" name="mpgdpr_timeout[requestget_personaldata]" value="{{ (mpgdpr_timeout.requestget_personaldata) ? mpgdpr_timeout.requestget_personaldata : 2 }}" placeholder="{{ entry_requestget_personaldata }}" id="input-requestget_personaldata" class="form-control" />
+                          <span class="help">{{ help_requestget_personaldata }}</span>
+                        </div>
+                      </div>
+                      <div class="form-group required">
+                        <label class="col-sm-2 control-label" for="input-requestdelete_personaldata">{{ entry_requestdelete_personaldata }}</label>
+                        <div class="col-sm-5">
+                          <input type="number" name="mpgdpr_timeout[requestdelete_personaldata]" value="{{ (mpgdpr_timeout.requestdelete_personaldata) ? mpgdpr_timeout.requestdelete_personaldata : 2 }}" placeholder="{{ entry_requestdelete_personaldata }}" id="input-requestdelete_personaldata" class="form-control" />
+                          <span class="help">{{ help_requestdelete_personaldata }}</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="tab-pane" id="tab-upload">
+                      <div class="form-group">
+                        <label class="col-sm-2 control-label" for="input-file-ext-allowed">{{ entry_file_ext_allowed }}</label>
+                        <div class="col-sm-5">
+                          <textarea name="mpgdpr_file_ext_allowed" rows="5" placeholder="{{ entry_file_ext_allowed }}" id="input-file-ext-allowed" class="form-control">{{ mpgdpr_file_ext_allowed }}</textarea>
+                          <span class="help">{{ help_file_ext_allowed }}</span>
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label class="col-sm-2 control-label" for="input-file-mime-allowed">{{ entry_file_mime_allowed }}</label>
+                        <div class="col-sm-5">
+                          <textarea name="mpgdpr_file_mime_allowed" rows="5" placeholder="{{ entry_file_mime_allowed }}" id="input-file-mime-allowed" class="form-control">{{ mpgdpr_file_mime_allowed }}</textarea>
+                          <span class="help">{{ help_file_mime_allowed }}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="tab-pane" id="tab-other">
+              <h4 class="subtitle"><i class="fa fa-exclamation-triangle"></i>  {{ text_access_personaldata }} <br/><small>{{ help_access_personaldata }}</small></h4>
+                
+              <ul class="nav nav-tabs" id="languageother">
+                {% for language in languages %}
+                <li><a href="#languageother{{ language.language_id }}" data-toggle="tab"><img src="{{ language.flag }}" title="{{ language.name }}" /> {{ language.name }}</a></li>
+                {% endfor %}
+              </ul>
+              <div class="tab-content">
+                {% for language in languages %}
+                <div class="tab-pane" id="languageother{{ language.language_id }}">
+                  <div class="form-group">
+                    <label class="col-sm-2 control-label">{{ entry_locationservices }}</label>
+                    <div class="col-sm-6">
+                      <textarea name="mpgdpr_services[{{ language.language_id }}][locationservices]" id="input-locationservices{{ language.language_id }}" class="form-control" cols="10">{{ (mpgdpr_services[language.language_id]) ? mpgdpr_services[language.language_id].locationservices :'' }}</textarea>
+                      <span class="help">{{ help_locationservices }}</span>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="col-sm-2 control-label">{{ entry_otherservices }}</label>
+                    <div class="col-sm-6">
+                      <textarea name="mpgdpr_services[{{ language.language_id }}][otherservices]" id="input-otherservices{{ language.language_id }}" class="form-control" cols="10">{{ (mpgdpr_services[language.language_id]) ? mpgdpr_services[language.language_id].otherservices : ''  }}</textarea>
+                      <span class="help">{{ help_otherservices }}</span>
+                    </div>
+                  </div>
+                </div>
+                {% endfor %}
+              </div>
+            </div>
+            <div class="tab-pane" id="tab-cookieconsent">
+              <div class="row">
+                <div class="col-sm-2">
+                  <ul class="nav nav-pills nav-stacked ostab">
+                    <li class="active"><a href="#tab-cgeneral" data-toggle="tab"><i class="fa fa-cogs"></i> <span>{{ legend_general }}</span></a></li>
+                    <li><a href="#tab-cookiemanager" data-toggle="tab"><i class="fa fa-stack-overflow"></i> <span>{{ legend_cookiemanager }}</span></a></li>
+                    <li><a href="#tab-language" data-toggle="tab"><i class="fa fa-language"></i> <span>{{ legend_language }}</span></a></li>
+                  </ul>    
+                </div>
+                <div class="col-sm-8">
+                  <div class="tab-content">
+                    <div class="tab-pane active" id="tab-cgeneral">
+                      <div class="form-group required mp-buttons">
+                        <label class="col-sm-2 control-label" for="input-cbstatus">{{ entry_cbstatus }} </label>
+                        <div class="col-sm-5">
+                          <div class="btn-group btn-group-justified" data-toggle="buttons">
+                            <label class="btn btn-primary {% if mpgdpr_cbstatus %}active{% endif %}">
+                              <input type="radio" name="mpgdpr_cbstatus" value="1" {% if mpgdpr_cbstatus %}checked="checked"{% endif %} />
+                            {{ text_enabled }}
+                           </label>
+                            <label class="btn btn-primary {% if not mpgdpr_cbstatus %}active{% endif %}">
+                              <input type="radio" name="mpgdpr_cbstatus" value="0" {% if not mpgdpr_cbstatus %}checked="checked"{% endif %} />
+                            {{ text_disabled }}
+                            </label>
+                          </div>
+                          <span class="help">{{ help_cbstatus }}</span>
+                        </div>
+                      </div>
+                      <div class="form-group required mp-buttons">
+                        <label class="col-sm-2 control-label" for="input-cbpolicy">{{ entry_cbpolicy }} </label>
+                        <div class="col-sm-5">
+                          <div class="btn-group btn-group-justified" data-toggle="buttons">
+                            <label class="btn btn-primary {% if mpgdpr_cbpolicy %}active{% endif %}">
+                              <input type="radio" name="mpgdpr_cbpolicy" value="1" {% if mpgdpr_cbpolicy %}checked="checked"{% endif %} />
+                            {{ text_enabled }}
+                           </label>
+                            <label class="btn btn-primary {% if not mpgdpr_cbpolicy %}active{% endif %}">
+                              <input type="radio" name="mpgdpr_cbpolicy" value="0" {% if not mpgdpr_cbpolicy %}checked="checked"{% endif %} />
+                            {{ text_disabled }}
+                            </label>
+                          </div>
+                          <span class="help">{{ help_cbpolicy }}</span>
+                        </div>
+                      </div>
+                      <div class="form-group required">
+                        <label class="col-sm-2 control-label" for="input-cbpolicy_page">{{ entry_cbpolicy_page }} </label>
+                        <div class="col-sm-5">
+                          <select name="mpgdpr_cbpolicy_page" id="input-cbpolicy_page" class="form-control">
+                            <option value="0">{{ text_default_page }}</option>
+                            {% for information_page in information_pages %}
+                            <option value="{{ information_page.information_id }}" {% if mpgdpr_cbpolicy_page == information_page.information_id %}selected="selected"{% endif %}>{{ information_page.title }}</option>
+                            {% endfor %}
+                          </select>
+                          <span class="help">{{ help_cbpolicy_page }}</span>
+                        </div>
+                      </div>
+                      <div class="form-group required mp-buttons">
+                        <label class="col-sm-2 control-label" for="input-cbpptrack">{{ entry_cbpptrack }} </label>
+                        <div class="col-sm-5">
+                          <div class="btn-group btn-group-justified" data-toggle="buttons">
+                            <label class="btn btn-primary {% if mpgdpr_cbpptrack %}active{% endif %}">
+                              <input type="radio" name="mpgdpr_cbpptrack" value="1" {% if mpgdpr_cbpptrack %}checked="checked"{% endif %} />
+                            {{ text_enabled }}
+                           </label>
+                            <label class="btn btn-primary {% if not mpgdpr_cbpptrack %}active{% endif %}">
+                              <input type="radio" name="mpgdpr_cbpptrack" value="0" {% if not mpgdpr_cbpptrack %}checked="checked"{% endif %} />
+                            {{ text_disabled }}
+                            </label>
+                          </div>
+                          <span class="help">{{ help_cbpptrack }}</span>
+                        </div>
+                      </div>
+                      <div class="form-group required">
+                        <label class="col-sm-2 control-label" for="input-cbinitial">{{ entry_cbinitial }} </label>
+                        <div class="col-sm-5">
+                          <select name="mpgdpr_cbinitial" id="input-cbinitial" class="form-control">
+                            {% for cbinitial in cbinitials %}
+                            <option value="{{ cbinitial.value }}" {% if mpgdpr_cbinitial == cbinitial.value %}selected="selected"{% endif %}>{{ cbinitial.text }}</option>
+                            {% endfor %}
+                          </select>
+                          <span class="help">{{ help_cbinitial }}</span>
+                        </div>
+                      </div>
+                      <div class="form-group required">
+                        <label class="col-sm-2 control-label" for="input-cbaction_close">{{ entry_cbaction_close }} </label>
+                        <div class="col-sm-5">
+                          <select name="mpgdpr_cbaction_close" id="input-cbaction_close" class="form-control">
+                            {% for cbaction_close in cbactions_close %}
+                            <option value="{{ cbaction_close.value }}" {% if mpgdpr_cbaction_close == cbaction_close.value %}selected="selected"{% endif %}>{{ cbaction_close.text }}</option>
+                            {% endfor %}
+                          </select>
+                          <span class="help">{{ help_cbaction_close }}</span>
+                        </div>
+                      </div>
+                      <div class="form-group required mp-buttons">
+                        <label class="col-sm-2 control-label" for="input-cbshowagain">{{ entry_cbshowagain }} </label>
+                        <div class="col-sm-5">
+                          <div class="btn-group btn-group-justified" data-toggle="buttons">
+                            <label class="btn btn-primary {% if mpgdpr_cbshowagain %}active{% endif %}">
+                              <input type="radio" name="mpgdpr_cbshowagain" value="1" {% if mpgdpr_cbshowagain %}checked="checked"{% endif %} />
+                            {{ text_enabled }}
+                           </label>
+                            <label class="btn btn-primary {% if not mpgdpr_cbshowagain %}active{% endif %}">
+                              <input type="radio" name="mpgdpr_cbshowagain" value="0" {% if not mpgdpr_cbshowagain %}checked="checked"{% endif %} />
+                            {{ text_disabled }}
+                            </label>
+                          </div>
+                          <span class="help">{{ help_cbshowagain }}</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="tab-pane" id="tab-cookiemanager"> 
+                      <div class="form-group required">
+                        <label class="col-sm-2 control-label" for="input-cookie_stricklyrequired">{{ entry_cookie_stricklyrequired }} </label>
+                        <div class="col-sm-5">
+                          <textarea rows="7" name="mpgdpr_cookie_stricklyrequired" id="input-cookie_stricklyrequired" class="form-control">{{ mpgdpr_cookie_stricklyrequired }}</textarea>
+                          <span class="help">{{ help_cookie_stricklyrequired }}</span>
+                        </div>
+                      </div>
+                      <div class="form-group required">
+                        <label class="col-sm-2 control-label" for="input-cookie_analytics">{{ entry_cookie_analytics }} </label>
+                        <div class="col-sm-5">
+                          <textarea rows="7" name="mpgdpr_cookie_analytics" id="input-cookie_analytics" class="form-control">{{ mpgdpr_cookie_analytics }}</textarea>
+                          <span class="help">{{ help_cookie_analytics }}</span>
+                        </div>
+                      </div>
+                      <div class="form-group required">
+                        <label class="col-sm-2 control-label" for="input-cookie_marketing">{{ entry_cookie_marketing }} </label>
+                        <div class="col-sm-5">
+                          <textarea rows="7" name="mpgdpr_cookie_marketing" id="input-cookie_marketing" class="form-control">{{ mpgdpr_cookie_marketing }}</textarea>
+                          <span class="help">{{ help_cookie_marketing }}</span>
+                        </div>
+                      </div>
+                      <div class="form-group required">
+                        <label class="col-sm-2 control-label" for="input-cookie_domain">{{ entry_cookie_domain }} </label>
+                        <div class="col-sm-5">
+                          <textarea rows="7" name="mpgdpr_cookie_domain" id="input-cookie_domain" class="form-control">{{ mpgdpr_cookie_domain }}</textarea>
+                          <span class="help">{{ help_cookie_domain }}</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="tab-pane" id="tab-language">
+                      <div class="form-group required" style="padding-top: 0;">
+                        <h4 class="subtitle"><i class="fa fa-exclamation-triangle"></i>  {{ entry_cookielanguage }} <br/> <small>{{ help_cookielanguage }}</small></h4>
+                        <div class="col-sm-12">
+                          <ul class="nav nav-tabs" id="cookielanguage">
+                          {% for language in languages %}
+                          <li><a href="#cookielanguage{{ language.language_id }}" data-toggle="tab"><img src="{{ language.flag }}" title="{{ language.name }}" /> {{ language.name }}</a></li>
+                          {% endfor %}
+                          </ul>
+                          <div class="tab-content">
+                            {% for language in languages %}
+                            <div class="tab-pane" id="cookielanguage{{ language.language_id }}">
+                              <div class="form-group required">
+                                <label class="col-sm-2 control-label" for="input-cookietext_msg{{ language.language_id }}">{{ entry_cookietext_msg }} </label>
+                                <div class="col-sm-5">
+                                  <textarea rows="4" name="mpgdpr_cookielang[{{ language.language_id }}][msg]" id="input-cookietext_msg{{ language.language_id }}" class="form-control">{{ (mpgdpr_cookielang[language.language_id]) ? mpgdpr_cookielang[language.language_id].msg : ''  }}</textarea>
+                                  <span class="help">{{ help_cookietext_msg }}</span>
+                                </div>
+                              </div>
+                              <div class="form-group required">
+                                <label class="col-sm-2 control-label" for="input-cookietext_policy{{ language.language_id }}">{{ entry_cookietext_policy }} </label>
+                                <div class="col-sm-5">
+                                  <input type="text" name="mpgdpr_cookielang[{{ language.language_id }}][text_policy]" id="input-cookietext_policy{{ language.language_id }}" class="form-control" value="{{ (mpgdpr_cookielang[language.language_id]) ? mpgdpr_cookielang[language.language_id].text_policy : ''  }}" />
+                                  <span class="help">{{ help_cookietext_policy }}</span>
+                                </div>
+                              </div>
+                              <div class="form-group required">
+                                <label class="col-sm-2 control-label" for="input-cookiebtn_accept{{ language.language_id }}">{{ entry_cookiebtn_accept }} </label>
+                                <div class="col-sm-5">
+                                  <input type="text" name="mpgdpr_cookielang[{{ language.language_id }}][btn_accept]" id="input-cookiebtn_accept{{ language.language_id }}" class="form-control" value="{{ (mpgdpr_cookielang[language.language_id]) ? mpgdpr_cookielang[language.language_id].btn_accept : ''  }}" />
+                                  <span class="help">{{ help_cookiebtn_accept }}</span>
+                                </div>
+                              </div>
+                              <div class="form-group required">
+                                <label class="col-sm-2 control-label" for="input-cookiebtn_deny{{ language.language_id }}">{{ entry_cookiebtn_deny }} </label>
+                                <div class="col-sm-5">
+                                  <input type="text" name="mpgdpr_cookielang[{{ language.language_id }}][btn_deny]" id="input-cookiebtn_deny{{ language.language_id }}" class="form-control" value="{{ (mpgdpr_cookielang[language.language_id]) ? mpgdpr_cookielang[language.language_id].btn_deny : ''  }}" />
+                                  <span class="help">{{ help_cookiebtn_deny }}</span>
+                                </div>
+                              </div>
+                              <div class="form-group required">
+                                <label class="col-sm-2 control-label" for="input-cookiebtn_prefrence{{ language.language_id }}">{{ entry_cookiebtn_prefrence }} </label>
+                                <div class="col-sm-5">
+                                  <input type="text" name="mpgdpr_cookielang[{{ language.language_id }}][btn_prefrence]" id="input-cookiebtn_prefrence{{ language.language_id }}" class="form-control" value="{{ (mpgdpr_cookielang[language.language_id]) ? mpgdpr_cookielang[language.language_id].btn_prefrence : ''  }}" />
+                                  <span class="help">{{ help_cookiebtn_prefrence }}</span>
+                                </div>
+                              </div>
+                              <div class="form-group required">
+                                <label class="col-sm-2 control-label" for="input-cookiebtn_showagain{{ language.language_id }}">{{ entry_cookiebtn_showagain }} </label>
+                                <div class="col-sm-5">
+                                  <input type="text" name="mpgdpr_cookielang[{{ language.language_id }}][btn_showagain]" id="input-cookiebtn_showagain{{ language.language_id }}" class="form-control" value="{{ (mpgdpr_cookielang[language.language_id]) ? mpgdpr_cookielang[language.language_id].btn_showagain : ''  }}" />
+                                  <span class="help">{{ help_cookiebtn_showagain }}</span>
+                                </div>
+                              </div>
+                            </div>
+                            {% endfor %}
+                          </div>
+                        </div>
+                      </div>
+                      <div class="form-group required">
+                        <label class="col-sm-2 control-label" for="input-cbposition">{{ entry_cbposition }} </label>
+                        <div class="col-sm-5">
+                          <select name="mpgdpr_cbposition" id="input-cbposition" class="form-control">
+                            {% for cbposition in cbpositions %}
+                            <option value="{{ cbposition.value }}" {% if mpgdpr_cbposition == cbposition.value %}selected="selected"{% endif %}>{{ cbposition.text }}</option>
+                            {% endfor %}
+                          </select>
+                          <span class="help">{{ help_cbposition }}</span>
+                        </div>
+                      </div>
+                      <div class="form-group required">
+                        <h4 class="subtitle"><i class="fa fa-exclamation-triangle"></i>  {{ entry_cbcolors }} <br/> <small>{{ help_cbcolors }}</small></h4>
+                        <div class="col-sm-12">
+                          <div class="form-group required">
+                            <label class="col-sm-2 control-label" for="input-cbbox_bg">{{ entry_cbboxbg }}</label>
+                            <div class="col-sm-5">
+                               <div class="colorpicker colorpicker-component input-group">
+                                <span class="input-group-addon"><i></i></span>
+                                <input type="text" name="mpgdpr_cbcolor[box_bg]" value="{{ (mpgdpr_cbcolor.box_bg) ? mpgdpr_cbcolor.box_bg : ''  }}" placeholder="{{ entry_cbboxbg }}" id="input-cbbox_bg" class="form-control" />
+                              </div>
+                            </div>
+                          </div>
+                          <div class="form-group required">
+                            <label class="col-sm-2 control-label" for="input-cbbox_text">{{ entry_cbboxtext }}</label>
+                            <div class="col-sm-5">
+                               <div class="colorpicker colorpicker-component input-group">
+                                <span class="input-group-addon"><i></i></span>
+                                <input type="text" name="mpgdpr_cbcolor[box_text]" value="{{ (mpgdpr_cbcolor.box_text) ? mpgdpr_cbcolor.box_text : ''  }}" placeholder="{{ entry_cbboxtext }}" id="input-cbbox_text" class="form-control" />
+                              </div>
+                            </div>
+                          </div>
+                          <div class="form-group required">
+                            <label class="col-sm-2 control-label" for="input-cbbtn_bg">{{ entry_cbbtnbg }}</label>
+                            <div class="col-sm-5">
+                               <div class="colorpicker colorpicker-component input-group">
+                                <span class="input-group-addon"><i></i></span>
+                                <input type="text" name="mpgdpr_cbcolor[btn_bg]" value="{{ (mpgdpr_cbcolor.btn_bg) ? mpgdpr_cbcolor.btn_bg : ''  }}" placeholder="{{ entry_cbbtnbg }}" id="input-cbbtn_bg" class="form-control" />
+                              </div>
+                            </div>
+                          </div>
+                          <div class="form-group required">
+                            <label class="col-sm-2 control-label" for="input-cbbtn_text">{{ entry_cbbtntext }}</label>
+                            <div class="col-sm-5">
+                               <div class="colorpicker colorpicker-component input-group">
+                                <span class="input-group-addon"><i></i></span>
+                                <input type="text" name="mpgdpr_cbcolor[btn_text]" value="{{ (mpgdpr_cbcolor.btn_text) ? mpgdpr_cbcolor.btn_text : ''  }}" placeholder="{{ entry_cbbtntext }}" id="input-cbbtn_text" class="form-control" />
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="form-group required">
+                        <label class="col-sm-2 control-label" for="input-cbcss">{{ entry_cbcss }} </label>
+                        <div class="col-sm-5">
+                          <textarea rows="5" name="mpgdpr_cbcss" id="input-cbcss" class="form-control">{{ mpgdpr_cbcss }}</textarea>
+                          <span class="help">{{ help_cbcss }}</span>
+                        </div>
+                      </div>
+                    </div>
+                    <a target="_blank" href="https://cookieconsent.insites.com/">* Cookie Conset js library Originally developed by insite :)</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="tab-pane" id="tab-support">
+              <fieldset>
+                <div class="form-group">
+                  <div class="col-md-12 col-xs-12">
+                    <h4 class="text-mpsuccess text-center"><i class="fa fa-thumbs-up" aria-hidden="true"></i> Thanks For Choosing Our Extension</h4>
+                     <ul class="list-group">
+                      <li class="list-group-item clearfix">Installed Version <span class="badge"><i class="fa fa-gg" aria-hidden="true"></i> V.1.0</span></li>
+                    </ul>
+                    <h4 class="text-mpsuccess text-center"><i class="fa fa-phone" aria-hidden="true"></i> Please Contact Us In Case Any Issue OR Give Feedback!</h4>
+                    <ul class="list-group">
+                      <li class="list-group-item clearfix">support@modulepoints.com <span class="badge"><a href="mailto:support@modulepoints.com?Subject=Request Support: GDPR"><i class="fa fa-envelope"></i> Contact Us</a></span></li> 
+                    </ul>
+                  </div>
+                </div>
+              </fieldset>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <script type="text/javascript"><!--
+$(function() { $('.colorpicker').colorpicker(); });
+$('.nav-tabs').each(function() {
+  $(this).find('a:first').tab('show');
+});
+//--></script>
+</div>
+{{ footer }}

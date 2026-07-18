@@ -1,0 +1,78 @@
+{% if (image_cache_directory) %} 
+<div class="col-sm-4">
+       <div id="chart_div" style="width: 400px; height: 400px;"></div>
+</div>	
+<div class="col-sm-8">   
+	    <div class="alert alert-warning">
+			Total number of cached images that requires webp compression:  {{ uncompress_count }} 
+		</div>
+		
+		<table class="table table-hover table-bordered">
+			<tr>
+				<td class="col-sm-4">Total Number of Cached Images by OpenCart</td>
+				<td>{{ oc_cache_count }}</td>
+			</tr>
+			<tr>
+				<td>Total Number of WebP Compressed Cached Images</td>
+				<td>{{ compress_count }}</td>
+			</tr>
+		</table>
+		
+		{% if (files) %} 
+		
+		<div style="margin-bottom:20px;">
+			<a onclick="getcachedimages();" style="background-color: #006699;" class="btn btn-primary" id="button-prepare">Step 1: Prepare Image Path <i class="fa fa-refresh"></i></a> <i class="fa fa-long-arrow-right" aria-hidden="true"></i>
+			<a onclick="startprocess('index.php?route={{ base_route }}/hb_webp/generate&user_token={{ user_token }}&oc_count={{ oc_cache_count }}');" style="background-color: #006633;" id="button-generate" class="btn btn-success">Step 2: Generate <i class="fa fa-compress"></i></a>
+		</div>
+		
+		<h4 style="color:#FF3333;">The following list shows the images that requires webp compression</h4>
+		<ul class="list-group">
+			{% for file in files %} 
+				<li class="list-group-item">{{ file }}</li>
+			{% endfor %} 
+		</ul>
+		{% endif %} 
+				
+</div>		
+
+
+<script type="text/javascript">
+      google.charts.load('current', {'packages':['gauge']});
+      google.charts.setOnLoadCallback(drawChart);
+
+      function drawChart(value) {
+
+        if (value) {
+			var data = google.visualization.arrayToDataTable([
+				  ['Label', 'Value'],
+				  ['WebP', value]
+				]);
+		}else{
+				var data = google.visualization.arrayToDataTable([
+				  ['Label', 'Value'],
+				  ['WebP', {{ gauge }}]
+				]);
+		}
+
+        var options = {
+          width: 400, height: 400,
+          redFrom: 90, redTo: 100,
+          yellowFrom:75, yellowTo: 90,
+          minorTicks: 5,
+          redColor: '#009900',
+        };
+
+        var chart = new google.visualization.Gauge(document.getElementById('chart_div'));
+
+        chart.draw(data, options);
+
+
+      }
+</script>
+
+{% else %} 
+<div class="well text-center">
+	<h3>IMAGE CACHE FOLDER NOT FOUND</h3>
+</div>
+
+{% endif %} 

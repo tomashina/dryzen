@@ -1,0 +1,69 @@
+<table class="quickcheckout-cart">
+  <thead>
+	<tr>
+	  <td class="image">{{ column_image }}</td>
+	  <td class="name">{{ column_name }}</td>
+	  <td class="quantity">{{ column_quantity }}</td>
+	  <td class="price1 hidden-xs hidden-sm">{{ column_price }}</td>
+	  <td class="total text-right">{{ column_total }}</td>
+	</tr>
+  </thead>
+  {% if products or vouchers %}
+	<tbody>
+      {% for product in products %}
+        <tr>
+          <td class="image">{% if product.thumb %} 
+            <a href="{{ product.href }}"><img src="{{ product.thumb }}" alt="{{ product.name }}" title="{{ product.name }}" /></a>
+            {% endif %}</td>
+          <td class="name"><a href="{{ product.href }}">{{ product.name }}</a>
+            <div>
+              {% for option in product.option %} 
+              <small>{{ option.name }}: {{ option.value }}</small><br />
+			  {% endfor %}
+			  {% if product.reward %} 
+			  <br />
+			  <small>{{ product.reward }}</small>
+			  {% endif %}
+			  {% if product.recurring %} 
+			  <br />
+			  <span class="label label-info">{{ text_recurring_item }}</span> <small>{{ product.recurring }}</small>
+			  {% endif %}
+            </div></td>
+          <td class="quantity">{% if edit_cart %} 
+		    <div class="qty-block">
+		      <input type="text" name="quantity[{{ product.key }}]" size="1" value="{{ product.quantity }}" class="form-control" />
+			  
+				<a data-toggle="tooltip" title="{{ button_update }}" class="button-update"><i class="fa fa-refresh"></i></a>
+				<a data-toggle="tooltip" title="{{ button_remove }}" class="button-remove" data-remove="{{ product.key }}"><i class="fa fa-times-circle"></i></a>
+			  
+			</div>
+			{% else %}
+			x&nbsp;{{ product.quantity }} 
+			{% endif %}</td>
+		  <td class="price1 hidden-xs hidden-sm">{{ product.price }}</td>
+          <td class="total text-right">{{ product.total }}</td>
+        </tr>
+        {% endfor %}
+        {% for voucher in vouchers %} 
+        <tr>
+          <td class="image"></td>
+          <td class="name">{{ voucher.description }}</td>
+          <td class="quantity">x&nbsp;1</td>
+		  <td class="price1">{{ voucher.amount }}</td>
+          <td class="total">{{ voucher.amount }}</td>
+        </tr>
+        {% endfor %} 
+	</tbody>
+  {% endif %}
+</table>
+
+<table class="table table-bordered total-list margin-b0">
+	<tbody>
+		{% for total in totals %} 
+		<tr>
+		  <td class="text-left" colspan="4"><b>{{ total.title }}:</b></td>
+		  <td class="text-right">{{ total.text }}</td>
+		</tr>
+        {% endfor %} 
+	</tbody>
+ </table>

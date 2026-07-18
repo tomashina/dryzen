@@ -1,0 +1,3 @@
+ul.breadcrumb li:last-child a {
+	font-weight: bold;
+}

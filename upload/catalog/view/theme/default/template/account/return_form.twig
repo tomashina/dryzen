@@ -1,0 +1,236 @@
+{{ header }}
+<div class="container">
+  <ul class="breadcrumb">
+    {% for breadcrumb in breadcrumbs %}
+    <li><a href="{{ breadcrumb.href }}"> {{ breadcrumb.text }}</a></li>
+    {% endfor %}
+  </ul>
+  {% if error_warning %}
+  <div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i> {{ error_warning }}</div>
+  {% endif %}
+  <div class="row">{{ column_left }}
+    {% if column_left and column_right %}
+    {% set class = 'col-sm-6' %}
+    {% elseif column_left or column_right %}
+    {% set class = 'col-md-9 col-sm-8' %}
+    {% else %}
+    {% set class = 'col-sm-12' %}
+    {% endif %}
+    <div id="content" class="{{ class }}">{{ content_top }}
+      <h1 id="page-title">{{ heading_title }}</h1>
+      <p class="margin-b20">{{ text_description }}</p>
+      <form action="{{ action }}" method="post" enctype="multipart/form-data" class="form-horizontal">
+        <fieldset class="margin-b15">
+          <legend>{{ text_order }}</legend>
+          <div class="form-group required">
+            <label class="col-sm-2 control-label" for="input-firstname">{{ entry_firstname }}</label>
+            <div class="col-sm-10">
+              <input type="text" name="firstname" value="{{ firstname }}" placeholder="{{ entry_firstname }}" id="input-firstname" class="form-control" />
+              {% if error_firstname %}
+              <div class="text-danger">{{ error_firstname }}</div>
+              {% endif %}
+            </div>
+          </div>
+          <div class="form-group required">
+            <label class="col-sm-2 control-label" for="input-lastname">{{ entry_lastname }}</label>
+            <div class="col-sm-10">
+              <input type="text" name="lastname" value="{{ lastname }}" placeholder="{{ entry_lastname }}" id="input-lastname" class="form-control" />
+              {% if error_lastname %}
+              <div class="text-danger">{{ error_lastname }}</div>
+              {% endif %}
+            </div>
+          </div>
+          <div class="form-group required">
+            <label class="col-sm-2 control-label" for="input-email">{{ entry_email }}</label>
+            <div class="col-sm-10">
+              <input type="text" name="email" value="{{ email }}" placeholder="{{ entry_email }}" id="input-email" class="form-control" />
+              {% if error_email %}
+              <div class="text-danger">{{ error_email }}</div>
+              {% endif %}
+            </div>
+          </div>
+          <div class="form-group required">
+            <label class="col-sm-2 control-label" for="input-telephone">{{ entry_telephone }}</label>
+            <div class="col-sm-10">
+              <input type="text" name="telephone" value="{{ telephone }}" placeholder="{{ entry_telephone }}" id="input-telephone" class="form-control" />
+              {% if error_telephone %}
+              <div class="text-danger">{{ error_telephone }}</div>
+              {% endif %}
+            </div>
+          </div>
+          <div class="form-group required">
+            <label class="col-sm-2 control-label" for="input-invoice-number">{{ entry_invoice_number }}</label>
+            <div class="col-sm-10">
+              <input type="text" name="invoice_number" value="{{ invoice_number }}" placeholder="{{ entry_invoice_number }}" id="input-invoice-number" class="form-control" />
+              {% if error_order_id %}
+              <div class="text-danger">{{ error_order_id }}</div>
+              {% endif %}
+            </div>
+          </div>
+          <div class="form-group required">
+            <label class="col-sm-2 control-label" for="input-invoice-date">{{ entry_invoice_date }}</label>
+            <div class="col-sm-3">
+              <div class="input-group date"><input type="date" name="invoice_date" value="{{ invoice_date }}" placeholder="{{ entry_invoice_date }}" data-date-format="YYYY-MM-DD" id="input-invoice-date" class="form-control" /><span class="input-group-btn">
+                <button type="button" class="btn btn-outline"><i class="fa fa-calendar"></i></button>
+                </span></div>
+              {% if error_date_ordered %}
+              <div class="text-danger">{{ error_date_ordered }}</div>
+              {% endif %}
+            </div>
+          </div>
+        </fieldset>
+        <fieldset>
+          <legend>{{ text_product }}</legend>
+          <input type="hidden" name="product_id" value="{{ product_id }}" />
+          <div class="form-group required">
+            <label class="col-sm-2 control-label">{{ text_return_products_title }}</label>
+            <div class="col-sm-10">
+              <div class="table-responsive">
+                <table id="return-product" class="table table-bordered">
+                  <thead>
+                    <tr>
+                      <td>{{ entry_product_code }}</td>
+                      <td>{{ entry_quantity }}</td>
+                      <td>{{ entry_price }}</td>
+                      <td></td>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for product_row, return_product in return_products %}
+                    <tr>
+                      <td><input type="text" name="return_products[{{ product_row }}][code]" value="{{ return_product.code }}" placeholder="{{ entry_product_code }}" class="form-control" /></td>
+                      <td><input type="text" name="return_products[{{ product_row }}][quantity]" value="{{ return_product.quantity }}" placeholder="{{ entry_quantity }}" class="form-control" /></td>
+                      <td><input type="text" name="return_products[{{ product_row }}][price]" value="{{ return_product.price }}" placeholder="{{ entry_price }}" class="form-control" /></td>
+                      <td class="text-center"><button type="button" class="btn btn-outline button-remove-return-product" title="{{ button_remove }}"><i class="fa fa-minus-circle"></i></button></td>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                  <tfoot>
+                    <tr>
+                      <td colspan="3"></td>
+                      <td class="text-center"><button type="button" id="button-return-product" class="btn btn-outline" title="{{ button_add_product }}"><i class="fa fa-plus-circle"></i></button></td>
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
+              {% if error_return_products %}
+              <div class="text-danger">{{ error_return_products }}</div>
+              {% endif %}
+            </div>
+          </div>
+          <div class="form-group required">
+            <label class="col-sm-2 control-label">{{ entry_reason }}</label>
+            <div class="col-sm-10">
+              {% for return_reason in return_reasons %}
+              {% if return_reason.return_reason_id == return_reason_id %}
+              <div class="radio">
+                <label>
+                  <input type="radio" name="return_reason_id" value="{{ return_reason.return_reason_id }}" checked="checked" />
+                  {{ return_reason.name }}</label>
+              </div>
+              {% else %}
+              <div class="radio">
+                <label>
+                  <input type="radio" name="return_reason_id" value="{{ return_reason.return_reason_id }}" />
+                  {{ return_reason.name }}</label>
+              </div>
+              {% endif %}
+              {% endfor %}
+              {% if error_reason %}
+              <div class="text-danger">{{ error_reason }}</div>
+              {% endif %}
+            </div>
+          </div>
+          <div class="form-group required">
+            <label class="col-sm-2 control-label" for="input-refund-iban">{{ entry_refund_iban }}</label>
+            <div class="col-sm-10">
+              <input type="text" name="refund_iban" value="{{ refund_iban }}" placeholder="{{ entry_refund_iban }}" id="input-refund-iban" class="form-control" />
+              {% if error_refund_iban %}
+              <div class="text-danger">{{ error_refund_iban }}</div>
+              {% endif %}
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-2 control-label" for="input-comment">{{ entry_fault_detail }}</label>
+            <div class="col-sm-10">
+              <textarea name="comment" rows="10" placeholder="{{ entry_fault_detail }}" id="input-comment" class="form-control">{{ comment }}</textarea>
+            </div>
+          </div>
+          {{ captcha }}
+        </fieldset>
+        {% if text_agree %}
+        <div class="buttons clearfix">
+          <div class="pull-left"><a href="{{ back }}" class="btn btn-danger">{{ button_back }}</a></div>
+          <div class="pull-right">{{ text_agree }}
+            {% if agree %}
+            <input type="checkbox" name="agree" value="1" checked="checked" />
+            {% else %}
+            <input type="checkbox" name="agree" value="1" />
+            {% endif %}
+            <input type="submit" value="{{ button_submit }}" class="btn btn-primary" />
+          </div>
+        </div>
+        {% else %}
+        <div class="buttons clearfix text-right">
+            <input type="submit" value="{{ button_submit }}" class="btn btn-contrast" />
+        </div>
+        {% endif %}
+      </form>
+      {{ content_bottom }}</div>
+    {{ column_right }}</div>
+</div>
+<script><!--
+(function($) {
+	var returnProductRow = {{ return_products|length }};
+	var hasDatepicker = $.fn.datetimepicker && window.moment;
+
+	if (hasDatepicker) {
+		$('.date').datetimepicker({
+			pickTime: false
+		});
+	}
+
+	$('.date').on('click', '.btn', function() {
+		if (hasDatepicker) {
+			return;
+		}
+
+		var input = $(this).closest('.date').find('input').get(0);
+
+		if (!input) {
+			return;
+		}
+
+		if (input.showPicker) {
+			input.showPicker();
+		} else {
+			input.focus();
+			input.click();
+		}
+	});
+
+	$('#button-return-product').on('click', function() {
+		var html = '';
+
+		html += '<tr>';
+		html += '  <td><input type="text" name="return_products[' + returnProductRow + '][code]" value="" placeholder="{{ entry_product_code|e('js') }}" class="form-control" /></td>';
+		html += '  <td><input type="text" name="return_products[' + returnProductRow + '][quantity]" value="" placeholder="{{ entry_quantity|e('js') }}" class="form-control" /></td>';
+		html += '  <td><input type="text" name="return_products[' + returnProductRow + '][price]" value="" placeholder="{{ entry_price|e('js') }}" class="form-control" /></td>';
+		html += '  <td class="text-center"><button type="button" class="btn btn-outline button-remove-return-product" title="{{ button_remove|e('js') }}"><i class="fa fa-minus-circle"></i></button></td>';
+		html += '</tr>';
+
+		$('#return-product tbody').append(html);
+
+		returnProductRow++;
+	});
+
+	$('#return-product').on('click', '.button-remove-return-product', function() {
+		if ($('#return-product tbody tr').length > 1) {
+			$(this).closest('tr').remove();
+		} else {
+			$(this).closest('tr').find('input').val('');
+		}
+	});
+})(jQuery);
+//--></script>
+{{ footer }}

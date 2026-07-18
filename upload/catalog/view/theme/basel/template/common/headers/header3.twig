@@ -1,0 +1,136 @@
+<div class="header-wrapper header3 fixed-header-possible">
+
+{% if top_line_style %}
+<div class="top_line">
+  <div class="container {{ top_line_width }}">
+  	<div class="table">
+        <div class="table-cell left sm-text-center xs-text-center">
+            <div class="promo-message">{{ promo_message }}</div>
+        </div>
+        <div class="table-cell text-right hidden-xs hidden-sm">
+            <div class="links">
+            <ul>
+            {% include 'basel/template/common/static_links.twig' %}
+            </ul>
+            {% if lang_curr_title %}
+            <div class="setting-ul">
+            <div class="setting-li dropdown-wrapper from-left lang-curr-trigger nowrap"><a>
+            <span>{{ lang_curr_title }}</span>
+            </a>
+            <div class="dropdown-content dropdown-right lang-curr-wrapper">
+            {{ language }}
+            {{ currency }}
+            </div>
+            </div>
+            </div>
+            {% endif %}
+            </div>
+        </div>
+    </div> <!-- .table ends -->
+  </div> <!-- .container ends -->
+</div> <!-- .top_line ends -->
+{% endif %}
+<span class="table header-main sticky-header-placeholder">&nbsp;</span>
+<div class="outer-container sticky-header">
+<div class="header-style">
+  <div class="container {{ main_header_width }}">
+    <div class="table header-main">
+    
+    <div class="table-cell w40 menu-cell hidden-xs hidden-sm">
+    {{ promo_message2 }}
+    </div>
+    
+    <div class="table-cell w20 logo text-center">
+    	{% if logo %}
+        <div id="logo">
+    	<a href="{{ home }}"><img src="{{ logo }}" title="{{ name }}" alt="{{ name }}" /></a>
+        </div>
+    	{% endif %}
+    </div>
+    
+    <div class="table-cell w40 shortcuts text-right"> 
+       
+       <div class="font-zero">
+       
+        {% if header_login %}
+            <div class="shortcut-wrapper sign-in hidden-sx hidden-sm hidden-xs">
+            {% if logged %}
+            <a class="anim-underline" href="{{ account }}">{{ text_account }}</a> &nbsp;/&nbsp; 
+            <a class="anim-underline" href="{{ logout }}">{{ text_logout }}</a>
+            {% else %}
+            <a class="anim-underline" href="{{ login }}">{{ text_login }} / {{ text_register }}</a>
+            {% endif %}
+            </div>
+        {% endif %}
+        
+        {% if header_search %}
+        <div class="icon-element">
+        <div class="dropdown-wrapper-click from-top hidden-sx hidden-sm hidden-xs">
+        <a class="shortcut-wrapper search-trigger from-top clicker">
+        <i class="icon-magnifier icon"></i>
+        </a>
+        <div class="dropdown-content dropdown-right">
+        <div class="search-dropdown-holder">
+        <div class="search-holder">
+        {{ basel_search }}
+        </div>
+        </div>
+        </div>
+        </div>
+        </div>
+        {% endif %}
+        
+        <div class="icon-element is_wishlist">
+        <a class="shortcut-wrapper wishlist" href="{{ wishlist }}">
+        <div class="wishlist-hover"><i class="icon-heart icon"></i><span class="counter wishlist-counter">{{ wishlist_counter }}</span></div>
+        </a>
+        </div>
+        
+        <div class="icon-element catalog_hide">
+        <div id="cart" class="dropdown-wrapper from-top">
+        <a href="{{ shopping_cart }}" class="shortcut-wrapper cart">
+        <i id="cart-icon" class="global-cart icon"></i> <span id="cart-total" class="nowrap">
+        <span class="counter cart-total-items">{{ cart_items }}</span> <span class="slash hidden-md hidden-sm hidden-xs">/</span>&nbsp;<b class="cart-total-amount hidden-sm hidden-xs">{{ cart_amount }}</b>
+        </span>
+        </a>
+        <div class="dropdown-content dropdown-right hidden-sm hidden-xs">
+        {{ cart }}
+        </div>
+		</div>
+        </div>
+        
+        <div class="icon-element">
+        <a class="shortcut-wrapper menu-trigger hidden-md hidden-lg">
+        <i class="icon-line-menu icon"></i>
+        </a>
+        </div>
+        
+       </div>
+    </div>
+    
+    </div> <!-- .table.header_main ends -->
+  </div> <!-- .container ends -->
+</div>                
+                 
+{% if primary_menu %}                 
+<div class="outer-container menu-style menu-style-contrast hidden-xs hidden-sm">
+<div class="container">
+     <div class="main-menu text-center">
+         <ul class="categories">
+          {% if primary_menu == 'oc' %}
+            <!-- Default menu -->
+            {{ default_menu }}
+          {% elseif primary_menu is defined %} 
+            <!-- Mega menu -->
+            {% for key, row in primary_menu_desktop %}
+                {% include 'basel/template/common/menus/mega_menu.twig' %}
+            {% endfor %}
+          {% endif %}
+        </ul>
+    </div>
+</div>
+</div>
+{% endif %}
+</div>
+
+</div> <!-- .header_wrapper ends -->

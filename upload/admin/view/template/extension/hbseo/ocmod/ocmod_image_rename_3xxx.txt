@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<modification>
+    <name>SEO - Image Rename [3xxx]</name>
+    <version>9.0.0</version>
+    <author>HuntBee OpenCart Services</author>
+    <link>https://www.huntbee.com</link>
+	<code>huntbee_seo_image_rename</code>
+
+	 <!-- AUTO MODE-->
+	 <file path="admin/controller/catalog/product.php">
+        <operation>
+            <search><![CDATA[$this->response->setOutput($this->load->view('catalog/product_list]]></search>
+            <add position="before"><![CDATA[
+			$data['hb_image_rename'] = htmlspecialchars_decode($this->url->link('extension/hbseo/hb_seoimage/generate', 'user_token=' . $this->session->data['user_token'], true));
+			if ($this->config->get('hb_seoimage_status') && $this->config->get('hb_seoimage_auto')) {
+			    $data['hb_seoimage_auto'] = true;
+			}else{
+			    $data['hb_seoimage_auto'] = false;
+			}
+			if (isset($this->request->get['page'])) {
+				$data['pagination_detected'] = true;
+			}else{
+				$data['pagination_detected'] = false;
+			}
+			]]></add>
+        </operation>
+    </file>	
+     <file path="admin/controller/catalog/category.php">
+        <operation>
+            <search><![CDATA[$this->response->setOutput($this->load->view('catalog/category_list]]></search>
+            <add position="before"><![CDATA[
+			$data['hb_image_rename'] = htmlspecialchars_decode($this->url->link('extension/hbseo/hb_seoimage/renamecategoryimages', 'user_token=' . $this->session->data['user_token'], true));
+			if ($this->config->get('hb_seoimage_status') && $this->config->get('hb_seoimage_auto')) {
+			    $data['hb_seoimage_auto'] = true;
+			}else{
+			    $data['hb_seoimage_auto'] = false;
+			}
+			if (isset($this->request->get['page'])) {
+				$data['pagination_detected'] = true;
+			}else{
+				$data['pagination_detected'] = false;
+			}
+			]]></add>
+        </operation>
+    </file>
+    <file path="admin/controller/catalog/manufacturer.php">
+        <operation>
+            <search><![CDATA[$this->response->setOutput($this->load->view('catalog/manufacturer_list]]></search>
+            <add position="before"><![CDATA[
+			$data['hb_image_rename'] = htmlspecialchars_decode($this->url->link('extension/hbseo/hb_seoimage/renamebrandimages', 'user_token=' . $this->session->data['user_token'], true));
+			if ($this->config->get('hb_seoimage_status') && $this->config->get('hb_seoimage_auto')) {
+			    $data['hb_seoimage_auto'] = true;
+			}else{
+			    $data['hb_seoimage_auto'] = false;
+			}
+			if (isset($this->request->get['page'])) {
+				$data['pagination_detected'] = true;
+			}else{
+				$data['pagination_detected'] = false;
+			}
+			]]></add>
+        </operation>
+    </file>
+	
+	<file path="admin/controller/catalog/option.php">
+        <operation>
+            <search><![CDATA[$this->response->setOutput($this->load->view('catalog/option_list]]></search>
+            <add position="before"><![CDATA[
+			$data['hb_image_rename'] = htmlspecialchars_decode($this->url->link('extension/hbseo/hb_seoimage/renameoptionimages', 'user_token=' . $this->session->data['user_token'], true));
+			if ($this->config->get('hb_seoimage_status') && $this->config->get('hb_seoimage_auto')) {
+			    $data['hb_seoimage_auto'] = true;
+			}else{
+			    $data['hb_seoimage_auto'] = false;
+			}
+			if (isset($this->request->get['page'])) {
+				$data['pagination_detected'] = true;
+			}else{
+				$data['pagination_detected'] = false;
+			}
+			]]></add>
+        </operation>
+    </file>
+	
+	<file path="admin/view/template/catalog/{product_list,category_list,manufacturer_list,option_list}.twig">
+        <operation>
+            <search><![CDATA[{{ footer }}]]></search>
+            <add position="before"><![CDATA[
+			{% if ((hb_seoimage_auto) and (pagination_detected == constant('false'))) %}
+			<script type="text/javascript">
+			$(document).ready( function () {
+			    $.ajax({
+					  url: '{{ hb_image_rename }}',
+					  dataType: 'json',
+					  success: function(json) {
+					    if (json['error']) {
+            				if (json['error']['products']) {
+            					$('.panel').before('<div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i> ' + json['error']['products'] + '<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+            				}	
+            			}
+        				if (json['success']) {
+        					$('.panel').before('<div class="alert alert-success">'+json['success']+'<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+        				}
+        			  }
+			    });
+			});
+			</script>
+			{% endif %}
+			]]>
+            </add>
+        </operation>
+    </file>
+  
+</modification>

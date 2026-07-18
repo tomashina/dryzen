@@ -1,0 +1,239 @@
+{% include 'extension/module/msmart_search/_header.twig' %}
+<br />
+	<link href="//cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/e8bddc60e73c1ec2475f827be36e1957af72e2ea/build/css/bootstrap-datetimepicker.css" rel="stylesheet">
+	<script src="//cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/e8bddc60e73c1ec2475f827be36e1957af72e2ea/src/js/bootstrap-datetimepicker.js"></script>
+<ul class="nav nav-tabs">
+	<li class="active"><a href="#search_history" data-toggle="tab">{{ tab_search_history }}</a></li>
+	<li><a href="#top_20" data-toggle="tab">{{ text_top_searches }}</a></li>
+</ul>
+
+<div class="tab-content">
+	<br />
+	<div class="tab-pane active" id="search_history">
+	
+	<table class="table table-tbody">
+			<tbody>
+				<tr>
+					<td width="300">{{ text_type_username_or_email }}</td>
+					<td>				
+					<div class='col-md-3'>
+						<input id="phrase" type="text" class="form-control" placeholder="{{ text_type_username }}" value="{{ phrase is defined ? phrase : '' }}">
+					</div>    
+						<a id="user-search-button" href="{{ action_save }}" class="btn btn-primary" style="margin: 1px 15px"><i class="glyphicon glyphicon-search"></i> {{ text_search }}</a>
+					</td>
+				</tr>
+				<tr>
+					<td width="300">Search by date</td>
+					<td>
+						<div class='col-md-3'>
+							<div class='input-group date' id='datetimepicker1'>
+								<input type='text' class="form-control" id="date_from" value="{{ date_start is defined ? date_start : '' }}" placeholder="{{ text_select_date }}" />
+								<span class="input-group-addon">
+									<span class="glyphicon glyphicon-calendar"></span>
+								</span>
+							</div>
+						</div>
+						<div class='col-md-3'>
+							<div class='input-group date' id='datetimepicker2'>
+								<input type='text' class="form-control" id="date_end" value="{{ date_end is defined ? date_end : '' }}" placeholder="{{ text_select_date }}" />
+								<span class="input-group-addon">
+									<span class="glyphicon glyphicon-calendar"></span>
+								</span>
+							</div>
+						</div>
+						<a id="date-search-button" href="{{ action_save }}" class="btn btn-primary" style="margin: 1px 15px"><i class="glyphicon glyphicon-search"></i> {{ text_search }}</a>
+					</td>
+				</tr>
+			</tbody>
+	</table>
+	{% if ( reset_results is defined ) %} 
+	<br/>
+	<div class="text-center">
+		<a href="{{ action_save }}" class="btn btn-primary" style="margin: 10px 0"><i class="glyphicon glyphicon-repeat"></i> Reset results</a>
+	</div>
+	{% endif %} 
+	<div class="pull-right">
+		<a id="delete-all-history" href="{{ action_del_history }}" style="padding: 5px 5px; margin-bottom: 10px" class="btn btn-xs btn-danger"><i class="glyphicon glyphicon-trash"></i> {{ text_delete_all_chistory }}</a>
+	</div>
+		<table class="table table-bordered table-hover table-striped">
+			<thead>
+				<tr style="color: #000; background: #dddddd; border-color: #000;">
+					<td width="1%" style="border: 1px solid #a1a1a1;" class="text-center">
+						<button id="smf-delete-form" data-toggle="tooltip" type="button" title="Delete selected" class="btn btn-xs btn-danger"><i class="glyphicon glyphicon-trash"></i></button>
+					</td>
+					<td width="15%" style="border: 1px solid #a1a1a1;">{{ text_keyphrase }}</td>
+					<td width="8%" style="border: 1px solid #a1a1a1;" class="text-center">{{ text_customer_name }}</td>
+					<td width="5%" style="border: 1px solid #a1a1a1;" class="text-center">{{ text_customer_ip }}</td>
+					<td width="5%" style="border: 1px solid #a1a1a1;" class="text-center">{{ text_number_of_results }}</td>
+					<td width="5%" style="border: 1px solid #a1a1a1;" class="text-center">{{ text_date~ ' / '~ text_time }}</td>
+				</tr>
+			</thead>
+			<tbody>
+				{% if ( history is empty ) %}	
+				<tr>
+					<td colspan="6" class="text-center">
+						<b>No results</b>
+					</td>
+				</tr>
+				{% endif %} 
+				{% for phrase in history %} 
+					<tr>
+						<td class="text-center">
+							<input type='checkbox' name='list_id[]' value="{{ phrase['id'] }}">
+						</td>
+						<td style="vertical-align: middle">
+							{{ phrase['keyphrase'] }} 
+						</td>
+						<td class="text-center" style="vertical-align: middle;" >
+							<span style="text-decoration: none; color: #666666; cursor: pointer" data-toggle="tooltip" title="Add to search field"> {{ phrase['firstname'] ? phrase['firstname']~' &zwnj;'~phrase['lastname'] : "Guest" }} </span>
+						</td>
+						<td class="text-center" style="vertical-align: middle">
+							{{ phrase['customer_ip'] }} 
+						</td>
+						<td class="text-center">
+							{{ phrase['number_of_results'] }} 
+						</td>
+						<td class="text-center">
+							{{ phrase['date'] }} / {{ phrase['time'] }} 
+						</td>
+					</tr>
+				{% endfor %} 
+			</tbody>
+		</table>
+		{% if ( results is not empty ) %} 
+			<div class="row">
+					<div class="col-sm-6 text-left">{{ pagination }}</div>
+					<div class="col-sm-6 text-right">{{ results }}</div>
+			</div>
+		{% endif %} 
+
+	</div>
+	
+	<div class="tab-pane" id="top_20">
+		<table class="table table-bordered table-hover table-striped">
+		<thead>
+			<tr style="color: #000; background: #dddddd; border-color: #000;">
+				<td width="20%" style="border: 1px solid #a1a1a1;">{{ text_keyphrase }}</td>
+				<td width="5%" style="border: 1px solid #a1a1a1;" class="text-center">{{ text_total_searches }}</td>
+			</tr>
+		</thead>
+		<tbody>
+				{% if ( top_20 is empty ) %}	
+				<tr>
+					<td colspan="2" class="text-center">
+						<b>{{ text_no_results }}</b>
+					</td>
+				</tr>
+				{% endif %} 
+			{% for phrase in top_20 %} 
+				<tr>
+					<td style="vertical-align: middle; padding-left: 10px">
+						{{ phrase['keyphrase'] }} 
+					</td>
+					<td class="text-center">
+						{{ phrase['total_searches'] }} 
+					</td>
+				</tr>
+			{% endfor %} 
+		</tbody>
+	</table>
+	</div>
+</div>
+<script type="text/javascript">
+(function(){
+	$('#smf-delete-form').click(function(){
+		$('#smf-form').submit();
+
+		return false;
+	});
+		
+	$('#delete-all-history').on('click', function(){
+		if( confirm( 'Are you sure?' ) ) {
+			return true;
+		}
+		return false;
+	});
+	
+	$('#phrase').keyup(function(e){
+		if(e.keyCode == 13){
+			$('#user-search-button')[0].click();
+		};
+	});
+	
+	$('#user-search-button, #date-search-button').on("click", function(){
+
+		var phrase_field = $('#phrase'),
+			date_from = $('#date_from'),
+			date_end = $('#date_end'),
+			phrase = $.trim(phrase_field.val()),
+			url_email = '',
+			url_user = '',
+			url_date = '',
+			send = false;
+			
+				if(phrase != ''){
+					if( !validateEmail(phrase)){
+					var url_user = "&phrase=" + $.trim(phrase);
+						send = true;
+					}else{
+						url_email = "&e_mail=" + phrase;
+						send = true;
+					}
+				}else{
+					if($(this).attr("id") == "user-search-button"){
+						user_or_email_field.attr("placeholder", "{{ text_type_username }}").focus();
+						return false;
+					}
+				}
+				
+				if(date_from.val() != '' && date_end.val() != ''){
+					url_date = "&date_start="+date_from.val() + "&date_end=" + date_end.val();
+					send = true;
+				}else{
+					if($(this).attr("id") == "date-search-button"){
+						if(date_from.val() == ''){
+							date_from.attr("placeholder", "Select date").focus();
+						}
+						if(date_end.val() == '' && date_from.is(":focus")){
+							date_end.attr("placeholder", "Select date");
+						}else{
+							date_end.attr("placeholder", "Select date").focus();
+						}
+						return false;
+					}
+				}
+				
+				if(send){
+					$(this).attr("href", '{{ action_save }}'.replace( /&amp;/g, '&' ) + "&action=search" + url_user + url_email + url_date);
+					return true;
+				}
+			
+			return false;
+	});
+	
+	$('[data-toggle="tooltip"]').tooltip({
+		trigger : 'hover'
+	}).on('click', function () {
+		$('#phrase').val( $.trim( $(this).text() ) );
+	});
+	
+	function validateEmail(email) {
+		var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+		return re.test(email);
+	}
+	
+	$('#datetimepicker1').datetimepicker({
+		format: 'YYYY-MM-DD'
+	}).on('dp.change', function(e){
+		$('#datetimepicker2').data("DateTimePicker",).minDate(e.date);
+	});
+	$('#datetimepicker2').datetimepicker({
+		format: 'YYYY-MM-DD',
+		useCurrent: false //Important! See issue #1075
+	}).on('dp.change', function(e){
+		$('#datetimepicker1').data("DateTimePicker").maxDate(e.date);
+	});
+
+})( jQuery );
+</script>			
+{% include 'extension/module/msmart_search/_footer.twig' %}

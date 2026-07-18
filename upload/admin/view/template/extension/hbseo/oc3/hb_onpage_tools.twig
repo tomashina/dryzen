@@ -1,0 +1,88 @@
+<form class="form-horizontal">
+    <!-- Invalid Language Entries Section -->
+    <div class="form-group">
+        <label class="col-sm-4 control-label">{{ text_invalid_language_entries }}</label>
+        <div class="col-sm-8">
+            {% for table, count in invalid_language_checks %}
+                {% if count %}
+                    <div class="alert alert-danger">
+                        <i class="fa fa-exclamation"></i> {{ count }} {{ text_invalid_entries[table] }}
+                    </div>
+                {% endif %}
+            {% endfor %}
+            {% if language_check_fine %}
+                <div class="alert alert-success">
+                    <i class="fa fa-check"></i> {{ text_looks_great }}
+                </div>
+            {% else %}
+                <a class="btn btn-primary col-sm-6" onclick="fixLanguageEntries()">
+                    <i class="fa fa-magic"></i> {{ text_fix_all }}
+                </a>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Meta Title Reports Section -->
+    <div class="form-group">
+        <div class="col-sm-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">{{ text_meta_title_reports }}</h3>
+                </div>
+                <div class="panel-body">
+                    {% for page, count in meta_title_checks %}
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label">{{ text_meta_title[page] }}</label>
+                            <div class="col-sm-8">
+                                {% if count %}
+                                    <div class="alert alert-warning">
+                                        <i class="fa fa-exclamation"></i> {{ count }} {{ text_meta_title_length_issue }}
+                                    </div>
+                                    <a class="btn btn-primary col-sm-6" onclick="clearMetaTitleIssues('{{ page }}')">
+                                        <i class="fa fa-magic"></i> {{ text_clear_values }}
+                                    </a>
+                                {% else %}
+                                    <div class="alert alert-success">
+                                        <i class="fa fa-check"></i> {{ text_looks_good }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Meta Description Reports Section -->
+    <div class="form-group">
+        <div class="col-sm-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">{{ text_meta_description_reports }}</h3>
+                </div>
+                <div class="panel-body">
+                    {% for page, count in meta_description_checks %}
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label">{{ text_meta_description[page] }}</label>
+                            <div class="col-sm-8">
+                                {% if count %}
+                                    <div class="alert alert-warning">
+                                        <i class="fa fa-exclamation"></i> {{ count }} {{ text_meta_description_length_issue }}
+                                    </div>
+                                    <a class="btn btn-primary col-sm-6" onclick="clearMetaDescIssues('{{ page }}')">
+                                        <i class="fa fa-magic"></i> {{ text_clear_values }}
+                                    </a>
+                                {% else %}
+                                    <div class="alert alert-success">
+                                        <i class="fa fa-check"></i> {{ text_looks_good }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

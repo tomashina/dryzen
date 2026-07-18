@@ -1,0 +1,192 @@
+
+<i class="fa fa-circle-o-notch fa-spin fa-2x fa-fw loading-spinner" v-cloak data-v="loading-spinner"></i>
+<span v-cloak data-v="loading-spinner">{{ text_loading }}</span>
+
+<ul class="pagination" v-if="getNumOfPages() > 1" v-cloak>
+	<li v-for="page in getNumOfPages()" :class="page==current_page ? 'active' : ''" >
+		<span v-if="page==current_page">${ page }</span>
+		<a href v-else v-on:click.stop.prevent="setCurrentPage(page)"><span>${ page }</span></a>
+	</li>
+</ul>
+		
+<div class="table-responsive" v-show="use_variants" v-cloak>
+	<table class="table table-striped table-bordered table-hover variants_list">
+		<thead>
+			<tr>
+				<td class="text-left" style="width: 250px">{{ entry_ro_variant_name }}</td>
+				<td class="text-left" >{{ entry_ro_options }}</td>
+				{% if version_pro %}
+					<td class="text-left" ><span data-toggle="tooltip" title="{{ entry_ro_variant_fields_help }}">{{ entry_ro_variant_fields }}</span></td>
+				{% endif %}
+				<td class="text-left" style="width: 150px">{{ entry_ro_sort_order }}</td>
+				<td v-if="!edit_single"></td>
+			</tr>
+		</thead>
+	  
+		<tbody>
+			<template v-for="(variant, variant_i) in variants" >
+				{# :id="'variant'+variant.rov_id" #}
+				<tr :key="variant_i"  v-if="!edit_separately || isVariantOnCurrentPage(variant_i)" v-show="isVariantOnCurrentPage(variant_i)">
+					
+					<template v-if="edit_separately">
+						<td class="text-left" style="vertical-align: top;">
+							${ variant.name }<br>
+							<span v-if="isVariantOnCurrentPage(variant_i)" class="help-block pull-left" style="font-size: 70%;" :title="'{{ text_used_in_ro_combs }}: '+(parseInt(variant.ro_combs_cnt) || '')">${ parseInt(variant.ro_combs_cnt) || '' }</span>
+						</td>
+					</template>
+					<template v-else>
+						<td class="text-right" style="vertical-align: top;">
+							<input v-model="variant.name" type="text" :name="'variants['+variant_i+'][name]'" size="40" class="form-control">
+							<input v-model="variant.rov_id" type="hidden" :name="'variants['+variant_i+'][id]'">
+							<span v-if="isVariantOnCurrentPage(variant_i)" class="help-block pull-left" style="font-size: 70%;" :title="'{{ text_used_in_ro_combs }}: '+(parseInt(variant.ro_combs_cnt) || '')">${ parseInt(variant.ro_combs_cnt) || '' }</span>
+							<button v-on:click="addVariantOption(variant_i)" v-if="isVariantOnCurrentPage(variant_i)" type="button" data-toggle="tooltip" title="{{ entry_ro_add_option }}" class="btn btn-primary" ><i class="fa fa-plus-circle"></i></button>
+						</td>
+					</template>	
+					
+					<td style="vertical-align: top;">
+						<table>
+							<tbody>
+								<tr v-for="(variant_option, variant_option_i) in variant.options">
+									<td>
+										
+										<template v-if="edit_separately">
+											${ variant_option.name+'&nbsp;&nbsp;&nbsp;[ID '+variant_option.option_id+']' }
+										</template>
+										<template v-else>
+										
+											<div class="input-group" v-if="isVariantOnCurrentPage(variant_i)">
+												<select v-model="variant_option.option_id" class="form-control" :name="'variants['+variant_i+'][options]['+variant_option_i+']'">
+													<option v-for="option in options" :value="option.option_id">${ option.name+'&nbsp;&nbsp;&nbsp;[ID '+option.option_id+']' }</option>
+												</select>
+												<span class="input-group-btn">
+													<button type="button" v-on:click="removeVariantOption(variant_i, variant_option_i)" data-toggle="tooltip" title="{{ entry_ro_delete_option }}" class="btn btn-danger">
+														<i class="fa fa-minus-circle"></i>
+													</button>
+												</span>
+											</div>
+											<div v-else>
+												<input type="hidden" :name="'variants['+variant_i+'][options]['+variant_option_i+']'" v-model="variant_option.option_id">
+											</div>
+										</template>		
+									</td>
+								</tr>
+							</tbody>	
+						</table>
+					</td>
+					{% if version_pro %}
+						<td style="vertical-align: top;">
+							<template v-if="edit_separately">
+								
+								<table v-show="variant.fields.length" class="table table-bordered table-condensed small">
+									<thead>
+										<tr>
+											<td >{{ entry_ro_variant_field_name }}</td>
+											<td style="width: 80px;">{{ entry_ro_variant_field_type }}</td>
+											<td style="width: 120px;"><span data-toggle="tooltip" title="{{ entry_ro_variant_field_key_help }}">{{ entry_ro_variant_field_key }}</span></td>
+											<td style="width: 80px;">{{ entry_ro_sort_order }}</td>
+										</tr>
+									</thead>
+									<tbody>
+										<tr v-for="(field, field_i) in variant.fields">
+											<td>
+												${ field.name }
+											</td>
+											<td>
+												${ field.type == 'date' ? '{{ entry_ro_variant_field_type_date }}' : '{{ entry_ro_variant_field_type_text }}' }
+											</td>
+											<td>
+												${ field.key }
+											</td>
+											<td class="text-right">
+												${ field.sort_order }
+											</td>
+										</tr>
+									</tbody>
+								</table>
+								
+							</template>
+							<template v-else>
+								<button v-show="!(variant.show_fields || variant.fields.length)" v-if="isVariantOnCurrentPage(variant_i)" v-on:click="showVariantFields(variant_i)" type="button" class="btn btn-default">{{ button_show_variant_fields }}</button>
+								<table v-show="variant.show_fields || variant.fields.length" class="table table-bordered table-condensed small">
+									<thead>
+										<tr>
+											<td >{{ entry_ro_variant_field_name }}</td>
+											<td style="width: 80px;">{{ entry_ro_variant_field_type }}</td>
+											<td style="width: 120px;"><span data-toggle="tooltip" title="{{ entry_ro_variant_field_key_help }}">{{ entry_ro_variant_field_key }}</span></td>
+											<td style="width: 80px;">{{ entry_ro_sort_order }}</td>
+											<td style="width: 42px;">
+												<button type="button" v-on:click="addVariantField(variant_i)" data-toggle="tooltip" title="{{ button_ro_variant_field_add }}" class="btn btn-sm btn-primary" ><i class="fa fa-plus-circle"></i></button>
+											</td>
+										</tr>
+									</thead>
+									<tbody>
+										<tr v-for="(field, field_i) in variant.fields">
+											<td>
+												<input v-model="field.relatedoptions_field_id" type="hidden" :name="'variants['+variant_i+'][fields]['+field_i+'][relatedoptions_field_id]'" >
+												<input v-model="field.name" type="text" class="form-control input-sm"  :name="'variants['+variant_i+'][fields]['+field_i+'][name]'">
+											</td>
+											<td>
+												<select v-model="field.type" class="form-control input-sm" :name="'variants['+variant_i+'][fields]['+field_i+'][type]'">
+													<option value="text">{{ entry_ro_variant_field_type_text }}</option>
+													<option value="date">{{ entry_ro_variant_field_type_date }}</option>
+												</select>
+											</td>
+											<td>
+												<input v-model="field.key" type="text" class="form-control input-sm" :name="'variants['+variant_i+'][fields]['+field_i+'][key]'">
+											</td>
+											<td>
+												<input v-model="field.sort_order" type="text" class="form-control input-sm" :name="'variants['+variant_i+'][fields]['+field_i+'][sort_order]'">
+											</td>
+											<td>
+												<button v-on:click="removeVariantField(variant_i, field_i)" type="button" data-toggle="tooltip" title="{{ button_ro_variant_field_remove }}" class="btn btn-sm btn-danger">
+													<i class="fa fa-minus-circle"></i>
+												</button>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</template>	
+						</td>
+					{% endif %}
+					<td class="text-right">
+						<template v-if="edit_separately">
+							${ variant.sort_order }
+						</template>
+						<template v-else>
+							<input v-model="variant.sort_order" type="text" :name="'variants['+variant_i+'][sort_order]'" class="form-control">
+						</template>
+					</td>
+					<td v-if="!edit_single">
+						<div class="pull-right">
+							<button v-if="edit_separately" type="button" v-on:click="editVariant(variant_i)" class="btn btn-primary" data-toggle="tooltip" title="{{ text_ro_edit_variant }}"><i class="fa fa-pencil"></i></button>
+							<button type="button" v-if="isVariantOnCurrentPage(variant_i)" v-on:click="removeVariantConfirm(variant_i, $event)" data-toggle="tooltip" title="{{ entry_ro_delete_variant }}" class="btn btn-danger"><i class="fa fa-minus-circle"></i></button>
+						</div>
+					</td>
+					
+				</tr>
+			</template>	
+		</tbody>
+	  
+		<tfoot v-if="!edit_single">
+			{% if version_pro %}
+				<td colspan="4"></td>
+			{% else %}	
+				<td colspan="3"></td>
+			{% endif %}
+			<td>
+				<div class="pull-right">
+					<button type="button" v-on:click="addVariant()" data-toggle="tooltip" title="{{ entry_ro_add_variant }}" class="btn btn-primary"><i class="fa fa-plus-circle"></i></button>
+				</div>
+			</td>
+		</tfoot>
+
+	</table>
+</div>
+	
+<ul class="pagination" v-if="getNumOfPages() > 1" v-cloak>
+	<li v-for="page in getNumOfPages()" :class="page==current_page ? 'active' : ''" >
+		<span v-if="page==current_page">${ page }</span>
+		<a href v-else v-on:click.stop.prevent="setCurrentPage(page)"><span>${ page }</span></a>
+	</li>
+</ul>
+

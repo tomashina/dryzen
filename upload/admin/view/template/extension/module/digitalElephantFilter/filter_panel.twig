@@ -1,0 +1,125 @@
+
+<div class="form-group">
+    <label class="col-sm-2 control-label"></label>
+    <label class="col-sm-2 control-label">{{ text_type }}</label>
+    <label class="col-sm-1 control-label">
+        {{ text_hide }}
+        <input type="checkbox"
+               class="form-control checkbox-inline"
+               id="hide_all"
+            >
+    </label>
+    <label class="col-sm-1 control-label">
+        {{ text_close }}
+        <input type="checkbox"
+               class="form-control checkbox-inline"
+               id="close_all"
+            >
+    </label>
+
+</div>
+
+<div class="form-group">
+    <label class="col-sm-2 control-label">{{ text_filter_price }}</label>
+    <label class="col-sm-offset-2 col-sm-1 control-label">
+        {% set checked = '' %}
+        {% if DEF_settings['filter_price']['hide'] %}
+            {% set checked = ' checked="checked"' %}
+        {% endif %}
+            <input type="checkbox"
+                   class="form-control checkbox-inline hide_all"
+                   name="DEF_settings[filter_price][hide]"
+                {{ checked }}
+                >
+        </label>
+
+    <label class="col-sm-1 control-label">
+        {% set checked = '' %}
+        {% if DEF_settings['filter_price']['close'] %}
+            {% set checked = ' checked="checked"' %}
+        {% endif %}
+            <input type="checkbox"
+                   class="form-control checkbox-inline close_all"
+                   name="DEF_settings[filter_price][close]"
+                {{ checked }}
+                >
+        </label>
+</div>
+
+{% for package in packages %}
+    <div class="form-group">
+        {% for section in package %}
+
+            {% set input_name = section['input_name'] %}
+            {% set input_label = section['input_label'] %}
+            {% set section_id = section['section_id'] %}
+            {% set group_name = section['group_name'] %}
+
+            <div class="row {{ input_name }}" style="padding-bottom:10px;">
+                <label class="col-sm-2 control-label">{{ input_label }} {{ group_name }}</label>
+
+                <div class="col-sm-2">
+                    <select
+                        name="DEF_settings[{{ input_name }}][{{ section_id }}][type]"
+                        class="form-control {{ input_name }}"
+                        >
+                        {% for type_input in list_types_input %}
+                            
+                            {% set selected = '' %}
+                            {% if DEF_settings[input_name][section_id]['type'] %}
+                                {% if type_input == DEF_settings[input_name][section_id]['type'] %}
+                                    {% set selected = '  selected="selected"' %}
+                                {% endif %}
+                            {% endif %}
+                            <option value="{{ type_input }}" {{ selected }}>{{ type_input }}</option>
+                            
+                        {% endfor %}
+                    </select>
+                </div>
+                <label class="col-sm-1 control-label">
+                    {% set checked = '' %}
+                    {% if DEF_settings[input_name][section_id]['hide'] %}
+                        {% set checked = ' checked="checked"' %}
+                    {% endif %}
+
+                        <input type="checkbox"
+                               class="form-control checkbox-inline hide_all"
+                               name="DEF_settings[{{ input_name }}][{{ section_id }}][hide]"
+                            {{ checked }}
+                            >
+                    </label>
+
+                <label class="col-sm-1 control-label">
+                    {% set checked = '' %}
+                    {% if DEF_settings[input_name][section_id]['close'] %}
+                        {% set checked = ' checked="checked"' %}
+                    {% endif %}
+
+                        <input type="checkbox"
+                               class="form-control checkbox-inline close_all"
+                               name="DEF_settings[{{ input_name }}][{{ section_id }}][close]"
+                            {{ checked }}
+                            >
+                    </label>
+
+                <input
+                    type="hidden"
+                    name="DEF_settings[{{ input_name }}][{{ section_id }}][input_label]"
+                    value="{{ input_label }}"
+                    >
+
+                <input
+                    type="hidden"
+                    name="DEF_settings[{{ input_name }}][{{ section_id }}][element_id]"
+                    value="{{ section_id }}"
+                    >
+            </div>
+
+        {% endfor %}
+    </div>
+{% endfor %}
+
+<script>
+$('select[class*="attributes"] option[value*="image"]').remove();
+</script>
+

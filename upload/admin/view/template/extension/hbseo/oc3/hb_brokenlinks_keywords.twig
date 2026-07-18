@@ -1,0 +1,30 @@
+<div class="table-responsive">
+<table class="table table-bordered table-hover">
+	<thead>
+		<tr>
+			<td class="text-left">{{ column_keyword }}</td>
+			<td class="text-left">{{ column_redirect_url }}</td>
+			<td class="text-right">{{ column_date_added }}</td>
+			<td class="text-center">{{ column_action }}</td>
+		</tr>
+	</thead>
+	<tbody>
+		{% if (records) %} 
+			{% for record in records %} 
+				<tr>
+				<td class="text-left">{{ record['keyword'] }}</td>
+				<td class="text-left">{{ record['redirect_url'] }}</td>
+				<td class="text-right">{{ record['date_added'] }}</td>
+				<td class="text-center">	
+					<button type="button" class="btn btn-danger" onclick="deleteKeyword('{{ record['id'] }}')"><i class="fa fa-trash"></i>&nbsp;{{ button_delete }}</button>
+				</td>
+				</tr>
+			{% endfor %} 
+		{% else %} 
+				<tr>
+				<td class="text-center" colspan="4">{{ text_no_results }}</td>
+				</tr> 
+		{% endif %} 
+	</tbody>
+</table>
+</div>

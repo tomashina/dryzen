@@ -1,0 +1,15 @@
+{% if comments %}
+<h3 class="section-title"><b>{{ text_comments }}</b></h3>
+{% for comment in comments %}
+<div class="table blog_comment">
+    <div class="table-cell v-top avatar">
+        <i class="icon-user"></i>
+    </div>
+    <div class="table-cell w100">
+        <p><b>{{ comment.name }}</b> - {{ comment.date_added }}</p>
+        <p>{{ comment.comment }}</p>
+    </div>
+</div>
+{% endfor %}
+{{ pagination }}
+{% endif %}

@@ -1,0 +1,9 @@
+<div class="search-field">
+<input type="text" name="search" value="{{ search }}" placeholder="{{ basel_text_search }}" class="form-control main-search-input" />
+<span class="btn btn-contrast do-search main"><i class="fa fa-search"></i></span>
+</div>
+<script>
+$(document).ready(function() {
+$('.search-holder-mobile input[name=\'search-mobile\']').attr("placeholder", "{{ basel_text_search }}").attr("value", "{{ search }}");
+});
+</script>

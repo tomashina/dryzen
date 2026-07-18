@@ -1,0 +1,131 @@
+<div class="header-wrapper header5">
+<span class="table header-main sticky-header-placeholder hidden-md hidden-lg">&nbsp;</span>
+
+<div class="sticky-header slidedown mobile-only outer-container header-style">
+  <div class="container {{ main_header_width }}">
+    <div class="table header-main">
+    
+    <div class="table-cell w50 vertical-bottom logo">
+     {% if logo %}
+        <div id="logo">
+    		<a href="{{ home }}"><img src="{{ logo }}" title="{{ name }}" alt="{{ name }}" /></a>
+        </div>
+     {% endif %}
+     <div class="promo-message hidden-xs hidden-sm">{{ promo_message }}</div>
+    </div>
+    
+    
+    <div class="table-cell w50 vertical-bottom text-right hidden-xs hidden-sm"> 
+       
+        <div class="links first-row">
+		
+        {% if lang_curr_title %}
+        <div class="setting-ul">
+        <div class="setting-li dropdown-wrapper from-bottom lang-curr-trigger nowrap"><a>
+        <span>{{ lang_curr_title }}</span>
+        </a>
+        <div class="dropdown-content dropdown-right lang-curr-wrapper">
+        {{ language }}
+        {{ currency }}
+        </div>
+        </div>
+        </div>
+        {% endif %}
+        
+        <ul>
+        
+        <li class="wishlist-hover is_wishlist">
+        <a href="{{ wishlist }}" id="wishlist-total"><i class="icon-heart icon"></i><span>{{ text_wishlist }}</span></a>
+        </li>
+        
+        
+        <li id="cart" class="dropdown-wrapper from-bottom catalog_hide">
+        <a href="{{ shopping_cart }}"><i class="global-cart icon"></i><span class="cart-total-items">{{ cart_items }}</span> / <b class="cart-total-amount">{{ cart_amount }}</b></a>
+        <div class="dropdown-content dropdown-right hidden-sm hidden-xs">
+        {{ cart }}
+        </div>
+        </li>
+        
+        </ul>
+        </div>
+        
+        <div class="links">
+		<ul>
+        {% include 'basel/template/common/static_links.twig' %}
+        </ul>
+        </div>
+            
+    </div>
+    
+    <div class="table-cell shortcuts text-right hidden-md hidden-lg">
+    <div class="font-zero">
+    <div class="icon-element is_wishlist">
+    <a class="shortcut-wrapper wishlist" href="{{ wishlist }}">
+    <div class="wishlist-hover"><i class="icon-heart icon"></i><span class="counter wishlist-counter">{{ wishlist_counter }}</span></div>
+    </a>
+    </div>
+    
+    <div class="icon-element catalog_hide">
+    <a href="{{ shopping_cart }}" class="shortcut-wrapper cart">
+    <i id="cart-icon" class="global-cart icon"></i> <span id="cart-total" class="nowrap">
+    <span class="counter cart-total-items">{{ cart_items }}</span>&nbsp;
+    </span>
+    </a>
+    </div>
+    
+    <div class="icon-element">
+    <a class="shortcut-wrapper menu-trigger hidden-md hidden-lg">
+    <i class="icon-line-menu icon"></i>
+    </a>
+    </div>
+    </div>
+    </div>
+    
+    
+    </div> <!-- .table.header_main ends -->
+  </div> <!-- .container ends -->
+</div> <!-- .mobile-sticky-header ends -->
+
+
+
+<div class="sticky-header slidedown outer-container menu-style menu-style-contrast hidden-xs hidden-sm">
+
+
+<div class="container {{ main_header_width }}">
+
+        <div class="main-menu menu-stay-left">
+        
+        {% if primary_menu %}
+        <ul class="categories block">
+          {% if primary_menu == 'oc' %}
+            <!-- Default menu -->
+            {{ default_menu }}
+          {% elseif primary_menu is defined %} 
+            <!-- Mega menu -->
+            {% for key, row in primary_menu_desktop %}
+            {% include 'basel/template/common/menus/mega_menu.twig' %}
+            {% endfor %}
+          {% endif %}
+        
+        <li class="dropdown-wrapper-click from-left pull-right has-icon hidden-sx hidden-sm hidden-xs">
+        <a class="search-trigger clicker">
+        <i class="icon-magnifier icon"></i>
+        </a>
+        <div class="dropdown-content dropdown-right">
+        <div class="search-dropdown-holder">
+        <div class="search-holder">
+        {{ basel_search }}
+        </div>
+        </div>
+        </div>
+        </li>
+        
+        </ul>
+        {% endif %}
+
+        </div>
+        
+</div>
+</div>
+
+</div> <!-- .header_wrapper ends -->

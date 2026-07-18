@@ -1,0 +1,39 @@
+
+
+
+<form name="pay" action="{{ action }}" method="post">
+
+    <input type="hidden" name="amount" value="{{ total }}">
+    <input id="cart"  name="cart" value="Web shop kupnja {{ order_id }}" hidden="true"/>
+    <input id="currency" name="currency" value="{{ currency }}" hidden="true"/>
+    <input id="language" name="language" value="hr" hidden="true"/>
+    <input type="hidden" name="order_number" value="{{ order_id }}">
+    <input id="require_complete"  name="require_complete" value="false" hidden="true"/>
+    <input type="hidden" name="store_id" value="{{ merchant }}">
+    <input type="hidden" name="version" value="1.3">
+
+
+    <input type="hidden" name="cardholder_address" value="{{ address }}">
+    <input type="hidden" name="cardholder_city" value="{{ city}}">
+    <input type="hidden" name="cardholder_country" value="{{ country }}">
+    <input type="hidden" name="cardholder_email" value="{{ email }}">
+    <input type="hidden" name="cardholder_name" value="{{ firstname }}">
+    <input type="hidden" name="payment_all" value="{{ number_of_installments }}">
+    <input type="hidden" name="cardholder_phone" value="{{ telephone }}">
+    <input type="hidden" name="cardholder_surname" value="{{ lastname }}">
+    <input type="hidden" name="cardholder_zip_code" value="{{ postcode }}">
+
+    <input type="hidden" name="signature" value="{{ md5 }}">
+
+
+
+    <div class="buttons pull-right">
+        <input type="submit" value="{{ button_confirm }}" class="btn btn-primary btn-blue" />
+
+
+    </div>
+   
+
+</form>
+
+

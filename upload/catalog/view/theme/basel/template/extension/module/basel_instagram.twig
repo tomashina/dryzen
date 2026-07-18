@@ -1,0 +1,46 @@
+{% if full_width %}</div>{% endif %}
+<div class="widget"{% if use_margin %} style="margin-bottom:{{ margin }}"{% endif %}>
+<div class="instagram_wrapper">
+{% if block_title %}
+<div class="instagram_title{% if title_inline %} floating_title text-center{% endif %}">
+<div class="table w100 h100"><div class="table-cell">
+<div class="widget-title">
+    {% if title_preline %}<p class="pre-line">{{ title_preline }}</p>{% endif %}
+    {% if title %} 
+    <p class="main-title"><span>{{ title }}</span></p>
+    <p class="widget-title-separator"><i class="icon-line-cross"></i></p>
+    {% endif %}
+    {% if title_subline %}
+    <p class="sub-line"><span>{{ title_subline }}</span></p>
+    {% endif %}
+</div>
+</div></div>
+</div>
+{% endif %}
+<div class="images_wrap">
+<div id="instafeed{{ module }}" class="grid-holder lg-grid{{ columns }} md-grid{{ columns_md }} sm-grid{{ columns_sm }}" style="margin:-{{ padding/2 }}px;"></div>
+</div>
+</div> <!-- .instagram_wrapper -->      
+</div>
+{% if full_width %}<div class="container">{% endif %}
+
+<script>
+	(function($){
+		$(window).on('load', function(){
+			$.instagramFeed({
+				'username': "{{ username }}",
+				'container': "#instafeed{{ module }}",
+				'callback': null,
+				'styling': true,
+				'items': '{{ limit }}',
+				'margin': {{ padding }},
+				{% if resolution %}
+				'image_size': 640,
+				{% else %}
+				'image_size': 320,
+				{% endif %}
+				'on_error': console.error
+			}); 
+		});
+	})(jQuery);
+</script>

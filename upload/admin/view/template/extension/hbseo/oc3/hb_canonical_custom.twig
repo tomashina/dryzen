@@ -1,0 +1,36 @@
+<div class="table-responsive">
+<table class="table table-bordered table-hover">
+<thead>
+	<tr>
+		<td width="1" style="text-align: center;"><input type="checkbox" onclick="$('input[name*=\'selected\']').prop('checked', this.checked);" /></td>
+    	<td class="text-left">URL</td>
+		<td class="text-left">Canonical</td>
+    </tr>
+</thead>
+<tbody>
+    {% if (records) %} 
+		{% for record in records %} 
+			<tr>
+			<td style="text-align: center;">{% if (record['selected']) %} 
+				<input type="checkbox" name="selected[]" value="{{ record['id'] }}" checked="checked" />
+				{% else %} 
+				<input type="checkbox" name="selected[]" value="{{ record['id'] }}" />
+				{% endif %}</td>
+			<td class="text-left">{{ record['url'] }}</td>
+			<td class="text-left">{{ record['canonical'] }}</td>
+			</tr>
+		{% endfor %} 
+    {% else %} 
+    		<tr>
+              <td class="text-center" colspan="3">No Records Found</td>
+            </tr> 
+    {% endif %} 
+</tbody>    
+
+</table>
+</div>
+
+<div class="row">
+  <div class="col-sm-6 text-left">{{ pagination }}</div>
+  <div class="col-sm-6 text-right">{{ results }}</div>
+</div>

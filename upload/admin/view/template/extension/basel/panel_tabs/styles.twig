@@ -1,0 +1,548 @@
+<legend>Styles & Colors</legend>
+
+<legend class="sub">General</legend>
+<div class="form-group">
+    <label class="col-sm-2 control-label">Shopping cart icon</label>
+    <div class="col-sm-10 image-btn">
+    <label><input type="radio" name="settings[basel][basel_cart_icon]" value="global-cart-bag" {% if basel_cart_icon == 'global-cart-bag' %} checked="checked"{% endif %} /><span><i class="icon-bag"></i></span></label>
+    
+    <label><input type="radio" name="settings[basel][basel_cart_icon]" value="global-cart-basket" {% if basel_cart_icon == 'global-cart-basket' %} checked="checked"{% endif %} /><span><i class="icon-basket"></i></span></label>
+    
+    <label><input type="radio" name="settings[basel][basel_cart_icon]" value="global-cart-handbag" {% if basel_cart_icon == 'global-cart-handbag' %} checked="checked"{% endif %} /><span><i class="icon-handbag"></i></span></label>
+    
+    <label><input type="radio" name="settings[basel][basel_cart_icon]" value="global-cart-briefcase" {% if basel_cart_icon == 'global-cart-briefcase' %} checked="checked"{% endif %} /><span><i class="icon-briefcase"></i></span></label>
+    
+    <label><input type="radio" name="settings[basel][basel_cart_icon]" value="global-cart-shoppingbag" {% if basel_cart_icon == 'global-cart-shoppingbag' %} checked="checked"{% endif %} /><span><i class="icon-shopping-bag"></i></span></label>
+    
+    <label><input type="radio" name="settings[basel][basel_cart_icon]" value="global-cart-shoppingbasket" {% if basel_cart_icon == 'global-cart-shoppingbasket' %} checked="checked"{% endif %} /><span><i class="icon-shopping-basket"></i></span></label>
+    </div>                   
+</div>
+
+<legend class="sub">Layout</legend>
+<div class="form-group">
+    <label class="col-sm-2 control-label">Layout Style</label>
+    <div class="col-sm-10 toggle-btn both-blue">
+    <label><input type="radio" name="settings[basel][basel_main_layout]" value="0" {% if basel_main_layout == '0' %} checked="checked"{% endif %} /><span>Full width</span></label>
+    <label><input type="radio" name="settings[basel][basel_main_layout]" value="1" {% if basel_main_layout == '1' %} checked="checked"{% endif %} /><span>Boxed width</span></label>
+    </div>                   
+</div>
+
+<div class="form-group">
+<label class="col-sm-2 control-label">Content width</label>
+<div class="col-sm-10">
+    <select name="settings[basel][basel_content_width]" class="form-control">
+        <option value="narrow_container"{% if basel_content_width == 'narrow_container' %} selected="selected"{% endif %}>Narrow (1060px)</option>
+        <option value=""{% if basel_content_width == '' %} selected="selected"{% endif %}>Normal (1170px)</option>
+        <option value="wide_container"{% if basel_content_width == 'wide_container' %} selected="selected"{% endif %}>Wide (1280px)</option>
+    </select>
+</div>                   
+</div>
+
+<legend class="sub">Sticky Columns</legend>
+<div class="form-group">
+    <label class="col-sm-2 control-label"><span data-toggle="tooltip" title="Sticky columns stays within the viewport when scrolling down">Sticky Columns</span></label>
+    <div class="col-sm-10 toggle-btn">
+    <label><input type="radio" name="settings[basel][basel_sticky_columns]" value="0" {% if basel_sticky_columns == '0' %} checked="checked"{% endif %} /><span>Disabled</span></label>
+    <label><input type="radio" name="settings[basel][basel_sticky_columns]" value="1" {% if basel_sticky_columns == '1' %} checked="checked"{% endif %} /><span>Enabled</span></label>
+    </div>                   
+</div>
+
+<div class="form-group">
+    <label class="col-sm-2 control-label"><span data-toggle="tooltip" title="Use offset if sticky header is enabled to avoid overlapping columns/header. Enter a value in pixels, for example 100">Sticky Offset Top</span></label>
+    <div class="col-sm-10 toggle-btn">
+    <input class="form-control" style="width:120px" name="settings[basel][basel_sticky_columns_offset]" value="{{ basel_sticky_columns_offset ? basel_sticky_columns_offset : '100' }}" />
+    </div>                   
+</div>
+
+<legend class="sub">Widget Titles</legend>
+<div class="form-group">
+<label class="col-sm-2 control-label"><span data-toggle="tooltip" title="Select heading style on modules">Widget heading style</span></label>
+<div class="col-sm-10">
+    <select name="settings[basel][basel_widget_title_style]" class="form-control">
+        <option value="0"{% if basel_widget_title_style == '0' %} selected="selected"{% endif %}>Style 1 - (Cross Separator)</option>
+        <option value="2"{% if basel_widget_title_style == '2' %} selected="selected"{% endif %}>Style 2 - (Line Separator)</option>
+        <option value="3"{% if basel_widget_title_style == '3' %} selected="selected"{% endif %}>Style 3 - (Bordered Title, No Separator)</option>
+    </select>
+</div>                   
+</div>
+
+<legend class="sub">Product Listing Style</legend>
+<div class="form-group">
+    <label class="col-sm-2 control-label"><span data-toggle="tooltip" title="Select how to show products in product listings, like category pages, related products etc.">Product listing style</span></label>
+    <div class="col-sm-10">
+    <select name="settings[basel][basel_list_style]" class="form-control">
+        <option value="1"{% if basel_list_style == '1' %} selected="selected"{% endif %}>Style 1 - Default style</option>
+        <option value="2"{% if basel_list_style == '2' %} selected="selected"{% endif %}>Style 2 - Action buttons slide up on hover</option>
+        <option value="3"{% if basel_list_style == '3' %} selected="selected"{% endif %}>Style 3 - Dark image overlay on hover</option>
+        <option value="4"{% if basel_list_style == '4' %} selected="selected"{% endif %}>Style 4 - Dark image overlay on hover alt 2</option>
+        <option value="1 names-c"{% if basel_list_style == '1 names-c' %} selected="selected"{% endif %}>Style 5 - Center aligned</option>
+        <option value="6"{% if basel_list_style == '6' %} selected="selected"{% endif %}>Style 6 - Center aligned with button</option>
+    </select>
+    </div>                   
+</div>
+
+<div class="form-group">
+    <label class="col-sm-2 control-label"><span data-toggle="tooltip" title="Show the first additional image when hovering a product">Swap image on hover</span></label>
+    <div class="col-sm-10 toggle-btn">
+    <label><input type="radio" name="settings[basel][basel_thumb_swap]" value="0" {% if basel_thumb_swap == '0' %} checked="checked"{% endif %} /><span>Disabled</span></label>
+    <label><input type="radio" name="settings[basel][basel_thumb_swap]" value="1" {% if basel_thumb_swap == '1' %} checked="checked"{% endif %} /><span>Enabled</span></label>
+    </div>                   
+</div>
+
+<div class="form-group">
+    <label class="col-sm-2 control-label"><span data-toggle="tooltip" title="Keep the product names in listings within one line (using only CSS)">Cut product names</span></label>
+    <div class="col-sm-10 toggle-btn">
+    <label><input type="radio" name="settings[basel][basel_cut_names]" value="0" {% if basel_cut_names == '0' %} checked="checked"{% endif %} /><span>Disabled</span></label>
+    <label><input type="radio" name="settings[basel][basel_cut_names]" value="1" {% if basel_cut_names == '1' %} checked="checked"{% endif %} /><span>Enabled</span></label>
+    </div>                   
+</div>
+
+<div class="form-group">
+    <label class="col-sm-2 control-label"><span data-toggle="tooltip" title="On smaller mobile devices, select to view 1 or 2 items per row">Minimum items per row</span></label>
+    <div class="col-sm-10 toggle-btn both-blue">
+    <label><input type="radio" name="settings[basel][items_mobile_fw]" value="1" {% if items_mobile_fw == '1' %} checked="checked"{% endif %} /><span>1 item</span></label>
+    <label><input type="radio" name="settings[basel][items_mobile_fw]" value="0" {% if items_mobile_fw == '0' %} checked="checked"{% endif %} /><span>2 items</span></label>
+    </div>                   
+</div>
+
+<legend>Custom Color Scheme</legend>
+<div class="form-group">
+    <label class="col-sm-2 control-label">Override default colors</label>
+    <div class="col-sm-10 toggle-btn">
+    <label><input type="radio" name="settings[basel][basel_design_status]" class="design-select" value="0" {% if basel_design_status == '0' %} checked="checked"{% endif %} /><span>Disabled</span></label>
+    <label><input type="radio" name="settings[basel][basel_design_status]" class="design-select" value="1" {% if basel_design_status == '1' %} checked="checked"{% endif %} /><span>Enabled</span></label>
+    </div>                   
+</div>
+
+<div id="custom_design_holder"{% if basel_design_status %} style="display:block"{% else %} style="display:none"{% endif %}>
+
+<legend class="third">Body Background (when using boxed layout)</legend>
+
+<div class="form-group">
+    <label class="col-sm-2 control-label">Background</label>
+    <div class="col-sm-10">
+    <div class="input-group form-inline colorfield">
+    <span class="input-group-addon"><i style="background:{{ basel_body_bg_color ? basel_body_bg_color : '#ececec' }}"></i></span>
+    <input class="form-control" name="settings[basel][basel_body_bg_color]" value="{{ basel_body_bg_color ? basel_body_bg_color : '#ececec' }}" />
+    </div> 
+    </div>                  
+</div>
+
+
+<div class="form-group">
+    <label class="col-sm-2 control-label">Background Image</label>
+    <div class="col-sm-10">
+    <div class="row">
+        <div class="col-sm-2">
+        <a href="" id="thumb-bc-img" data-toggle="image" class="img-thumbnail"><img src="{{ body_thumb }}" alt="" title="" data-placeholder="{{ placeholder }}" /></a>
+    <input type="hidden" name="settings[basel][basel_body_bg_img]" value="{{ basel_body_bg_img }}" id="input-body-img" />
+        </div>
+        <div class="col-sm-2">
+        <label>Background Position</label>
+        <select name="settings[basel][basel_body_bg_img_pos]" class="form-control">
+        <option value="top left"{% if basel_body_bg_img_pos == 'top left' %} selected="selected"{% endif %}>top left</option>
+        <option value="top center"{% if basel_body_bg_img_pos == 'top center' %} selected="selected"{% endif %}>top center</option>
+        <option value="top right"{% if basel_body_bg_img_pos == 'top right' %} selected="selected"{% endif %}>top right</option>
+        <option value="center left"{% if basel_body_bg_img_pos == 'center left' %} selected="selected"{% endif %}>middle left</option>
+        <option value="center center"{% if basel_body_bg_img_pos == 'center center' %} selected="selected"{% endif %}>middle center</option>
+        <option value="center right"{% if basel_body_bg_img_pos == 'center right' %} selected="selected"{% endif %}>middle right</option>
+        <option value="bottom left"{% if basel_body_bg_img_pos == 'bottom left' %} selected="selected"{% endif %}>bottom left</option>
+        <option value="bottom center"{% if basel_body_bg_img_pos == 'bottom center' %} selected="selected"{% endif %}>bottom center</option>
+        <option value="bottom right"{% if basel_body_bg_img_pos == 'bottom right' %} selected="selected"{% endif %}>bottom right</option>
+        </select>
+        </div>
+        <div class="col-sm-2">
+        <label>Background Size</label>
+        <select name="settings[basel][basel_body_bg_img_size]" class="form-control">
+        <option value="auto"{% if basel_body_bg_img_size == 'auto' %} selected="selected"{% endif %}>auto</option>
+        <option value="contain"{% if basel_body_bg_img_size == 'contain' %} selected="selected"{% endif %}>contain</option>
+        <option value="cover"{% if basel_body_bg_img_size == 'cover' %} selected="selected"{% endif %}>cover</option>
+        </select>
+        </div>
+        <div class="col-sm-2">
+        <label>Background Size</label>
+        <select name="settings[basel][basel_body_bg_img_repeat]" class="form-control">
+        <option value="no-repeat"{% if basel_body_bg_img_repeat == 'no-repeat' %} selected="selected"{% endif %}>no-repeat</option>
+        <option value="repeat-x"{% if basel_body_bg_img_repeat == 'repeat-x' %} selected="selected"{% endif %}>repeat-x (-)</option>
+        <option value="repeat-y"{% if basel_body_bg_img_repeat == 'repeat-y' %} selected="selected"{% endif %}>repeat-y (|)</option>
+        <option value="repeat"{% if basel_body_bg_img_repeat == 'repeat' %} selected="selected"{% endif %}>repeat</option>
+        </select>
+        </div>
+        <div class="col-sm-2">
+        <label>Background Attachment</label>
+        <select name="settings[basel][basel_body_bg_img_att]" class="form-control">
+        <option value="scroll"{% if basel_body_bg_img_att == 'scroll' %} selected="selected"{% endif %}>scroll</option>
+        <option value="local"{% if basel_body_bg_img_att == 'local' %} selected="selected"{% endif %}>local</option>
+        <option value="fixed"{% if basel_body_bg_img_att == 'fixed' %} selected="selected"{% endif %}>fixed</option>
+        </select>
+        </div>        
+            
+    </div>
+    </div>                   
+</div>
+
+
+<legend class="third">Top Line Promo Message</legend>
+<div class="form-group">
+    <label class="col-sm-2 control-label">Background</label>
+    <div class="col-sm-10">
+    <div class="input-group form-inline colorfield">
+    <span class="input-group-addon"><i style="background:{{ basel_top_note_bg ? basel_top_note_bg : '#000000' }}"></i></span>
+    <input class="form-control" name="settings[basel][basel_top_note_bg]" value="{{ basel_top_note_bg ? basel_top_note_bg : '#000000' }}" />
+    </div> 
+    </div>                  
+</div>
+
+<div class="form-group">
+    <label class="col-sm-2 control-label">Color</label>
+    <div class="col-sm-10">
+    <div class="input-group form-inline colorfield">
+    <span class="input-group-addon"><i style="background:{{ basel_top_note_color ? basel_top_note_color : '#eeeeee' }}"></i></span>
+    <input class="form-control" name="settings[basel][basel_top_note_color]" value="{{ basel_top_note_color ? basel_top_note_color : '#eeeeee' }}" />
+    </div> 
+    </div>                 
+</div>
+
+<legend class="third">Top Line</legend>
+<div class="form-group">
+    <label class="col-sm-2 control-label">Background</label>
+    <div class="col-sm-10">
+    <div class="input-group form-inline colorfield">
+    <span class="input-group-addon"><i style="background:{{ basel_top_line_bg ? basel_top_line_bg : '#1daaa3' }}"></i></span>
+    <input class="form-control" name="settings[basel][basel_top_line_bg]" value="{{ basel_top_line_bg ? basel_top_line_bg : '#1daaa3' }}" />
+    </div> 
+    </div>                   
+</div>
+
+<div class="form-group">
+    <label class="col-sm-2 control-label">Color</label>
+    <div class="col-sm-10">
+    <div class="input-group form-inline colorfield">
+    <span class="input-group-addon"><i style="background:{{ basel_top_line_color ? basel_top_line_color : '#ffffff' }}"></i></span>
+    <input class="form-control" name="settings[basel][basel_top_line_color]" value="{{ basel_top_line_color ? basel_top_line_color : '#ffffff' }}" />
+    </div> 
+    </div>                   
+</div>
+
+<legend class="third">Header Area</legend>
+<div class="form-group">
+    <label class="col-sm-2 control-label">Background</label>
+    <div class="col-sm-10">
+    <div class="input-group form-inline colorfield">
+    <span class="input-group-addon"><i style="background:{{ basel_header_bg ? basel_header_bg : '#ffffff' }}"></i></span>
+    <input class="form-control" name="settings[basel][basel_header_bg]" value="{{ basel_header_bg ? basel_header_bg : '#ffffff' }}" />
+    </div> 
+    </div>                  
+</div>
+
+<div class="form-group">
+    <label class="col-sm-2 control-label">Color</label>
+    <div class="col-sm-10">
+    <div class="input-group form-inline colorfield">
+    <span class="input-group-addon"><i style="background:{{ basel_header_color ? basel_header_color : '#000000' }}"></i></span>
+    <input class="form-control" name="settings[basel][basel_header_color]" value="{{ basel_header_color ? basel_header_color : '#000000' }}" />
+    </div> 
+    </div>                   
+</div>
+
+<div class="form-group">
+    <label class="col-sm-2 control-label"><span data-toggle="tooltip" title="Color on details in header, for example product counters">Header accent color</span></label>
+    <div class="col-sm-10">
+    <div class="input-group form-inline colorfield">
+    <span class="input-group-addon"><i style="background:{{ basel_header_accent ? basel_header_accent : '#1daaa3' }}"></i></span>
+    <input class="form-control" name="settings[basel][basel_header_accent]" value="{{ basel_header_accent ? basel_header_accent : '#1daaa3' }}" />
+    </div> 
+    </div>                  
+</div>
+
+<legend class="third">Menu</legend>
+<div class="form-group">
+    <label class="col-sm-2 control-label">Background</label>
+    <div class="col-sm-10">
+    <div class="input-group form-inline colorfield">
+    <span class="input-group-addon"><i style="background:{{ basel_header_menu_bg ? basel_header_menu_bg : '#111111' }}"></i></span>
+    <input class="form-control" name="settings[basel][basel_header_menu_bg]" value="{{ basel_header_menu_bg ? basel_header_menu_bg : '#111111' }}" />
+    </div> 
+    </div>                  
+</div>
+
+<div class="form-group">
+    <label class="col-sm-2 control-label">Color</label>
+    <div class="col-sm-10">
+    <div class="input-group form-inline colorfield">
+    <span class="input-group-addon"><i style="background:{{ basel_header_menu_color ? basel_header_menu_color : '#eeeeee' }}"></i></span>
+    <input class="form-control" name="settings[basel][basel_header_menu_color]" value="{{ basel_header_menu_color ? basel_header_menu_color : '#eeeeee' }}" />
+    </div> 
+    </div>                 
+</div>
+
+<div class="form-group">
+<label class="col-sm-2 control-label"><span data-toggle="tooltip" title="(When using header 6)">Search field color scheme</span></label>
+<div class="col-sm-10">
+    <select name="settings[basel][basel_search_scheme]" class="form-control">
+        <option value="dark-search"{% if basel_search_scheme == 'dark-search' %} selected="selected"{% endif %}>Dark</option>
+        <option value="light-search"{% if basel_search_scheme == 'light-search' %} selected="selected"{% endif %}>Light</option>
+    </select>
+</div>                   
+</div>
+
+<div class="form-group">
+    <label class="col-sm-2 control-label">Menu sale label</label>
+    <div class="col-sm-10">
+    <div class="input-group form-inline colorfield">
+    <span class="input-group-addon"><i style="background:{{ basel_menutag_sale_bg ? basel_menutag_sale_bg : '#D41212' }}"></i></span>
+    <input class="form-control" name="settings[basel][basel_menutag_sale_bg]" value="{{ basel_menutag_sale_bg ? basel_menutag_sale_bg : '#D41212' }}" />
+    </div> 
+    </div>                  
+</div>
+
+<div class="form-group">
+    <label class="col-sm-2 control-label">Menu new label</label>
+    <div class="col-sm-10">
+    <div class="input-group form-inline colorfield">
+    <span class="input-group-addon"><i style="background:{{ basel_menutag_new_bg ? basel_menutag_new_bg : '#1daaa3' }}"></i></span>
+    <input class="form-control" name="settings[basel][basel_menutag_new_bg]" value="{{ basel_menutag_new_bg ? basel_menutag_new_bg : '#1daaa3' }}" />
+    </div> 
+    </div>                  
+</div>
+
+<legend class="third">Breadcrumbs (When Holding Titles)</legend>
+
+<div class="form-group">
+    <label class="col-sm-2 control-label">Background</label>
+    <div class="col-sm-10">
+    <div class="input-group form-inline colorfield">
+    <span class="input-group-addon"><i style="background:{{ basel_bc_bg_color ? basel_bc_bg_color : '#000000' }}"></i></span>
+    <input class="form-control" name="settings[basel][basel_bc_bg_color]" value="{{ basel_bc_bg_color ? basel_bc_bg_color : '#000000' }}" />
+    </div> 
+    </div>                  
+</div>
+
+<div class="form-group">
+    <label class="col-sm-2 control-label"><br /><span data-toggle="tooltip" title="Inline titles helper">Background image</span></label>
+    <div class="col-sm-10">
+    <div class="row">
+        <div class="col-sm-2">
+        <a href="" id="thumb-bc-img" data-toggle="image" class="img-thumbnail"><img src="{{ bc_thumb }}" alt="" title="" data-placeholder="{{ placeholder }}" /></a>
+    <input type="hidden" name="settings[basel][basel_bc_bg_img]" value="{{ basel_bc_bg_img }}" id="input-bc-img" />
+        </div>
+        <div class="col-sm-2">
+        <label>Background Position</label>
+        <select name="settings[basel][basel_bc_bg_img_pos]" class="form-control">
+        <option value="top left"{% if basel_bc_bg_img_pos == 'top left' %} selected="selected"{% endif %}>top left</option>
+        <option value="top center"{% if basel_bc_bg_img_pos == 'top center' %} selected="selected"{% endif %}>top center</option>
+        <option value="top right"{% if basel_bc_bg_img_pos == 'top right' %} selected="selected"{% endif %}>top right</option>
+        <option value="center left"{% if basel_bc_bg_img_pos == 'center left' %} selected="selected"{% endif %}>middle left</option>
+        <option value="center center"{% if basel_bc_bg_img_pos == 'center center' %} selected="selected"{% endif %}>middle center</option>
+        <option value="center right"{% if basel_bc_bg_img_pos == 'center right' %} selected="selected"{% endif %}>middle right</option>
+        <option value="bottom left"{% if basel_bc_bg_img_pos == 'bottom left' %} selected="selected"{% endif %}>bottom left</option>
+        <option value="bottom center"{% if basel_bc_bg_img_pos == 'bottom center' %} selected="selected"{% endif %}>bottom center</option>
+        <option value="bottom right"{% if basel_bc_bg_img_pos == 'bottom right' %} selected="selected"{% endif %}>bottom right</option>
+        </select>
+        </div>
+        <div class="col-sm-2">
+        <label>Background Size</label>
+        <select name="settings[basel][basel_bc_bg_img_size]" class="form-control">
+        <option value="auto"{% if basel_bc_bg_img_size == 'auto' %} selected="selected"{% endif %}>auto</option>
+        <option value="contain"{% if basel_bc_bg_img_size == 'contain' %} selected="selected"{% endif %}>contain</option>
+        <option value="cover"{% if basel_bc_bg_img_size == 'cover' %} selected="selected"{% endif %}>cover</option>
+        </select>
+        </div>
+        <div class="col-sm-2">
+        <label>Background Size</label>
+        <select name="settings[basel][basel_bc_bg_img_repeat]" class="form-control">
+        <option value="no-repeat"{% if basel_bc_bg_img_repeat == 'no-repeat' %} selected="selected"{% endif %}>no-repeat</option>
+        <option value="repeat-x"{% if basel_bc_bg_img_repeat == 'repeat-x' %} selected="selected"{% endif %}>repeat-x (-)</option>
+        <option value="repeat-y"{% if basel_bc_bg_img_repeat == 'repeat-y' %} selected="selected"{% endif %}>repeat-y (|)</option>
+        <option value="repeat"{% if basel_bc_bg_img_repeat == 'repeat' %} selected="selected"{% endif %}>repeat</option>
+        </select>
+        </div>
+        <div class="col-sm-2">
+        <label>Background Attachment</label>
+        <select name="settings[basel][basel_bc_bg_img_att]" class="form-control">
+        <option value="scroll"{% if basel_bc_bg_img_att == 'scroll' %} selected="selected"{% endif %}>scroll</option>
+        <option value="local"{% if basel_bc_bg_img_att == 'local' %} selected="selected"{% endif %}>local</option>
+        <option value="fixed"{% if basel_bc_bg_img_att == 'fixed' %} selected="selected"{% endif %}>fixed</option>
+        </select>
+        </div>        
+            
+    </div>
+    </div>                   
+</div>
+<div class="form-group">
+    <label class="col-sm-2 control-label">Color</label>
+    <div class="col-sm-10">
+    <div class="input-group form-inline colorfield">
+    <span class="input-group-addon"><i style="background:{{ basel_bc_color ? basel_bc_color : '#ffffff' }}"></i></span>
+    <input class="form-control" name="settings[basel][basel_bc_color]" value="{{ basel_bc_color ? basel_bc_color : '#ffffff' }}" />
+    </div> 
+    </div>                  
+</div>
+
+
+
+<legend class="third">Content Area</legend>
+<div class="form-group">
+    <label class="col-sm-2 control-label"><span data-toggle="tooltip" title="Color when hovering links etc">Primary accent color</span></label>
+    <div class="col-sm-10">
+    <div class="input-group form-inline colorfield">
+    <span class="input-group-addon"><i style="background:{{ basel_primary_accent_color ? basel_primary_accent_color : '#1daaa3' }}"></i></span>
+    <input class="form-control" name="settings[basel][basel_primary_accent_color]" value="{{ basel_primary_accent_color ? basel_primary_accent_color : '#1daaa3' }}" />
+    </div> 
+    </div>                  
+</div>
+
+<div class="form-group">
+    <label class="col-sm-2 control-label"><span data-toggle="tooltip" title="On produts in product listings and product pages">Sale badge background</span></label>
+    <div class="col-sm-10">
+    <div class="input-group form-inline colorfield">
+    <span class="input-group-addon"><i style="background:{{ basel_salebadge_bg ? basel_salebadge_bg : '#1daaa3' }}"></i></span>
+    <input class="form-control" name="settings[basel][basel_salebadge_bg]" value="{{ basel_salebadge_bg ? basel_salebadge_bg : '#1daaa3' }}" />
+    </div> 
+    </div>                  
+</div>
+
+<div class="form-group">
+    <label class="col-sm-2 control-label"><span data-toggle="tooltip" title="On produts in product listings and product pages">Sale badge color</span></label>
+    <div class="col-sm-10">
+    <div class="input-group form-inline colorfield">
+    <span class="input-group-addon"><i style="background:{{ basel_salebadge_color ? basel_salebadge_color : '#ffffff' }}"></i></span>
+    <input class="form-control" name="settings[basel][basel_salebadge_color]" value="{{ basel_salebadge_color ? basel_salebadge_color : '#ffffff' }}" />
+    </div> 
+    </div>                 
+</div>
+
+<div class="form-group">
+    <label class="col-sm-2 control-label"><span data-toggle="tooltip" title="On produts in product listings and product pages">New badge background</span></label>
+    <div class="col-sm-10">
+    <div class="input-group form-inline colorfield">
+    <span class="input-group-addon"><i style="background:{{ basel_newbadge_bg ? basel_newbadge_bg : '#ffffff' }}"></i></span>
+    <input class="form-control" name="settings[basel][basel_newbadge_bg]" value="{{ basel_newbadge_bg ? basel_newbadge_bg : '#ffffff' }}" />
+    </div> 
+    </div>                   
+</div>
+
+<div class="form-group">
+    <label class="col-sm-2 control-label"><span data-toggle="tooltip" title="On produts in product listings and product pages">New badge color</span></label>
+    <div class="col-sm-10">
+    <div class="input-group form-inline colorfield">
+    <span class="input-group-addon"><i style="background:{{ basel_newbadge_color ? basel_newbadge_color : '#111111' }}"></i></span>
+    <input class="form-control" name="settings[basel][basel_newbadge_color]" value="{{ basel_newbadge_color ? basel_newbadge_color : '#111111' }}" />
+    </div> 
+    </div>                   
+</div>
+
+<div class="form-group">
+    <label class="col-sm-2 control-label">Price color</label>
+    <div class="col-sm-10">
+    <div class="input-group form-inline colorfield">
+    <span class="input-group-addon"><i style="background:{{ basel_price_color ? basel_price_color : '#1daaa3' }}"></i></span>
+    <input class="form-control" name="settings[basel][basel_price_color]" value="{{ basel_price_color ? basel_price_color : '#1daaa3' }}" />
+    </div> 
+    </div>                  
+</div>
+
+<div class="form-group">
+    <label class="col-sm-2 control-label"><span data-toggle="tooltip" title="When using vertical mega menu modules, or when using header alternative 5">Vertical menu background</span></label>
+    <div class="col-sm-10">
+    <div class="input-group form-inline colorfield">
+    <span class="input-group-addon"><i style="background:{{ basel_vertical_menu_bg ? basel_vertical_menu_bg : '#212121' }}"></i></span>
+    <input class="form-control" name="settings[basel][basel_vertical_menu_bg]" value="{{ basel_vertical_menu_bg ? basel_vertical_menu_bg : '#212121' }}" />
+    </div> 
+    </div>                   
+</div>
+
+<div class="form-group">
+    <label class="col-sm-2 control-label"><span data-toggle="tooltip" title="When using vertical mega menu modules, or when using header alternative 5">Vertical menu background on hover</span></label>
+    <div class="col-sm-10">
+    <div class="input-group form-inline colorfield">
+    <span class="input-group-addon"><i style="background:{{ basel_vertical_menu_bg_hover ? basel_vertical_menu_bg_hover : '#fbbc34' }}"></i></span>
+    <input class="form-control" name="settings[basel][basel_vertical_menu_bg_hover]" value="{{ basel_vertical_menu_bg_hover ? basel_vertical_menu_bg_hover : '#fbbc34' }}" />
+    </div> 
+    </div>                  
+</div>
+
+
+<legend class="third">Buttons</legend>
+<div class="form-group">
+    <label class="col-sm-2 control-label">Default buttons: Background</label>
+    <div class="col-sm-10">
+    <div class="input-group form-inline colorfield">
+    <span class="input-group-addon"><i style="background:{{ basel_default_btn_bg ? basel_default_btn_bg : '#000000' }}"></i></span>
+    <input class="form-control" name="settings[basel][basel_default_btn_bg]" value="{{ basel_default_btn_bg ? basel_default_btn_bg : '#000000' }}" />
+    </div> 
+    </div>                  
+</div>
+
+<div class="form-group">
+    <label class="col-sm-2 control-label">Default buttons: Color</label>
+    <div class="col-sm-10">
+    <div class="input-group form-inline colorfield">
+    <span class="input-group-addon"><i style="background:{{ basel_default_btn_color ? basel_default_btn_color : '#ffffff' }}"></i></span>
+    <input class="form-control" name="settings[basel][basel_default_btn_color]" value="{{ basel_default_btn_color ? basel_default_btn_color : '#ffffff' }}" />
+    </div> 
+    </div>                  
+</div>
+
+<div class="form-group">
+    <label class="col-sm-2 control-label">Default buttons: Hover background</label>
+    <div class="col-sm-10">
+    <div class="input-group form-inline colorfield">
+    <span class="input-group-addon"><i style="background:{{ basel_default_btn_bg_hover ? basel_default_btn_bg_hover : '#3e3e3e' }}"></i></span>
+    <input class="form-control" name="settings[basel][basel_default_btn_bg_hover]" value="{{ basel_default_btn_bg_hover ? basel_default_btn_bg_hover : '#3e3e3e' }}" />
+    </div> 
+    </div>                   
+</div>
+
+<div class="form-group">
+    <label class="col-sm-2 control-label">Default buttons: Hover color</label>
+    <div class="col-sm-10">
+    <div class="input-group form-inline colorfield">
+    <span class="input-group-addon"><i style="background:{{ basel_default_btn_color_hover ? basel_default_btn_color_hover : '#ffffff' }}"></i></span>
+    <input class="form-control" name="settings[basel][basel_default_btn_color_hover]" value="{{ basel_default_btn_color_hover ? basel_default_btn_color_hover : '#ffffff' }}" />
+    </div> 
+    </div>                   
+</div>
+
+<div class="form-group">
+    <label class="col-sm-2 control-label">Action buttons: Background</label>
+    <div class="col-sm-10">
+    <div class="input-group form-inline colorfield">
+    <span class="input-group-addon"><i style="background:{{ basel_contrast_btn_bg ? basel_contrast_btn_bg : '#1daaa3' }}"></i></span>
+    <input class="form-control" name="settings[basel][basel_contrast_btn_bg]" value="{{ basel_contrast_btn_bg ? basel_contrast_btn_bg : '#1daaa3' }}" />
+    </div> 
+    </div>                   
+</div>
+
+
+<legend class="third">Footer</legend>
+<div class="form-group">
+    <label class="col-sm-2 control-label">Background</label>
+    <div class="col-sm-10">
+    <div class="input-group form-inline colorfield">
+    <span class="input-group-addon"><i style="background:{{ basel_footer_bg ? basel_footer_bg : '#000000' }}"></i></span>
+    <input class="form-control" name="settings[basel][basel_footer_bg]" value="{{ basel_footer_bg ? basel_footer_bg : '#000000' }}" />
+    </div> 
+    </div>                   
+</div>
+
+<div class="form-group">
+    <label class="col-sm-2 control-label">Color</label>
+    <div class="col-sm-10">
+    <div class="input-group form-inline colorfield">
+    <span class="input-group-addon"><i style="background:{{ basel_footer_color ? basel_footer_color : '#ffffff' }}"></i></span>
+    <input class="form-control" name="settings[basel][basel_footer_color]" value="{{ basel_footer_color ? basel_footer_color : '#ffffff' }}" />
+    </div> 
+    </div>               
+</div>
+
+<div class="form-group">
+    <label class="col-sm-2 control-label">Heading / Links separator color</label>
+    <div class="col-sm-10">
+    <div class="input-group form-inline colorfield">
+    <span class="input-group-addon"><i style="background:{{ basel_footer_h5_sep ? basel_footer_h5_sep : '#cccccc' }}"></i></span>
+    <input class="form-control" name="settings[basel][basel_footer_h5_sep]" value="{{ basel_footer_h5_sep ? basel_footer_h5_sep : '#cccccc' }}" />
+    </div> 
+    </div>                
+</div>
+</div><!-- #custom_design_holder -->

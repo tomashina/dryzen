@@ -1,0 +1,1351 @@
+{{ header }}{{ column_left }}
+<div id="content">
+  <div class="page-header">
+    <div class="container-fluid">
+      <div class="pull-right"">
+      {% if save_and_stay %}
+      <a class="btn btn-success" onclick="$('#save').val('stay');$('#form_basel_content').submit();" data-toggle="tooltip" title="{{ button_save_stay }}"><i class="fa fa-check"></i></a>
+      {% endif %}
+    <button type="submit" form="form_basel_content" data-toggle="tooltip" title="{{ button_save }}" class="btn btn-primary"><i class="fa fa-save"></i></button>
+    <a href="{{ cancel }}" data-toggle="tooltip" title="{{ button_cancel }}" class="btn btn-default"><i class="fa fa-reply"></i></a>
+        </div>
+      <h1>{{ heading_title }}</h1>
+      <ul class="breadcrumb">
+        {% for breadcrumb in breadcrumbs %}
+        <li><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+  <div class="container-fluid">
+  
+    {% if error_warning %}
+    <div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i> {{ error_warning }}
+    <button type="button" class="close" data-dismiss="alert">&times;</button>
+    </div>
+    {% endif %}
+    
+    {% if success %}
+    <div class="alert alert-success"><i class="fa fa-check"></i> {{ success }}
+    <button type="button" class="close" data-dismiss="alert">&times;</button>
+    </div>
+    {% endif %}
+    
+    <div class="panel-wrapper">
+    <form action="{{ action }}" method="post" enctype="multipart/form-data" id="form_basel_content" class="form-horizontal">
+    <input type="hidden" name="save" id="save" value="0">
+    <div class="panel-header">
+    <ul class="main-tabs list-unstyled">
+    <li class="active"><a href="#tab-content" data-toggle="tab"><i class="fa fa-pencil"></i> {{ text_tab_content }}</a></li><!--
+    --><li><a href="#tab-templates" data-toggle="tab"><i class="fa fa-download"></i> {{ text_tab_template }}</a></li>
+    </ul>
+    </div>
+    
+    <div class="tab-content">
+    
+    <div class="tab-pane active" id="tab-content">
+    <div class="main-content" style="background:#ffffff;">
+    
+    <div class="left-side">
+    <legend>{{ text_module_settings }}</legend>
+    
+    <div class="form-group">
+    <label class="col-sm-3 control-label" for="input-name">{{ entry_name }}</label>
+    <div class="col-sm-9">
+    <input type="text" name="name" value="{{ name }}" placeholder="{{ entry_name }}" id="input-name" class="form-control" />
+    {% if error_name %}
+    <div class="text-danger">{{ error_name }}</div>
+    {% endif %}
+    </div>
+    </div>
+    
+    <div class="form-group">
+    <label class="col-sm-3 control-label">{{ entry_status }}</label>
+    <div class="col-sm-9 toggle-btn">
+    {% if status %}
+    <label><input type="radio" name="status" value="0" /><span>{{ text_disabled }}</span></label>
+    <label><input type="radio" name="status" value="1" checked="checked" /><span>{{ text_enabled }}</span></label>
+    {% else %}
+    <label><input type="radio" name="status" value="0" checked="checked" /><span>{{ text_disabled }}</span></label>
+    <label><input type="radio" name="status" value="1" /><span>{{ text_enabled }}</span></label>
+    {% endif %}
+    </div>                   
+    </div>
+    
+    <div class="sample">
+    <h4 class="sample-heading">{{ text_layout_example }}</h4>
+    
+    <div class="page"><small class="browser">{{ text_page }}</small>
+    	<div class="block"><small>{{ text_block }}</small>
+        	<div class="content">
+    			<div class="column left"><small>{{ text_column }}</small></div>
+                <div class="column right"><small>{{ text_column }}</small></div>
+                <small>{{ text_content }}</small>
+    		</div>
+    	</div>
+    </div>
+    
+    </div>
+    
+    <legend>{{ text_block_settings }}</legend>
+    
+    <div class="form-group">
+    <label class="col-sm-3 control-label">{{ text_use_block_title }}</label>
+    <div class="col-sm-9 toggle-btn">
+    {% if b_setting.title %}
+    <label><input type="radio" class="title_select" name="b_setting[title]" value="0" /><span>{{ text_disabled }}</span></label>
+    <label><input type="radio" class="title_select" name="b_setting[title]" value="1" checked="checked" /><span>{{ text_enabled }}</span></label>
+    {% else %}
+    <label><input type="radio" class="title_select" name="b_setting[title]" value="0" checked="checked" /><span>{{ text_disabled }}</span></label>
+    <label><input type="radio" class="title_select" name="b_setting[title]" value="1" /><span>{{ text_enabled }}</span></label>
+    {% endif %}
+    </div>                   
+    </div>
+    
+    <div class="form-group title_field" style="display:{% if b_setting.title %}block{% else %}none{% endif %}">
+    <label class="col-sm-3 control-label">{{ text_block_pre_line }}</label>
+    <div class="col-sm-9">
+    {% for language in languages %}
+    <div class="input-group">
+    <span class="input-group-addon"><img src="language/{{ language.code }}/{{ language.code }}.png" title="{{ language.name }}" /></span>
+    <input type="text" name="b_setting[title_pl][{{ language.language_id }}]" value="{{ b_setting.title_pl[language.language_id] ? b_setting.title_pl[language.language_id] }}" class="form-control" />
+    </div>
+    {% endfor %}
+    </div>
+    </div>
+    
+    <div class="form-group title_field" style="display:{% if b_setting.title %}block{% else %}none{% endif %}">
+    <label class="col-sm-3 control-label">{{ text_block_title }}</label>
+    <div class="col-sm-9">
+    {% for language in languages %}
+    <div class="input-group">
+    <span class="input-group-addon"><img src="language/{{ language.code }}/{{ language.code }}.png" title="{{ language.name }}" /></span>
+    <input type="text" name="b_setting[title_m][{{ language.language_id }}]" value="{{ b_setting.title_m[language.language_id] ? b_setting.title_m[language.language_id] }}" class="form-control" />
+    </div>
+    {% endfor %}
+    </div>
+    </div>
+    
+    <div class="form-group title_field" style="display:{% if b_setting.title %}block{% else %}none{% endif %}">
+    <label class="col-sm-3 control-label">{{ text_block_sub_line }}</label>
+    <div class="col-sm-9">
+    {% for language in languages %}
+    <div class="input-group">
+    <span class="input-group-addon"><img src="language/{{ language.code }}/{{ language.code }}.png" title="{{ language.name }}" /></span>
+    <textarea type="text" name="b_setting[title_b][{{ language.language_id }}]" class="form-control">{{ b_setting.title_b[language.language_id] ? b_setting.title_b[language.language_id] }}</textarea>
+    </div>
+    {% endfor %}
+    </div>
+    </div>
+    
+    
+    <div class="form-group">
+    <label class="col-sm-3 control-label">{{ text_block_margin }}</label>
+    <div class="col-sm-9 toggle-btn">
+    {% if b_setting.custom_m %}
+    <label><input type="radio" class="margin_select" name="b_setting[custom_m]" value="0" /><span>{{ text_disabled }}</span></label>
+    <label><input type="radio" class="margin_select" name="b_setting[custom_m]" value="1" checked="checked" /><span>{{ text_enabled }}</span></label>
+    {% else %}
+    <label><input type="radio" class="margin_select" name="b_setting[custom_m]" value="0" checked="checked" /><span>{{ text_disabled }}</span></label>
+    <label><input type="radio" class="margin_select" name="b_setting[custom_m]" value="1" /><span>{{ text_enabled }}</span></label>
+    {% endif %}
+    </div>                   
+    </div>
+    
+    <div class="form-group" id="custom_margin_field" style="display:{% if b_setting.custom_m %}block{% else %}none{% endif %}">
+    <label class="col-sm-3 control-label">{{ text_margin }}</label>
+    <div class="col-sm-9">
+    <input type="text" name="b_setting[mt]" value="{{ b_setting.mt ? b_setting.mt }}" placeholder="{{ text_top }}" class="form-control inline" /> px&nbsp;&nbsp;&nbsp;
+    <input type="text" name="b_setting[mr]" value="{{ b_setting.mr ? b_setting.mr }}" placeholder="{{ text_right }}" class="form-control inline" /> px&nbsp;&nbsp;&nbsp;
+    <input type="text" name="b_setting[mb]" value="{{ b_setting.mb ? b_setting.mb }}" placeholder="{{ text_bottom }}" class="form-control inline" /> px&nbsp;&nbsp;&nbsp;
+    <input type="text" name="b_setting[ml]" value="{{ b_setting.ml ? b_setting.ml }}" placeholder="{{ text_left }}" class="form-control inline" /> px&nbsp;&nbsp;&nbsp;
+    </div>
+    </div>
+    
+    <div class="form-group">
+    <label class="col-sm-3 control-label">{{ text_full_width_background }}</label>
+    <div class="col-sm-9 toggle-btn">
+    {% if b_setting.fw %}
+    <label><input type="radio" name="b_setting[fw]" value="0" /><span>{{ text_disabled }}</span></label>
+    <label><input type="radio" name="b_setting[fw]" value="1" checked="checked" /><span>{{ text_enabled }}</span></label>
+    {% else %}
+    <label><input type="radio" name="b_setting[fw]" value="0" checked="checked" /><span>{{ text_disabled }}</span></label>
+    <label><input type="radio" name="b_setting[fw]" value="1" /><span>{{ text_enabled }}</span></label>
+    {% endif %}
+    </div>                   
+    </div>
+    
+    
+    <div class="form-group">
+    <label class="col-sm-3 control-label">{{ text_use_background_color }}</label>
+    <div class="col-sm-9 toggle-btn">
+    {% if b_setting.block_bg %}
+    <label><input type="radio" class="bg_color_select" name="b_setting[block_bg]" value="0" /><span>{{ text_disabled }}</span></label>
+    <label><input type="radio" class="bg_color_select" name="b_setting[block_bg]" value="1" checked="checked" /><span>{{ text_enabled }}</span></label>
+    {% else %}
+    <label><input type="radio" class="bg_color_select" name="b_setting[block_bg]" value="0" checked="checked" /><span>{{ text_disabled }}</span></label>
+    <label><input type="radio" class="bg_color_select" name="b_setting[block_bg]" value="1" /><span>{{ text_enabled }}</span></label>
+    {% endif %}
+    </div>                   
+    </div>
+    
+    <div class="form-group" id="background_color_field" style="display:{% if b_setting.block_bg %}block{% else %}none{% endif %}">
+    <label class="col-sm-3 control-label">{{ text_background_color }}</label>
+    <div class="col-sm-9">
+    <div class="input-group color_field">
+    <span class="input-group-addon"><i></i></span><input type="text" name="b_setting[bg_color]" value="{{ b_setting.bg_color ? b_setting.bg_color }}" class="form-control" />
+    </div>
+    </div>
+    </div>
+    
+    <div class="form-group">
+    <label class="col-sm-3 control-label">{{ text_use_background_image }}</label>
+    <div class="col-sm-9 toggle-btn">
+    {% if b_setting.block_bgi %}
+    <label><input type="radio" class="bg_image_select" name="b_setting[block_bgi]" value="0" /><span>{{ text_disabled }}</span></label>
+    <label><input type="radio" class="bg_image_select" name="b_setting[block_bgi]" value="1" checked="checked" /><span>{{ text_enabled }}</span></label>
+    {% else %}
+    <label><input type="radio" class="bg_image_select" name="b_setting[block_bgi]" value="0" checked="checked" /><span>{{ text_disabled }}</span></label>
+    <label><input type="radio" class="bg_image_select" name="b_setting[block_bgi]" value="1" /><span>{{ text_enabled }}</span></label>
+    {% endif %}
+    </div>                   
+    </div>
+    
+    <div class="form-group background_image_field" style="display:{% if b_setting.block_bgi %}block{% else %}none{% endif %}">
+    <label class="col-sm-3 control-label">{{ text_background_image }}</label>
+    <div class="col-sm-9"><a href="" id="thumb-image" data-toggle="image" class="img-thumbnail"><img src="{{ image }}" alt="" title="" data-placeholder="{{ placeholder }}" /></a>
+    <input type="hidden" name="bg_image" value="{{ bg_image ? bg_image }}" id="input-image" />
+    </div>
+    </div>
+    
+    <div class="form-group background_image_field" id="background_color_field" style="display:{% if b_setting.block_bgi %}block{% else %}none{% endif %}">
+    <label class="col-sm-3 control-label">{{ text_background_parallax }}</label>
+    <div class="col-sm-9">
+    <select name="b_setting[bg_par]" class="form-control">
+    {% if b_setting.bg_par == '0' %}
+    <option value="0" selected="selected">{{ text_disabled }}</option>
+    {% else %}
+    <option value="0">{{ text_disabled }}</option>
+    {% endif %}
+    {% if b_setting.bg_par == '1' %}
+    <option value="1" selected="selected">1</option>
+    {% else %}
+    <option value="1">1</option>
+    {% endif %}
+    {% if b_setting.bg_par == '2' %}
+    <option value="2" selected="selected">2</option>
+    {% else %}
+    <option value="2">2</option>
+    {% endif %}
+    {% if b_setting.bg_par == '3' %}
+    <option value="3" selected="selected">3</option>
+    {% else %}
+    <option value="3">3</option>
+    {% endif %}
+    {% if b_setting.bg_par == '4' %}
+    <option value="4" selected="selected">4</option>
+    {% else %}
+    <option value="4">4</option>
+    {% endif %}
+    {% if b_setting.bg_par == '5' %}
+    <option value="5" selected="selected">5</option>
+    {% else %}
+    <option value="5">5</option>
+    {% endif %}
+    {% if b_setting.bg_par == '6' %}
+    <option value="6" selected="selected">6</option>
+    {% else %}
+    <option value="6">6</option>
+    {% endif %}
+    {% if b_setting.bg_par == '7' %}
+    <option value="7" selected="selected">7</option>
+    {% else %}
+    <option value="7">7</option>
+    {% endif %}
+    {% if b_setting.bg_par == '8' %}
+    <option value="8" selected="selected">8</option>
+    {% else %}
+    <option value="8">8</option>
+    {% endif %}
+    {% if b_setting.bg_par == '9' %}
+    <option value="9" selected="selected">9</option>
+    {% else %}
+    <option value="9">9</option>
+    {% endif %}
+    </select>
+    </div>
+    </div>
+    
+    <div class="form-group background_image_field" style="display:{% if b_setting.block_bgi %}block{% else %}none{% endif %}">
+    <label class="col-sm-3 control-label">{{ text_background_position }}</label>
+    <div class="col-sm-9">
+    <select name="b_setting[bg_pos]" class="form-control">
+    {% if b_setting.bg_pos == 'top left' %}
+    <option value="left top" selected="selected">left top</option>
+    {% else %}
+    <option value="left top">left top</option>
+    {% endif %}
+    {% if b_setting.bg_pos == 'top center' %}
+    <option value="left center" selected="selected">left center</option>
+    {% else %}
+    <option value="left center">left center</option>
+    {% endif %}
+    {% if b_setting.bg_pos == 'left bottom' %}
+    <option value="left bottom" selected="selected">left bottom</option>
+    {% else %}
+    <option value="left bottom">left bottom</option>
+    {% endif %}
+    {% if b_setting.bg_pos == 'right top' %}
+    <option value="right top" selected="selected">right top</option>
+    {% else %}
+    <option value="right top">right top</option>
+    {% endif %}
+    {% if b_setting.bg_pos == 'right center' %}
+    <option value="right center" selected="selected">right center</option>
+    {% else %}
+    <option value="right center">right center</option>
+    {% endif %}
+    {% if b_setting.bg_pos == 'right bottom' %}
+    <option value="right bottom" selected="selected">right bottom</option>
+    {% else %}
+    <option value="right bottom">right bottom</option>
+    {% endif %}
+    {% if b_setting.bg_pos == 'center top' %}
+    <option value="center top" selected="selected">center top</option>
+    {% else %}
+    <option value="center top">center top</option>
+    {% endif %}
+    {% if b_setting.bg_pos == 'center center' %}
+    <option value="center center" selected="selected">center center</option>
+    {% else %}
+    <option value="center center">center center</option>
+    {% endif %}
+    {% if b_setting.bg_pos == 'center bottom' %}
+    <option value="center bottom" selected="selected">center bottom</option>
+    {% else %}
+    <option value="center bottom">center bottom</option>
+    {% endif %}
+    </select>
+    </div>
+    </div>
+    
+    <div class="form-group background_image_field" style="display:{% if b_setting.block_bgi %}block{% else %}none{% endif %}">
+    <label class="col-sm-3 control-label">{{ text_background_repeat }}</label>
+    <div class="col-sm-9">
+    <select name="b_setting[bg_repeat]" class="form-control">
+    {% if b_setting.bg_repeat == 'no-repeat' %}
+    <option value="no-repeat" selected="selected">no-repeat</option>
+    {% else %}
+    <option value="no-repeat">no-repeat</option>
+    {% endif %}
+    {% if b_setting.bg_repeat == 'repeat' %}
+    <option value="repeat" selected="selected">repeat</option>
+    {% else %}
+    <option value="repeat">repeat</option>
+    {% endif %}
+    {% if b_setting.bg_repeat == 'repeat-x' %}
+    <option value="repeat-x" selected="selected">repeat-x</option>
+    {% else %}
+    <option value="repeat-x">repeat-x</option>
+    {% endif %}
+    {% if b_setting.bg_repeat == 'repeat-y' %}
+    <option value="repeat-y" selected="selected">repeat-y</option>
+    {% else %}
+    <option value="repeat-y">repeat-y</option>
+    {% endif %}
+    </select>
+    </div>
+    </div>
+    
+    
+    <div class="form-group">
+    <label class="col-sm-3 control-label">{{ text_use_background_video }}</label>
+    <div class="col-sm-9 toggle-btn">
+    {% if b_setting.block_bgv %}
+    <label><input type="radio" class="bg_video_select" name="b_setting[block_bgv]" value="0" /><span>{{ text_disabled }}</span></label>
+    <label><input type="radio" class="bg_video_select" name="b_setting[block_bgv]" value="1" checked="checked" /><span>{{ text_enabled }}</span></label>
+    {% else %}
+    <label><input type="radio" class="bg_video_select" name="b_setting[block_bgv]" value="0" checked="checked" /><span>{{ text_disabled }}</span></label>
+    <label><input type="radio" class="bg_video_select" name="b_setting[block_bgv]" value="1" /><span>{{ text_enabled }}</span></label>
+    {% endif %}
+    </div>                   
+    </div>
+    
+    <div class="form-group" id="background_video_field" style="display:{% if b_setting.block_bgv %}block{% else %}none{% endif %}">
+    <label class="col-sm-3 control-label">{{ text_background_video }}</label>
+    <div class="col-sm-9">
+    <input type="text" name="b_setting[bg_video]" value="{{ b_setting.bg_video ? b_setting.bg_video }}" class="form-control" />
+    </div>
+    </div>
+    
+    
+    <div class="form-group">
+    <label class="col-sm-3 control-label">{{ text_use_css }}</label>
+    <div class="col-sm-9 toggle-btn">
+    {% if b_setting.block_css %}
+    <label><input type="radio" class="b_css_select" name="b_setting[block_css]" value="0" /><span>{{ text_disabled }}</span></label>
+    <label><input type="radio" class="b_css_select" name="b_setting[block_css]" value="1" checked="checked" /><span>{{ text_enabled }}</span></label>
+    {% else %}
+    <label><input type="radio" class="b_css_select" name="b_setting[block_css]" value="0" checked="checked" /><span>{{ text_disabled }}</span></label>
+    <label><input type="radio" class="b_css_select" name="b_setting[block_css]" value="1" /><span>{{ text_enabled }}</span></label>
+    {% endif %}
+    </div>                   
+    </div>
+    
+    <div class="form-group" id="block_css_field" style="display:{% if b_setting.block_css %}block{% else %}none{% endif %}">
+    <label class="col-sm-3 control-label">{{ text_css }}</label>
+    <div class="col-sm-9">
+    <textarea name="b_setting[css]" class="form-control" style="height:105px;">{{ b_setting.css ? b_setting.css }}</textarea>
+    </div>
+    </div>
+    
+    
+    
+    <legend>{{ text_content_settings }}</legend>
+    
+    <div class="form-group">
+    <label class="col-sm-3 control-label">{{ text_full_width_content }}</label>
+    <div class="col-sm-9 toggle-btn">
+    {% if c_setting.fw %}
+    <label><input type="radio" name="c_setting[fw]" value="0" /><span>{{ text_disabled }}</span></label>
+    <label><input type="radio" name="c_setting[fw]" value="1" checked="checked" /><span>{{ text_enabled }}</span></label>
+    {% else %}
+    <label><input type="radio" name="c_setting[fw]" value="0" checked="checked" /><span>{{ text_disabled }}</span></label>
+    <label><input type="radio" name="c_setting[fw]" value="1" /><span>{{ text_enabled }}</span></label>
+    {% endif %}
+    </div>                   
+    </div>
+    
+    <div class="form-group">
+    <label class="col-sm-3 control-label">{{ text_use_css }}</label>
+    <div class="col-sm-9 toggle-btn">
+    {% if c_setting.block_css %}
+    <label><input type="radio" class="c_css_select" name="c_setting[block_css]" value="0" /><span>{{ text_disabled }}</span></label>
+    <label><input type="radio" class="c_css_select" name="c_setting[block_css]" value="1" checked="checked" /><span>{{ text_enabled }}</span></label>
+    {% else %}
+    <label><input type="radio" class="c_css_select" name="c_setting[block_css]" value="0" checked="checked" /><span>{{ text_disabled }}</span></label>
+    <label><input type="radio" class="c_css_select" name="c_setting[block_css]" value="1" /><span>{{ text_enabled }}</span></label>
+    {% endif %}
+    </div>                   
+    </div>
+    
+    <div class="form-group" id="content_css_field" style="display:{% if c_setting.block_css %}block{% else %}none{% endif %}">
+    <label class="col-sm-3 control-label">{{ text_css }}</label>
+    <div class="col-sm-9">
+    <textarea name="c_setting[css]" class="form-control" style="height:105px;">{{ c_setting.css ? c_setting.css }}</textarea>
+    </div>
+    </div>
+    
+    <legend>{{ text_columns_settings }}</legend>
+    
+    <div class="form-group">
+    <label class="col-sm-3 control-label">{{ text_zero_margin }}</label>
+    <div class="col-sm-9 toggle-btn">
+    {% if c_setting.nm %}
+    <label><input type="radio" name="c_setting[nm]" value="0" /><span>{{ text_disabled }}</span></label>
+    <label><input type="radio" name="c_setting[nm]" value="1" checked="checked" /><span>{{ text_enabled }}</span></label>
+    {% else %}
+    <label><input type="radio" name="c_setting[nm]" value="0" checked="checked" /><span>{{ text_disabled }}</span></label>
+    <label><input type="radio" name="c_setting[nm]" value="1" /><span>{{ text_enabled }}</span></label>
+    {% endif %}
+    </div>                   
+    </div>
+    
+    <div class="form-group">
+    <label class="col-sm-3 control-label">{{ text_equal_height }}</label>
+    <div class="col-sm-9 toggle-btn">
+    {% if c_setting.eh %}
+    <label><input type="radio" name="c_setting[eh]" value="0" /><span>{{ text_disabled }}</span></label>
+    <label><input type="radio" name="c_setting[eh]" value="1" checked="checked" /><span>{{ text_enabled }}</span></label>
+    {% else %}
+    <label><input type="radio" name="c_setting[eh]" value="0" checked="checked" /><span>{{ text_disabled }}</span></label>
+    <label><input type="radio" name="c_setting[eh]" value="1" /><span>{{ text_enabled }}</span></label>
+    {% endif %}
+    </div>                   
+    </div>
+    
+    </div> <!-- .left-side -->
+    
+    
+    <div class="right-side">
+    <legend>{{ text_content_columns }}</legend>
+    
+    
+    
+    <ul class="list-unstyled" id="column_tabs">
+    {% set column_row = 1 %}
+    {% for column in columns %}
+    <li><a href="#tab-column-{{ column_row }}" data-toggle="tab">{{ text_column }} {{ column_row }} <i class="fa fa-minus-circle" onclick="$('a[href=\'#tab-column-{{ column_row }}\']').parent().remove(); $('#tab-column-{{ column_row }}').remove(); $('#column_tabs a:first').tab('show');"></i></a></li>
+    {% set column_row = column_row + 1 %}
+    {% endfor %}
+    <li id="column-add" style="cursor:pointer"><a onclick="addColumn();"><i class="fa fa-plus-circle"></i> {{ text_add_column }}</a></li> 
+    </ul>
+    
+
+    <div class="tab-content column-holder">
+    
+    {% set column_row = 1 %}
+    
+    {% for column in columns %}
+    <div class="tab-pane" id="tab-column-{{ column_row }}">
+    
+    <div class="form-group">
+    <label class="col-sm-3 control-label">{{ text_column_width }}</label>
+    <div class="col-sm-9">
+    <select name="columns[{{ column_row }}][w]" class="form-control" onchange="set_width($(this).val(),'{{ column_row }}')">
+    {% for key, column_width in column_widths %}
+    <option value="{{ key }}"{% if column.w == key %} selected="selected"{% endif %}>{{ column_width }}</option>
+    {% endfor %}
+    </select>
+    </div>
+    </div> <!-- form-group ends -->
+    
+    
+    <div class="form-group" id="custom-width-{{ column_row }}" style="display:{% if column.w == 'custom' %}block{% else %}none{% endif %}">
+    <label class="col-sm-3 control-label">{{ text_width_per_device }}</label>
+    <div class="col-sm-9">
+    <i class="fa fa-2x fa-mobile"></i>&nbsp;
+    <select name="columns[{{ column_row }}][w_sm]" class="form-control inline">
+    {% for key, sm_width in sm_widths %}
+    <option value="{{ key }}"{% if column.w_sm == key %} selected="selected"{% endif %}>{{ sm_width }}</option>
+    {% endfor %}
+    </select>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    
+    <i class="fa fa-2x fa-tablet"></i>&nbsp;
+    <select name="columns[{{ column_row }}][w_md]" class="form-control inline">
+    {% for key, md_width in md_widths %}
+    <option value="{{ key }}"{% if column.w_md == key %} selected="selected"{% endif %}>{{ md_width }}</option>
+    {% endfor %}
+    </select>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    
+    <i class="fa fa-2x fa-desktop"></i>&nbsp;
+    <select name="columns[{{ column_row }}][w_lg]" class="form-control inline">
+    {% for key, lg_width in lg_widths %}
+    <option value="{{ key }}"{% if column.w_lg == key %} selected="selected"{% endif %}>{{ lg_width }}</option>
+    {% endfor %}
+    </select>      
+    </div>
+    </div> <!-- form-group ends -->
+    
+    <div class="form-group">
+    <label class="col-sm-3 control-label">{{ text_type }}</label>
+    <div class="col-sm-9">
+    <select name="columns[{{ column_row }}][type]" class="form-control" onchange="set_type($(this).val(),'{{ column_row }}')" id="type-select-{{ column_row }}">
+    {% if column.type == 'html' %}
+    <option value="html" selected="selected">{{ text_html }}</option>
+    {% else %}
+    <option value="html">{{ text_html }}</option>
+    {% endif %}
+    {% if column.type == 'img' %}
+    <option value="img" selected="selected">{{ text_banner }}</option>
+    {% else %}
+    <option value="img">{{ text_banner }}</option>
+    {% endif %}
+    {% if column.type == 'tm' %}
+    <option value="tm" selected="selected">{{ text_testimonial }}</option>
+    {% else %}
+    <option value="tm">{{ text_testimonial }}</option>
+    {% endif %}
+    </select>
+    </div>
+    </div> <!-- form-group ends -->
+    
+    <div id="data-holder-{{ column_row }}">
+    
+    {% if column.type == 'html' %}
+    <legend>{{ text_title_htm }}</legend>
+    <div class="form-group">
+    <label class="col-sm-3 control-label">{{ text_position }}</label>
+    <div class="col-sm-9"> 
+    <select name="columns[{{ column_row }}][data7]" class="form-control">
+    {% for key, overlay_position in overlay_positions %}
+    <option value="{{ key }}"{% if column.data7 == key %}selected="selected"{% endif %}>{{ overlay_position }}</option>
+    {% endfor %}
+    </select>
+    </div>
+    </div> <!-- form-group ends -->
+    
+    <div class="tab-pane">
+    <div class="col-sm-offset-3 language-tabs-holder">
+    <ul class="nav nav-tabs" id="tabs-{{ column_row }}">
+    {% for language in languages %}
+    <li><a href="#tab-{{ column_row }}-{{ language.language_id }}" data-toggle="tab"><img src="language/{{ language.code }}/{{ language.code }}.png" title="{{ language.name }}" /> {{ language.name }}</a></li>
+    {% endfor %}
+    </ul>
+    </div>
+    <div class="tab-content">
+    {% for language in languages %}
+    <div class="tab-pane" id="tab-{{ column_row }}-{{ language.language_id }}">
+    <div class="form-group">
+      <label class="col-sm-3 control-label">{{ text_html_content }}<br />
+      <a id="enable_editor-{{ column_row }}-{{ language.language_id }}-1" class="editor-link-{{ column_row }}-1" onclick="enable_editor('{{ column_row }}', '{{ language.language_id }}', '1')"><small>{{ text_enable_editor }}</small></a><br />
+      <a class="icon_list"><small>{{ text_view_icons }}</small></a><br />
+      <a class="shortcode_list"><small>{{ text_view_shortcodes }}</small></a></label>
+      <div class="col-sm-9">
+        <textarea name="columns[{{ column_row }}][data1][{{ language.language_id }}]" class="form-control content-block template-reciever-{{ column_row }}-1" id="textarea-{{ column_row }}-{{ language.language_id }}-1">{{ column.data1[language.language_id] ?column.data1[language.language_id] }}</textarea>
+      </div>
+    </div>
+    </div>
+    {% endfor %}
+    </div>
+    </div>
+    {% endif %}
+    
+    
+    {% if column.type == 'tm' %}
+    <legend>{{ text_title_testimonial }}</legend>
+    <div class="form-group">
+    <label class="col-sm-3 control-label">{{ text_limit }}</label>
+    <div class="col-sm-9"> 
+    <input type="text" class="form-control" name="columns[{{ column_row }}][data1]" value="{{ column.data1 ? column.data1 : '3' }}" />
+    </div>
+    </div> <!-- form-group ends -->
+    
+    <div class="form-group">
+    <label class="col-sm-3 control-label">{{ text_tm_columns }}</label>
+    <div class="col-sm-9"> 
+    <select name="columns[{{ column_row }}][data7]" class="form-control">
+    {% if column.data7 == '1' %}
+    <option value="1" selected="selected">1</option>
+    {% else %}
+    <option value="1">1</option>
+    {% endif %}
+    {% if column.data7 == '2' %}
+    <option value="2" selected="selected">2</option>
+    {% else %}
+    <option value="2">2</option>
+    {% endif %}
+    {% if column.data7 == '3' %}
+    <option value="3" selected="selected">3</option>
+    {% else %}
+    <option value="3">3</option>
+    {% endif %}
+    </select>
+    </div>
+    </div> <!-- form-group ends -->
+    
+    <div class="form-group">
+    <label class="col-sm-3 control-label">{{ text_tm_style }}</label>
+    <div class="col-sm-9"> 
+    <select name="columns[{{ column_row }}][data8]" class="form-control">
+    {% if column.data8 == 'plain' %}
+    <option value="plain" selected="selected">{{ text_tm_style_plain }}</option>
+    {% else %}
+    <option value="plain">{{ text_tm_style_plain }}</option>
+    {% endif %}
+    {% if column.data8 == 'light plain' %}
+    <option value="light plain" selected="selected">{{ text_tm_style_plain_light }}</option>
+    {% else %}
+    <option value="light plain">{{ text_tm_style_plain_light }}</option>
+    {% endif %}
+    {% if column.data8 == 'block' %}
+    <option value="block" selected="selected">{{ text_tm_style_block }}</option>
+    {% else %}
+    <option value="block">{{ text_tm_style_block }}</option>
+    {% endif %}
+    </select>
+    </div>
+    </div> <!-- form-group ends -->
+    
+    {% endif %}
+    
+    
+    
+    {% if column.type == 'img' %}
+    <legend>{{ text_title_banner }}</legend>
+
+    <div class="form-group">
+    <label class="col-sm-3 control-label">{{ text_banner }}</label>
+    <div class="col-sm-9"> 
+    <a id="thumb-image{{ column_row }}" data-toggle="image" class="img-thumbnail">
+    <img src="{{ column.image ? column.image : placeholder }}" data-placeholder="{{ placeholder }}" /></a>
+    <input type="hidden" name="columns[{{ column_row }}][data2]" value="{{ column.data2 ? column.data2 }}" id="input-image{{ column_row }}" />
+    </div>
+    </div> <!-- form-group ends -->
+    
+    <div class="form-group">
+    <label class="col-sm-3 control-label">{{ text_link_target }}</label>
+    <div class="col-sm-9"> 
+    <input type="text" class="form-control" name="columns[{{ column_row }}][data5]" value="{{ column.data5 ? column.data5 }}" />
+    </div>
+    </div> <!-- form-group ends -->
+    
+    <legend class="sub">{{ text_banner_overlay }}</legend>
+    
+    <div class="form-group">
+    <label class="col-sm-3 control-label">{{ text_position_banner }}</label>
+    <div class="col-sm-9"> 
+    <select name="columns[{{ column_row }}][data7]" class="form-control">
+    {% for key, overlay_position in overlay_positions %}
+    <option value="{{ key }}"{% if column.data7 == key %}selected="selected"{% endif %}>{{ overlay_position }}</option>
+    {% endfor %}
+    </select>
+    </div>
+    </div> <!-- form-group ends -->
+    
+    <div class="tab-pane">
+    <div class="col-sm-offset-3 language-tabs-holder">
+    <ul class="nav nav-tabs" id="tabs-{{ column_row }}">
+    {% for language in languages %}
+    <li><a href="#tab-{{ column_row }}-{{ language.language_id }}" data-toggle="tab"><img src="language/{{ language.code }}/{{ language.code }}.png" title="{{ language.name }}" /> {{ language.name }}</a></li>
+    {% endfor %}
+    </ul>
+    </div>
+    <div class="tab-content">
+    {% for language in languages %}
+    <div class="tab-pane" id="tab-{{ column_row }}-{{ language.language_id }}">
+    <div class="form-group">
+      <label class="col-sm-3 control-label">{{ text_banner_overlay }}<br /><a class="overlay_list"><small>{{ text_view_overlays }}</small></a></label>
+      <div class="col-sm-9">
+        <textarea name="columns[{{ column_row }}][data1][{{ language.language_id }}]" class="form-control content-block template-reciever-{{ column_row }}-1">{{ column.data1[language.language_id] ?column.data1[language.language_id] }}</textarea>
+      </div>
+    </div>
+    </div>
+    {% endfor %}
+    
+    </div>
+    </div>
+    
+    <a class="btn btn-primary btn-block banner-btn-{{ column_row }}" style="margin:20px 20px 10px 20px;display:{% if column.data4 %}none{% else %}block{% endif %}" onclick="add_second_banner('{{ column_row }}');">{{ text_btn_add_banner }}</a>
+  
+    
+    <div class="banner2-holder-{{ column_row }}">
+    {% if column.data4 %}
+    <legend>{{ text_title_banner2 }} <a class="remove_second_banner" onclick="remove_second_banner('{{ column_row }}');">[{{ text_remove_banner }}]</a></legend>
+    <div class="form-group">
+    <label class="col-sm-3 control-label">{{ text_banner }}</label>
+    <div class="col-sm-9"> 
+    <a id="thumb-image2{{ column_row }}" data-toggle="image" class="img-thumbnail">
+    <img src="{{ column.image2 ? column.image2 : placeholder }}" data-placeholder="{{ placeholder }}" /></a>
+    <input type="hidden" name="columns[{{ column_row }}][data4]" value="{{ column.data4 ? column.data4 }}" id="input-image2{{ column_row }}" />
+    </div>
+    </div> <!-- form-group ends -->
+    
+    <div class="form-group">
+    <label class="col-sm-3 control-label">{{ text_link_target }}</label>
+    <div class="col-sm-9"> 
+    <input type="text" class="form-control" name="columns[{{ column_row }}][data6]" value="{{ column.data6 ? column.data6 }}" />
+    </div>
+    </div> <!-- form-group ends -->
+    
+    <legend class="sub">{{ text_banner_overlay }}</legend>
+    
+    <div class="form-group">
+    <label class="col-sm-3 control-label">{{ text_position_banner }}</label>
+    <div class="col-sm-9"> 
+    <select name="columns[{{ column_row }}][data8]" class="form-control">
+    {% for key, overlay_position in overlay_positions %}
+    <option value="{{ key }}"{% if column.data8 == key %}selected="selected"{% endif %}>{{ overlay_position }}</option>
+    {% endfor %}
+    </select>
+    </div>
+    </div> <!-- form-group ends -->
+    
+    <div class="tab-pane">
+    <div class="col-sm-offset-3 language-tabs-holder">
+    <ul class="nav nav-tabs" id="tabs2-{{ column_row }}">
+    {% for language in languages %}
+    <li><a href="#tab2-{{ column_row }}-{{ language.language_id }}" data-toggle="tab"><img src="language/{{ language.code }}/{{ language.code }}.png" title="{{ language.name }}" /> {{ language.name }}</a></li>
+    {% endfor %}
+    </ul>
+    </div>
+    <div class="tab-content">
+    {% for language in languages %}
+    <div class="tab-pane" id="tab2-{{ column_row }}-{{ language.language_id }}">
+    <div class="form-group">
+    <label class="col-sm-3 control-label">{{ text_banner_overlay }}<br /><a class="overlay_list"><small>{{ text_view_overlays }}</small></a></label>
+    <div class="col-sm-9">
+    <textarea name="columns[{{ column_row }}][data3][{{ language.language_id }}]" class="form-control content-block template-reciever-{{ column_row }}-2">{{ column.data3[language.language_id] ? column.data3[language.language_id] }}</textarea>
+    </div>
+    </div>
+    </div>
+    {% endfor %}
+    </div>
+    </div>
+    {% endif %}
+    </div>
+    {% endif %}
+    
+    
+
+    </div>
+    </div> <!-- tab-pane ends -->
+    {% set column_row = column_row + 1 %}
+    {% endfor %} <!-- foreach columns ends -->
+    </div> <!-- columns holder ends -->
+    </div> <!-- .right-side -->
+    </div> <!-- .main-content -->
+    </div> <!-- #tab-content -->
+    
+    <div class="tab-pane" id="tab-templates">
+    <div class="template-content">
+    
+    <table class="table table-bordered table-hover">
+    
+    <thead>
+    <td style="width:100%">{{ text_template }}</td>
+    <td class="text-right">{{ text_action }}</td>
+    </thead>
+    
+    {% for template in templates %}
+    <tr>
+    <td class="name" style="width:100%">{{ template.name }}</td>
+    <td style="white-space:nowrap;">
+    <a class="btn btn-primary" data-toggle="tooltip" title="{{ text_preview }}" onclick="template_preview({{ template.template_id }}, '{{ template.name }}');"><i class="fa fa-eye"></i></a>
+    <a class="btn btn-success" data-toggle="tooltip" title="{{ text_import }}" onclick="confirm('{{ text_confirm }}') ? location.href='{{ template.import_url }}' : false;"><i class="fa fa-download"></i></a>
+    </td>
+    </tr>
+    {% endfor %}
+ 
+    </table>
+    
+    </div> <!-- .template-content -->
+    </div> <!-- #tab-templates -->
+    
+    </div>
+
+    </form>
+    </div> <!-- .panel-wrapper -->
+
+   </div>
+
+
+
+<script type="text/javascript"><!--
+// Add Column
+var column_row = {{ column_row }};
+function addColumn() {	
+html  = '<div class="tab-pane" id="tab-column-' + column_row + '">';
+html += '<div class="form-group">';
+html += '<label class="col-sm-3 control-label">{{ text_column_width }}</label>';
+html += '<div class="col-sm-9">';
+html += '<select name="columns[' + column_row + '][w]" onchange="set_width($(this).val(),' + column_row + ');" class="form-control">';
+{% for key, column_width in column_widths %}
+html += '<option value="{{ key }}">{{ column_width }}</option>';
+{% endfor %}
+html += '</select>';
+html += '</div>';
+html += '</div>';
+
+html += '<div class="form-group" id="custom-width-' + column_row + '" style="display:none;">';
+html += '<label class="col-sm-3 control-label">{{ text_width_per_device }}</label>';
+html += '<div class="col-sm-9">';
+html += '<i class="fa fa-2x fa-mobile"></i>&nbsp;';
+html += '<select name="columns[' + column_row + '][w_sm]" class="form-control inline">';
+{% for key, sm_width in sm_widths %}
+html += '<option value="{{ key }}">{{ sm_width }}</option>';
+{% endfor %}
+html += '</select>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+html += '<i class="fa fa-2x fa-tablet"></i>&nbsp;';
+html += '<select name="columns[' + column_row + '][w_md]" class="form-control inline">';
+{% for key, md_width in md_widths %}
+html += '<option value="{{ key }}">{{ md_width }}</option>';
+{% endfor %}
+html += '</select>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+html += '<i class="fa fa-2x fa-desktop"></i>&nbsp;';
+html += '<select name="columns[' + column_row + '][w_lg]" class="form-control inline">';
+{% for key, lg_width in lg_widths %}
+html += '<option value="{{ key }}">{{ lg_width }}</option>';
+{% endfor %}
+html += '</select>';
+html += '</div>';
+html += '</div>';
+
+html += '<div class="form-group">';
+html += '<label class="col-sm-3 control-label">{{ text_type }}</label>';
+html += '<div class="col-sm-9">';
+html += '<select name="columns[' + column_row + '][type]" onchange="set_type($(this).val(),' + column_row + ');" id="type-select-' + column_row + '" class="form-control">';
+html += '<option>{{ text_select_type }}</option>';
+html += '<option value="html">{{ text_html }}</option>';
+html += '<option value="img">{{ text_banner }}</option>';
+html += '<option value="tm">{{ text_testimonial }}</option>';
+html += '</select>';
+html += '</div>';
+html += '</div>';
+
+html += '<div id="data-holder-' + column_row + '">';
+html += '</div>';
+
+html += '</div>';        
+
+$('.tab-content.column-holder').append(html);
+	
+$('#column-add').before('<li><a href="#tab-column-' + column_row + '" data-toggle="tab"> {{ text_column }} ' + column_row + ' <i class="fa fa-minus-circle" onclick="$(\'a[href=\\\'#tab-column-' + column_row + '\\\']\').parent().remove(); $(\'#tab-column-' + column_row + '\').remove(); $(\'#column_tabs a:first\').tab(\'show\');"></i></a></li>');
+
+$('#column_tabs a[href=\'#tab-column-' + column_row + '\']').tab('show');
+// Fix Bootstrap Tooltip
+$('[data-toggle=\'tooltip\']').tooltip({container: 'body'});
+column_row++;
+}
+//--></script>
+
+<script type="text/javascript"><!--
+// Set content type
+var set_type = function(type, column_row) {
+
+if( type == 'html' ) {
+html = '<legend>{{ text_title_htm }}</legend>';
+html += '<div class="form-group">';
+html += '<label class="col-sm-3 control-label">{{ text_overlay_position }}</label>';
+html += '<div class="col-sm-9">';
+html += '<select name="columns[' + column_row + '][data7]" class="form-control">';
+{% for key, overlay_position in overlay_positions %}
+html += '<option value="{{ key }}">{{ overlay_position }}</option>';
+{% endfor %}
+html += '</select>';
+html += '</div>';
+html += '</div>';
+html += '<div class="tab-pane">';
+html += '<div class="col-sm-offset-3 language-tabs-holder">';
+html += '<ul class="nav nav-tabs" id="tabs-' + column_row + '">';
+{% for language in languages %}
+html += '<li><a href="#tab-' + column_row + '{{ language.language_id }}" data-toggle="tab"><img src="language/{{ language.code }}/{{ language.code }}.png" title="{{ language.name }}" /> {{ language.name }}</a></li>';
+{% endfor %}
+html += '</ul>';
+html += '</div>';
+html += '<div class="tab-content">';
+{% for language in languages %}
+html += '<div class="tab-pane" id="tab-' + column_row + '{{ language.language_id }}">';
+html += '<div class="form-group">';
+html += '<label class="col-sm-3 control-label">{{ text_html_content }}<br /><a id="enable_editor-' + column_row + '-{{ language.language_id }}-1"  class="editor-link-' + column_row + '-1" onclick="enable_editor(' + column_row + ', {{ language.language_id }},1);"><small>{{ text_enable_editor }}</small></a><br /><a class="icon_list"><small>{{ text_view_icons }}</small></a><br><a class="shortcode_list"><small>{{ text_view_shortcodes }}</small></a></label>';
+html += '<div class="col-sm-9">';
+html += '<textarea name="columns[' + column_row + '][data1][{{ language.language_id }}]" id="textarea-' + column_row + '-{{ language.language_id }}-1" class="form-control content-block template-reciever-' + column_row + '-1"></textarea>';
+html += '</div>';
+html += '</div>';
+html += '</div>';
+{% endfor %}
+html += '</div>';
+html += '</div>';
+}
+
+if( type == 'img' ) {
+html = '<legend>{{ text_title_banner }}</legend>';
+html += '<div class="form-group">';
+html += '<label class="col-sm-3 control-label">{{ text_banner }}</label>';
+html += '<div class="col-sm-9">';
+html += '<a href="" id="thumb-image' + column_row + '" data-toggle="image" class="img-thumbnail"><img src="{{ placeholder }}" data-placeholder="{{ placeholder }}" /></a>';
+html += '<input type="hidden" name="columns[' + column_row + '][data2]" value="" id="input-image' + column_row + '" />';
+html += '</div>';
+html += '</div>';
+
+html += '<div class="form-group">';
+html += '<label class="col-sm-3 control-label">{{ text_link_target }}</label>';
+html += '<div class="col-sm-9">';
+html += '<input type="text" class="form-control" name="columns[' + column_row + '][data5]"/>';
+html += '</div>';
+html += '</div>';
+
+html += '<legend class="sub">{{ text_banner_overlay }}</legend>';
+
+html += '<div class="form-group">';
+html += '<label class="col-sm-3 control-label">{{ text_position_banner }}</label>';
+html += '<div class="col-sm-9">';
+html += '<select name="columns[' + column_row + '][data7]" class="form-control">';
+{% for key, overlay_position in overlay_positions %}
+html += '<option value="{{ key }}">{{ overlay_position }}</option>';
+{% endfor %}
+html += '</select>';
+html += '</div>';
+html += '</div>';
+			
+html += '<div class="tab-pane">';
+html += '<div class="col-sm-offset-3 language-tabs-holder">';
+html += '<ul class="nav nav-tabs" id="tabs-' + column_row + '">';
+{% for language in languages %}
+html += '<li><a href="#tab-' + column_row + '{{ language.language_id }}" data-toggle="tab"><img src="language/{{ language.code }}/{{ language.code }}.png" title="{{ language.name }}" /> {{ language.name }}</a></li>';
+{% endfor %}
+html += '</ul>';
+html += '</div>';
+html += '<div class="tab-content">';
+{% for language in languages %}
+html += '<div class="tab-pane" id="tab-' + column_row + '{{ language.language_id }}">';
+html += '<div class="form-group">';
+html += '<label class="col-sm-3 control-label">{{ text_banner_overlay }}<br /><a class="overlay_list"><small>{{ text_view_overlays }}</small></a></label>';
+html += '<div class="col-sm-9">';
+html += '<textarea name="columns[' + column_row + '][data1][{{ language.language_id }}]" id="textarea-' + column_row + '-{{ language.language_id }}-1" class="form-control content-block template-reciever-' + column_row + '-1"></textarea>';
+html += '</div>';
+html += '</div>';
+html += '</div>';
+{% endfor %}
+html += '</div>';
+html += '</div>';
+
+html += '<a style="margin:20px 20px 10px 20px" class="btn btn-primary btn-block banner-btn-' + column_row + '" onclick="add_second_banner(' + column_row + ');">{{ text_btn_add_banner }}</a>';
+
+html += '<div class="banner2-holder-' + column_row + '"';
+html += '</div>';
+}
+
+if( type == 'tm' ) {
+html = '<legend>{{ text_title_testimonial }}</legend>';
+html += '<div class="form-group">';
+html += '<label class="col-sm-3 control-label">{{ text_limit }}</label>';
+html += '<div class="col-sm-9">';
+html += '<input type="text" class="form-control" name="columns[' + column_row + '][data1]" value="3"/>';
+html += '</div>';
+html += '</div>';
+
+html += '<div class="form-group">';
+html += '<label class="col-sm-3 control-label">{{ text_tm_columns }}</label>';
+html += '<div class="col-sm-9">';
+html += '<select name="columns[' + column_row + '][data7]" class="form-control">';
+html += '<option value="1">1</option>';
+html += '<option value="2">2</option>';
+html += '<option value="3">3</option>';
+html += '</select>';
+html += '</div>';
+html += '</div>';
+
+html += '<div class="form-group">';
+html += '<label class="col-sm-3 control-label">{{ text_tm_style }}</label>';
+html += '<div class="col-sm-9">';
+html += '<select name="columns[' + column_row + '][data8]" class="form-control">';
+html += '<option value="plain">{{ text_tm_style_plain }}</option>';
+html += '<option value="light plain">{{ text_tm_style_plain_light }}</option>';
+html += '<option value="block">{{ text_tm_style_block }}</option>';
+html += '</select>';
+html += '</div>';
+html += '</div>';
+}
+
+$('#data-holder-' + column_row + '').html(html);
+$('#tabs-' + column_row + ' a:first').tab('show');
+// Fix Bootstrap Tooltip
+$('[data-toggle=\'tooltip\']').tooltip({container: 'body'});
+}
+//--></script>
+<script type="text/javascript"><!--
+// Set content type
+var set_template = function(template, column_row, number) {
+		{% for language in languages %}
+		$('#textarea-' + column_row + '-{{ language.language_id }}-' + number + '').summernote('destroy');
+		{% endfor %}
+		$('.editor-link-' + column_row + '-' + number + '').text('{{ text_enable_editor }}').removeClass('active');
+		$('.template-reciever-' + column_row + '-' + number + '').val(template);
+	
+}
+// Set column width
+var set_width = function(width,column_row) {
+	if (width == 'custom') {
+		$('#custom-width-' + column_row + '').css('display', 'block');
+	} else {
+		$('#custom-width-' + column_row + '').css('display', 'none');
+	}
+}
+var enable_editor = function(column_row, lang_id, number) {
+	if ( $('#enable_editor-' + column_row + '-' + lang_id + '-' + number + '').hasClass('active') ) {
+		$('#enable_editor-' + column_row + '-' + lang_id + '-' + number + '').text('{{ text_enable_editor }}').removeClass('active');
+		$('#textarea-' + column_row + '-' + lang_id + '-' + number + '').summernote('destroy');
+		
+	} else {
+		$('#enable_editor-' + column_row + '-' + lang_id + '-' + number + '').text('{{ text_disable_editor }}').addClass('active');
+
+		$('#textarea-' + column_row + '-' + lang_id + '-' + number + '').summernote({
+			disableDragAndDrop: true,
+			styleWithSpan: false,
+			height: 300,
+			emptyPara: '',
+			codemirror: { // codemirror options
+				mode: 'text/html',
+				htmlMode: true,
+				lineNumbers: true,
+				theme: 'monokai'
+			},			
+			fontsize: ['8', '9', '10', '11', '12', '14', '16', '18', '20', '24', '30', '36', '48' , '64'],
+			toolbar: [
+				['style', ['style']],
+				['font', ['bold', 'underline', 'clear']],
+				['fontname', ['fontname']],
+				['fontsize', ['fontsize']],
+				['color', ['color']],
+				['para', ['ul', 'ol', 'paragraph']],
+				['table', ['table']],
+				['insert', ['link', 'image', 'video']],
+				['view', ['fullscreen', 'codeview', 'help']]
+			],
+			callbacks: {
+					onPaste: function (e) {
+					var bufferText = ((e.originalEvent || e).clipboardData || window.clipboardData).getData('Text');
+					e.preventDefault();
+					document.execCommand('insertText', false, bufferText);
+					}
+            },
+			popover: {
+           		image: [
+					['custom', ['imageAttributes']],
+					['imagesize', ['imageSize100', 'imageSize50', 'imageSize25']],
+					['float', ['floatLeft', 'floatRight', 'floatNone']],
+					['remove', ['removeMedia']]
+				],
+			},
+			buttons: {
+    			image: function() {
+					var ui = $.summernote.ui;
+					// create button
+					var button = ui.button({
+						contents: '<i class="fa fa-image" />',
+						tooltip: $.summernote.lang[$.summernote.options.lang].image.image,
+						click: function () {
+							$('#modal-image').remove();
+							$.ajax({
+								url: 'index.php?route=common/filemanager&user_token=' + getURLVar('user_token'),
+								dataType: 'html',
+								beforeSend: function() {
+									$('#button-image i').replaceWith('<i class="fa fa-circle-o-notch fa-spin"></i>');
+									$('#button-image').prop('disabled', true);
+								},
+								complete: function() {
+									$('#button-image i').replaceWith('<i class="fa fa-upload"></i>');
+									$('#button-image').prop('disabled', false);
+								},
+								success: function(html) {
+									$('body').append('<div id="modal-image" class="modal">' + html + '</div>');
+									$('#modal-image').modal('show');
+									//$('#modal-image a.thumbnail').on('click', function(e) {
+									$('#modal-image').on('click', 'a.thumbnail', function(e) {
+										e.preventDefault();
+										$(textarea).summernote('insertImage', $(this).attr('href'));
+										$('#modal-image').modal('hide');
+								});}});}});
+				return button.render();
+		}}});
+	}
+}
+var add_second_banner = function(column_row) {
+html = 	'<legend>{{ text_title_banner2 }}'; 
+html += '<a class="remove_second_banner" onclick="remove_second_banner(' + column_row + ');">[{{ text_remove_banner }}]</a>';
+html += '</legend>';
+
+html += '<div class="form-group">';
+html += '<label class="col-sm-3 control-label">{{ text_banner }}</label>';
+html += '<div class="col-sm-9">';
+html += '<a href="" id="thumb-image2' + column_row + '" data-toggle="image" class="img-thumbnail"><img src="{{ placeholder }}" data-placeholder="{{ placeholder }}" /></a>';
+html += '<input type="hidden" name="columns[' + column_row + '][data4]" value="" id="input-image2' + column_row + '" />';
+html += '</div>';
+html += '</div>';
+
+html += '<div class="form-group">';
+html += '<label class="col-sm-3 control-label">{{ text_link_target }}</label>';
+html += '<div class="col-sm-9">';
+html += '<input type="text" class="form-control" name="columns[' + column_row + '][data6]"/>';
+html += '</div>';
+html += '</div>';
+
+html += '<legend class="sub">{{ text_banner_overlay }}</legend>';
+
+html += '<div class="form-group">';
+html += '<label class="col-sm-3 control-label">{{ text_position_banner }}</label>';
+html += '<div class="col-sm-9">';
+html += '<select name="columns[' + column_row + '][data8]" class="form-control">';
+{% for key, overlay_position in overlay_positions %}
+html += '<option value="{{ key }}">{{ overlay_position }}</option>';
+{% endfor %}
+html += '</select>';
+html += '</div>';
+html += '</div>';
+
+html += '<div class="tab-pane">';
+html += '<div class="col-sm-offset-3 language-tabs-holder">';
+html += '<ul class="nav nav-tabs" id="tabs2-' + column_row + '">';
+{% for language in languages %}
+html += '<li><a href="#tab2-' + column_row + '{{ language.language_id }}" data-toggle="tab"><img src="language/{{ language.code }}/{{ language.code }}.png" title="{{ language.name }}" /> {{ language.name }}</a></li>';
+{% endfor %}
+html += '</ul>';
+html += '</div>';
+html += '<div class="tab-content">';
+{% for language in languages %}
+html += '<div class="tab-pane" id="tab2-' + column_row + '{{ language.language_id }}">';
+html += '<div class="form-group">';
+html += '<label class="col-sm-3 control-label">{{ text_banner_overlay }}<br /><a class="overlay_list"><small>{{ text_view_overlays }}</small></a></label>';
+html += '<div class="col-sm-9">';
+html += '<textarea name="columns[' + column_row + '][data3][{{ language.language_id }}]" id="textarea-' + column_row + '-{{ language.language_id }}-2" class="form-control content-block template-reciever-' + column_row + '-2"></textarea>';
+html += '</div>';
+html += '</div>';
+html += '</div>';
+{% endfor %}
+html += '</div>';
+html += '</div>';
+
+$('.banner2-holder-' + column_row + '').html(html);
+$('#tabs2-' + column_row + ' a:first').tab('show');
+$('.banner-btn-' + column_row + '').css('display', 'none');
+// Fix Bootstrap Tooltip
+$('[data-toggle=\'tooltip\']').tooltip({container: 'body'});
+}
+var remove_second_banner = function(column_row) {
+$('.banner2-holder-' + column_row + '').html('');
+$('.banner-btn-' + column_row + '').css('display', 'block');
+}
+//--></script>
+<script type="text/javascript">
+/* HTML templates popup */
+var template_preview = function(template, name) {
+	$.ajax({
+		type: 'get',
+		dataType: 'html',
+		success: function(data) {
+			html  = '<div id="modal-' + template + '" class="modal content">';
+			html += '  <div class="modal-dialog">';
+			html += '    <div class="modal-content">';
+			html += '      <div class="modal-header">';
+			html += '        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>';
+			html += '        <h4 class="modal-title">{{ text_preview_template }}: ' + name + '</h4>';
+			html += '      </div>';
+			html += '      <div class="modal-body"><img src="view/javascript/basel/content_templates/' + template + '/preview.png"</div>';
+			html += '    </div';
+			html += '  </div>';
+			html += '</div>';
+			$('body').append(html);
+			$('#modal-' + template + '').modal('show');
+		}
+	});
+}
+$(document).delegate('.icon_list', 'click', function(e) {
+	e.preventDefault();
+	$.ajax({
+		type: 'get',
+		dataType: 'html',
+		success: function(data) {
+			html  = '<div id="modal-icons" class="modal content">';
+			html += '  <div class="modal-dialog">';
+			html += '    <div class="modal-content">';
+			html += '      <div class="modal-header">';
+			html += '        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>';
+			html += '        <h4 class="modal-title">{{ text_icons_list }}</h4>';
+			html += '      </div>';
+			html += '      <div class="modal-body" style="padding:30px 0;"><iframe src="view/javascript/basel/icons_list/icon_list.html" width="1240" height="560" frameborder="0" allowtransparency="true"></iframe></div>';
+			html += '    </div';
+			html += '  </div>';
+			html += '</div>';
+			$('body').append(html);
+			$('#modal-icons').modal('show');
+		}
+	});
+});
+$(document).delegate('.shortcode_list', 'click', function(e) {
+	e.preventDefault();
+	$.ajax({
+		type: 'get',
+		dataType: 'html',
+		success: function(data) {
+			html  = '<div id="modal-shortcode" class="modal content">';
+			html += '  <div class="modal-dialog">';
+			html += '    <div class="modal-content">';
+			html += '      <div class="modal-header">';
+			html += '        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>';
+			html += '        <h4 class="modal-title">Shortcodes</h4>';
+			html += '      </div>';
+			html += '      <div class="modal-body"><iframe src="view/javascript/basel/shortcode_list/shortcode_list.html" width="1240" height="560" frameborder="0" allowtransparency="true"></iframe></div>';
+			html += '    </div';
+			html += '  </div>';
+			html += '</div>';
+			$('body').append(html);
+			$('#modal-shortcode').modal('show');
+		}
+	});
+});
+$(document).delegate('.overlay_list', 'click', function(e) {
+	e.preventDefault();
+	$.ajax({
+		type: 'get',
+		dataType: 'html',
+		success: function(data) {
+			html  = '<div id="modal-overlay" class="modal content">';
+			html += '  <div class="modal-dialog">';
+			html += '    <div class="modal-content">';
+			html += '      <div class="modal-header">';
+			html += '        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>';
+			html += '        <h4 class="modal-title">Banner overlay examples</h4>';
+			html += '      </div>';
+			html += '      <div class="modal-body"><iframe src="view/javascript/basel/overlay_list/overlay_list.html" width="1240" height="560" frameborder="0" allowtransparency="true"></iframe></div>';
+			html += '    </div';
+			html += '  </div>';
+			html += '</div>';
+			$('body').append(html);
+			$('#modal-overlay').modal('show');
+		}
+	});
+});
+//--></script>
+<script type="text/javascript"><!--
+// Import ready made templates
+$('.margin_select').on('change', function() {
+  	if ($(this).val() == '1') {
+		$('#custom_margin_field').css('display', 'block');
+	} else {
+		$('#custom_margin_field').css('display', 'none');
+	}
+});
+$('.bg_color_select').on('change', function() {
+  	if ($(this).val() == '1') {
+		$('#background_color_field').css('display', 'block');
+	} else {
+		$('#background_color_field').css('display', 'none');
+	}
+});
+$('.color_field').colorpicker({
+sliders: {
+saturation: {
+	maxLeft: 150,
+	maxTop: 150},
+	hue: { maxTop: 150},
+	alpha: { maxTop: 150}
+	}
+});
+
+$('.bg_image_select').on('change', function() {
+  	if ($(this).val() == '1') {
+		$('.background_image_field').css('display', 'block');
+	} else {
+		$('.background_image_field').css('display', 'none');
+	}
+});
+$('.bg_video_select').on('change', function() {
+  	if ($(this).val() == '1') {
+		$('#background_video_field').css('display', 'block');
+	} else {
+		$('#background_video_field').css('display', 'none');
+	}
+});
+$('.title_select').on('change', function() {
+  	if ($(this).val() == '1') {
+		$('.title_field').css('display', 'block');
+	} else {
+		$('.title_field').css('display', 'none');
+	}
+});
+$('.c_css_select').on('change', function() {
+  	if ($(this).val() == '1') {
+		$('#content_css_field').css('display', 'block');
+	} else {
+		$('#content_css_field').css('display', 'none');
+	}
+});
+$('.b_css_select').on('change', function() {
+  	if ($(this).val() == '1') {
+		$('#block_css_field').css('display', 'block');
+	} else {
+		$('#block_css_field').css('display', 'none');
+	}
+});
+//--></script>
+<script type="text/javascript"><!--
+$('#column_tabs li:first-child a').tab('show');
+var column_row = 1;
+{% for column in columns %}
+$('#tabs-' + column_row + ' li:first-child a').tab('show');
+$('#tabs2-' + column_row + ' li:first-child a').tab('show');
+column_row++;
+{% endfor %}
+//--></script> 
+</div>
+<link href="view/javascript/codemirror/lib/codemirror.css" rel="stylesheet" />
+<link href="view/javascript/codemirror/theme/monokai.css" rel="stylesheet" />
+<script type="text/javascript" src="view/javascript/codemirror/lib/codemirror.js"></script> 
+<script type="text/javascript" src="view/javascript/codemirror/lib/xml.js"></script> 
+<script type="text/javascript" src="view/javascript/codemirror/lib/formatting.js"></script> 
+<script type="text/javascript" src="view/javascript/summernote/summernote.js"></script>
+<link href="view/javascript/summernote/summernote.css" rel="stylesheet" />
+<script type="text/javascript" src="view/javascript/summernote/summernote-image-attributes.js"></script>
+<script type="text/javascript" src="view/javascript/summernote/opencart.js"></script>
+{{ footer }}

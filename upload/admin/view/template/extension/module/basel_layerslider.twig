@@ -1,0 +1,1577 @@
+{{ header }}
+{% if contrast_color %}
+<style>
+.slide-preview-wrapper .btn-contrast, 
+.slide-preview-wrapper a.btn-contrast, 
+.slide-preview-wrapper .btn-contrast-outline:hover {
+	background-color:{{ contrast_color }};
+}
+.slide-preview-wrapper .btn-contrast-outline {
+	border-color:{{ contrast_color }};
+	color:{{ contrast_color }};
+}
+</style>
+{% endif %}
+{{ column_left }}
+<div id="content" class="{% if fullwidth %}fullwidth{% endif %}">
+ <div class="page-header">
+  <div class="container-fluid">
+  <div class="pull-right">
+  {% if has_module_id %}
+  <a class="btn btn-success" onclick="$('#save').val('stay');$('#form-layerslider').submit();">{{ button_save_stay }}</a>
+  {% endif %}
+  <button type="submit" form="form-layerslider" class="btn btn-primary">{{ button_save }}</button>
+  <a href="{{ cancel }}" class="btn btn-default">{{ button_cancel }}</a>
+  </div>
+  
+      	<h1>{{ heading_title }}</h1>
+      	<ul class="breadcrumb">
+        {% for breadcrumb in breadcrumbs %}
+        <li><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+        {% endfor %}
+       </ul>
+      </div>
+     </div>
+
+    <div class="container-fluid">
+    
+    <!-- Notification messages -->
+    {% if error_warning %}
+    <div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i> {{ error_warning }}
+    <button type="button" class="close" data-dismiss="alert">&times;</button>
+    </div>
+    {% endif %}
+    {% if success %}
+    <div class="alert alert-success"><i class="fa fa-check"></i> {{ success }}
+    <button type="button" class="close" data-dismiss="alert">&times;</button>
+    </div>
+    {% endif %}
+    
+     <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title"><i class="fa fa-pencil"></i> {{ text_edit }}</h3>
+      </div>
+      <div class="panel-body">
+        
+        <form action="{{ action }}" method="post" enctype="multipart/form-data" id="form-layerslider" class="">
+        <input type="hidden" name="save" id="save" value="0">
+          
+        <!-- Tab Headings -->
+        <ul class="nav nav-tabs master" role="tablist">
+        <li role="presentation" {% if not has_module_id %}class="active"{% endif %}><a href="#home" role="tab" data-toggle="tab"><i class="fa fa-cog"></i> {{ text_general_settings }}</a></li>
+        <li role="presentation"><a href="#fonts" role="tab" data-toggle="tab"><i class="fa fa-font"></i> {{ text_google_fonts }}</a></li>
+        <li role="presentation" {% if has_module_id %}class="active"{% endif %}><a href="#slides" role="tab" data-toggle="tab"><i class="fa fa-bars"></i> {{ text_slides }}</a></li>
+        </ul>
+        
+        <!-- Tab content -->
+        <div class="tab-content">
+        <!-- General Settings -->
+        <div role="tabpanel" class="tab-pane {% if not has_module_id %}active{% endif %}" id="home">
+        
+        <div class="form-horizontal">
+        
+        <div class="form-group">
+            <div class="col-sm-2"></div>
+            <div class="col-sm-10 pull-left-2">
+              <h3 class="first">{{ h3_module_settings }}</h3>
+            </div>
+          </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label" for="input-status">{{ entry_status }}</label>
+            <div class="col-sm-10">
+              <select name="status" id="input-status" class="form-control">
+                {% if status %}
+                <option value="1" selected="selected">{{ text_enabled }}</option>
+                <option value="0">{{ text_disabled }}</option>
+                {% else %}
+                <option value="1">{{ text_enabled }}</option>
+                <option value="0" selected="selected">{{ text_disabled }}</option>
+                {% endif %}
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-2 control-label" for="input-name">{{ entry_name }}</label>
+            <div class="col-sm-10">
+                <input name="name" id="input-name" class="form-control" value="{{ name }}" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-2 control-label" for="input-status">{{ text_preview_language }}</label>
+            <div class="col-sm-10">
+              <select name="lang" id="input-lang" class="form-control">
+               {% for language in languages %}
+                {% if lang == language.language_id %}
+				<option value="{{ language.language_id }}" selected="selected">{{ language.name }}</option>
+                {% else %}
+				<option value="{{ language.language_id }}">{{ language.name }}</option>
+                {% endif %}
+               {% endfor %}
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-sm-2"></div>
+            <div class="col-sm-10 pull-left-2">
+              <h3>{{ h3_slideshow_sizing }}</h3>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-2 control-label" for="input-width">{{ entry_width }}</label>
+            <div class="col-sm-10">
+                <input name="width" id="input-width" class="form-control" value="{{ width }}" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-2 control-label" for="input-width">{{ entry_height }}</label>
+            <div class="col-sm-10">
+                <input name="height" id="input-height" class="form-control" value="{{ height }}" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-2 control-label" for="input-width">{{ entry_minheight }}</label>
+            <div class="col-sm-10">
+                <input name="minheight" id="input-minheight" class="form-control" value="{{ minheight }}" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-2 control-label" for="input-width">{{ entry_fullwidth }}</label>
+            <div class="col-sm-10">
+                <select name="fullwidth" id="input-fullwidth" class="form-control">
+                {% if fullwidth %}
+                <option value="1" selected="selected">{{ text_enabled }}</option>
+                <option value="0">{{ text_disabled }}</option>
+                {% else %}
+                <option value="1">{{ text_enabled }}</option>
+                <option value="0" selected="selected">{{ text_disabled }}</option>
+                {% endif %}
+              </select>
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label class="col-sm-2 control-label" for="input-margin_bottom">{{ entry_margin_bottom }}</label>
+            <div class="col-sm-10">
+                <input name="margin_bottom" id="input-margin_bottom" class="form-control" value="{{ margin_bottom }}" />
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <div class="col-sm-2"></div>
+            <div class="col-sm-10 pull-left-2">
+              <h3>{{ h3_slide_navigation }}</h3>
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label class="col-sm-2 control-label">{{ text_slide_transition }}</label>
+            <div class="col-sm-10">
+                <select name="slide_transition" class="form-control">
+                
+                {% if slide_transition == 'basic' %}
+				<option value="basic" selected="selected">Basic</option>
+                {% else %}
+				<option value="basic">Basic</option>
+                {% endif %}
+                
+                {% if slide_transition == 'fade' %}
+				<option value="fade" selected="selected">Fade</option>
+                {% else %}
+				<option value="fade">Fade</option>
+                {% endif %}
+                
+                {% if slide_transition == 'wave' %}
+				<option value="wave" selected="selected">Wave</option>
+                {% else %}
+				<option value="wave">Wave</option>
+                {% endif %}
+                
+                {% if slide_transition == 'flow' %}
+				<option value="flow" selected="selected">Flow</option>
+                {% else %}
+				<option value="flow">Flow</option>
+                {% endif %}
+                
+                {% if slide_transition == 'stack' %}
+				<option value="stack" selected="selected">Stack</option>
+                {% else %}
+				<option value="stack">Stack</option>
+                {% endif %}
+                
+                {% if slide_transition == 'scale' %}
+				<option value="scale" selected="selected">Scale</option>
+                {% else %}
+				<option value="scale">Scale</option>
+                {% endif %}
+                
+                </select>
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label class="col-sm-2 control-label">{{ entry_speed }}</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" name="speed" value="{{ speed ? speed : '20' }}" />
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label class="col-sm-2 control-label">{{ entry_loop }}</label>
+            <div class="col-sm-10">
+                <select name="loop" class="form-control">
+                {% if loop %}
+                <option value="1" selected="selected">{{ text_enabled }}</option>
+                <option value="0">{{ text_disabled }}</option>
+                {% else %}
+                <option value="1">{{ text_enabled }}</option>
+                <option value="0" selected="selected">{{ text_disabled }}</option>
+                {% endif %}
+              </select>
+            </div>
+          </div>
+          
+          
+          <div class="form-group">
+            <label class="col-sm-2 control-label">{{ text_nav_buttons }}</label>
+            <div class="col-sm-10">
+              <select name="nav_buttons" class="form-control">
+                
+                {% if nav_buttons == '0' %}
+				<option value="0" selected="selected">{{ text_disabled }}</option>
+                {% else %}
+				<option value="0">{{ text_disabled }}</option>
+                {% endif %}
+                
+                {% if nav_buttons == 'simple-arrows' %}
+				<option value="simple-arrows" selected="selected">{{ text_simple_arrows }}</option>
+                {% else %}
+				<option value="simple-arrows">{{ text_simple_arrows }}</option>
+                {% endif %}
+                
+                {% if nav_buttons == 'circle-arrows' %}
+				<option value="circle-arrows" selected="selected">{{ text_circle_arrows }}</option>
+                {% else %}
+				<option value="circle-arrows">{{ text_circle_arrows }}</option>
+                {% endif %}
+                
+              </select>
+            </div>
+          </div>
+          
+          
+          <div class="form-group">
+            <label class="col-sm-2 control-label">{{ text_nav_bullets }}</label>
+            <div class="col-sm-10">
+              <select name="nav_bullets" class="form-control">
+                {% if nav_bullets %}
+				<option value="1" selected="selected">{{ text_enabled }}</option>
+                <option value="0">{{ text_disabled }}</option>
+                {% else %}
+				<option value="1">{{ text_enabled }}</option>
+                <option value="0" selected="selected">{{ text_disabled }}</option>
+                {% endif %}
+              </select>
+            </div>
+          </div>
+          
+          
+          <div class="form-group">
+            <label class="col-sm-2 control-label">{{ text_nav_timer_bar }}</label>
+            <div class="col-sm-10">
+              <select name="nav_timer_bar" class="form-control">
+                {% if nav_timer_bar %}
+				<option value="1" selected="selected">{{ text_enabled }}</option>
+                <option value="0">{{ text_disabled }}</option>
+                {% else %}
+				<option value="1">{{ text_enabled }}</option>
+                <option value="0" selected="selected">{{ text_disabled }}</option>
+                {% endif %}
+              </select>
+            </div>
+          </div>
+
+          
+          </div>
+          
+        </div>
+        
+        <!-- Google Fonts -->
+        <div role="tabpanel" class="tab-pane" id="fonts">
+        
+                {{ fonts_help_block }}<br />
+
+               
+                
+        <table id="fonts" class="g_fonts">
+            <thead>
+              <tr>
+                <td class="text-left">{{ text_import }}</td>
+                <td class="text-left">{{ text_name }}</td>
+                <td></td>
+              </tr>
+            </thead>
+            <tbody>
+            {% set g_font_row = 1 %}
+            {% for g_font in g_fonts %}
+              <tr id="g_font-row{{ g_font_row }}">
+             
+                <td class="text-left">
+                <input type="text" class="form-control" name="g_fonts[{{ g_font_row }}][import]" value="{{ g_font.import ? g_font.import }}" />
+                </td>
+                
+                <td class="text-left">
+                <input type="text" class="form-control" name="g_fonts[{{ g_font_row }}][name]" value="{{ g_font.name ? g_font.name }}" />
+                </td>
+
+                <td class="text-right action"><button type="button" onclick="$('#g_font-row{{ g_font_row }}').remove();" class="btn btn-danger"><i class="fa fa-minus-circle"></i></button></td>
+              </tr>
+            {% set g_font_row = g_font_row + 1 %}
+			{% endfor %}
+            </tbody>
+            <tfoot>
+              <tr>
+                <td colspan="2"></td>
+                <td class="text-left action"><button type="button" onclick="addFont();" class="btn btn-primary"><i class="fa fa-plus-circle"></i></button></td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+        
+        <!-- Slides -->
+        
+        <div role="tabpanel" class="tab-pane {% if has_module_id %}active{% endif %}" id="slides">
+         
+      		<ul class="nav nav-pills" id="section">
+                {% set section_row = 1 %}
+                {% for section in sections %}
+        		<li><a href="#tab-section-{{ section_row }}" data-toggle="tab"><i class="fa fa-times-circle" onclick="$('a[href=\'#tab-section-{{ section_row }}\']').parent().remove(); $('#tab-section-{{ section_row }}').remove(); $('#section a:first').tab('show');"></i><i class="fa fa-image"></i> {{ tab_section }} {{ section_row }}</a></li>
+        		{% set section_row = section_row + 1 %}
+        		{% endfor %}
+        		<li id="section-add"><a onclick="addSlide();">{{ text_add_section }} <i class="fa fa-long-arrow-right"></i></a></li> 
+        	</ul>
+        
+      	
+        <div class="row">
+      	<div class="col-sm-12">
+        
+        <div class="tab-content first">
+        
+        {% set section_row = 1 %}
+       
+      	{% for section in sections %}
+           
+		<div class="tab-pane" id="tab-section-{{ section_row }}">
+		<div class="tab-content">
+          
+          <h2>{{ text_slide_settings }}</h2>
+          <div class="well">
+          <div class="row">
+          
+          <div class="form-group col-sm-4">
+          <label>{{ text_sort_order }}</label>
+       	  <input type="text" class="form-control" name="sections[{{ section_row }}][sort_order]" value="{{ section.sort_order ? section.sort_order : section_row }}" />
+          </div> <!-- form-group ends -->
+          
+          <div class="form-group col-sm-4">
+          <label>{{ text_slide_duration }}</label>
+       	  <input type="text" class="form-control" name="sections[{{ section_row }}][duration]" id="duration{{ section_row }}" value="{{ section.duration ? section.duration : '6' }}" />
+          </div> <!-- form-group ends -->
+          
+          <div class="form-group col-sm-4">
+          <label>{{ text_slide_kenburn }}</label>
+        <select name="sections[{{ section_row }}][slide_kenburn]" class="form-control">
+        {% for key, slide_kenburn in slide_kenburns %}
+        <option value="{{ key }}"{% if section.slide_kenburn == key %} selected="selected"{% endif %}>{{ slide_kenburn }}</option>
+        {% endfor %}
+        </select>
+          </div> <!-- form-group ends -->
+          
+          </div> <!-- row ends -->
+          
+          
+          <div class="row">
+          
+          <div class="form-group col-sm-4">
+          <label>{{ text_bg_color }}</label>
+          <div class="input-group colorpicker-element" id="bg_color_{{ section_row }}">
+          <input class="form-control" name="sections[{{ section_row }}][bg_color]" value="{{ section.bg_color ? section.bg_color }}" /><span class="input-group-addon"><i></i></span>
+          </div>
+          </div> <!-- form-group ends -->
+          
+          <div class="form-group col-sm-4">
+          <label>{{ text_link_target }}</label>
+       	  <input type="text" class="form-control" name="sections[{{ section_row }}][link]" value="{{ section.link ? section.link }}" />
+          </div> <!-- form-group ends -->
+          
+          <div class="form-group col-sm-4">
+          <label>{{ text_button_target }}</label>
+          
+          <select name="sections[{{ section_row }}][link_new_window]" class="form-control">
+        {% if section.link_new_window %}
+		<option value="1" selected="selected">{{ text_enabled }}</option>
+        <option value="0">{{ text_disabled }}</option>
+        {% else %}
+        <option value="1">{{ text_enabled }}</option>
+        <option value="0" selected="selected">{{ text_disabled }}</option>
+        {% endif %}
+        </select>
+          </div> <!-- form-group ends -->
+          
+          </div> <!-- row ends -->
+          
+          </div> <!-- well ends -->
+          
+
+          
+          <h2>{{ text_slide_preview }}</h2>
+          
+          <div class="slide-preview-wrapper">
+
+          <div class="slide-preview s{{ section_row }}" style="
+          background-image:url('{% if section.thumb_image %}{{ base_url }}image/{{ section.thumb_image }}{% endif %}');
+          background-color:{{ section.bg_color ? section.bg_color }} ;
+          width:{{ width ? width : '1140' }}px;
+          ">
+                    
+          <div class="slide-preview-inner" style="width:{{ width ? width : '1140' }}px;height:{{ height ? height : '500' }}px">
+          
+          
+          {% set group_row = 0 %}
+            {% if section.groups %}
+                        
+            {% for group in section.groups %}
+            
+            <!-- Text layer -->
+            
+           <div class="preview-layer-holder s{{ section_row }} g{{ group_row }}" style="
+           top:{{ section.groups[group_row].top[lang] ? section.groups[group_row].top[lang] }}px;
+           left:{{ section.groups[group_row].left[lang] ? section.groups[group_row].left[lang] }}px;
+           ">
+           
+            <div class="preview_single_layer s{{ section_row }} g{{ group_row }} layer-edit-s{{ section_row }}-g{{ group_row }} 
+			{% if section.groups[group_row].type == 'button' %}
+            {{ section.groups[group_row].button_class }}
+            {% endif %}
+            " onclick="layerNavigate({{ section_row }}, {{ group_row }});" style="
+            
+            z-index:{{ section.groups[group_row].sort_order ? section.groups[group_row].sort_order : 'auto' }};
+            
+            {% if section.groups[group_row].type == 'text' %}
+            font-family:{{ section.groups[group_row].font ? section.groups[group_row].font }};
+            font-weight:{{ section.groups[group_row].fontweight ? section.groups[group_row].fontweight }};
+            font-size:{{ section.groups[group_row].fontsize ? section.groups[group_row].fontsize }};
+            color:{{ section.groups[group_row].color ? section.groups[group_row].color }};
+            background-color:{{ section.groups[group_row].bg ? section.groups[group_row].bg }};
+            padding:{{ section.groups[group_row].padding ? section.groups[group_row].padding }};
+            border-radius:{{ section.groups[group_row].radius ? section.groups[group_row].radius }};
+            {{ section.groups[group_row].customcss ? section.groups[group_row].customcss }}
+            {% endif %}
+            ">
+            
+			<div class="html_decode_area">
+            {% if section.groups[group_row].type == 'text' %}
+            {{ section.groups[group_row].description[lang] ? section.groups[group_row].description[lang] }}
+            {% endif %}
+            
+            {% if section.groups[group_row].type == 'button' %}
+            <span>{{ section.groups[group_row].description[lang] ? section.groups[group_row].description[lang] }}</span>
+            {% endif %}
+			</div>
+            
+            {% if section.groups[group_row].type == 'image' %}
+            <img src="{% if section.groups[group_row].image[lang] %}{{ base_url }}image/{{ section.groups[group_row].image[lang] }}{% else %}{{ placeholder }}{% endif %}" alt="" title="" />
+            {% endif %} 
+            
+            </div>
+            
+           </div>
+                        
+            {% set group_row =  group_row + 1 %}
+            {% endfor %}  <!-- foreach groups ends -->
+            {% endif %} 
+            
+              
+            </div> <!-- Slide preview inner ends -->
+          </div> <!-- Slide preview ends -->
+          </div> <!-- Slide preview wrapper ends -->
+          
+          <div class="slide-toolbar">
+          <div class="row">
+          <div class="col-sm-6">
+          <div>
+       	  <a id="thumb-image{{ section_row }}" data-toggle="image" class="btn btn-default"><i class="fa fa-arrows-alt"></i> {{ text_change_slide_bg }}</a>
+        <input type="hidden" name="sections[{{ section_row }}][thumb_image]" value="{{ section.thumb_image ? section.thumb_image }}" id="input-image{{ section_row }}" />
+          </div>
+          </div>
+          
+          <div class="col-sm-6 text-right">
+          <a class="btn btn-default" onclick="addLayer({{ section_row }}, 'text');"><i class="fa fa-font"></i> {{ text_add_text_layer }}</a>
+          <a class="btn btn-default" onclick="addLayer({{ section_row }}, 'button');"><i class="fa fa-hand-o-up"></i> {{ text_add_button_layer }}</a>
+          <a class="btn btn-default" onclick="addLayer({{ section_row }}, 'image');"><i class="fa fa-image"></i> {{ text_add_image_layer }}</a>
+          </div>
+          </div> <!-- row ends -->
+          </div>
+          
+          
+          
+		<div class="layer-wrapper">
+        
+        
+        
+          <div id="groups-{{ section_row }}" class="layer-holder">
+          
+          <div class="layer-table-header">
+          <div class="layer-table-cell icons">
+          <b class="pull-right"><span>{{ text_layer_sort_order }}</span><span>{{ text_layer_parallax }}</span></b>
+          <b>{{ text_layer_list }}</b>
+          </div>
+          <div class="layer-table-cell slider"><b>{{ text_layer_in }}</b><b class="pull-right">{{ text_layer_out }}</b></div>
+          </div>
+          
+          {% set group_row = 0 %}
+           {% if section.groups %}
+
+
+          	{% for group in section.groups %}
+			
+            <div id="group-row-s{{ section_row }}-g{{ group_row }}" class="single-layer row{{ group_row }}">
+            
+            <div class="main">
+          
+          <div class="panel panel-default ">
+  			
+            <div class="panel-heading"><h3 class="panel-title">{{ text_layer_settings }}</h3></div>
+  			
+            <div class="panel-body">
+            <input type="hidden" name="sections[{{ section_row }}][groups][{{ group_row }}][type]" value="{{ section.groups[group_row].type ? section.groups[group_row].type : 'text' }}" />	
+            
+
+            
+                <div id="language-s{{ section_row }}-g{{ group_row }}">
+                  <ul class="nav nav-tabs" id="language{{ section_row }}">
+                    {% for language in languages %}
+                    <li><a href="#tab-section-s{{ section_row }}-g{{ group_row }}-{{ language.language_id }}" data-toggle="tab">
+                    <img src="language/{{ language.code }}/{{ language.code }}.png" title="{{ language.name }}" /></a></li>
+                    {% endfor %}
+                  </ul>
+                 </div>
+               <div class="tab-content">
+                {% for language in languages %}
+                <div class="tab-pane fade" id="tab-section-s{{ section_row }}-g{{ group_row }}-{{ language.language_id }}">
+                  
+                  <h4>{{ text_layer_content }}</h4>
+                  <div class="row">
+                  <div class="col-sm-12">
+                  
+                  {% if section.groups[group_row].type == 'text' %}
+                  <div class="form-group">
+                  <textarea class="form-control custom-control" name="sections[{{ section_row }}][groups][{{ group_row }}][description][{{ language.language_id }}]" id="description-s{{ section_row }}-g{{ group_row }}-{{ language.language_id }}">{{ section.groups[group_row].description[language.language_id] ? section.groups[group_row].description[language.language_id] }}</textarea>
+                 </div>
+                 {% endif %}
+                 
+                 {% if section.groups[group_row].type == 'button' %}
+                  <div class="form-group">
+                  <label>{{ text_button_text }}</label>
+                  <input class="form-control" name="sections[{{ section_row }}][groups][{{ group_row }}][description][{{ language.language_id }}]" id="button_text-s{{ section_row }}-g{{ group_row }}-{{ language.language_id }}" value="{{ section.groups[group_row].description[language.language_id] ? section.groups[group_row].description[language.language_id] }}" />
+                 </div>
+                 {% endif %}
+                 
+                 {% if section.groups[group_row].type == 'image' %}
+                 <div class="well">
+                 <div class="image_holder">
+                  <a href="" id="thumb-image-s{{ section_row }}-g{{ group_row }}-{{ language.language_id }}" data-toggle="image" class="img-thumbnail">
+                <img src="{% if section.groups[group_row].image[lang] %}{{ base_url }}image/{{ section.groups[group_row].image[language.language_id] }}{% else %}{{ placeholder}}{% endif %}" alt="" title="" data-placeholder="{{ placeholder }}" />
+                </a>
+                <input type="hidden" name="sections[{{ section_row }}][groups][{{ group_row }}][image][{{ language.language_id }}]" value="{{ section.groups[group_row].image[language.language_id] ? section.groups[group_row].image[language.language_id] }}" id="input-image-s{{ section_row }}-g{{ group_row }}-{{ language.language_id }}" />
+                </div>
+                </div>
+                {% endif %}
+                
+                </div>
+                </div> <!-- Row ends -->
+                
+                <h4>{{ text_layer_position }}</h4>
+                <div class="row border_bottom">
+            	<div class="form-group col-sm-6">
+                <label>{{ text_offset_left }}</label>
+                <input class="form-control" name="sections[{{ section_row }}][groups][{{ group_row }}][left][{{ language.language_id }}]" id="left-s{{ section_row }}-g{{ group_row }}-l{{ language.language_id }}" value="{{ section.groups[group_row].left[language.language_id] ? section.groups[group_row].left[language.language_id] }}" />	
+            	</div>
+                
+            	<div class="form-group col-sm-6">
+                <label>{{ text_offset_top }}</label>
+                <input class="form-control" name="sections[{{ section_row }}][groups][{{ group_row }}][top][{{ language.language_id }}]" id="top-s{{ section_row }}-g{{ group_row }}-l{{ language.language_id }}" value="{{ section.groups[group_row].top[language.language_id] ? section.groups[group_row].top[language.language_id] }}" />	
+            	</div>
+            	</div> <!-- Row ends -->
+                 
+                </div> <!-- tab-pane ends -->
+                {% endfor %} <!-- Foreach language ends -->
+                </div>
+                
+                {% if section.groups[group_row].type == 'image' %}
+                <h4>{{ text_heading_minheight }}</h4>
+                <div class="row border_bottom">
+            	<div class="form-group col-sm-12">
+                <label>{{ text_layer_minheight }}</label>
+                <input class="form-control" name="sections[{{ section_row }}][groups][{{ group_row }}][minheight]" value="{{ section.groups[group_row].minheight ? section.groups[group_row].minheight : '0' }}" />	
+            	</div>
+                </div>
+                {% endif %}
+            
+			{% if (section.groups[group_row].type == 'text') or (section.groups[group_row].type == 'button') %}
+              <h4>{{ text_layer_style }}</h4>
+              
+              {% if section.groups[group_row].type == 'button' %}
+              <div class="row">
+              <div class="form-group col-sm-12">
+                <label>{{ text_button_class }}</label>
+                <select name="sections[{{ section_row }}][groups][{{ group_row }}][button_class]" id="button_class-s{{ section_row }}-g{{ group_row }}" class="form-control">
+                {% for key, button_class in button_classes %}  
+                <option value="{{ key }}" {% if section.groups[group_row].button_class == key %}selected="selected"{% endif %}>
+                {{ button_class }}</option>
+                {% endfor %}  
+                </select>
+                </div>
+              </div>
+              <div class="row">
+              <div class="form-group col-sm-6">
+                <label>{{ text_button_href }}</label>
+                <input class="form-control" name="sections[{{ section_row }}][groups][{{ group_row }}][button_href]" id="button_href-s{{ section_row }}-g{{ group_row }}" value="{{ section.groups[group_row].button_href ? section.groups[group_row].button_href }}" />
+                </div>
+                <div class="form-group col-sm-6">
+                <label>{{ text_button_target }}</label>
+                
+                
+                <select name="sections[{{ section_row }}][groups][{{ group_row }}][button_target]" class="form-control">
+                {% if section.groups[group_row].button_target %}
+                <option value="1" selected="selected">{{ text_enabled }}</option>
+                <option value="0">{{ text_disabled }}</option>
+                {% else %}
+                <option value="1">{{ text_enabled }}</option>
+                <option value="0" selected="selected">{{ text_disabled }}</option>
+                {% endif %}
+                </select>
+                
+                </div>
+              </div>
+              
+              {% endif %}
+              
+              
+              {% if section.groups[group_row].type == 'text' %}
+              
+              <div class="row">
+                <div class="form-group col-sm-6">
+                <label>{{ text_font_family }}</label>
+                <select name="sections[{{ section_row }}][groups][{{ group_row }}][font]" id="font-s{{ section_row }}-g{{ group_row }}" class="form-control">
+                <option disabled style="font-weight:bold">{{ text_system_fonts }}</option>
+                
+                {% for key, system_font in system_fonts %}  
+                <option value="{{ key }}" {% if section.groups[group_row].font == key %}selected="selected"{% endif %}>
+                {{ system_font }}</option>
+                {% endfor %}
+                
+                <option disabled style="font-weight:bold">{{ text_google_fonts }}</option>
+                
+                {% for g_font in g_fonts %}  
+                <option value="{{ g_font.name }}" {% if section.groups[group_row].font == g_font.name %}selected="selected"{% endif %}>
+                {{ g_font.name }}</option>
+                {% endfor %}
+                
+                {% for basel_font in basel_fonts %}  
+                <option value="{{ basel_font.name }}" {% if section.groups[group_row].font == basel_font.name %}selected="selected"{% endif %}>
+                {{ basel_font.name }}</option>
+                {% endfor %}
+                
+              </select>
+                </div>
+                
+                <div class="form-group col-sm-6">
+                <label>{{ text_font_weight }}</label>
+                <select name="sections[{{ section_row }}][groups][{{ group_row }}][fontweight]" id="font-weight-s{{ section_row }}-g{{ group_row }}" class="form-control">
+                
+                {% for key, fontweight in fontweights %}  
+                <option value="{{ key }}" {% if section.groups[group_row].fontweight == key %}selected="selected"{% endif %}>
+                {{ fontweight }}</option>
+                {% endfor %}
+                
+                </select>
+                </div>
+                                
+                </div> <!-- Row ends -->
+                
+                
+                
+                <div class="row">
+                
+                <div class="form-group col-sm-6">
+                <label>{{ text_font_size }}</label>
+                <input class="form-control" name="sections[{{ section_row }}][groups][{{ group_row }}][fontsize]" id="fontsize-s{{ section_row }}-g{{ group_row }}" value="{{ section.groups[group_row].fontsize ? section.groups[group_row].fontsize }}" />
+            	</div>
+
+                <div class="form-group col-sm-6">
+                <label>{{ text_color }}</label>
+                <div class="input-group" id="color-s{{ section_row }}-g{{ group_row }}">
+                <input class="form-control" name="sections[{{ section_row }}][groups][{{ group_row }}][color]" value="{{ section.groups[group_row].color ? section.groups[group_row].color }}" /><span class="input-group-addon"><i></i></span>
+                </div>
+            	</div>
+
+               </div> <!-- Row ends -->
+               
+               
+               <div class="row">
+               
+               <div class="form-group col-sm-6">
+                <label>{{ text_background }}</label>
+                <div class="input-group" id="bg-s{{ section_row }}-g{{ group_row }}">
+                <input class="form-control" name="sections[{{ section_row }}][groups][{{ group_row }}][bg]" value="{{ section.groups[group_row].bg ? section.groups[group_row].bg }}" /><span class="input-group-addon"><i></i></span>
+                </div>
+            	</div>
+
+                <div class="form-group col-sm-6">
+                <label>{{ text_padding }}</label>
+                <input class="form-control" name="sections[{{ section_row }}][groups][{{ group_row }}][padding]" id="padding-s{{ section_row }}-g{{ group_row }}" value="{{ section.groups[group_row].padding ? section.groups[group_row].padding }}" />
+            	</div>
+                
+               </div> <!-- Row ends -->
+               
+               <div class="row border_bottom">
+
+                <div class="form-group col-sm-6">
+                <label>{{ text_border_radius }}</label>
+                <input class="form-control" name="sections[{{ section_row }}][groups][{{ group_row }}][radius]" id="radius-s{{ section_row }}-g{{ group_row }}" value="{{ section.groups[group_row].radius ? section.groups[group_row].radius }}" />
+            	</div>
+                
+                <div class="form-group col-sm-6">
+                <label>{{ text_custom_css }}</label>
+                <textarea class="form-control" name="sections[{{ section_row }}][groups][{{ group_row }}][customcss]" id="customcss-s{{ section_row }}-g{{ group_row }}">{{ section.groups[group_row].customcss ? section.groups[group_row].customcss }}</textarea>
+            	</div>
+			
+               </div> <!-- Row ends -->
+               {% endif %} <!-- layer type text ends -->
+               {% endif %}
+               
+               <h4>{{ text_animation_in }}</h4>
+               
+               <div class="row">
+                
+                <div class="form-group col-sm-6">
+                <label>{{ text_effect }}</label>
+                <select name="sections[{{ section_row }}][groups][{{ group_row }}][transitionin]" id="transitionin-s{{ section_row }}-g{{ group_row }}" class="form-control">
+                {% for key, transition in transitions %}
+                <option value="{{ key }}" 
+                {% if section.groups[group_row].transitionin == key %}selected="selected"{% endif %}>
+                {{ transition }}</option>
+                {% endfor %}
+                
+                </select>
+        
+                </div>
+                
+                <div class="form-group col-sm-6">
+                <label>{{ text_easing }}</label>
+                <select name="sections[{{ section_row }}][groups][{{ group_row }}][easingin]" id="ease-in-s{{ section_row }}-g{{ group_row }}" class="form-control">
+                {% for key, easing in easings %}
+                <option value="{{ key }}" 
+                {% if section.groups[group_row].easingin == key %}selected="selected"{% endif %}>
+                {{ easing }}</option>
+                {% endfor %}
+                
+                </select>
+                </div>
+                
+               </div> <!-- Row ends -->
+               
+               <div class="row border_bottom">
+               
+               <div class="form-group col-sm-6">
+                <label>{{ text_duration }}</label>
+                <input class="form-control" name="sections[{{ section_row }}][groups][{{ group_row }}][durationin]" id="durationin-s{{ section_row }}-g{{ group_row }}" value="{{ section.groups[group_row].durationin ? section.groups[group_row].durationin }}" />
+            	</div>
+                
+               </div> <!-- Row ends -->
+               
+               
+               
+               <h4>{{ text_animation_out }}</h4>
+               
+               <div class="row">
+                
+                <div class="form-group col-sm-6">
+                <label>{{ text_effect }}</label>
+                <select name="sections[{{ section_row }}][groups][{{ group_row }}][transitionout]" class="form-control">
+                
+                {% for key, transition in transitions %}
+                <option value="{{ key }}" 
+                {% if section.groups[group_row].transitionout == key %}selected="selected"{% endif %}>
+                {{ transition }}</option>
+                {% endfor %}
+                </select>
+                </div>
+                
+                <div class="form-group col-sm-6">
+                <label>{{ text_easing }}</label>
+                <select name="sections[{{ section_row }}][groups][{{ group_row }}][easingout]" class="form-control">
+                {% for key, easing in easings %}
+                <option value="{{ key }}" 
+                {% if section.groups[group_row].easingout == key %}selected="selected"{% endif %}>
+                {{ easing }}</option>
+                {% endfor %}
+                
+                </select>
+                </div>
+                
+               </div> <!-- Row ends -->
+               
+               <div class="row">
+               
+               <div class="form-group col-sm-6">
+                <label>{{ text_duration }}</label>
+                <input class="form-control" name="sections[{{ section_row }}][groups][{{ group_row }}][durationout]" value="{{ section.groups[group_row].durationout ? section.groups[group_row].durationout }}" />
+            	</div>
+                
+               </div> <!-- Row ends -->
+                
+               
+               </div>
+               </div> 
+               </div>
+               
+               <div class="layer-list">
+               <div class="layer-bar">
+               
+               <div class="layer-table-cell icons">
+               <a class="icon selector" onclick="layerNavigate({{ section_row }}, {{ group_row }});"></a>
+               <div class="icon {{ section.groups[group_row].type }}"></div>
+               <a class="icon remove" onclick="removeLayer({{ section_row }}, {{ group_row }});"><i class="fa fa-times-circle"></i></a>
+               <div class="sort_holder">
+               <input class="form-control" name="sections[{{ section_row }}][groups][{{ group_row }}][sort_order]" value="{{ section.groups[group_row].sort_order ? section.groups[group_row].sort_order : '0' }}" id="sort_order{{ section_row }}{{ group_row }}" />
+               <input class="form-control" name="sections[{{ section_row }}][groups][{{ group_row }}][p_index]" value="{{ section.groups[group_row].p_index ? section.groups[group_row].p_index : '0' }}" id="p_index{{ section_row }}{{ group_row }}" />
+               </div>
+               
+               </div>
+               
+               
+                
+                <div class="layer-table-cell field first">
+                <input class="form-control" data-index="0" style="width:60px;display:inline-block" name="sections[{{ section_row }}][groups][{{ group_row }}][start]" id="start-s{{ section_row }}-g{{ group_row }}" value="{{ section.groups[group_row].start ? section.groups[group_row].start : '0' }}" />
+                </div>
+                
+                <div class="layer-table-cell slider">
+                <div id="slider-s{{ section_row }}-g{{ group_row }}"></div>
+                </div>
+                
+                <div class="layer-table-cell field last">
+               <input class="form-control" data-index="1" style="width:60px;display:inline-block" name="sections[{{ section_row }}][groups][{{ group_row }}][end]" id="end-s{{ section_row }}-g{{ group_row }}" value="{{ section.groups[group_row].end ? section.groups[group_row].end : '6000' }}" />
+               </div>
+               
+               
+               </div> <!-- layer-bar ends -->
+               </div>
+               
+          		{% set group_row =  group_row + 1 %}
+                
+                </div> <!-- class single-layer ends -->
+               {% endfor %} <!-- foreach groups ends -->
+              {% endif %}
+
+          	</div> <!-- id groups- ends -->
+           </div> <!-- layer-wrapper ends -->
+            
+         </div> <!-- tab-content ends -->
+      	{% set section_row = section_row + 1 %}
+      	</div>
+      	
+        
+        {% endfor %} <!-- foreach sections ends -->
+      
+       </div>
+      </div> 
+    </div>
+  </div> 
+</div>
+          
+
+      
+     </form>
+   </div>
+  </div>
+ </div>
+<br />
+
+<!-- Google Fonts -->
+<script type="text/javascript"><!--
+var deleted_layers = 0;
+
+var g_font_row = {{ g_font_row }};
+function addFont() {
+	html  = '<tr id="g_font-row' + g_font_row + '">';
+	html += '<td class="text-left">';
+	html += '<input type="text" name="g_fonts[' + g_font_row + '][import]" class="form-control"/>';	
+	html += '</td>';
+	html += '<td class="text-left">';
+	html += '<input type="text" name="g_fonts[' + g_font_row + '][name]" class="form-control"/>';	
+	html += '</td>';
+	html += '  <td class="text-left"><button type="button" onclick="$(\'#g_font-row' + g_font_row  + '\').remove();" class="btn btn-danger"><i class="fa fa-minus-circle"></i></button></td>';
+	html += '</tr>';
+	$('#fonts tbody').append(html);
+	g_font_row++;
+}
+//--></script>
+
+
+<script type="text/javascript"><!--
+var section_row = {{ section_row }};
+
+function addSlide() {	
+	group_row = 0;
+   	html  = '<div class="tab-pane" id="tab-section-' + section_row + '">';
+	html += '<div class="tab-content">';
+	html += '<h2>{{ text_slide_settings }}</h2>';
+	html += '<div class="well">';
+	
+	html += '<div class="row">';
+	html += '<div class="form-group col-sm-4">';
+	html += '<label>{{ text_sort_order }}</label>';
+    html += '<input type="text" class="form-control" name="sections[' + section_row + '][sort_order]" value="' + section_row + '" />';
+	html += '</div>';
+	html += '<div class="form-group col-sm-4">';
+	html += '<label>{{ text_slide_duration }}</label>';
+    html += '<input type="text" class="form-control" id="duration' + section_row + '" name="sections[' + section_row + '][duration]" value="6" />';
+	html += '</div>';
+
+	html += '<div class="form-group col-sm-4">';
+	html += '<label>{{ text_slide_kenburn }}</label>';
+	html += '<select name="sections[' + section_row + '][slide_kenburn]" class="form-control">';
+	{% for key, slide_kenburn in slide_kenburns %}
+    html += '<option value="{{ key }}">{{ slide_kenburn }}</option>';
+    {% endfor %}
+	html += '</select>';
+	html += '</div>';
+	html += '</div>';
+	
+	html += '<div class="row">';
+	
+	html += '<div class="form-group col-sm-4">';
+	html += '<label>{{ text_bg_color }}</label>';
+	html += '<div class="input-group colorpicker-element" id="bg_color_' + section_row + '">';
+    html += '<input class="form-control" name="sections[' + section_row + '][bg_color]" /><span class="input-group-addon"><i></i></span>';
+	html += '</div>';
+	html += '</div>';
+		  
+	html += '<div class="form-group col-sm-4">';
+	html += '<label>{{ text_link_target }}</label>';
+    html += '<input type="text" class="form-control" name="sections[' + section_row + '][link]" />';
+	html += '</div>';
+	html += '<div class="form-group col-sm-4">';
+	html += '<label>{{ text_button_target }}</label>';
+	html += '<select class="form-control" name="sections[' + section_row + '][link_new_window]">';
+	html += '<option value="1">{{ text_enabled }}</option>';
+	html += '<option value="0" selected="selected">{{ text_disabled }}</option>';
+	html += '</select>';
+	html += '</div>';
+	html += '</div>';
+	html += '</div>';
+	html += '</div>';
+	html += '<h2>{{ text_slide_preview }}</h2>';
+	html += '<div class="slide-preview-wrapper">';
+	html += '<div class="slide-preview s' + section_row + '">';
+	html += '<div class="slide-preview-inner" style="width:' + $('#input-width').val() + 'px; height:' + $('#input-height').val() + 'px; ">';
+	html += '</div>';
+	html += '</div>';
+	html += '</div>';
+	html += '<div class="slide-toolbar">';
+	html += '<div class="row">';
+	html += '<div class="col-sm-6">';
+	html += '<div>';
+	html += '<a id="thumb-image' + section_row + '" data-toggle="image" class="btn btn-default"><i class="fa fa-arrows-alt"></i> {{ text_change_slide_bg }}</a>';
+	html += '<input type="hidden" id="input-image' + section_row + '" name="sections[' + section_row + '][thumb_image]" />';
+	html += '</div>';
+	html += '</div>';
+	html += '<div class="col-sm-6 text-right">';
+	html += '<a class="btn btn-default" onclick="addLayer(' + section_row + ', \'text\''+');"><i class="fa fa-font"></i> {{ text_add_text_layer }}</a> ';
+	html += '<a class="btn btn-default" onclick="addLayer(' + section_row + ', \'button\''+');"><i class="fa fa-hand-o-up"></i> {{ text_add_button_layer }}</a> ';
+	html += '<a class="btn btn-default" onclick="addLayer(' + section_row + ', \'image\''+');"><i class="fa fa-image"></i> {{ text_add_image_layer }}</a>';
+    html += '</div>';
+	html += '</div>';
+	html += '</div>';
+	html += '<div class="layer-wrapper">';
+	html += '<div id="groups-' + section_row + '" class="layer-holder">';
+	html += '<div class="layer-table-header">';
+	html += '<div class="layer-table-cell icons"><b class="pull-right"><span>{{ text_layer_sort_order }}</span><span>{{ text_layer_parallax }}</span></b><b>{{ text_layer_list }}</b></div>';
+	html += '<div class="layer-table-cell slider"><b>{{ text_layer_in }}</b><span class="pull-right"><b>{{ text_layer_out }}</b></span></div>';
+	html += '</div>';
+	html += '</div>';
+	html += '</div>';
+	html += '</div>';
+	html += '</div>';
+	
+	$('.tab-content.first').append(html);
+		
+	$('#section-add').before('<li><a href="#tab-section-' + section_row + '" data-toggle="tab"><i class="fa fa-times-circle" onclick="$(\'a[href=\\\'#tab-section-' + section_row + '\\\']\').parent().remove(); $(\'#tab-section-' + section_row + '\').remove(); $(\'#section a:first\').tab(\'show\');"></i> </i><i class="fa fa-image"></i> {{ tab_section }} ' + section_row + '</a></li>');
+
+
+	$('#section a[href=\'#tab-section-' + section_row + '\']').tab('show');
+	
+	addSlideScripts(section_row);
+	
+	section_row++;
+}
+//--></script>
+
+<script type="text/javascript"><!--
+function addLayer(section_row, layer_type) {
+	group_row = ($('#groups-' + section_row + ' .single-layer').length) + (deleted_layers);
+	sort_order = $('#groups-' + section_row + ' .single-layer').length + 1;
+
+	html  = '<div id="group-row-s' + section_row + '-g' + group_row + '" class="single-layer row' + group_row + '">';
+	html += '<div class="main">';
+	html += '<div class="panel panel-default">';
+	html += '<div class="panel-heading"><h3 class="panel-title">{{ text_layer_settings }}</h3></div>';
+	html += '<div class="panel-body">';
+	html += '<input type="hidden" name="sections[' + section_row + '][groups][' + group_row + '][type]" value="' + layer_type + '"/>';
+	html += '<div id="language-s' + section_row + '-g' + group_row + '">';
+	html += '<ul class="nav nav-tabs" id="language' + section_row + '">';
+	{% for language in languages %}
+	html += '<li><a href="#tab-section-s' + section_row + '-g' + group_row + '-{{ language.language_id }}" data-toggle="tab">';
+	html += '<img src="language/{{ language.code }}/{{ language.code }}.png" title="{{ language.name }}" />'
+	html += '</a></li>';
+	{% endfor %}
+    html += '</ul>';
+	html += '</div>';
+	html += '<div class="tab-content">';
+	{% for language in languages %}
+	html += '<div class="tab-pane" id="tab-section-s' + section_row + '-g' + group_row + '-{{ language.language_id }}">';
+	html += '<h4>{{ text_layer_content }}</h4>';
+	html += '<div class="row">';
+	html += '<div class="col-sm-12">';
+	if (layer_type == 'text') { 
+	html += '<div class="form-group">';
+	html += '<textarea class="form-control custom-control" name="sections[' + section_row + '][groups][' + group_row + '][description][{{ language.language_id }}]" id="description-s' + section_row + '-g' + group_row + '-{{ language.language_id }}" >Layer Caption</textarea>';
+	html += '</div>';
+	}
+	if (layer_type == 'button') { 
+	html += '<div class="form-group">';
+	html += '<label>{{ text_button_text }}</label>';
+	html += '<input class="form-control" name="sections[' + section_row + '][groups][' + group_row + '][description][{{ language.language_id }}]" id="button_text-s' + section_row + '-g' + group_row + '-{{ language.language_id }}" value="button text" />';
+	html += '</div>';
+	}
+	if (layer_type == 'image') { 
+	html += '<div class="well">';
+	html += '<div class="image_holder">';
+	html += '<a href="" id="thumb-image-s' + section_row + '-g' + group_row + '-{{ language.language_id }}" data-toggle="image" class="img-thumbnail"><img src="{{ placeholder }}" alt="" title="" data-placeholder="{{ placeholder }}" /></a>';
+	html += '<input type="hidden" name="sections[' + section_row + '][groups][' + group_row + '][image][{{ language.language_id }}]" id="input-image-s' + section_row + '-g' + group_row + '-{{ language.language_id }}" value="cache/no_image-100x100.png" />';
+	html += '</div>';
+	html += '</div>';
+	} 
+	html += '</div>';
+	html += '</div>';
+	html += '<h4>{{ text_layer_position }}</h4>';
+	html += '<div class="row border_bottom">';
+	html += '<div class="form-group col-sm-6">';
+	html += '<label>{{ text_offset_left }}</label>';
+	html += '<input class="form-control" type="text" name="sections[' + section_row + '][groups][' + group_row + '][left][{{ language.language_id }}]" id="left-s' + section_row + '-g' + group_row + '-l{{ language.language_id }}" value="50" />';
+	html += '</div>';
+	html += '<div class="form-group col-sm-6">';
+	html += '<label>{{ text_offset_top }}</label>';
+	html += '<input class="form-control" type="text" name="sections[' + section_row + '][groups][' + group_row + '][top][{{ language.language_id }}]" id="top-s' + section_row + '-g' + group_row + '-l{{ language.language_id }}" value="50" />';
+	html += '</div>';
+	html += '</div>';
+	html += '</div>';
+
+	{% endfor %}
+	html += '</div>';
+    
+	if (layer_type == 'text' || layer_type == 'button') {
+	html += '<h4>{{ text_layer_style }}</h4>';
+	if (layer_type == 'button') {
+	html += '<div class="row">';
+	html += '<div class="form-group col-sm-12">';
+	html += '<label>{{ text_button_class }}</label>';
+	html += '<select name="sections[' + section_row + '][groups][' + group_row + '][button_class]" id="button_class-s' + section_row + '-g' + group_row + '" class="form-control">';
+	{% for key, button_class in button_classes %}
+    html += '<option value="{{ key }}">{{ button_class }}</option>';
+    {% endfor %}
+	html += '</select>';
+	html += '</div>';
+	html += '</div>';
+	html += '<div class="row">';
+	html += '<div class="form-group col-sm-6">';
+	html += '<label>{{ text_button_href }}</label>';
+	html += '<input class="form-control" name="sections[' + section_row + '][groups][' + group_row + '][button_href]" />';
+	html += '</div>';
+	html += '<div class="form-group col-sm-6">';
+	html += '<label>{{ text_button_target }}</label>';
+	html += '<select name="sections[' + section_row + '][groups][' + group_row + '][button_target]" class="form-control">';
+    html += '<option value="0">{{ text_disabled }}</option>';
+	html += '<option value="1">{{ text_enabled }}</option>';
+	html += '</select>';
+	html += '</div>';
+	html += '</div>';
+	}
+	
+	if (layer_type == 'text') {
+	html += '<div class="row">';
+	
+	html += '<div class="form-group col-sm-6">';
+	html += '<label>{{ text_font_family }}</label>';
+	html += '<select name="sections[' + section_row + '][groups][' + group_row + '][font]" id="font-s' + section_row + '-g' + group_row + '" class="form-control">';
+	html += '<option disabled style="font-weight:bold">{{ text_system_fonts }}</option>';
+	{% for key, system_font in system_fonts %}
+    html += '<option value="{{ key }}">{{ system_font }}</option>';
+    {% endfor %}
+	html += '<option disabled style="font-weight:bold">{{ text_google_fonts }}</option>';
+	{% for key, g_font in g_fonts %}
+    html += '<option value="{{ g_font.name|escape('js') }}">';
+	html += '{{ g_font.name|escape('js') }}';
+	html += '</option>';     
+    {% endfor %}
+	{% for basel_font in basel_fonts %}
+	html += '<option value="{{ basel_font.name|escape('js') }}">';
+	html += '{{ basel_font.name|escape('js') }}';
+	html += '</option>';
+	{% endfor %}	
+	html += '</select>';
+	html += '</div>';
+	html += '<div class="form-group col-sm-6">';
+	html += '<label>{{ text_font_weight }}</label>';
+	html += '<select name="sections[' + section_row + '][groups][' + group_row + '][fontweight]" id="font-weight-s' + section_row + '-g' + group_row + '" class="form-control">';
+	{% for key, fontweight in fontweights %}
+    html += '<option value="{{ key }}">{{ fontweight }}</option>';
+    {% endfor %}
+	html += '</select>';
+	html += '</div>';
+	html += '</div>';
+
+	html += '<div class="row">';
+	html += '<div class="form-group col-sm-6">';
+	html += '<label>{{ text_font_size }}</label>';
+	html += '<input class="form-control" name="sections[' + section_row + '][groups][' + group_row + '][fontsize]" id="fontsize-s' + section_row + '-g' + group_row + '" value="24px" />';
+	html += '</div>';
+	html += '<div class="form-group col-sm-6">';
+	html += '<label>{{ text_color }}</label>';
+	html += '<div class="input-group" id="color-s' + section_row + '-g' + group_row + '">';
+	html += '<input class="form-control" name="sections[' + section_row + '][groups][' + group_row + '][color]" value="#222222" /><span class="input-group-addon"><i></i></span>';
+	html += '</div>';
+	html += '</div>';
+    html += '</div>';
+	
+	html += '<div class="row">';
+	html += '<div class="form-group col-sm-6">';
+	html += '<label>{{ text_background }}</label>';
+	html += '<div class="input-group" id="bg-s' + section_row + '-g' + group_row + '">';
+	html += '<input class="form-control" name="sections[' + section_row + '][groups][' + group_row + '][bg]" value="" /><span class="input-group-addon"><i></i></span>';
+	html += '</div>';
+	html += '</div>';
+	html += '<div class="form-group col-sm-6">';
+	html += '<label>{{ text_padding }}</label>';
+	html += '<input class="form-control" id="padding-s' + section_row + '-g' + group_row + '" name="sections[' + section_row + '][groups][' + group_row + '][padding]" value="10px 15px 10px 15px" />';
+	html += '</div>';
+    html += '</div>';
+
+	html += '<div class="row border_bottom">';
+	html += '<div class="form-group col-sm-6">';
+	html += '<label>{{ text_border_radius }}</label>';
+	html += '<input class="form-control" name="sections[' + section_row + '][groups][' + group_row + '][radius]" id="radius-s' + section_row + '-g' + group_row + '" value="3px 3px 3px 3px" />';
+	html += '</div>';
+	html += '<div class="form-group col-sm-6">';
+	html += '<label>{{ text_custom_css }}</label>';
+	html += '<textarea class="form-control" name="sections[' + section_row + '][groups][' + group_row + '][customcss]"/></texarea>';
+	html += '</div>';
+    html += '</div>';
+	}
+	}
+	
+	if (layer_type == 'image') {
+	html += '<h4>{{ text_heading_minheight }}</h4>';
+	html += '<div class="row border_bottom">';
+	html += '<div class="form-group col-sm-12">';
+	html += '<label>{{ text_layer_minheight }}</label>';
+	html += '<input class="form-control" type="text" name="sections[' + section_row + '][groups][' + group_row + '][minheight]"  value="0" />';
+	html += '</div>';
+	html += '</div>';
+	}
+
+	html += '<h4>{{ text_animation_in }}</h4>';
+	html += '<div class="row">';
+	html += '<div class="form-group col-sm-6">';
+	html += '<label>{{ text_effect }}</label>';
+	html += '<select name="sections[' + section_row + '][groups][' + group_row + '][transitionin]" id="transitionin-s' + section_row + '-g' + group_row + '" class="form-control">';
+	{% for key, transition in transitions %}
+    html += '<option value="{{ key }}">{{ transition }}</option>';
+    {% endfor %}
+	html += '</select>';
+	html += '</div>';
+	html += '<div class="form-group col-sm-6">';
+	html += '<label>{{ text_easing }}</label>';
+	html += '<select name="sections[' + section_row + '][groups][' + group_row + '][easingin]" id="easingin-s' + section_row + '-g' + group_row + '" class="form-control">';
+	{% for key, easing in easings %}
+    html += '<option value="{{ key }}">{{ easing }}</option>';
+    {% endfor %}
+	html += '</select>';
+	html += '</div>';
+	html += '</div>';
+	
+	html += '<div class="row border_bottom">';
+	html += '<div class="form-group col-sm-6">';
+	html += '<label>{{ text_duration }}</label>';
+	html += '<input class="form-control" name="sections[' + section_row + '][groups][' + group_row + '][durationin]" id="durationin-s' + section_row + '-g' + group_row + '" value="500" />';
+	html += '</div>';
+	html += '</div>';
+
+	html += '<h4>{{ text_animation_out }}</h4>';
+	html += '<div class="row">';
+	html += '<div class="form-group col-sm-6">';
+	html += '<label>{{ text_effect }}</label>';
+	html += '<select name="sections[' + section_row + '][groups][' + group_row + '][transitionout]" id="transitionout-s' + section_row + '-g' + group_row + '" class="form-control">';
+	{% for key, transition in transitions %}
+    html += '<option value="{{ key }}">{{ transition }}</option>';
+    {% endfor %}
+	html += '</select>';
+	html += '</div>';
+	html += '<div class="form-group col-sm-6">';
+	html += '<label>{{ text_easing }}</label>';
+	html += '<select name="sections[' + section_row + '][groups][' + group_row + '][easingout]" id="easingout-s' + section_row + '-g' + group_row + '" class="form-control">';
+	{% for key, easing in easings %}
+    html += '<option value="{{ key }}">{{ easing }}</option>';
+    {% endfor %}
+	html += '</select>';
+	html += '</div>';
+	html += '</div>';
+	
+	html += '<div class="row">';
+	html += '<div class="form-group col-sm-6">';
+	html += '<label>{{ text_duration }}</label>';
+	html += '<input class="form-control" name="sections[' + section_row + '][groups][' + group_row + '][durationout]" id="durationout-s' + section_row + '-g' + group_row + '" value="500" />';
+	html += '</div>';
+	html += '</div>';
+	
+	html += '</div>';
+	html += '</div>';
+	html += '</div>';
+	html += '<div class="layer-list">';
+	html += '<div class="layer-bar">';
+	html += '<div class="layer-table-cell icons">';
+	html += '<a class="icon selector" onclick="layerNavigate(' + section_row + ', ' + group_row + ');"></a>';
+	html += '<div class="icon ' + layer_type + '"></div>';
+	html += '<a class="icon remove" onclick="removeLayer(' + section_row + ',' + group_row + ');"><i class="fa fa-times-circle"></i></a>';		   
+	
+	html += '<div class="sort_holder">';
+	html += '<input class="form-control" name="sections[' + section_row + '][groups][' + group_row + '][sort_order]" value="' + sort_order + '" id="sort_order' + section_row + group_row + '" /> ';
+	html += '<input class="form-control" name="sections[' + section_row + '][groups][' + group_row + '][p_index]" value="0" id="p_index' + section_row + group_row + '" />';
+	html += '</div>';	
+	
+	html += '</div>';
+	html += '<div class="layer-table-cell field first">';
+	html += '<input class="form-control" type="text" data-index="0" name="sections[' + section_row + '][groups][' + group_row + '][start]" id="start-s' + section_row + '-g' + group_row + '" value="500" />';
+	html += '</div>';
+	html += '<div class="layer-table-cell slider">';
+	html += '<div id="slider-s' + section_row + '-g' + group_row + '"></div>';
+	html += '</div>';
+	html += '<div class="layer-table-cell field last">';
+	html += '<input class="form-control" type="text" data-index="1" name="sections[' + section_row + '][groups][' + group_row + '][end]" id="end-s' + section_row + '-g' + group_row + '" value="' + ( ($('#duration' + section_row + '').val() * 1000) - 500) + '" />';
+	html += '</div>';
+	html += '</div>';
+	html += '</div>';
+	html += '</div>';
+
+	$('#groups-' + section_row ).append(html);
+	
+	$('#language-s' + section_row + '-g' + group_row + ' li:first-child a').tab('show');
+	$('#groups-' + section_row + ' .single-layer').removeClass("active");
+	$('#group-row-s' + section_row + '-g' + group_row + '').addClass("active");
+	
+	if (layer_type == 'text') {
+	preview_layer = '<div class="preview-layer-holder s' + section_row + ' g' + group_row + '" style="top:50px;left:50px;z-index:' + sort_order + ';"><div class="preview_single_layer s' + section_row + ' g' + group_row + ' layer-edit-s' + section_row + '-g' + group_row +'" style="font-size:24px;color:#222222;padding:10px 15px 10px 15px;border-radius:3px 3px 3px 3px;" onclick="layerNavigate(' + section_row + ',' + group_row + ');">Layer Caption</div></div>';
+	}
+	
+	if (layer_type == 'button') {
+	preview_layer = '<div class="preview-layer-holder s' + section_row + ' g' + group_row + '" style="top:50px;left:50px;z-index:' + sort_order + ';"><div class="preview_single_layer s' + section_row + ' g' + group_row + ' layer-edit-s' + section_row + '-g' + group_row +' btn btn-link" style="" onclick="layerNavigate(' + section_row + ',' + group_row + ');"><span>button text</span></div></div>';
+	}
+	
+	if (layer_type == 'image') {
+	preview_layer = '<div class="preview-layer-holder s' + section_row + ' g' + group_row + '" style="top:50px;left:50px;z-index:' + sort_order + ';"><div class="preview_single_layer s' + section_row + ' g' + group_row + ' layer-edit-s' + section_row + '-g' + group_row +'" style="" onclick="layerNavigate(' + section_row + ',' + group_row + ');"><img src="{{ placeholder }}" /></div></div>';
+	}
+	
+	$('#tab-section-' + section_row + ' .slide-preview-inner').append(preview_layer);
+	
+	addScripts(section_row, group_row);
+	
+	group_row++;
+
+}
+function addScripts(section_row, group_row){
+// Update image
+$('#input-image-s' + section_row + '-g' + group_row + '-{{ lang }}').change( function(){
+$('.preview_single_layer.s' + section_row + '.g' + group_row + ' img').attr("src", ("{{ base_url }}" + 'image/' + $(this).val()));
+});
+// Make layers draggable
+$('.preview-layer-holder.s' + section_row + '.g' + group_row + '').draggable({
+stop: function() { 
+$('#left-s' + section_row + '-g' + group_row + '-l{{ lang }}').val(Math.round( $(this).position().left ));
+$('#top-s' + section_row + '-g' + group_row + '-l{{ lang }}').val(Math.round( $(this).position().top ));
+}
+});
+// Change layer position
+$('#left-s' + section_row + '-g' + group_row + '-l{{ lang }}').change( function(){
+$('.preview-layer-holder.s' + section_row + '.g' + group_row + '').css("left", $(this).val() + "px");
+});
+$('#top-s' + section_row + '-g' + group_row + '-l{{ lang }}').change( function(){
+$('.preview-layer-holder.s' + section_row + '.g' + group_row + '').css("left", $(this).val() + "px");
+});
+// Change z-index
+$('#sort_order' + section_row + group_row + '').change( function(){
+$('.preview-layer-holder.s' + section_row + '.g' + group_row + '').css("z-index", $(this).val());
+});
+// Change text
+$('#description-s' + section_row + '-g' + group_row + '-{{ lang }}').keyup( function(){
+$('.preview_single_layer.s' + section_row + '.g' + group_row + '').html( $(this).val() );
+});
+$('#button_text-s' + section_row + '-g' + group_row + '-{{ lang }}').keyup( function(){
+$('.preview_single_layer.s' + section_row + '.g' + group_row + ' span').html( $(this).val() );
+});
+// Change font-family
+$('#font-s' + section_row + '-g' + group_row + '').change( function(){
+$('.preview_single_layer.s' + section_row + '.g' + group_row + '').css("font-family", $(this).val());
+});
+// Font Size
+$('#fontsize-s' + section_row + '-g' + group_row + '').change( function(){
+$('.preview_single_layer.s' + section_row + '.g' + group_row + '').css("font-size", $(this).val()).css("height", "auto");
+});
+// Font Weight
+$('#font-weight-s' + section_row + '-g' + group_row + '').change( function(){
+$('.preview_single_layer.s' + section_row + '.g' + group_row + '').css("font-weight", $(this).val());
+});
+// Color picker
+$('#color-s' + section_row + '-g' + group_row + '').colorpicker({
+sliders: {
+saturation: {maxLeft: 150, maxTop: 150},hue: { maxTop: 150},alpha: { maxTop: 150}}
+}).on('changeColor.colorpicker', function(){
+$('.preview_single_layer.s' + section_row + '.g' + group_row + '').css("color", $('#color-s' + section_row + '-g' + group_row + ' input').val());
+});
+// Bg Color Picker
+$('#bg-s' + section_row + '-g' + group_row + '').colorpicker({
+sliders: {
+saturation: {maxLeft: 150, maxTop: 150},hue: { maxTop: 150},alpha: { maxTop: 150}}
+}).on('changeColor.colorpicker', function(){
+$('.preview_single_layer.s' + section_row + '.g' + group_row + '').css("background-color", $('#bg-s' + section_row + '-g' + group_row + ' input').val());
+});
+// Padding
+$('#padding-s' + section_row + '-g' + group_row + '').change( function(){
+$('.preview_single_layer.s' + section_row + '.g' + group_row + '').css("padding", $(this).val()).css("height", "auto");
+});
+// Border radius
+$('#radius-s' + section_row + '-g' + group_row + '').change( function(){
+$('.preview_single_layer.s' + section_row + '.g' + group_row + '').css("border-radius", $(this).val());
+});
+// Timer slider
+$('#slider-s' + section_row + '-g' + group_row + '').slider({
+range: true,
+min: 0,
+max: ( ($('#duration' + section_row + '').val() * 1000)),
+step: 1,
+values: [ 500 , ( ($('#duration' + section_row + '').val() * 1000) - 500) ],
+slide: function(event, ui) {
+$('#start-s' + section_row + '-g' + group_row + '').val(ui.values[0]);
+$('#end-s' + section_row + '-g' + group_row + '').val(ui.values[1]);
+}
+});
+$('#start-s' + section_row + '-g' + group_row + '').change(function() {
+var $this = $(this);
+$('#slider-s' + section_row + '-g' + group_row + '').slider("values", $this.data("index"), $this.val());
+});
+$('#end-s' + section_row + '-g' + group_row + '').change(function() {
+var $this = $(this);
+$('#slider-s' + section_row + '-g' + group_row + '').slider("values", $this.data("index"), $this.val());
+});
+// Change button class
+$('#button_class-s' + section_row + '-g' + group_row + '').change(function() {
+var $this = $(this);
+$('.preview_single_layer.s' + section_row + '.g' + group_row + '').alterClass( 'btn-*' );
+$('.preview_single_layer.s' + section_row + '.g' + group_row + '').addClass( $this.val() );
+});
+// Fix Bootstrap Tooltip
+$('[data-toggle=\'tooltip\']').tooltip({container: 'body'});
+}
+
+
+function addSlideScripts(section_row){
+// Change layer background image
+$('#input-image' + section_row).change( function(){
+$('.slide-preview.s' + section_row).css('background-image', 'url("{{ base_url }}/image/' + $(this).val() + '")');
+});
+// Change layer background color
+$('#bg_color_' + section_row).colorpicker({
+sliders: {
+saturation: {maxLeft: 150, maxTop: 150},hue: { maxTop: 150},alpha: { maxTop: 150}}
+}).on('changeColor.colorpicker', function(){
+$('.slide-preview.s' + section_row).css("background-color", $('#bg_color_' + section_row +' input').val());
+});
+
+
+// Fix Bootstrap Tooltip
+$('[data-toggle=\'tooltip\']').tooltip({container: 'body'});
+}
+	
+function removeLayer(section_row, group_row){
+if ($('#group-row-s' + section_row + '-g' + group_row).hasClass('active')) {
+$('#group-row-s' + section_row + '-g' + group_row).remove();
+$('.preview-layer-holder.s' + section_row + '.g' + group_row).remove();
+$('#groups-' + section_row + ' .single-layer:first').addClass('active');
+} else {
+$('#group-row-s' + section_row + '-g' + group_row).remove();
+$('.preview-layer-holder.s' + section_row + '.g' + group_row).remove();
+}
+deleted_layers++;
+}
+
+function layerNavigate(section_row, group_row) {
+$('#groups-' + section_row + ' .single-layer').removeClass("active");
+$('#group-row-s' + section_row + '-g' + group_row + '').addClass("active");
+}
+//--></script> 
+
+
+<!-- Scripts -->
+<script type="text/javascript"><!--
+$('#section li:first-child a').tab('show');
+//--></script>
+
+<script type="text/javascript"><!--
+$('#input-fullwidth').change( function(){
+if ($(this).val() == "1") {
+$('#content').addClass('fullwidth');
+} else {
+$('#content').removeClass('fullwidth');
+}
+});
+{% set section_row = 1 %}
+{% for section in sections %}
+$('#language{{ section_row }} li:first-child a').tab('show');
+$('#groups-{{ section_row }} .single-layer:first').addClass('active');
+// Change layer background image
+$("#input-image{{ section_row }}").change( function(){
+$('.slide-preview.s{{ section_row }}').css('background-image', 'url("{{ base_url }}/image/' + $(this).val() + '")');
+});
+// Change layer background color
+$('#bg_color_{{ section_row }}').colorpicker({
+sliders: {
+saturation: {maxLeft: 150, maxTop: 150},hue: { maxTop: 150},alpha: { maxTop: 150}}
+}).on('changeColor.colorpicker', function(){
+$('.slide-preview.s{{ section_row }}').css("background-color", $('#bg_color_{{ section_row }} input').val());
+});
+{% set group_row = 0 %}
+{% for group in section.groups %}
+// Make layers draggable
+$(".preview-layer-holder.s{{ section_row }}.g{{ group_row }}").draggable({
+    stop: function() { 
+    $('#left-s{{ section_row }}-g{{ group_row }}-l{{ lang }}').val(Math.round( $(this).position().left ));
+	$('#top-s{{ section_row }}-g{{ group_row }}-l{{ lang }}').val(Math.round( $(this).position().top ));
+    }
+});
+// Change layer position
+$('#left-s{{ section_row }}-g{{ group_row }}-l{{ lang }}').change( function(){
+$('.preview-layer-holder.s{{ section_row }}.g{{ group_row }}').css("left", $(this).val() + "px");
+});
+$('#top-s{{ section_row }}-g{{ group_row }}-l{{ lang }}').change( function(){
+$('.preview-layer-holder.s{{ section_row }}.g{{ group_row }}').css("top", $(this).val() + "px");
+});
+// Change image
+$('#input-image-s{{ section_row }}-g{{ group_row }}-{{ lang }}').change( function(){
+$('.preview_single_layer.s{{ section_row }}.g{{ group_row }} img').attr("src", ("{{ base_url }}" + 'image/' + $(this).val()));
+});
+// Change text
+$('#description-s{{ section_row }}-g{{ group_row }}-{{ lang }}').keyup( function(){
+$('.preview_single_layer.s{{ section_row }}.g{{ group_row }}').html( $(this).val() );
+});
+$('#button_text-s{{ section_row }}-g{{ group_row }}-{{ lang }}').keyup( function(){
+$('.preview_single_layer.s{{ section_row }}.g{{ group_row }} span').html( $(this).val() );
+});
+// Change z-index
+$('#sort_order{{ section_row }}{{ group_row }}').change( function(){
+$('.preview-layer-holder.s{{ section_row }}.g{{ group_row }}').css("z-index", $(this).val());
+});
+// Change font
+$('#font-s{{ section_row }}-g{{ group_row }}').change( function(){
+$('.preview_single_layer.s{{ section_row }}.g{{ group_row }}').css("font-family", $(this).val());
+});
+// Color picker
+$('#color-s{{ section_row }}-g{{ group_row }}').colorpicker({
+sliders: {
+saturation: {maxLeft: 150, maxTop: 150},hue: { maxTop: 150},alpha: { maxTop: 150}}
+}).on('changeColor.colorpicker', function(){
+$('.preview_single_layer.s{{ section_row }}.g{{ group_row }}').css("color", $('#color-s{{ section_row }}-g{{ group_row }} input').val());
+});
+// Bg Color Picker
+$('#bg-s{{ section_row }}-g{{ group_row }}').colorpicker({
+sliders: {
+saturation: {maxLeft: 150, maxTop: 150},hue: { maxTop: 150},alpha: { maxTop: 150}}
+}).on('changeColor.colorpicker', function(){
+$('.preview_single_layer.s{{ section_row }}.g{{ group_row }}').css("background-color", $('#bg-s{{ section_row }}-g{{ group_row }} input').val());
+});
+// Font Size
+$('#fontsize-s{{ section_row }}-g{{ group_row }}').change( function(){
+$('.preview_single_layer.s{{ section_row }}.g{{ group_row }}').css("font-size", $(this).val()).css("height", "auto");
+});
+// Font Weight
+$('#font-weight-s{{ section_row }}-g{{ group_row }}').change( function(){
+$('.preview_single_layer.s{{ section_row }}.g{{ group_row }}').css("font-weight", $(this).val());
+});
+// Padding
+$('#padding-s{{ section_row }}-g{{ group_row }}').change( function(){
+$('.preview_single_layer.s{{ section_row }}.g{{ group_row }}').css("padding", $(this).val()).css("height", "auto");
+});
+// Border radius
+$('#radius-s{{ section_row }}-g{{ group_row }}').change( function(){
+$('.preview_single_layer.s{{ section_row }}.g{{ group_row }}').css("border-radius", $(this).val());
+});
+// Range Slider
+
+
+$("#slider-s{{ section_row }}-g{{ group_row }}").slider({
+range: true,
+min: 0,
+max: ($('#duration{{ section_row }}').val() * 1000),
+step: 1,
+values: [ {{ section.groups[group_row].start }} , {{ section.groups[group_row].end }} ],
+slide: function(event, ui) {
+$('#start-s{{ section_row }}-g{{ group_row }}').val(ui.values[0]);
+$('#end-s{{ section_row }}-g{{ group_row }}').val(ui.values[1]);
+}
+});
+$("#start-s{{ section_row }}-g{{ group_row }}").change(function() {
+var $this = $(this);
+$("#slider-s{{ section_row }}-g{{ group_row }}").slider("values", $this.data("index"), $this.val());
+});
+$("#end-s{{ section_row }}-g{{ group_row }}").change(function() {
+var $this = $(this);
+$("#slider-s{{ section_row }}-g{{ group_row }}").slider("values", $this.data("index"), $this.val());
+});
+//Change button class
+$("#button_class-s{{ section_row }}-g{{ group_row }}").change(function() {
+var $this = $(this);
+$('.preview_single_layer.s{{ section_row }}.g{{ group_row }}').alterClass( 'btn-*' );
+$('.preview_single_layer.s{{ section_row }}.g{{ group_row }}').addClass( $this.val() );
+});
+
+{% set group_row =  group_row + 1 %}
+{% endfor %}
+
+{% set section_row = section_row + 1 %}
+{% endfor %}
+//--></script>
+<script type="text/javascript">
+// HTML decoder for twig engine
+jQuery.fn.decHTML = function() {
+  return this.each(function(){
+    var me   = jQuery(this);
+    var html = me.html();
+    me.html(html.replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>'));
+  });
+};
+</script>
+<script>
+$(document).ready(function(){
+  $(".html_decode_area").decHTML();
+});
+</script>
+{{ footer }}

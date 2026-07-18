@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="utf-8"?>
+<modification>
+    <name>SEO - URL BASIC [2200 - 23xx]</name>
+    <version>5.1</version>
+    <author>HuntBee OpenCart Services</author>
+    <link>https://www.huntbee.com</link>
+	<code>huntbee_seo_friendly_url_ocmod</code>
+
+		<file path="catalog/controller/startup/seo_url.php">
+            <operation>
+                <search><![CDATA[if (!isset($this->request->get['route'])) {]]></search>
+                <add position="before"><![CDATA[
+                $this->request->get['_route_'] = rtrim($this->request->get['_route_'],'/');
+				$hb_route = $this->db->query("SELECT `route`,`language_id` FROM `".DB_PREFIX."hb_url` WHERE `keyword` = '".$this->db->escape($this->request->get['_route_'])."' AND `store_id` = '".(int)$this->config->get('config_store_id')."' LIMIT 1");
+    			if ($hb_route->num_rows == 1) {
+    				$this->request->get['route'] = $hb_route->row['route'];
+    			}		
+				]]></add>
+            </operation>
+			<operation>
+                <search><![CDATA[if ($url) {]]></search>
+                <add position="before"><![CDATA[
+				if (isset($data['route'])) {
+    				$hb_keyword = $this->db->query("SELECT `keyword` FROM `".DB_PREFIX."hb_url` WHERE `route` = '".$this->db->escape($data['route'])."' AND `language_id` = '".(int)$this->config->get('config_language_id')."' AND `store_id` = '".(int)$this->config->get('config_store_id')."' LIMIT 1");
+        			if ($hb_keyword->num_rows == 1) {
+        				$url .= '/'.$hb_keyword->row['keyword'];
+        			}
+    				if (isset($data['route']) && $data['route'] == 'common/home') { 
+    					if(isset($set_language_code)){
+    					    $url .= '/'.$set_language_code;   
+    					}else{
+    					    $url .= '/'; 
+    					}
+    				} 
+				}
+				]]></add>
+            </operation>
+		</file>
+		
+		<file path="admin/controller/catalog/product.php">
+            <operation>
+                <search><![CDATA[$this->response->setOutput($this->load->view('catalog/product_list]]></search>
+                <add position="before"><![CDATA[
+				if (version_compare(VERSION,'2.2.0.0','<=' )) {
+					$extn_route = 'hbseo';
+				}else{
+					$extn_route = 'extension/hbseo';
+				}
+                $this->load->model('setting/setting');
+                $data['hb_stores'] = array();
+        		$data['auto_urls'] = array();
+        		$data['hb_stores'][] = 0;
+        		
+        		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "store");
+        		if ($query->num_rows > 0){
+        			$results = $query->rows;
+        			foreach ($results as $result) {
+        				$data['hb_stores'][] = $result['store_id'];
+        			}
+        		}
+        		
+        		foreach ($data['hb_stores'] as $store_id){
+        		    $data['auto_urls'][] = array(
+        		    'link' => $this->url->link($extn_route.'/hb_seourl/generatekeyword', 'token=' . $this->session->data['token'] . '&store_id='.$store_id.'&type=product', true));
+        		}
+		
+				$data['hb_seourl_auto'] = $this->config->get('hb_seourl_auto');
+				if (isset($this->request->get['page'])) {
+				    $data['pagination_detected'] = true;
+				}else{
+				    $data['pagination_detected'] = false;
+				}
+				]]></add>
+            </operation>
+        </file>	
+        
+        <file path="admin/view/template/catalog/product_list.tpl">
+            <operation>
+                <search><![CDATA[<?php echo $footer; ?>]]></search>
+                <add position="before"><![CDATA[
+				<?php if (($hb_seourl_auto == 1)  and ($pagination_detected == false)) {?>
+				<script type="text/javascript">
+				$(document).ready( function () {
+				  <?php foreach ($auto_urls as $auto_url) { ?>
+				  $.ajax({ url: '<?php echo htmlspecialchars_decode($auto_url['link']); ?>' });
+				  <?php } ?>
+				});
+				</script>
+				<?php } ?>
+				]]>
+                </add>
+            </operation>
+        </file>
+        
+        <file path="admin/controller/catalog/category.php">
+            <operation>
+                <search><![CDATA[$this->response->setOutput($this->load->view('catalog/category_list]]></search>
+                <add position="before"><![CDATA[
+				if (version_compare(VERSION,'2.2.0.0','<=' )) {
+					$extn_route = 'hbseo';
+				}else{
+					$extn_route = 'extension/hbseo';
+				}
+				
+                $this->load->model('setting/setting');
+                $data['hb_stores'] = array();
+        		$data['auto_urls'] = array();
+        		$data['hb_stores'][] = 0;
+        		
+        		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "store");
+        		if ($query->num_rows > 0){
+        			$results = $query->rows;
+        			foreach ($results as $result) {
+        				$data['hb_stores'][] = $result['store_id'];
+        			}
+        		}
+        		
+        		foreach ($data['hb_stores'] as $store_id){
+        		    $data['auto_urls'][] = array(
+        		    'link' => $this->url->link($extn_route.'/hb_seourl/generatekeyword', 'token=' . $this->session->data['token'] . '&store_id='.$store_id.'&type=category', true));
+        		}
+		
+				$data['hb_seourl_auto'] = $this->config->get('hb_seourl_auto');
+				if (isset($this->request->get['page'])) {
+				    $data['pagination_detected'] = true;
+				}else{
+				    $data['pagination_detected'] = false;
+				}
+				]]></add>
+            </operation>
+        </file>	
+        
+        <file path="admin/view/template/catalog/category_list.tpl">
+            <operation>
+                <search><![CDATA[<?php echo $footer; ?>]]></search>
+                <add position="before"><![CDATA[
+				<?php if (($hb_seourl_auto == 1)  and ($pagination_detected == false)) { ?>
+    				<script type="text/javascript">
+    				$(document).ready( function () {
+    				  <?php foreach ($auto_urls as $auto_url) { ?>
+    				  $.ajax({ url: '<?php echo htmlspecialchars_decode($auto_url['link']); ?>' });
+    				  <?php } ?>
+    				});
+    				</script>
+				<?php } ?>
+				]]>
+                </add>
+            </operation>
+        </file>
+        
+        <file path="admin/controller/catalog/manufacturer.php">
+            <operation>
+                <search><![CDATA[$this->response->setOutput($this->load->view('catalog/manufacturer_list]]></search>
+                <add position="before"><![CDATA[
+				if (version_compare(VERSION,'2.2.0.0','<=' )) {
+					$extn_route = 'hbseo';
+				}else{
+					$extn_route = 'extension/hbseo';
+				}
+				
+                $this->load->model('setting/setting');
+                $data['hb_stores'] = array();
+        		$data['auto_urls'] = array();
+        		$data['hb_stores'][] = 0;
+        		
+        		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "store");
+        		if ($query->num_rows > 0){
+        			$results = $query->rows;
+        			foreach ($results as $result) {
+        				$data['hb_stores'][] = $result['store_id'];
+        			}
+        		}
+        		
+        		foreach ($data['hb_stores'] as $store_id){
+        		    $data['auto_urls'][] = array(
+        		    'link' => $this->url->link($extn_route.'/hb_seourl/generatekeyword', 'token=' . $this->session->data['token'] . '&store_id='.$store_id.'&type=brand', true));
+        		}
+		
+				$data['hb_seourl_auto'] = $this->config->get('hb_seourl_auto');
+				if (isset($this->request->get['page'])) {
+				    $data['pagination_detected'] = true;
+				}else{
+				    $data['pagination_detected'] = false;
+				}
+				]]></add>
+            </operation>
+        </file>	
+        
+        <file path="admin/view/template/catalog/manufacturer_list.tpl">
+            <operation>
+                <search><![CDATA[<?php echo $footer; ?>]]></search>
+                <add position="before"><![CDATA[
+				<?php if (($hb_seourl_auto == 1)  and ($pagination_detected == false)) {?>
+				<script type="text/javascript">
+				$(document).ready( function () {
+				  <?php foreach ($auto_urls as $auto_url) { ?>
+				  $.ajax({ url: '<?php echo htmlspecialchars_decode($auto_url['link']); ?>' });
+				  <?php } ?>
+				});
+				</script>
+				<?php } ?>
+				]]>
+                </add>
+            </operation>
+        </file>
+        
+        <file path="admin/controller/catalog/information.php">
+            <operation>
+                <search><![CDATA[$this->response->setOutput($this->load->view('catalog/information_list]]></search>
+                <add position="before"><![CDATA[
+				if (version_compare(VERSION,'2.2.0.0','<=' )) {
+					$extn_route = 'hbseo';
+				}else{
+					$extn_route = 'extension/hbseo';
+				}
+				
+                $this->load->model('setting/setting');
+                $data['hb_stores'] = array();
+        		$data['auto_urls'] = array();
+        		$data['hb_stores'][] = 0;
+        		
+        		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "store");
+        		if ($query->num_rows > 0){
+        			$results = $query->rows;
+        			foreach ($results as $result) {
+        				$data['hb_stores'][] = $result['store_id'];
+        			}
+        		}
+        		
+        		foreach ($data['hb_stores'] as $store_id){
+        		    $data['auto_urls'][] = array(
+        		    'link' => $this->url->link($extn_route.'/hb_seourl/generatekeyword', 'token=' . $this->session->data['token'] . '&store_id='.$store_id.'&type=information', true));
+        		}
+		
+				$data['hb_seourl_auto'] = $this->config->get('hb_seourl_auto');
+				if (isset($this->request->get['page'])) {
+				    $data['pagination_detected'] = true;
+				}else{
+				    $data['pagination_detected'] = false;
+				}
+				]]></add>
+            </operation>
+        </file>	
+        
+        <file path="admin/view/template/catalog/information_list.tpl">
+            <operation>
+                <search><![CDATA[<?php echo $footer; ?>]]></search>
+                <add position="before"><![CDATA[
+				<?php if (($hb_seourl_auto == 1)  and ($pagination_detected == false)) {?>
+				<script type="text/javascript">
+				$(document).ready( function () {
+				  <?php foreach ($auto_urls as $auto_url) { ?>
+				  $.ajax({ url: '<?php echo htmlspecialchars_decode($auto_url['link']); ?>' });
+				  <?php } ?>
+				});
+				</script>
+				<?php } ?>
+				]]>
+                </add>
+            </operation>
+        </file>
+        
+</modification>

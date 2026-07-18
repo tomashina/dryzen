@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html dir="{{ direction }}" lang="{{ lang }}">
+<head>
+<meta charset="UTF-8" />
+<title>{{ title }}</title>
+</head>
+<body>
+<div id="content">
+  {% if policy_title is not empty %}
+  <h4>{{ policy_title }}</h4>
+  {{ policy_description }}
+  {% else %}
+  <h1>{{ error }}</h1>
+  {% endif %}
+</div>
+</body>
+</html>

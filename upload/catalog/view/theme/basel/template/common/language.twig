@@ -1,0 +1,32 @@
+{% if languages|length > 1 %}
+<div class="option">
+<h4>{{ text_language }}</h4>
+{% for language in languages %}
+{% if language.code == code %}
+<p><span class="anim-underline active">{{ language.name }}</span></p>
+{% else %}
+<p><a class="anim-underline" onclick="$('input[name=\'code\']').attr('value', '{{ language.code }}'); $('#form-language').submit();">
+{{ language.name }}</a></p>
+{% endif %}
+{% endfor %}
+<select name="language-select" id="language-select" class="-hidden-md -hidden-lg">
+{% for language in languages %}
+{% if language.code == code %}
+<option value="{{ language.code }}" selected="selected">{{ language.name }}</option>
+{% else %}
+<option value="{{ language.code }}">{{ language.name }}</option>
+{% endif %}
+{% endfor %}
+</select>
+<form action="{{ action }}" method="post" enctype="multipart/form-data" id="form-language">
+<input type="hidden" name="code" id="lang-code" value="" />
+<input type="hidden" name="redirect" value="{{ redirect }}" />
+</form>
+<script>
+$(document).ready(function() {
+$('.mobile-lang-curr').addClass('has-l');
+$('#language-select').appendTo('.mobile-lang-curr');
+});
+</script>
+</div>
+{% endif %}

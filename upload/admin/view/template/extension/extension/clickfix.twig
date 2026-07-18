@@ -1,0 +1,194 @@
+{{ header }} {{ column_left }} 
+{% spaceless %}
+<div id="content">
+<link type="text/css" href="view/stylesheet/stylesheet2.css" rel="stylesheet" media="screen" />
+  <div class="breadcrumb">
+    {% for breadcrumb in breadcrumbs %} 
+    {{ breadcrumb.separator }} <a href="{{ breadcrumb.href }}">{{ breadcrumb.text }} </a>
+    {% endfor %} 
+  </div>
+  {% if error_warning %} 
+  <div class="warning">{{ error_warning }} </div>
+  {% endif %} 
+  {% if success %} 
+  <div class="success">{{ success }} </div>
+  {% endif %} 
+  <div class="box">
+    <div class="heading">
+      <h1><img src="view/image/review.png" alt="" /> {{ heading_title }} </h1>
+		
+		<div class="buttons"><div id="containerx" style="margin: 1px;width: 200px;height: 21px;position: relative;"></div></div>
+	</div> 
+    <div class="content">
+	<form action="{{ action }}" method="post" enctype="multipart/form-data" id="form">
+		   <table class="list">
+            <thead>
+              <tr>
+                <td class="left" width="200">SEO Feature</td>
+				<td class="left">About</td>
+				<td class="right" width="220">Action</td>
+              </tr>
+            </thead>
+            
+			<tbody>
+              <tr>
+                <td class="left"><b>SEO URLs</b></td>
+                <td class="left">
+				
+				{{ aboutseourls }} </td>
+                <td class="right">
+					{% if fixseourls %} 
+					<a onclick="location = '{{ fixseourls }}'" class="button">Fix SEO URLs</a>
+					 {% else %}   
+					<a class="button" style="background:green">OK</a>
+					 {% endif %}
+				</td>
+              </tr>
+              <tr>
+                <td class="left"><b>Meta Descriptions</b></td>
+                <td class="left">
+				
+				{{ aboutmetadescription }} </td>
+                <td class="right">
+					{% if fixmetadescription %} 
+					<a onclick="location = '{{ fixmetadescription }}'" class="button">Fix Meta Descriptions</a>
+					 {% else %}   
+					<a class="button" style="background:green">OK</a>
+					 {% endif %}
+				</td>
+              </tr>
+              <tr>
+                <td class="left"><b>Meta Keywords</b></td>
+                <td class="left">
+				
+				{{ aboutmetakeyword }} </td>
+                <td class="right">
+					{% if fixmetakeyword %} 
+					<a onclick="location = '{{ fixmetakeyword }}'" class="button">Fix Meta Keywords</a>
+					{% else %}   
+					<a class="button" style="background:green">OK</a>
+					 {% endif %} 
+				</td>
+              </tr>
+              <tr>
+                <td class="left"><b>Meta Titles</b></td>
+                <td class="left">
+				
+				{{ aboutmetatitle }} </td>
+                <td class="right">
+					{% if fixmetatitle %} 
+					<a onclick="location = '{{ fixmetatitle }}'" class="button">Fix Meta Titles</a>
+					 {% else %}   
+					<a class="button" style="background:green">OK</a>
+					 {% endif %}
+				</td>
+              </tr>
+              <tr>
+                <td class="left"><b>Canonical Links</b></td>
+                <td class="left">
+				
+				{{ aboutcanonicals }} </td>
+                <td class="right">
+					{% if fixcanonicals %} 
+					<a onclick="location = '{{ fixcanonicals }}'" class="button">Fix Canonical Links</a>
+					 {% else %}   
+					<a class="button" style="background:green">OK</a>
+					 {% endif %}
+				</td>
+              </tr>
+            <tr>
+                <td class="left"><b>Multi Language SEO</b></td>
+                <td class="left">
+				
+				{{ aboutmlseo }} </td>
+                <td class="right">
+					{% if fixmlseo %} 
+					<a onclick="location = '{{ fixmlseo }}'" class="button">Fix Multi Language SEO</a>
+					 {% else %}   
+					<a class="button" style="background:green">OK</a>
+					 {% endif %}
+				</td>
+              </tr>
+            <tr>
+                <td class="left"><b>Rich Snippets & Social SEO</b></td>
+                <td class="left">
+				
+				{{ aboutrichsnippets }} </td>
+                <td class="right">
+					{% if fixrichsnippets %} 
+					<a onclick="location = '{{ fixrichsnippets }}'" class="button">Fix Rich Snippets & Social SEO</a>
+					{% else %}   
+					<a class="button" style="background:green">OK</a>
+					 {% endif %} 
+				</td>
+              </tr>
+            <tr>
+                <td class="left"><b>SEO Pagination</b></td>
+                <td class="left">
+				
+				{{ aboutseopagination }} </td>
+                <td class="right">
+					{% if fixseopagination %} 
+					<a onclick="location = '{{ fixseopagination }}'" class="button">Fix SEO Pagination</a>
+					 {% else %}   
+					<a class="button" style="background:green">OK</a>
+					 {% endif %}
+				</td>
+              </tr>
+            <tr>
+                <td class="left"><b>Extended SEO</b></td>
+                <td class="left">
+				
+				{{ aboutextendedseo }} </td>
+                <td class="right">
+					{% if fixextendedseo %} 
+					<a onclick="location = '{{ fixextendedseo }}'" class="button">Fix Extended SEO</a>
+					{% else %}   
+					<a class="button" style="background:green">OK</a>
+					 {% endif %} 
+				</td>
+              </tr>
+            </tbody>
+			
+            
+          </table>
+	</form>
+	</div>
+   </div>
+</div>
+<script src="view/javascript/progressbar.js"></script>
+<script type="text/javascript">
+var bar = new ProgressBar.Line(containerx, {
+  strokeWidth: 10,
+  easing: 'easeInOut',
+  duration: 3000,
+  color: '#FFEA82',
+  trailColor: '#bbb',
+  trailWidth: 10,
+  svgStyle: {width: '100%', height: '100%'},
+  text: {
+    style: {
+      // Text color.
+      // Default: same as stroke color (options.color)
+      color: '#555555',
+	  
+      position: 'absolute',
+      right: '50px',
+      top: '0',
+      padding: 0,
+      margin: 10,
+      transform: null
+    },
+    autoStyleContainer: false
+  },
+  from: {color: '#00EA82'},
+  to: {color: '#006A5A'},
+  step: (state, bar) => {
+    bar.setText('<b>SEO Meter: ' + Math.floor(bar.value() * 100) + ' %</b>');
+  }
+});
+
+bar.animate({{ seometer }} ); 
+</script>
+{% endspaceless %}
+{{ footer }} 

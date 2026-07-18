@@ -1,0 +1,627 @@
+{{ header }}{{ column_left }} 
+<!--Main Content block start-->
+
+<div id="content">
+  <!--Header Start-->
+	<div class="page-header">
+		<div class="container-fluid">
+			<div class="pull-right">
+				<button type="submit" form="form-sitemap" data-toggle="tooltip" title="{{ button_save }}" class="btn btn-primary"><i class="fa fa-save"></i>&nbsp;{{ button_save }}</button>
+				<a class="btn btn-danger" onclick="deleteLink();" id="button-deletelink"><i class="fa fa-trash"></i>&nbsp;{{ button_remove_links }}</a>
+				<a class="btn btn-default" href="{{ google_index_link }}" target="_blank"><i class="fa fa-google"></i>&nbsp;{{ button_google_indexed }}</a>
+				<a href="{{ doc_link }}" target="_blank" class="btn btn-default"><i class="fa fa-book"></i>&nbsp;{{ button_doc }}</a>
+				<a href="{{ cancel }}" data-toggle="tooltip" title="{{ button_cancel }}" class="btn btn-default"><i class="fa fa-reply"></i></a>
+			</div>
+			<h1>{{ heading_title }}</h1>
+			<ul class="breadcrumb">
+				{% for breadcrumb in breadcrumbs %} 
+				<li><a href="{{ breadcrumb['href'] }}">{{ breadcrumb['text'] }}</a></li>
+				{% endfor %} 
+			</ul>
+		</div>
+	</div>
+  <!--Header End-->
+  <!--Container 1 start -->
+  	<div class="container-fluid">
+		<!--Start - Error / Success Message if any -->
+		{% if (error_warning) %} 
+		<div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i> {{ error_warning }} 
+		<button type="button" class="close" data-dismiss="alert">&times;</button>
+		</div>
+		{% endif %} 
+		{% if (success) %} 
+		<div class="alert alert-success"><i class="fa fa-check-circle"></i> {{ success }} 
+		<button type="button" class="close" data-dismiss="alert">&times;</button>
+		</div>
+		{% endif %} 
+		<!--End - Error / Success Message if any -->	
+	
+		<div id="msgoutput"></div>
+		{% if not htaccess_enabled %} 
+		<div class="alert alert-danger no-htaccess" id="htaccess-msg-block">
+			{{ text_code_missing }}
+			<a class="btn btn-warning" id="add-htacess-code">{{ button_add_htaccess }}</a>
+		</div>
+		{% endif %} 
+	
+		<!--Panel Content Start-->
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h3 class="panel-title"><i class="fa fa-sitemap"></i> {{ heading_title }}</h3>
+					{% if (stores) %} 
+					<div class="pull-right">
+						<select id="store">
+							<option value="0" {{ store_id == 0?'selected':'' }}>Default Store</option>
+							{% for store in stores %} 
+								<option value="{{ store.store_id }}" {{ store_id == store.store_id ?'selected':'' }}>{{ store.name }}</option>
+							{% endfor %} 
+						</select>
+					</div>
+					{% endif %} 
+			</div>
+
+			<div class="panel-body">        
+				<!--Tabs UL Starts-->
+				<ul class="nav nav-tabs" id="tabs">
+					<li class="active"><a href="#tab-dashboard" data-toggle="tab"><i class="fa fa-tachometer"></i>&nbsp;{{ tab_dashboard }}</a></li>
+					<li><a href="#tab-links" onclick="loadBlock('links');" data-toggle="tab"><i class="fa fa-link"></i>&nbsp;{{ tab_links }}</a></li>
+					<li><a href="#tab-setting" data-toggle="tab"><i class="fa fa-cogs"></i>&nbsp;{{ tab_setting }}</a></li>
+					<li><a href="#tab-tools" data-toggle="tab"><i class="fa fa-wrench"></i>&nbsp;{{ tab_tools }}</a></li>
+				</ul>
+				<!--Tabs UL Ends-->
+				<div class="tab-content">
+					<div class="tab-pane active" id="tab-dashboard">
+						{% if invalid_date %}
+						<div class="row">
+							<div class="col-sm-12">
+								<div class="well">									
+									{% for date in invalid_date %}
+									<p class="text-danger">{{ date }}</p>
+									{% endfor %}
+									<br /><a class="btn btn-primary" onclick="fixDates();"><i class="fa fa-magic"></i>&nbsp;{{ button_fix_dates }}</a>
+								</div>
+							</div>
+						</div>
+						{% endif %}
+						
+						<form class="form-horizontal">
+							<div class="well">
+								<div class="form-group">
+									<div class="col-sm-4">{{ text_sitemap_index_info }}</div>
+									<div class="col-sm-6">
+										<input type="text" class="form-control" value="{{ sitemap_index_link }}" readonly="" />
+									</div>
+									<div class="col-sm-2">
+										<a href="{{ sitemap_index_link }}" class="btn btn-primary col-sm-12" target="_blank"><i class="fa fa-sitemap"></i>&nbsp;{{ button_sitemap_index }}</a>
+									</div>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<div class="col-sm-12">
+									<h4>{{ text_all_sitemap_links }}</h4>
+								</div>
+								
+								<div class="col-sm-12">
+									<table class="table table-hover table-bordered table-striped">
+										<thead>
+										<tr>
+											<th>{{ col_sitemap_file }} <a id="generate-sitemaps" data-toggle="tooltip" title="{{ button_generate }}" class="btn btn-sm btn-default"><i class="fa fa-download"></i></a></th>
+											<th class="text-right">{{ col_modified }}</th>
+										</tr>
+										</thead>
+										<tbody>
+										{% if sitemaps %} 
+											{% for sitemap in sitemaps %} 
+											<tr>
+												<td><a href="{{ sitemap.loc }}" target="_blank">{{ sitemap.loc }}</a></td>
+												<td class="text-right">{{ sitemap.lastmod }}</td>
+											</tr>
+											{% endfor %} 
+										{% else %} 
+											<tr>
+												<td colspan="2" class="text-danger">{{ error_no_sitemaps }}</td>
+											</tr>
+										{% endif %} 
+										</tbody>
+									</table>									
+								</div>
+							</div>	
+
+							{% if real_sitemap_files %}
+							<div class="form-group">
+								<div class="col-sm-12">									
+									<div class="alert alert-info">
+										{{ text_real_sitemap_info | raw }}
+									</div>
+									<h4>{{ text_real_sitemap_links }}</h4>
+								</div>
+								
+								<div class="col-sm-12">
+									<table class="table table-hover table-bordered table-striped">
+										<thead>
+										<tr>
+											<th>{{ col_sitemap_file }}</th>
+											<th class="text-right">{{ col_modified }}</th>
+										</tr>
+										</thead>
+										<tbody>										 
+											{% for sitemap in real_sitemap_files %} 
+											<tr>
+												<td><a href="{{ sitemap.loc }}" target="_blank">{{ sitemap.loc }}</a></td>
+												<td class="text-right">{{ sitemap.lastmod }}</td>
+											</tr>
+											{% endfor %} 
+										</tbody>
+									</table>									
+								</div>
+							</div>	
+							{% endif %} 					
+						</form>					
+						
+						
+					</div>				
+					
+					<!--LINKS TAB-->
+					<div class="tab-pane" id="tab-links">						 
+						<div class="row" style="margin-bottom:10px;">
+							<div class="col-sm-4">
+								<input type="text" name="link" id="link" onkeyup="searchRecord();" class="form-control" value="" placeholder="{{ entry_link }}" />
+							</div>
+							<div class="col-sm-3">
+								<select id="freq" class="form-control">
+									{% for value, text in freq_options %}
+										<option value="{{ value }}">{{ text }}</option>
+									{% endfor %}
+								</select>
+							</div>
+							<div class="col-sm-3">
+								<select id="priority" class="form-control">
+									{% for value, text in priority_options %}
+										<option value="{{ value }}">{{ text }}</option>
+									{% endfor %}
+								</select>
+							</div>
+							<div class="col-sm-2">
+								<a class="btn btn-success col-sm-12" onclick="addLink();" id="button-addlink"><i class="fa fa-plus"></i> Add Link</a>
+							</div>
+						</div>
+						
+						<div id="links-block" class="ajax-block"></div>					
+					</div>
+					
+					<!--SETUP-->
+					<div class="tab-pane" id="tab-setting">	
+						<form action="{{ action }}" method="post" enctype="multipart/form-data" id="form-sitemap" class="form-horizontal">
+              <div class="row">	
+                <div class="col-sm-6">
+                  <div class="panel panel-default">
+                    <div class="panel-heading"><h4 class="panel-title">{{ text_sitemaps_essential }}</h4></div>
+                    <div class="panel-body">
+                      <div class="col-sm-12">
+                        <!-- Product Sitemap -->
+                        <div class="form-group">
+                          <label class="col-sm-8 control-label">{{ text_product_sitemap }}</label>
+                          <div class="col-sm-4">
+                            <input type="checkbox" data-toggle="toggle" data-onstyle="success" name="hb_sitemap_product" class="form-control" value="1" {{ hb_sitemap_product == '1' ? 'checked' : '' }} />
+                          </div>
+                        </div>  
+                        
+                        <!-- Category Sitemap -->
+                        <div class="form-group">
+                          <label class="col-sm-8 control-label">{{ text_category_sitemap }}</label>
+                          <div class="col-sm-4">
+                            <input type="checkbox" data-toggle="toggle" data-onstyle="success" name="hb_sitemap_category" class="form-control" value="1" {{ hb_sitemap_category == '1' ? 'checked' : '' }} />
+                          </div>
+                        </div> 
+                        
+                        <!-- Manufacturer Sitemap -->
+                        <div class="form-group">
+                          <label class="col-sm-8 control-label">{{ text_manufacturer_sitemap }}</label>
+                          <div class="col-sm-4">
+                            <input type="checkbox" data-toggle="toggle" data-onstyle="success" name="hb_sitemap_brand" class="form-control" value="1" {{ hb_sitemap_brand == '1' ? 'checked' : '' }} />
+                          </div>
+                        </div> 
+                        
+                        <!-- Information Sitemap -->
+                        <div class="form-group">
+                          <label class="col-sm-8 control-label">{{ text_information_sitemap }}</label>
+                          <div class="col-sm-4">
+                            <input type="checkbox" data-toggle="toggle" data-onstyle="success" name="hb_sitemap_information" class="form-control" value="1" {{ hb_sitemap_information == '1' ? 'checked' : '' }} />
+                          </div>
+                        </div>        
+                      </div>
+                    </div>
+                  </div>
+
+
+                  <div class="panel panel-default">
+                    <div class="panel-heading"><h4 class="panel-title">{{ text_sitemaps_extra }}</h4></div>
+                    <div class="panel-body"> 
+					<!-- Misc/Custom Links Sitemap -->
+					<div class="form-group">
+						<label class="col-sm-8 control-label">{{ text_misc_custom_links_sitemap }}</label>
+						<div class="col-sm-4">
+							<input type="checkbox" data-toggle="toggle" data-onstyle="success" name="hb_sitemap_misc" class="form-control" value="1" {{ hb_sitemap_misc == '1' ? 'checked' : '' }} />
+						</div>
+						</div>
+						
+                      <!-- Category to Product Sitemap -->
+                      <div class="form-group">
+                        <label class="col-sm-8 control-label">{{ text_category_to_product_sitemap }}</label>
+                        <div class="col-sm-4">
+                          <input type="checkbox" data-toggle="toggle" data-onstyle="success" name="hb_sitemap_category_to_product" class="form-control" value="1" {{ hb_sitemap_category_to_product == '1' ? 'checked' : '' }} />
+                        </div>
+                      </div> 
+                      
+                      <!-- Manufacturer to Product Sitemap -->
+                      <div class="form-group">
+                        <label class="col-sm-8 control-label">{{ text_manufacturer_to_product_sitemap }}</label>
+                        <div class="col-sm-4">
+                          <input type="checkbox" data-toggle="toggle" data-onstyle="success" name="hb_sitemap_brand_to_product" class="form-control" value="1" {{ hb_sitemap_brand_to_product == '1' ? 'checked' : '' }} />
+                        </div>
+                      </div>   
+                      
+                      <!-- Product Tags Sitemap -->
+                      <div class="form-group">
+                        <label class="col-sm-8 control-label">{{ text_product_tags_sitemap }}</label>
+                        <div class="col-sm-4">
+                          <input type="checkbox" data-toggle="toggle" data-onstyle="success" name="hb_sitemap_product_tags" class="form-control" value="1" {{ hb_sitemap_product_tags == '1' ? 'checked' : '' }} />
+                        </div>
+                      </div>                            
+
+                      <!-- Journal3 Blog -->
+                      <div class="form-group">
+                        <label class="col-sm-8 control-label">{{ text_journal3_blog }}</label>
+                        <div class="col-sm-4">
+                          <input type="checkbox" data-toggle="toggle" data-onstyle="success" name="hb_sitemap_journal3blog" class="form-control" value="1" {{ hb_sitemap_journal3blog == '1' ? 'checked' : '' }} />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+
+                <div class="col-sm-6">
+                  <div class="panel panel-default">
+                    <div class="panel-heading">
+                      <h4 class="panel-title">{{ text_sitemaps_status }}</h4>
+                    </div>
+                    <div class="panel-body">
+                      <div class="col-sm-12">
+                        <!-- Enable Extension / Sitemap Index -->
+                        <div class="form-group">
+                          <label class="col-sm-4 control-label">{{ text_enable_extension }}</label>
+                          <div class="col-sm-8">
+                            <input type="checkbox" data-toggle="toggle" data-onstyle="success" name="hb_sitemap_enable" class="form-control" value="1" {{ hb_sitemap_enable == '1'? 'checked':'' }} />
+                          </div>
+                        </div>
+
+                        <!-- Number of Products Per Page -->
+                        <div class="form-group">
+                          <label class="col-sm-4 control-label">{{ text_number_of_products }}</label>
+                          <div class="col-sm-8">
+                            <input type="number" name="hb_sitemap_limit" value="{{ hb_sitemap_limit }}" class="form-control" />
+                          </div>
+                        </div>
+
+                        <!-- XML Formatter -->
+                        <div class="form-group">
+                          <label class="col-sm-4 control-label">
+                            <span data-toggle="tooltip" title="{{ text_xml_formatter_tooltip }}">{{ text_xml_formatter }}</span>
+                          </label>
+                          <div class="col-sm-8">
+                            <input type="checkbox" data-toggle="toggle" data-onstyle="success" name="hb_sitemap_beautify" class="form-control" value="1" {{ hb_sitemap_beautify == '1'? 'checked':'' }} />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              </div><!--row-->                
+              
+              <div class="row">
+                <div class="col-sm-12">			 
+                <!--LANGUAGE BLOCK PANEL-->		
+                  <div class="panel panel-default">
+                    <div class="panel-heading"><h4 class="panel-title">{{ text_image_settings }}</h4></div>
+                    <div class="panel-body">
+                      
+                      <!-- Image Resize Dimension -->
+                      <div class="form-group">
+                        <label class="col-sm-4 control-label">{{ text_image_resize_dimension }}</label>
+                        <div class="col-sm-4">
+                          <div class="input-group">
+                            <div class="input-group-addon"> <i class="fa fa-arrows-h"></i> </div>
+                            <input type="number" name="hb_sitemap_width" value="{{ hb_sitemap_width }}" class="form-control" />
+                            <div class="input-group-addon"> px </div>
+                          </div>
+                        </div>
+                        <div class="col-sm-4">
+                          <div class="input-group">
+                            <div class="input-group-addon"> <i class="fa fa-arrows-v"></i> </div>
+                            <input type="number" name="hb_sitemap_height" value="{{ hb_sitemap_height }}" class="form-control" />
+                            <div class="input-group-addon"> px </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <ul class="nav nav-tabs" id="languages">
+                      {% for language in languages %} 
+                      <li><a href="#language{{ language.language_id }}" data-toggle="tab"><img src="language/{{ language['code'] }}/{{ language['code'] }}.png" title="{{ language['name'] }}" /> {{ language['name'] }}</a></li>
+                      {% endfor %} 
+                      </ul>
+                  
+                      <div class="tab-content"> <!-- language tab content -->
+                        {% for language in languages %}
+                          <div class="tab-pane" id="language{{ language.language_id }}">
+                            <div class="alert alert-info">
+                              <b>{{ text_shortcode_label }}</b> {p} - {{ text_product_name }}
+                            </div>
+
+                            <!-- Image Caption Pattern -->
+                            <div class="form-group">
+                              <label class="col-sm-4 control-label">{{ text_image_caption_pattern }}</label>
+                              <div class="col-sm-8">
+                                <input type="text" name="hb_sitemap_caption{{ language.language_id }}" value="{{ hb_sitemap_caption[language.language_id] }}" class="form-control" />
+                              </div>
+                            </div>
+                            
+                            <!-- Image Title Pattern -->
+                            <div class="form-group">
+                              <label class="col-sm-4 control-label">{{ text_image_title_pattern }}</label>
+                              <div class="col-sm-8">
+                                <input type="text" name="hb_sitemap_title{{ language.language_id }}" value="{{ hb_sitemap_title[language.language_id] }}" class="form-control" />
+                              </div>
+                            </div>
+                            
+                            <!-- Additional Image Caption Pattern -->
+                            <div class="form-group">
+                              <label class="col-sm-4 control-label">{{ text_additional_image_caption_pattern }}</label>
+                              <div class="col-sm-8">
+                                <input type="text" name="hb_sitemap_a_caption{{ language.language_id }}" value="{{ hb_sitemap_a_caption[language.language_id] }}" class="form-control" />
+                              </div>
+                            </div>
+                            
+                            <!-- Additional Image Title Pattern -->
+                            <div class="form-group">
+                              <label class="col-sm-4 control-label">{{ text_additional_image_title_pattern }}</label>
+                              <div class="col-sm-8">
+                                <input type="text" name="hb_sitemap_a_title{{ language.language_id }}" value="{{ hb_sitemap_a_title[language.language_id] }}" class="form-control" />
+                              </div>
+                            </div>
+                          </div>
+                        {% endfor %}
+ 
+                      </div> <!-- language tab content end-->	
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!--LANGUAGE BLOCK PANEL-->		
+              
+              <!--HTACCESS BLOCK PANEL-->		
+              {% if not htaccess_enabled %} 
+              <div class="row">
+                <div class="col-sm-12">
+                  <div class="panel panel-default no-htaccess">
+                    <div class="panel-heading"><h4 class="panel-title">{{text_htaccess_code }}</h4></div>
+                    <div class="panel-body">
+                      <div class="alert alert-warning">Add these lines to your .htaccess file in your web root directory just below the line <b>RewriteRule ^system/download/(.*) index.php?route=error/not_found [L]</b></div>
+                      <textarea class="form-control" rows="10" readonly="readonly">{{ htaccess_code }}</textarea>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              {% endif %} 
+                
+              
+            </form>
+					</div>
+					
+					<!--TOOLS TAB-->
+					<div class="tab-pane" id="tab-tools">
+						<form class="form-horizontal">						
+						<div class="form-group">
+							<div class="col-sm-12">
+								<h3>{{ text_import_bulk }}</h3>
+								<div class="alert alert-info">{{ text_info_import }}</div>
+							</div>
+							<div class="col-sm-12">
+								<textarea id="bulk-links" class="form-control" rows="10"></textarea>
+							</div>
+							<div class="col-sm-12" style="margin-top:10px;">
+								<a class="btn btn-primary btn-lg" onclick="importBulk();"><i class="fa fa-download"></i>&nbsp;{{ button_import }}</a>
+							</div>
+						</div>
+						</form>
+					</div>				
+				</div><!--tab-content block end-->
+      </div>
+    </div>
+    <!--Panel Content End-->
+
+    <!--Huntbee copyrights-->
+    <div class="container-fluid">
+      <center>
+        <span class="help">{{ heading_title }} - {{ extension_version }} &copy; <a href="https://www.huntbee.com/">WWW.HUNTBEE.COM</a> | <a href="https://www.huntbee.com/get-support">SUPPORT</a></span>
+      </center>
+    </div>
+    <!--Huntbee copyrights end-->
+  </div>
+  <!--Container 1 start -->
+</div>
+<!--Main Content block end-->
+<style type="text/css"> 
+a {cursor:pointer;}
+.loaddiv{margin:100px;color:#0099CC;}
+body{font-family: sans-serif; }
+</style>
+
+<link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+<script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>	   
+
+<script type="text/javascript"><!--
+$('#languages a:first').tab('show');
+//--></script>
+
+<script type="text/javascript">
+$(document).ready(function() {
+	//loadBlock('products');
+});
+</script>
+
+<script type="text/javascript">
+function loadBlock(name){
+	$('.ajax-block').html('');
+	$('#'+name+'-block').html('<center><div class="loaddiv"><i class="fa fa-circle-o-notch fa-spin fa-3x fa-fw"></i></div></center>');
+	$('#'+name+'-block').load('index.php?route=extension/hbseo/hb_sitemap/'+name+'&user_token={{ user_token }}&store_id={{ store_id }}');
+}
+
+function searchRecord() {
+	var search_value = $('#link').val();
+	$('#links-block').load('index.php?route=extension/hbseo/hb_sitemap/links&user_token={{ user_token }}&store_id={{ store_id }}&search='+encodeURIComponent(search_value));
+}
+
+$('#links-block').delegate('.pagination a', 'click', function(e) {
+	e.preventDefault();
+	$('#links-block').load(this.href);
+});
+</script>
+
+<script type="text/javascript">
+$('#add-htacess-code').on('click', function() {
+	$('#msgoutput').html('<i class="fa fa-circle-o-notch fa-spin fa-3x fa-fw"></i>');
+	$.ajax({
+		  url: 'index.php?route=extension/hbseo/hb_sitemap/add_htaccess&user_token={{ user_token }}&store_id={{ store_id }}',
+		  dataType: 'json',
+		  success: function(json) {
+		  		if (json['error']) {
+					  $('#msgoutput').html('<div class="alert alert-danger"><i class="fa fa-warning"></i> '+json['error']+'</div>');
+				  }
+				if (json['success']) {
+					  $('#msgoutput').html('<div class="alert alert-success"><i class="fa fa-check-circle"></i> '+json['success']+'<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+					  $('.no-htaccess').remove();
+				}
+		  },
+		  error: function(xhr, ajaxOptions, thrownError) {
+			alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+		}
+	 });
+});
+
+function addLink(){
+	$('#msgoutput').html('<i class="fa fa-circle-o-notch fa-spin fa-3x fa-fw"></i>');
+	$.ajax({
+		type: 'post',
+		url: 'index.php?route=extension/hbseo/hb_sitemap/add_link&user_token={{ user_token }}&store_id={{ store_id }}',
+		data: {link : $('#link').val(), freq : $('#freq').val(), priority : $('#priority').val()},
+		dataType: 'json',
+		success: function(json) {
+			if (json['success']) {
+				$('#msgoutput').html('<div class="alert alert-success"><i class="fa fa-check-circle"></i> '+json['success']+'<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+				loadBlock('links');
+			}
+			if (json['error']) {
+				$('#msgoutput').html('<div class="alert alert-danger">'+json['error']+'<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+			}			
+		},			
+		error: function(xhr, ajaxOptions, thrownError) {
+			alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+		}
+	});
+}
+
+function deleteLink(){
+	$('#msgoutput').html('<i class="fa fa-circle-o-notch fa-spin fa-3x fa-fw"></i>');
+	var arraydata = $('input[name="selected[]"]:checked').map(function(){
+        return this.value;
+    }).get()
+	
+	$.ajax({
+		type: 'post',
+		url: 'index.php?route=extension/hbseo/hb_sitemap/delete_link&user_token={{ user_token }}&store_id={{ store_id }}',
+		data: {selected : arraydata},
+		dataType: 'json',
+		success: function(json) {
+			if (json['success']) {
+				$('#msgoutput').html('<div class="alert alert-success"><i class="fa fa-check-circle"></i> '+json['success']+'<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+				loadBlock('links');
+			}
+			if (json['error']) {
+				$('#msgoutput').html('<div class="alert alert-danger"><i class="fa fa-warning"></i> '+json['error']+'<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+			}
+		},			
+		error: function(xhr, ajaxOptions, thrownError) {
+			alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+		}
+	});
+}
+
+function fixDates(){
+	$.ajax({
+		url: 'index.php?route=extension/hbseo/hb_sitemap/fix_dates&user_token={{ user_token }}',
+		dataType: 'json',	
+		success: function(json) {
+			if (json['success']) {
+				$('#msgoutput').html('<div class="alert alert-success"><i class="fa fa-check-circle"></i> '+json['success']+'<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+			}
+		}			
+	 });
+}
+
+function importBulk(){
+	$('#msgoutput').html('<i class="fa fa-circle-o-notch fa-spin fa-3x fa-fw"></i>');
+	$.ajax({
+		type: 'post',
+		url: 'index.php?route=extension/hbseo/hb_sitemap/import_bulk&user_token={{ user_token }}&store_id={{ store_id }}',
+		dataType: 'json',	
+		data: {links : $('#bulk-links').val()},
+		success: function(json) {
+			if (json['success']) {
+				$('#msgoutput').html('<div class="alert alert-success"><i class="fa fa-check-circle"></i> '+json['success']+'<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+				loadBlock('links');
+				$('#bulk-links').val('');
+			}
+			if (json['error']) {
+				$('#msgoutput').html('<div class="alert alert-danger"><i class="fa fa-warning"></i> '+json['error']+'<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+			}
+		}			
+	});
+}
+
+$('#generate-sitemaps').on('click', function() {
+        $('#msgoutput').html('<div class="alert alert-info">Generating sitemaps... Please wait.</div>');
+
+        var data = {
+            sitemapUrl: '{{ sitemap_index_link }}'
+        };
+
+        $.ajax({
+            url: 'index.php?route=extension/hbseo/hb_sitemap/generateSitemaps&user_token={{ user_token }}&store_id={{ store_id }}',
+            type: 'POST',
+            dataType: 'json',
+            data: data,
+            success: function(response) {
+                if (response.success) {
+					$('#msgoutput').html('<div class="alert alert-success"><i class="fa fa-check-circle"></i> '+response.success+'<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+                } else if (response.error) {
+                    $('#msgoutput').html('<div class="alert alert-danger"><i class="fa fa-warning"></i> '+response.error+'<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+                }
+            },
+            error: function(xhr, ajaxOptions, thrownError) {
+              console.log(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+              $('#msgoutput').html('<div class="alert alert-danger"><i class="fa fa-warning"></i> An error occurred. Please try again.<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+            }
+        });
+    });
+</script>
+
+<script type="text/javascript">
+$('#store').on('change', function() {
+	window.location.href = 'index.php?route=extension/hbseo/hb_sitemap&user_token={{ user_token }}&store_id='+$('#store').val();
+});
+</script>
+{{ footer }}

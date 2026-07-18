@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<modification>
+    <name>{name}</name>
+    <version>{version}</version>
+    <author>HuntBee OpenCart Services</author>
+    <link>https://www.huntbee.com</link>
+	<code>huntbee_webp</code>
+	
+	<file path="admin/model/tool/image.php">
+        <operation>
+            <search><![CDATA[class ModelToolImage extends Model {]]></search>
+            <add position="before"><![CDATA[
+			//HUNTBEE WEBP
+    		require DIR_SYSTEM.'library/vendor/huntbee-webp/autoload.php';
+            use WebPConvert\WebPConvert;
+			//HUNTBEE WEBP
+			]]>
+            </add>
+        </operation>
+		<operation>
+            <search><![CDATA[if (!is_file(DIR_IMAGE . $image_new)]]></search>
+            <add position="before"><![CDATA[
+			//HUNTBEE WEBP
+			$webp_file 		= utf8_substr($image_new, 0, utf8_strrpos($image_new, "."));
+			
+			$webp_file		= str_replace('cache/','webp/',$webp_file);
+				
+    		$webp_file 		= $webp_file.'.webp';
+    		if (file_exists(DIR_IMAGE .$webp_file) and (isset($_SERVER['HTTP_ACCEPT'])) and (strpos($_SERVER['HTTP_ACCEPT'], 'image/webp') !== false)) {
+    			$image_new = $webp_file;
+    		}
+			//HUNTBEE WEBP
+			]]>
+            </add>
+        </operation>
+	</file>	
+	
+	<file path="catalog/model/tool/image.php">
+        <operation>
+            <search><![CDATA[class ModelToolImage extends Model {]]></search>
+            <add position="before"><![CDATA[
+			//HUNTBEE WEBP
+    		require DIR_SYSTEM.'library/vendor/huntbee-webp/autoload.php';
+            use WebPConvert\WebPConvert;
+			//HUNTBEE WEBP
+			]]>
+            </add>
+        </operation>
+		<operation>
+            <search><![CDATA[if (!is_file(DIR_IMAGE . $image_new)]]></search>
+            <add position="before"><![CDATA[
+			//HUNTBEE WEBP
+    		$webp_file 		= utf8_substr($image_new, 0, utf8_strrpos($image_new, "."));
+    		
+    		$webp_file		= str_replace('cache/','webp/',$webp_file);
+    		
+    		$webp_file 		= $webp_file.'.webp';
+    		if (file_exists(DIR_IMAGE .$webp_file) and (isset($_SERVER['HTTP_ACCEPT'])) and (strpos($_SERVER['HTTP_ACCEPT'], 'image/webp') !== false)) {
+    			$image_new = $webp_file;
+    		}
+			//HUNTBEE WEBP
+			]]>
+            </add>
+        </operation>
+
+        <operation>
+            <search><![CDATA[$image->save(DIR_IMAGE . $image_new);]]></search>
+            <add position="after"><![CDATA[
+			if (in_array($image_type, array(IMAGETYPE_PNG, IMAGETYPE_JPEG))) {
+				error_reporting(0);
+				$webp_source = 'image/'.$image_new;
+				$webp_source_without_extension 		= utf8_substr($webp_source, 0, utf8_strrpos($webp_source, "."));
+				
+				$webp_source_without_extension		= str_replace('/cache/','/webp/',$webp_source_without_extension);
+				
+				$webp_destination 	= $webp_source_without_extension.'.webp';
+				$options = [];
+				try {
+					WebPConvert::convert($webp_source, $webp_destination, $options);
+					$webp_image = $image_new.'.webp';
+				}catch (Exception $e){
+					$this->log->write('Extension - Huntbee WebP Compression (Auto): Issue while processing (image) path '.$webp_source.'. Issue: '.$e->getMessage());
+				}
+			}
+			]]>
+            </add>
+        </operation>
+        <operation>
+            <search><![CDATA[copy(DIR_IMAGE . $image_old, DIR_IMAGE . $image_new);]]></search>
+            <add position="after"><![CDATA[
+			if (in_array($image_type, array(IMAGETYPE_PNG, IMAGETYPE_JPEG))) {
+				error_reporting(0);
+				$webp_source = 'image/'.$image_new;
+				$webp_source_without_extension 		= utf8_substr($webp_source, 0, utf8_strrpos($webp_source, "."));
+				
+				$webp_source_without_extension		= str_replace('/cache/','/webp/',$webp_source_without_extension);
+						
+				$webp_destination 	= $webp_source_without_extension.'.webp';
+				$options = [];
+				try {
+					WebPConvert::convert($webp_source, $webp_destination, $options);
+					$webp_image = $image_new.'.webp';
+				}catch (Exception $e){
+					$this->log->write('Extension - Huntbee WebP Compression (Auto): Issue while processing (image) path '.$webp_source.'. Issue: '.$e->getMessage());
+				}
+			}
+			]]>
+            </add>
+        </operation>
+	</file>
+		
+</modification>

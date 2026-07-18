@@ -1,0 +1,13 @@
+<div class="full-search-wrapper">
+<div class="search-field search-main">
+<input type="text" name="search" value="{{ search }}" placeholder="{{ basel_text_search }}" class="form-control main-search-input" />
+</div>
+<div class="search-button do-search main">
+<a class="icon-magnifier icon"></a>
+</div>
+</div>
+<script>
+$(document).ready(function() {
+$('.search-holder-mobile input[name=\'search-mobile\']').attr("placeholder", "{{ basel_text_search }}").attr("value", "{{ search }}");
+});
+</script>

@@ -1,0 +1,52 @@
+{% include 'extension/module/msmart_search/_header.twig' %}
+
+<a href="{{ add_extra_field_url }}" class="btn btn-xs btn-primary pull-right"><i class="fa fa-plus-square"></i> {{ text_add_extra_field }}</a>
+<div class="clearfix"></div><br />	
+	<table class="table table-bordered table-hover table-striped">
+		<thead>
+			<tr>
+				<th>{{ text_type }}</th>
+				<th>{{ text_condition_table }}</th>
+				<th>{{ text_condition_column }}</th>
+				<th>{{ text_condition_type }}</th>
+				<th width="100"></th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for extra_field in extra_fields %} 
+			<tr>
+				<td>{{ extra_field.type }}</td>
+				<td>{{ extra_field.config.condition.table }}</td>
+				<td>{{ extra_field.config.condition.column }}</td>
+				<td>{{ extra_field.config.condition.type }}</td>
+				<td width="100" class="text-center">
+					<a href="{{ extra_field.edit_url }}" class="btn btn-sm btn-primary"><i class="glyphicon glyphicon-edit"></i></a>
+					<a href="{{ extra_field.delete_url }}" class="btn btn-sm btn-danger"><i class="glyphicon glyphicon-remove"></i></a>
+				</td>
+			</tr>
+			{% endfor %} 
+		</tbody>
+	</table>
+		{{ pagination }} 
+	
+<script type="text/javascript">
+	(function(){		
+		$('.table').on('click', "a.btn-danger", function(){
+			if( confirm( 'Are you sure?' ) ) {
+				return true;
+			}
+			
+			return false;
+		});
+
+	})( jQuery );
+</script>		
+<style type="text/css">
+	.mss-helper pre {
+		display: inline-block;
+		margin: 0;
+		vertical-align: middle;
+		padding: 3px 5px;
+	}
+</style>
+{% include 'extension/module/msmart_search/_footer.twig' %}

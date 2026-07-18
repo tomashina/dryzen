@@ -1,0 +1,22 @@
+{% if reviews %}
+{% for review in reviews %}
+<div class="table">
+<div class="table-cell"><i class="fa fa-user"></i></div>
+<div class="table-cell right">
+<p class="author"><b>{{ review.author }}</b> &nbsp;-&nbsp; {{ review.date_added }}
+<span class="rating">
+<span class="rating_stars rating r{{ review.rating }}">
+<i class="fa fa-star-o"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i>
+</span>
+</span>
+</p>
+{{ review.text }}
+</div>
+</div>
+{% endfor %}
+{% if pagination %}
+<div class="pagination-holder">{{ pagination }}</div>
+{% endif %}
+{% else %}
+<p>{{ text_no_reviews }}</p>
+{% endif %}

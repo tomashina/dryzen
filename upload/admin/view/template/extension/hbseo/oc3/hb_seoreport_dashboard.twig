@@ -1,0 +1,115 @@
+<div class="row">
+    <div class="col-sm-4 d-flex justify-content-center align-items-center" style="flex-direction: column; height: 100%;">
+        <span class="text pull-right" style="font-size:20px; text-align: center;"><b>{{ text_site_seo_score }}</b>: {{ total_seo_score }}%</span>
+        <div id="seoHealthScore" style="width: 500px; height: 500px; margin: 0;"></div>
+    </div>
+
+    <div class="col-sm-8 d-flex justify-content-center align-items-center" style="flex-direction: column; height: 100%;">
+        <canvas id="radarChart" style="width: 800px; height: 400px;"></canvas>
+    </div>
+</div>
+
+<!-- Gauge chart -->
+<script type="text/javascript">
+    // Load the Google Charts library and the gauge package
+    google.charts.load('current', {
+        packages: ['gauge']
+    });
+
+    google.charts.setOnLoadCallback(drawGaugeChart);
+
+    function drawGaugeChart() {
+        var data = google.visualization.arrayToDataTable([
+            ['Label', 'Value'],
+            ['SEO', {{ total_seo_score }}]  // Example: {{ total_seo_score }} dynamic value
+        ]);
+
+        var options = {
+            width: 800,  // Width of the chart
+            height: 400, // Reduced height to make it look semi-circular
+            redFrom: 0,   // Starting value of the red range
+            redTo: 30,    // Ending value of the red range (0-30 is considered poor)
+            yellowFrom: 30, // Starting value of the yellow range
+            yellowTo: 60, // Ending value of the yellow range (30-60 is moderate)
+            greenFrom: 60,  // Starting value of the green range
+            greenTo: 100,   // Ending value of the green range (60-100 is good)
+            minorTicks: 5,  // Number of minor ticks in the gauge
+            majorTicks: ['0', '20', '40', '60', '80', '100'], // Major ticks for the gauge
+            animation: { 
+                duration: 1000,  // Animation duration in milliseconds
+                easing: 'inAndOut'  // Animation easing effect
+            }
+        };
+
+        var chart = new google.visualization.Gauge(document.getElementById('seoHealthScore'));
+        chart.draw(data, options);
+    }
+</script>
+
+<!-- Radar chart -->
+<script>
+    $(document).ready(function () {
+    // Function to dynamically load the Chart.js script
+    function loadChartJs(callback) {
+        var script = document.createElement('script');
+        script.src = "https://cdn.jsdelivr.net/npm/chart.js";
+        script.type = "text/javascript";
+        script.onload = callback; // Run the callback function once the script is loaded
+        document.getElementsByTagName('head')[0].appendChild(script);
+    }
+
+    // Check if Chart.js is already loaded
+    if (typeof Chart === 'undefined') {
+        loadChartJs(function () {
+            console.log("Chart.js loaded successfully!");
+            initializeChart(); // Initialize your chart after Chart.js loads
+        });
+    } else {
+        initializeChart(); // If Chart.js is already loaded, just initialize the chart
+    }
+
+    function initializeChart() {
+        const pageSeoData = {
+            basic: {{ basic_page_seo }},
+            product: {{ product_page_seo }},
+            category: {{ category_page_seo }},
+            manufacturer: {{ manufacturer_page_seo }},
+            information: {{ information_page_seo }}
+        };
+
+        const labels = Object.keys(pageSeoData).map(label => label.charAt(0).toUpperCase() + label.slice(1) + " Page");
+        const dataValues = Object.values(pageSeoData);
+        
+        const ctx = document.getElementById('radarChart').getContext('2d');
+        const data = {
+            labels: labels,
+            datasets: [{
+                label: 'SEO Health',
+                data: dataValues,
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 2
+            }]
+        };
+
+        const options = {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                r: {
+                    suggestedMin: 0,
+                    suggestedMax: 100
+                }
+            }
+        };
+
+        new Chart(ctx, {
+            type: 'radar',
+            data: data,
+            options: options
+        });
+    }
+});
+
+</script>
+

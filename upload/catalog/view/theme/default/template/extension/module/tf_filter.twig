@@ -1,0 +1,580 @@
+<div id="tf-filter-{{ module_class_id }}" class="panel tf-filter panel-default filter-container">
+  <div data-toggle="collapse" href="#tf-filter-content-{{ module_class_id }}" class="panel-heading{{ collapsed?' collapsed' }}">
+    <h4 class="panel-title">{{ heading_title }}</h4>
+    {% if reset_all %}
+      <span data-tf-reset="all" data-toggle="tooltip" title="{{ text_reset_all }}" class="tf-filter-reset hide text-danger"><i class="fa fa-times"></i></span>
+    {% endif %}
+    <i class="fa fa-chevron-circle-down" aria-hidden="true"></i>
+  </div>
+  <div id="tf-filter-content-{{ module_class_id }}" data-tf-base-z-index="99" class="collapse{{ not collapsed?' in' }} tf-list-filter-group row">
+    {% for key,filter in filters %}
+      {% if (filter['type'] == 'price') %} {# price range #}
+        <div class="tf-filter-group {{ filter.type }} col-xs-{{ (12/column_xs)|round(0, 'ceil') }} col-sm-{{ (12/column_sm)|round(0, 'ceil') }} col-md-{{ (12/column_md)|round(0, 'ceil') }} col-lg-{{ (12/column_lg)|round(0, 'ceil') }}">
+          <div class="tf-filter-group-header {{ filter['collapse']?'collapsed' }}" data-toggle="collapse" href="#tf-filter-panel-{{ module_class_id }}-{{ key }}">
+            <span class="tf-filter-group-title">{{ text_price }}</span>
+            {% if reset_group %}
+              {% if filter['selected']['min'] != filter['min_price'] or filter['selected']['max'] != filter['max_price'] %}
+                <a data-tf-reset="price" data-toggle="tooltip" title="{{ text_reset }}" class="tf-filter-reset"><i class="fa fa-times"></i></a>
+              {% else %}
+                <a data-tf-reset="price" data-toggle="tooltip" title="{{ text_reset }}" class="tf-filter-reset hide"><i class="fa fa-times"></i></a>
+              {% endif %}
+            {% endif %}
+            <i class="fa fa-caret-up toggle-icon"></i>
+          </div>
+          <div id="tf-filter-panel-{{ module_class_id }}-{{ key }}" class="collapse {{ not filter['collapse']?'in':'' }}" >
+            <div class="tf-filter-group-content">
+              <div data-role="rangeslider"></div>
+              <div class="row">
+                <div class="col-xs-6"><input type="number" class="form-control" name="tf_fp[min]" value="{{ filter['selected']['min'] }}" min="{{ filter['min_price'] }}" max="{{ filter['max_price'] - 1 }}" /></div>
+                <div class="col-xs-6"><input type="number" class="form-control" name="tf_fp[max]" value="{{ filter['selected']['max'] }}" min="{{ filter['min_price'] + 1 }}" max="{{ filter['max_price'] }}" /></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      {% elseif (filter['type'] == 'sub_category' and filter['values']) %} {# Manufacturer #}
+        <div class="tf-filter-group {{ filter.type }} {{ (hide_zero_filter and not filter.status)?'hide' }} col-xs-{{ (12/column_xs)|round(0, 'ceil') }} col-sm-{{ (12/column_sm)|round(0, 'ceil') }} col-md-{{ (12/column_md)|round(0, 'ceil') }} col-lg-{{ (12/column_lg)|round(0, 'ceil') }}">
+          <div class="tf-filter-group-header {{ filter['collapse']?'collapsed' }}" data-toggle="collapse" href="#tf-filter-panel-{{ module_class_id }}-{{ key }}">
+            <span class="tf-filter-group-title">{{ text_sub_category }}</span>
+            {% if reset_group %}
+              {% set total_selected = 0 %}
+              {% for sub_category in filter['values'] %}{% if sub_category['selected'] %}{% set total_selected = total_selected + 1 %}{% endif %}{% endfor %}
+              <a data-tf-reset="check" data-toggle="tooltip" title="{{ text_reset }}" class=" tf-filter-reset{{ not total_selected?' hide' }}"><i class="fa fa-times"></i></a>
+            {% endif %}
+            <i class="fa fa-caret-up toggle-icon"></i>
+          </div>
+          <div id="tf-filter-panel-{{ module_class_id }}-{{ key }}" class="collapse {{ not filter['collapse']?'in':'' }}" >
+            {% if filter['search'] %}
+              <div class="tf-filter-group-search"><i class="fa fa-search"></i> <input type="search" placeholder="{{ text_search }}"/></div>
+            {% endif %}
+            <div class="tf-filter-group-content {{ overflow }}">
+              {% for sub_category in filter['values'] %}
+                <div class="form-check tf-filter-value {{ (hide_zero_filter and not sub_category.status)?'hide' }} custom-{{ filter['input_type'] }} {{ filter['list_type'] }}">
+                  <label class="form-check-label">
+                    {% if (sub_category['selected']) %}
+                      <input type="{{ filter['input_type'] }}" name="tf_fsc" value="{{ sub_category['category_id'] }}" class="form-check-input" checked>
+                    {% else %}
+                      <input type="{{ filter['input_type'] }}" name="tf_fsc" value="{{ sub_category['category_id'] }}" class="form-check-input" {{ not sub_category['status']?'disabled' }}>
+                    {% endif %}
+                    {% if (filter['list_type'] == 'image' or filter['list_type'] == 'both') %}
+                      <img src="{{ sub_category['image'] }}" title="{{ sub_category['name'] }}" alt="{{ sub_category['name'] }}" />
+                    {% else %}
+                      <span class="checkmark fa"></span>
+                    {% endif %}
+                    {% if (filter['list_type'] == 'text' or filter['list_type'] == 'both') %}
+                      {{ sub_category['name'] }}
+                    {% endif %}
+                  </label>
+                  {% if count_product and filter['list_type'] != 'image' %}
+                    {% if (sub_category['total']) %}
+                      <span class="label label-info tf-product-total">{{ sub_category['total'] }}</span>
+                    {% else %}
+                      <span class="label label-info label-danger tf-product-total">{{ sub_category['total'] }}</span>
+                    {% endif %}
+                  {% endif %}
+                </div>
+              {% endfor %}
+              {% if overflow == 'more' and filter['values']|length >= 7 %}
+                <a class="tf-see-more btn-link" data-toggle="tf-seemore" data-show="{{ text_see_more }}" data-hide="{{ text_see_less }}" href="#">{{ text_see_more }}</a>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+
+      {% elseif (filter['type'] == 'manufacturer' and filter['values']) %} {# Manufacturer #}
+        <div class="tf-filter-group {{ filter.type }} {{ (hide_zero_filter and not filter.status)?'hide' }} col-xs-{{ (12/column_xs)|round(0, 'ceil') }} col-sm-{{ (12/column_sm)|round(0, 'ceil') }} col-md-{{ (12/column_md)|round(0, 'ceil') }} col-lg-{{ (12/column_lg)|round(0, 'ceil') }}">
+          <div class="tf-filter-group-header {{ filter['collapse']?'collapsed' }}" data-toggle="collapse" href="#tf-filter-panel-{{ module_class_id }}-{{ key }}">
+            <span class="tf-filter-group-title">{{ text_manufacturer }}</span>
+            {% if reset_group %}
+              {% set total_selected = 0 %}
+              {% for manufacturer in filter['values'] %}{% if manufacturer['selected'] %}{% set total_selected = total_selected + 1 %}{% endif %}{% endfor %}
+              <a data-tf-reset="check" data-toggle="tooltip" title="{{ text_reset }}" class=" tf-filter-reset{{ not total_selected?' hide' }}"><i class="fa fa-times"></i></a>
+            {% endif %}
+            <i class="fa fa-caret-up toggle-icon"></i>
+          </div>
+          <div id="tf-filter-panel-{{ module_class_id }}-{{ key }}" class="collapse {{ not filter['collapse']?'in':'' }}" >
+            {% if filter['search'] %}
+              <div class="tf-filter-group-search"><i class="fa fa-search"></i> <input type="search" placeholder="{{ text_search }}"/></div>
+            {% endif %}
+            <div class="tf-filter-group-content {{ overflow }}">
+              {% for manufacturer in filter['values'] %}
+                <div class="form-check tf-filter-value {{ (hide_zero_filter and not manufacturer.status)?'hide' }} custom-{{ filter['input_type'] }} {{ filter['list_type'] }}">
+                  <label class="form-check-label">
+                    {% if (manufacturer['selected']) %}
+                      <input type="{{ filter['input_type'] }}" name="tf_fm" value="{{ manufacturer['manufacturer_id'] }}" class="form-check-input" checked>
+                    {% else %}
+                      <input type="{{ filter['input_type'] }}" name="tf_fm" value="{{ manufacturer['manufacturer_id'] }}" class="form-check-input" {{ not manufacturer['status']?'disabled' }}>
+                    {% endif %}
+                    {% if (filter['list_type'] == 'image' or filter['list_type'] == 'both') %}
+                      <img src="{{ manufacturer['image'] }}" title="{{ manufacturer['name'] }}" alt="{{ manufacturer['name'] }}" />
+                    {% else %}
+                      <span class="checkmark fa"></span>
+                    {% endif %}
+                    {% if (filter['list_type'] == 'text' or filter['list_type'] == 'both') %}
+                      {{ manufacturer['name'] }}
+                    {% endif %}
+                  </label>
+                  {% if count_product and filter['list_type'] != 'image' %}
+                    {% if (manufacturer['total']) %}
+                      <span class="label label-info tf-product-total">{{ manufacturer['total'] }}</span>
+                    {% else %}
+                      <span class="label label-info label-danger tf-product-total">{{ manufacturer['total'] }}</span>
+                    {% endif %}
+                  {% endif %}
+                </div>
+              {% endfor %}
+              {% if overflow == 'more' and filter['values']|length >= 7 %}
+                <a class="tf-see-more btn-link" data-toggle="tf-seemore" data-show="{{ text_see_more }}" data-hide="{{ text_see_less }}" href="#">{{ text_see_more }}</a>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      {% elseif (filter['type'] == 'search') %} {# Search #}
+        <div class="tf-filter-group {{ filter.type }} col-xs-{{ (12/column_xs)|round(0, 'ceil') }} col-sm-{{ (12/column_sm)|round(0, 'ceil') }} col-md-{{ (12/column_md)|round(0, 'ceil') }} col-lg-{{ (12/column_lg)|round(0, 'ceil') }}">
+          <div class="tf-filter-group-header {{ filter['collapse']?'collapsed' }}" data-toggle="collapse" href="#tf-filter-panel-{{ module_class_id }}-{{ key }}">
+            <span  class="tf-filter-group-title">{{ text_search }}</span>
+            {% if reset_group %}
+              {% if filter['keyword'] %}
+                <a data-tf-reset="text" data-toggle="tooltip" title="{{ text_reset }}" class="tf-filter-reset"><i class="fa fa-times"></i></a>
+              {% else %}
+                <a data-tf-reset="text" data-toggle="tooltip" title="{{ text_reset }}" class="tf-filter-reset hide"><i class="fa fa-times"></i></a>
+              {% endif %}
+            {% endif %}
+            <i class="fa fa-caret-up toggle-icon"></i>
+          </div>
+          <div id="tf-filter-panel-{{ module_class_id }}-{{ key }}" class="collapse {{ not filter['collapse']?'in':'' }}" >
+            <div class="tf-filter-group-content">
+              <input type="text" name="tf_fq" value="{{ filter['keyword'] }}" placeholder="{{ text_search_placeholder }}" class="form-control" />
+            </div>
+          </div>
+        </div>
+      {% elseif (filter['type'] == 'availability') %} {# Availability #}
+        <div class="tf-filter-group {{ filter.type }} col-xs-{{ (12/column_xs)|round(0, 'ceil') }} col-sm-{{ (12/column_sm)|round(0, 'ceil') }} col-md-{{ (12/column_md)|round(0, 'ceil') }} col-lg-{{ (12/column_lg)|round(0, 'ceil') }}">
+          <div class="tf-filter-group-header {{ filter['collapse']?'collapsed' }}" data-toggle="collapse" href="#tf-filter-panel-{{ module_class_id }}-{{ key }}">
+            <span class="tf-filter-group-title">{{ text_availability }}</span>
+            {% if reset_group %}
+              {% if filter['values']['in_stock']['selected'] or filter['values']['out_of_stock']['selected'] %}
+                <a data-tf-reset="check" data-toggle="tooltip" title="{{ text_reset }}" class=" tf-filter-reset"><i class="fa fa-times"></i></a>
+              {% else %}
+                <a data-tf-reset="check" data-toggle="tooltip" title="{{ text_reset }}" class=" tf-filter-reset hide"><i class="fa fa-times"></i></a>
+              {% endif %}
+            {% endif %}
+            <i class="fa fa-caret-up toggle-icon"></i>
+          </div>
+          <div id="tf-filter-panel-{{ module_class_id }}-{{ key }}" class="collapse {{ not filter['collapse']?'in':'' }}" >
+            <div class="tf-filter-group-content">
+              <div class="form-check tf-filter-value custom-radio">
+                <label class="form-check-label">
+                  {% if (filter['values']['in_stock']['selected']) %}
+                    <input type="radio" value="1" name="tf_fs" class="form-check-input" checked>
+                  {% else %}
+                    <input type="radio" value="1" name="tf_fs" class="form-check-input" {{ not filter['values']['in_stock']['status']?'disabled' }}>
+                  {% endif %}
+                  <span class="checkmark fa"></span>
+                  {{ text_in_stock }}
+                </label>
+                {% if count_product %}
+                  {% if (filter['values']['in_stock']['total']) %}
+                    <span class="label label-info tf-product-total">{{ filter['values']['in_stock']['total'] }}</span>
+                  {% else %}
+                    <span class="label label-info label-danger tf-product-total">{{ filter['values']['in_stock']['total'] }}</span>
+                  {% endif %}
+                {% endif %}
+              </div>
+              <div class="form-check tf-filter-value custom-radio">
+                <label class="form-check-label">
+                  {% if (filter['values']['out_of_stock']['selected']) %}
+                    <input type="radio" value="0" name="tf_fs" class="form-check-input" checked>
+                  {% else %}
+                    <input type="radio" value="0" name="tf_fs" class="form-check-input" {{ not filter['values']['out_of_stock']['status']?'disabled' }}>
+                  {% endif %}
+                  <span class="checkmark fa"></span>
+                  {{ text_out_of_stock }}
+                </label>
+                {% if count_product %}
+                  {% if (filter['values']['out_of_stock']['total']) %}
+                    <span class="label label-info tf-product-total">{{ filter['values']['out_of_stock']['total'] }}</span>
+                  {% else %}
+                    <span class="label label-info label-danger tf-product-total">{{ filter['values']['out_of_stock']['total'] }}</span>
+                  {% endif %}
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+      {% elseif (filter.type == 'stock_status' and filter.values) %} {# stock_status #}
+        <div class="tf-filter-group {{ (hide_zero_filter and not filter.status)?'hide' }} {{ filter.type }} col-xs-{{ (12/column_xs)|round(0, 'ceil') }} col-sm-{{ (12/column_sm)|round(0, 'ceil') }} col-md-{{ (12/column_md)|round(0, 'ceil') }} col-lg-{{ (12/column_lg)|round(0, 'ceil') }}">
+          <div class="tf-filter-group-header {{ filter.collapse?'collapsed' }}" data-toggle="collapse" data-target="#tf-filter-panel-{{ module_class_id }}-{{ key }}">
+            <span class="tf-filter-group-title">{{ text_availability }}</span>
+            {% if reset_group %}
+              {% set total_selected = 0 %}
+              {% for stock_status in filter.values %}{% if stock_status.selected %}{% set total_selected = total_selected + 1 %}{% endif %}{% endfor %}
+              <a data-tf-reset="check" data-toggle="tooltip" title="{{ text_reset }}" class="tf-filter-reset{{ not total_selected?' hide' }}"><i class="fa fa-times"></i></a>
+            {% endif %}
+            <i class="fa fa-caret-up toggle-icon"></i>
+          </div>
+          <div id="tf-filter-panel-{{ module_class_id }}-{{ key }}" class="collapse {{ not filter.collapse?'in':'' }}" >
+            <div class="tf-filter-group-content {{ overflow }}">
+              {% for stock_status in filter.values %}<div class="form-check tf-filter-value {{ (hide_zero_filter and not stock_status.status)?'hide' }} custom-{{ filter['input_type'] }} {{ filter['list_type'] }}">
+                <label class="form-check-label">
+                  {% if (stock_status.selected) %}
+                    <input type="{{ filter.input_type }}" name="tf_fss" value="{{ stock_status.stock_status_id }}" class="form-check-input" checked>
+                  {% else %}
+                    <input type="{{ filter.input_type }}" name="tf_fss" value="{{ stock_status.stock_status_id }}" class="form-check-input" {{ not stock_status['status']?'disabled' }}>
+                  {% endif %}
+                  <span class="checkmark fa"></span>
+                  {{ stock_status.name }}
+                </label>
+                {% if count_product %}
+                  {% if (stock_status.total) %}
+                    <span class="label label-info tf-product-total">{{ stock_status.total }}</span>
+                  {% else %}
+                    <span class="label label-info label-danger tf-product-total">{{ stock_status.total }}</span>
+                  {% endif %}
+                {% endif %}
+                </div>{% endfor %}
+              {% if overflow == 'more' and filter.values|length >= 7 %}
+                <a class="tf-see-more btn-link" data-toggle="tf-seemore" data-show="{{ text_see_more }}" data-hide="{{ text_see_less }}" href="#">{{ text_see_more }}</a>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      {% elseif (filter['type'] == 'rating') %} {# Rating #}
+        <div class="tf-filter-group {{ filter.type }} col-xs-{{ (12/column_xs)|round(0, 'ceil') }} col-sm-{{ (12/column_sm)|round(0, 'ceil') }} col-md-{{ (12/column_md)|round(0, 'ceil') }} col-lg-{{ (12/column_lg)|round(0, 'ceil') }}">
+          <div class="tf-filter-group-header {{ filter['collapse']?'collapsed' }}" data-toggle="collapse" href="#tf-filter-panel-{{ module_class_id }}-{{ key }}">
+            <span class="tf-filter-group-title">{{ text_rating }}</span>
+            {% if reset_group %}
+              {% set total_selected = 0 %}
+              {% for rating in filter['values'] %}{% if rating['selected'] %}{% set total_selected = total_selected + 1 %}{% endif %}{% endfor %}
+              <a data-tf-reset="check" data-toggle="tooltip" title="{{ text_reset }}" class="tf-filter-reset{{ not total_selected?' hide' }}"><i class="fa fa-times"></i></a>
+            {% endif %}
+            <i class="fa fa-caret-up toggle-icon"></i>
+          </div>
+          <div id="tf-filter-panel-{{ module_class_id }}-{{ key }}" class="collapse {{ not filter['collapse']?'in':'' }}" >
+            <div class="tf-filter-group-content">
+              {% for rating in filter['values'] %}
+                <div class="form-check tf-filter-value custom-radio">
+                  <label class="form-check-label">
+                    {% if (rating['selected']) %}
+                      <input type="radio" value="{{ rating['rating'] }}" name="tf_fr" class="form-check-input" checked>
+                    {% else %}
+                      <input type="radio" value="{{ rating['rating'] }}" name="tf_fr" class="form-check-input" {{ not rating['status']?'disabled' }}>
+                    {% endif %}
+                    <span class="checkmark fa"></span>
+                    <span class="rating">
+                {% for i in range(1, 5) %}
+                  {% if (rating['rating'] < i) %}
+                    <span class="fa fa-stack"><i class="fa fa-star-o fa-stack-1x"></i></span>
+                  {% else %}
+                    <span class="fa fa-stack"><i class="fa fa-star fa-stack-1x"></i><i class="fa fa-star-o fa-stack-1x"></i></span>
+                  {% endif %}
+                {% endfor %}
+              </span>
+                    {{ text_and_up }}
+                  </label>
+                  {% if count_product %}
+                    {% if (rating['total']) %}
+                      <span class="label label-info tf-product-total">{{ rating['total'] }}</span>
+                    {% else %}
+                      <span class="label label-info label-danger tf-product-total">{{ rating['total'] }}</span>
+                    {% endif %}
+                  {% endif %}
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      {% elseif (filter['type'] == 'discount') %} {# Discount #}
+        <div class="tf-filter-group {{ filter.type }} col-xs-{{ (12/column_xs)|round(0, 'ceil') }} col-sm-{{ (12/column_sm)|round(0, 'ceil') }} col-md-{{ (12/column_md)|round(0, 'ceil') }} col-lg-{{ (12/column_lg)|round(0, 'ceil') }}">
+          <div class="tf-filter-group-header {{ filter['collapse']?'collapsed' }}" data-toggle="collapse" href="#tf-filter-panel-{{ module_class_id }}-{{ key }}">
+            <span class="tf-filter-group-title">{{ text_discount }}</span>
+            {% if reset_group %}
+              {% set total_selected = 0 %}
+              {% for discount in filter['values'] %}{% if discount['selected'] %}{% set total_selected = total_selected + 1 %}{% endif %}{% endfor %}
+              <a data-tf-reset="check" data-toggle="tooltip" title="{{ text_reset }}" class="tf-filter-reset{{ not total_selected?' hide' }}"><i class="fa fa-times"></i></a>
+            {% endif %}
+            <i class="fa fa-caret-up toggle-icon"></i>
+          </div>
+          <div id="tf-filter-panel-{{ module_class_id }}-{{ key }}" class="collapse {{ not filter['collapse']?'in':'' }}" >
+            <div class="tf-filter-group-content">
+              {% for discount in filter['values'] %}
+                <div class="form-check tf-filter-value custom-radio">
+                  <label class="form-check-label">
+                    {% if (discount['selected']) %}
+                      <input type="radio" value="{{ discount['value'] }}" name="tf_fd" class="form-check-input" checked>
+                    {% else %}
+                      <input type="radio" value="{{ discount['value'] }}" name="tf_fd" class="form-check-input" {{ not discount['status']?'disabled' }}>
+                    {% endif %}
+                    <span class="checkmark fa"></span>
+                    {{ discount['name'] }}
+                  </label>
+                  {% if count_product %}
+                    {% if (discount['total']) %}
+                      <span class="label label-info tf-product-total">{{ discount['total'] }}</span>
+                    {% else %}
+                      <span class="label label-info label-danger tf-product-total">{{ discount['total'] }}</span>
+                    {% endif %}
+                  {% endif %}
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      {% elseif (filter['type'] == 'filter') %} {# Filter #}
+        <div class="tf-filter-group {{ filter.type }} {{ (hide_zero_filter and not filter.status)?'hide' }} col-xs-{{ (12/column_xs)|round(0, 'ceil') }} col-sm-{{ (12/column_sm)|round(0, 'ceil') }} col-md-{{ (12/column_md)|round(0, 'ceil') }} col-lg-{{ (12/column_lg)|round(0, 'ceil') }}">
+          <div class="tf-filter-group-header {{ filter['collapse']?'collapsed' }}" data-toggle="collapse" href="#tf-filter-panel-{{ module_class_id }}-{{ key }}">
+            <span  class="tf-filter-group-title">{{ filter['name'] }}</span>
+            {% if reset_group %}
+              {% set total_selected = 0 %}
+              {% for value in filter['values'] %}{% if value['selected'] %}{% set total_selected = total_selected + 1 %}{% endif %}{% endfor %}
+              <a data-tf-reset="check" data-toggle="tooltip" title="{{ text_reset }}" class=" tf-filter-reset{{ not total_selected?' hide' }}"><i class="fa fa-times"></i></a>
+            {% endif %}
+            <i class="fa fa-caret-up toggle-icon"></i>
+          </div>
+          <div id="tf-filter-panel-{{ module_class_id }}-{{ key }}" class="collapse {{ not filter['collapse']?'in':'' }}" >
+            {% if filter['search'] %}
+              <div class="tf-filter-group-search"><i class="fa fa-search"></i> <input type="search" placeholder="{{ text_search }}"/></div>
+            {% endif %}
+            <div class="tf-filter-group-content {{ overflow }}">
+              {% for value in filter['values'] %}
+                <div class="form-check tf-filter-value {{ (hide_zero_filter and not value.status)?'hide' }} custom-checkbox">
+                  <label class="form-check-label">
+                    {% if (value['selected']) %}
+                      <input type="checkbox" name="tf_ff" value="{{ value['filter_id'] }}" class="form-check-input" checked>
+                    {% else %}
+                      <input type="checkbox" name="tf_ff" value="{{ value['filter_id'] }}" class="form-check-input" {{ not value['status']?'disabled' }}>
+                    {% endif %}
+                    <span class="checkmark fa"></span>
+                    {{ value['name'] }}
+                  </label>
+                  {% if count_product %}
+                    {% if (value['total']) %}
+                      <span class="label label-info tf-product-total">{{ value['total'] }}</span>
+                    {% else %}
+                      <span class="label label-info label-danger tf-product-total">{{ value['total'] }}</span>
+                    {% endif %}
+                  {% endif %}
+                </div>
+              {% endfor %}
+              {% if overflow == 'more' and filter['values']|length >= 7 %}
+                <a class="tf-see-more btn-link" data-toggle="tf-seemore" data-show="{{ text_see_more }}" data-hide="{{ text_see_less }}" href="#">{{ text_see_more }}</a>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      {% elseif (filter['type'] == 'custom') %} {# Custom filter #}
+        <div class="tf-filter-group {{ filter.type }} {{ (hide_zero_filter and not filter.status)?'hide' }} col-xs-{{ (12/column_xs)|round(0, 'ceil') }} col-sm-{{ (12/column_sm)|round(0, 'ceil') }} col-md-{{ (12/column_md)|round(0, 'ceil') }} col-lg-{{ (12/column_lg)|round(0, 'ceil') }}">
+          <div class="tf-filter-group-header {{ filter['collapse']?'collapsed' }}" data-toggle="collapse" href="#tf-filter-panel-{{ module_class_id }}-{{ key }}">
+            <span class="tf-filter-group-title">{{ filter['name'] }}</span>
+            {% if reset_group %}
+              {% set total_selected = 0 %}
+              {% for value in filter['values'] %}{% if value['selected'] %}{% set total_selected = total_selected + 1 %}{% endif %}{% endfor %}
+              <a data-tf-reset="check" data-toggle="tooltip" title="{{ text_reset }}" class="tf-filter-reset{{ not total_selected?' hide' }}"><i class="fa fa-times"></i></a>
+            {% endif %}
+            <i class="fa fa-caret-up toggle-icon"></i>
+          </div>
+          <div id="tf-filter-panel-{{ module_class_id }}-{{ key }}" data-custom-filter="{{ filter['filter_id'] }}" class="collapse {{ not filter['collapse']?'in':'' }}" >
+            {% if filter['search'] %}
+              <div class="tf-filter-group-search"><i class="fa fa-search"></i> <input type="search" placeholder="{{ text_search }}"/></div>
+            {% endif %}
+            <div class="tf-filter-group-content {{ overflow }}">
+              {% for value in filter['values'] %}
+                <div class="form-check tf-filter-value {{ (hide_zero_filter and not value.status)?'hide' }} custom-{{ filter['input_type'] }} {{ filter['list_type'] }}">
+                  <label class="form-check-label">
+                    {% if (value['selected']) %}
+                      <input type="{{ filter['input_type'] }}" name="tf_fc{{ filter['filter_id'] }}" value="{{ value['value_id'] }}" class="form-check-input" checked>
+                    {% else %}
+                      <input type="{{ filter['input_type'] }}" name="tf_fc{{ filter['filter_id'] }}" value="{{ value['value_id'] }}" class="form-check-input" {{ (not value['status'])?'disabled' }}>
+                    {% endif %}
+                    {% if (filter['list_type'] == 'image' or filter['list_type'] == 'both') %}
+                      <img src="{{ value['image'] }}" title="{{ value['name'] }}" alt="{{ value['name'] }}" />
+                    {% else %}
+                      <span class="checkmark fa"></span>
+                    {% endif %}
+                    {% if (filter['list_type'] == 'text' or filter['list_type'] == 'both') %}
+                      {{ value['name'] }}
+                    {% endif %}
+                  </label>
+                  {% if count_product and filter['list_type'] != 'image' %}
+                    {% if (value['total']) %}
+                      <span class="label label-info tf-product-total">{{ value['total'] }}</span>
+                    {% else %}
+                      <span class="label label-info label-danger tf-product-total">{{ value['total'] }}</span>
+                    {% endif %}
+                  {% endif %}
+                </div>
+              {% endfor %}
+              {% if overflow == 'more' and filter['values']|length >= 7 %}
+                <a class="tf-see-more btn-link" data-toggle="tf-seemore" data-show="{{ text_see_more }}" data-hide="{{ text_see_less }}" href="#">{{ text_see_more }}</a>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      {% endif %}
+    {% endfor %}
+  </div>
+</div>
+
+<script type="text/javascript">
+  // Basel
+  $(document).ready(function() {
+    $('.filter-trigger-btn').addClass('active').html('<img src="image/filter.svg" class="filter-icon" alt="filter icon"/>{{ heading_title }}');
+    // Basel
+    $(".filter-trigger-btn").click(function(){
+      $('html').addClass('no-scroll side-filter-open');
+      $('.body-cover').addClass('active');
+    });
+  });
+</script>
+
+
+<script>
+  $(function(){
+    /*if(window.innerWidth < 767){ // Collaped all panel in small device
+        $('.tf-filter .collapse.in').collapse("hide");
+    }*/
+
+    // Filter
+    var paginationContainer = $('#content').children('.row').last();
+    var productContainer = paginationContainer.prev();
+
+    productContainer.css('position', 'relative');
+
+    $('#tf-filter-{{ module_class_id }}').tf_filter({
+      requestURL: "{{ requestURL }}",
+      searchEl: $('.tf-filter-group-search input'),
+      ajax: {{ ajax?'true':'false' }},
+      delay: {{ delay?'true':'false' }},
+      hideZeroFilter: {{ hide_zero_filter?'true':'false' }},
+      search_in_description: {{ search_in_description?'true':'false' }},
+      countProduct: {{ count_product?'true':'false' }},
+      sortBy: '{{ sort_by }}',
+      onParamChange: function(param){
+        $("#input-limit,#input-sort").find('option').each(function(){
+          var url = $(this).attr('value');
+          $(this).attr('value', modifyURLQuery(url, $.extend({}, param, {page: null})));
+        });
+        var currency = $('#form-currency input[name="redirect"]');
+        currency.val(modifyURLQuery(currency.val(), $.extend({}, param, {tf_fp: null, page: null})));
+
+        // Show or hide reset all button
+        if($('.tf-filter-group [data-tf-reset]:not(.hide)').length){
+          $('[data-tf-reset="all"]').removeClass('hide');
+        } else {
+          $('[data-tf-reset="all"]').addClass('hide');
+        }
+      },
+      onInputChange: function(e){
+        var filter_group = $(e.target).closest('.tf-filter-group');
+
+        var is_input_selected = false;
+
+        // Hide Reset for Checkbox or radio
+        if(filter_group.find('input[type="checkbox"]:checked,input[type="radio"]:checked').length){
+          is_input_selected = true;
+        }
+
+        // Hide Reset for price
+        if($(e.target).filter('[name="tf_fp[min]"],[name="tf_fp[max]"]').length){
+          if($('[name="tf_fp[min]"]').val() !== $('[name="tf_fp[min]"]').attr('min') || $('[name="tf_fp[max]"]').val() !== $('[name="tf_fp[max]"]').attr('max')){
+            is_input_selected = true;
+          }
+        }
+
+        // Hide reset for text
+        if($(e.target).filter('[type="text"]').val()){
+          is_input_selected = true;
+        }
+
+        // Hide or show reset buton
+        if(is_input_selected){
+          filter_group.find('[data-tf-reset]').removeClass('hide');
+        } else {
+          filter_group.find('[data-tf-reset]').addClass('hide');
+        }
+      },
+      onReset: function(el_reset){
+        var type = $(el_reset).data('tf-reset');
+
+        // Reset price
+        if(type === 'price' || type === 'all'){
+          price_slider.slider("values", [parseFloat(price_slider.slider("option", 'min')), parseFloat(price_slider.slider("option", 'max'))]);
+        }
+
+        // Hide reset button
+        if($(el_reset).data('tf-reset') !== 'all'){
+          $(el_reset).addClass('hide');
+        } else {
+          $('[data-tf-reset]').addClass('hide');
+        }
+      },
+      onBeforeSend: function(){
+        productContainer.append('<div class="tf-loader"><img src="catalog/view/javascript/maza/loader.gif" /></div>');
+      },
+      onResult: function(json){
+        var content = $(json['content']).find('#content');
+        var products = content.children('.row').last().prev().html();
+        var pagination = content.children('.row').last().html();
+
+        // Add result products to container
+        if(products){
+          $(productContainer).html(products);
+
+          $('#list-view.active').click();
+          $('#grid-view.active').click();
+        } else {
+          $(productContainer).html("<div class='col-xs-12 text-center'>{{ text_no_result }}</div>");
+        }
+
+        // Add pagination to container
+        if(pagination){
+          $(paginationContainer).html(pagination);
+        } else {
+          $(paginationContainer).empty();
+        }
+      }
+    });
+
+    // Price slider
+    var price_slider = $(".tf-filter [data-role='rangeslider']").slider({
+      range: true,
+      min: parseFloat($('[name="tf_fp[min]"]').attr('min')),
+      max: parseFloat($('[name="tf_fp[max]"]').attr('max')),
+      values: [parseFloat($('[name="tf_fp[min]"]').val()), parseFloat($('[name="tf_fp[max]"]').val())],
+      slide: function( event, ui ) {
+        $('[name="tf_fp[min]"]').val(ui.values[0]);
+        $('[name="tf_fp[max]"]').val(ui.values[1]);
+      },
+      change: function( event, ui ) {
+        // Hide Reset for price
+        if($('[name="tf_fp[min]"]').val() !== $('[name="tf_fp[min]"]').attr('min') || $('[name="tf_fp[max]"]').val() !== $('[name="tf_fp[max]"]').attr('max')){
+          $('[data-tf-reset="price"]').removeClass('hide');
+        } else {
+          $('[data-tf-reset="price"]').addClass('hide');
+        }
+
+        // Trigger filter change
+        $('#tf-filter-{{ module_class_id }}').change();
+      }
+    });
+    $('[name="tf_fp[min]"]').change(function(){
+      price_slider.slider("values", 0, $(this).val());
+    });
+    $('[name="tf_fp[max]"]').change(function(){
+      price_slider.slider("values", 1, $(this).val());
+    });
+
+    // Show reset all button if filter is selected
+    if($('.tf-filter-group [data-tf-reset]:not(.hide)').length){
+      $('[data-tf-reset="all"]').removeClass('hide');
+    }
+
+    // Fix z-index
+    $('.tf-filter-group .collapse').on('show.bs.collapse', function(){
+      var z_index = Number($('#tf-filter-content-{{ module_class_id }}').data('tf-base-z-index')) + 1;
+      $(this).css('z-index', z_index);
+      $('#tf-filter-content-{{ module_class_id }}').data('tf-base-z-index', z_index);
+    });
+  });
+</script>
+<link href="catalog/view/theme/default/stylesheet/tf_filter.css" rel="stylesheet" media="screen" />

@@ -1,0 +1,574 @@
+{{ header }}
+{#
+==============================================
+Special Manager
+Author 	: OpenCartBoost
+Email 	: support@opencartboost.com
+Website : http://www.opencartboost.com
+==============================================
+#}
+{{ column_left }}
+<div id="content">
+  <div class="page-header">
+	<div class="container-fluid">
+	  <div class="pull-right">
+	    <a href="{{ cancel }}" data-toggle="tooltip" title="{{ button_cancel }}" class="btn btn-default"><i class="fa fa-reply"></i></a>
+	  </div>
+	  <h1 class="panel-title">{{ text_title }}</h1>
+	  <ul class="breadcrumb">
+	    {% for breadcrumb in breadcrumbs %}
+		  <li><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+	    {% endfor %}
+	  </ul>
+	</div>
+  </div>
+  <div class="container-fluid">
+    {% if error_warning %}
+      <div class="alert alert-danger alert-dismissible"><i class="fa fa-exclamation-circle"></i> {{ error_warning }}
+	    <button type="button" class="close" data-dismiss="alert">&times;</button>
+	  </div>
+    {% endif %}
+    {% if success %}
+	  <div class="alert alert-success alert-dismissible"><i class="fa fa-check-circle"></i> {{ success }}
+	    <button type="button" class="close" data-dismiss="alert">&times;</button>
+	  </div>
+    {% endif %}	
+    <div id="hidden-alert-danger" style="display:none" class="alert alert-danger"><i class="fa fa-exclamation-circle"></i>
+	  <span></span>
+      <button type="button" class="close" onclick="$('#hidden-alert-danger').hide()">&times;</button>
+    </div>
+    <div id="hidden-alert-success" style="display:none" class="alert alert-success"><i class="fa fa-check-circle"></i>
+	  <span></span>
+      <button type="button" class="close" onclick="$('#hidden-alert-success').hide()">&times;</button>
+    </div>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+	    <h3 class="panel-title"><i class="fa fa-list"></i> {{ text_title }}</h3>
+	  </div>
+	  <div class="panel-body">
+	    <ul class="nav nav-tabs" id="tabspecial">
+		  <li><a href="#tab-product" data-toggle="tab">{{ tab_products }}</a></li>
+		  <li><a href="#tab-category" data-toggle="tab">{{ tab_categories }}</a></li>
+		  <li><a href="#tab-setting" data-toggle="tab">{{ tab_setting }}</a></li>
+	    </ul>
+	    <div class="tab-content">
+	      <div class="tab-pane" id="tab-product">
+		    <div class="extension-list">
+			  <div id="toolbar">
+			    <a href="{{ addurl }}" class="btn btn-primary"><i class="fa fa-plus"></i> {{ button_add }}</a>
+			    <button type="button" id="remove" title="" class="btn btn-danger" ><i class="fa fa-trash-o"></i> {{ button_delete }}</button>
+			  </div>
+			  <table class="table special-manager-product table-bordered table-hover"
+				data-toolbar="#toolbar" data-search="true" data-show-refresh="false"
+				data-show-fullscreen="true" data-show-columns="true" data-toggle="table"
+				data-pagination="true" data-id-field="id" data-page-size="20" data-page-list="[20, 50, 100, 200, all]">
+			    <thead>
+				  <tr>
+				    <th style="width: 1px;" class="text-center" {% if products %} data-checkbox="true" {% endif %} ></th>
+				    <th class="text-center" data-sortable="true" data-field="id">ID</th>
+				    <th class="text-center" data-field="image">{{ column_image }}</th>
+				    <th class="text-left" data-sortable="true" data-field="name">{{ column_product_name }}</th>
+				    <th class="text-left" data-sortable="true" data-field="price">{{ column_price }}</th>
+				    <th class="text-left" data-sortable="true" data-field="special">{{ column_special }}</th>
+				    <th class="text-left" data-sortable="true" data-field="categories" data-visible="false">{{ column_categories }}</th>
+				    <th class="text-left" data-sortable="true" data-field="manufacturer" data-visible="false">{{ column_manufacturer }}</th>
+				    <th class="text-left" data-sortable="true" data-field="status" data-visible="false">{{ column_status }}</th>
+				    <th class="text-left" data-sortable="true" data-field="date_start">{{ column_date_start }}</th>
+				    <th class="text-left" data-sortable="true" data-field="date_end">{{ column_date_end }}</th>
+				    <th class="text-left" data-sortable="true" data-field="customer_group_id">{{ column_customer_group }}</th>
+				    <th class="text-left" data-sortable="true" data-field="priority">{{ column_priority }}</th>
+				  </tr>
+			    </thead>
+			    <tbody>
+				  {% if products %}
+				    {% for product in products %}
+					  <tr>
+					    <td class="text-center" ></td>
+					    <td class="text-center">{{ product.product_special_id }}</td>
+					    <td class="text-center">{% if product.image %} <img src="{{ product.image }}" alt="{{ product.name }}" class="img-thumbnail" /> {% else %} <span class="img-thumbnail list"><i class="fa fa-camera fa-2x"></i></span> {% endif %}</td>
+					    <td class="text-left">{{ product.name }}</td>
+					    <td class="text-left">{{ product.price }}</td>
+					    <td class="text-left" data-value="{{product.special}}" >{{ product.special_formatted }}</td>
+					    <td class="text-left">
+						  {% for category in categories_list %}
+							{% if category.category_id in product.categories %}
+							  {{ category.name }}<br>
+                            {% endif %}
+						  {% endfor %}
+						</td>
+					    <td class="text-left">{{ product.manufacturer }}</td>
+					    <td class="text-left">{{ product.status }}</td>
+					    <td class="text-left date">{{ product.date_start }}</td>
+					    <td class="text-left date">{{ product.date_end }}</td>
+					    <td class="text-left">{{ product.customer_group_name }}</td>
+					    <td class="text-left">{{ product.priority }}</td>
+					  </tr>
+				    {% endfor %}
+				  {% endif %}
+			    </tbody>
+			  </table>
+		    </div>
+		  </div><!--/div tab-product -->
+
+		  <div class="tab-pane" id="tab-category">
+		    <div class="extension-list">
+			  <div id="toolbar2">
+			    <a href="{{ addcaturl }}" class="btn btn-primary"><i class="fa fa-plus"></i> {{ button_add }}</a>
+			    <button type="button" id="remove2" class="btn btn-danger" ><i class="fa fa-trash-o"></i> {{ button_delete }}</button>
+			  </div>
+			  <table class="table special-manager-category table-bordered table-hover"
+				data-toolbar="#toolbar2" data-search="true" data-show-refresh="false"
+				data-show-fullscreen="true" data-show-columns="true" data-toggle="table"
+				data-pagination="true" data-id-field="id" data-page-size="20" data-page-list="[20, 50, 100, 200, all]">
+			    <thead>
+				  <tr>
+				    <th style="width: 1px;" class="text-center" {% if categories %} data-checkbox="true" {% endif %}></th>
+				    <th class="text-center" data-sortable="true" data-field="id">ID</th>
+				    <th class="text-left" data-sortable="true" data-field="name">{{ column_category_name }}</th>
+				    <th class="text-left" data-sortable="true" data-field="discount">{{ column_discount }}</th>
+				    <th class="text-left" data-sortable="true" data-field="discount_type">{{ column_discount_type }}</th>
+				    <th class="text-left" data-sortable="true" data-field="date_start">{{ column_date_start }}</th>
+				    <th class="text-left" data-sortable="true" data-field="date_end">{{ column_date_end }}</th>
+				    <th class="text-left" data-sortable="true" data-field="customer_group_id">{{ column_customer_group }}</th>
+				    <th class="text-left" data-sortable="true" data-field="priority">{{ column_priority }}</th>
+				  </tr>
+			    </thead>
+			    <tbody>
+				  {% if categories %}
+				    {% for category in categories %}
+					<tr>
+					  <td class="text-center"></td>
+					  <td class="text-center" >{{ category.cat_special_id }}</td>
+					  <td class="text-left">{{ category.name }}</td>
+					  <td class="text-left" data-value="{{category.discount}}">{{ category.discount_formatted }}</td>
+					  <td class="text-left">{{ category.discount_type }}</td>
+					  <td class="text-left">{{ category.date_start }}</td>
+					  <td class="text-left">{{ category.date_end }}</td>
+					  <td class="text-left">{{ category.customer_group_name }}</td>
+					  <td class="text-left">{{ category.priority }}</td>
+					</tr>
+				    {% endfor %}
+				  {% endif %}
+			    </tbody>
+			  </table>
+		    </div>
+		  </div><!--/div tab-category -->
+			
+		  <div class="tab-pane" id="tab-setting">
+		    <div class="extension-list">
+			  <form action="{{ setting }}" method="post" enctype="multipart/form-data" id="form-setting" class="form-horizontal">						
+			   <div class="form-group">
+				  <label class="col-sm-3 control-label" for="input-include-special"><span data-toggle="tooltip" title="{{ help_include_special }}">{{ entry_include_special }}</span></label>
+				  <div class="col-sm-9">
+				    <div class="btn-group btn-toggle" data-toggle="buttons">
+				      {% if include_special == 1 %}
+					    <label class="btn btn-success btn-md active"><input type="radio" name="setting_special" id="setting_special_1" value="1" checked="checked">{{ text_yes }}</label>
+					    <label class="btn btn-default btn-md"><input type="radio" name="setting_special" id="setting_special_0" value="0">{{ text_no }}</label>
+					  {% else %}
+					    <label class="btn btn-default btn-md"><input type="radio" name="setting_special" id="setting_special_1" value="1">{{ text_yes }}</label>
+					    <label class="btn btn-success btn-md active"><input type="radio" name="setting_special" id="setting_special_0" value="0" checked="checked">{{ text_no }}</label>
+					  {% endif %}
+				    </div>
+				  </div> 
+			    </div>
+				
+			    <div class="form-group">
+			      <div class="col-sm-9 col-sm-offset-3">
+				    <button class="btn btn-primary" form="form-setting" type="submit"><i class="fa fa-save"></i> {{ button_save }}</button>
+				  </div>
+			    </div>
+			  </form>
+		    </div>
+		  </div><!--/div tab-setting -->
+        </div>
+	  </div>
+    </div>
+  </div>
+  
+<script type="text/javascript">
+	$('#button-setting').on('click', function() {
+		$.ajax({
+			url: 'index.php?route=extension/module/boost_special_manager/setting&user_token={{ user_token }}',
+			dataType: 'html',
+			beforeSend: function() {
+				$('#button-setting').button('loading');
+			},
+			complete: function() {
+				$('#button-setting').button('reset');
+			},
+			success: function(html) {
+				$('#modal-developer').remove();
+				
+				$('body').prepend('<div id="modal-developer" class="modal">' + html + '</div>');
+				
+				$('#modal-developer').modal('show');
+			},
+			error: function(xhr, ajaxOptions, thrownError) {
+				alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+			}
+		});	
+	});	
+
+	function number_format (number, decimals, decPoint, thousandsSep) { 
+		number = (number + '').replace(/[^0-9+\-Ee.]/g, '')
+		var n = !isFinite(+number) ? 0 : +number
+		var prec = !isFinite(+decimals) ? 0 : Math.abs(decimals)
+		var sep = (typeof thousandsSep === 'undefined') ? ',' : thousandsSep
+		var dec = (typeof decPoint === 'undefined') ? '.' : decPoint
+		var s = ''
+
+		var toFixedFix = function (n, prec) {
+			var k = Math.pow(10, prec)
+			return '' + (Math.round(n * k) / k)
+			.toFixed(prec)
+		}
+
+		// @todo: for IE parseFloat(0.55).toFixed(0) = 0;
+		s = (prec ? toFixedFix(n, prec) : '' + Math.round(n)).split('.')
+		if (s[0].length > 3) {
+			s[0] = s[0].replace(/\B(?=(?:\d{3})+(?!\d))/g, sep)
+		}
+		if ((s[1] || '').length < prec) {
+			s[1] = s[1] || ''
+			s[1] += new Array(prec - s[1].length + 1).join('0')
+		}
+
+		return s.join(dec)
+	}
+
+	function getIndex($table, selector){
+		var $th = $($table).find('[data-field="' + selector + '"]')
+		return $($th).parent().children().index($($th))
+	}
+
+	var $tableProduct = $('table.special-manager-product')
+	
+	$tableProduct.bootstrapTable({
+		locale: '{{ lang_code }}',
+		onResetView: function(){
+			if (!$($tableProduct).find('.no-records-found').length) {
+				initEditableProduct()
+				initDatePicker()
+			} 
+		}
+	})
+
+	function initEditableProduct(){
+		if ($($tableProduct).find('.tabledit-toolbar.btn-toolbar').length){
+			return
+		}
+		
+		{% if products %}
+			$($tableProduct).Tabledit({
+				url: 'index.php?route=extension/module/boost_special_manager/update&user_token={{ user_token }}',
+				columns: {
+					identifier: [1, 'product_special_id'],
+					editable: [
+						[getIndex($tableProduct, 'special'), 'special'],
+						[getIndex($tableProduct, 'date_start'), 'date_start', , 'date'],
+						[getIndex($tableProduct, 'date_end'), 'date_end', , 'date'],
+						[getIndex($tableProduct, 'customer_group_id'), 'customer_group_id', '{{json_customer_group|json_encode()}}'],
+						[getIndex($tableProduct, 'priority'), 'priority'],
+					]
+				},
+				buttons: {
+					edit: {
+						class: 'btn btn-sm btn-default',
+						html: '<i class="fa fa-pencil"></i>',
+						action: 'edit'
+					},
+					delete: {
+						class: 'btn btn-sm btn-default',
+						html: '<i class="fa fa-trash-o"></i>',
+						action: 'delete'
+					},
+					cancel: {
+						class: 'btn btn-sm btn-default',
+						html: '<i class="fa fa-times"></i>'
+					},
+					save: {
+						class: 'btn btn-sm btn-success',
+						html: '<i class="fa fa-save"></i>'
+					},
+					restore: {
+						class: 'btn btn-sm btn-warning',
+						html: 'Restore',
+						action: 'restore'
+					},
+					confirm: {
+						class: 'btn btn-sm btn-danger',
+						html: '<i class="fa fa-check"></i>'
+					}
+				},
+				onDraw: function(){
+					initDatePicker()
+				},
+				onValidate: function(td){
+					var value = $(td).find('input[name="special"]').val()
+					$('.input-error').remove()
+					if ($.trim(value) == '') {
+						//return 'Units is required.';
+					}
+					if (($.isNumeric(value) == '') && ($.trim(value) !== 'EA')) {
+						$(td).find('input[name="special"]').after('<div class="input-error" style="color:red;">{{ error_entry_value }}</div>')
+						return false;
+					}
+					
+					var priority = $(td).find('input[name="priority"]').val()
+					$('.input-error').remove()
+					if ($.trim(priority) == '') {
+						//return 'Units is required.';
+					}
+					if (($.isNumeric(priority) == '') && ($.trim(priority) !== 'EA')) {
+						$(td).find('input[name="priority"]').after('<div class="input-error" style="color:red;">{{ error_entry_value }}</div>')
+						return false;
+					}
+				},
+				onAjax: function(action, serialize) {
+					return {{ modify_permission ? 'true' : 'false' }};
+				},
+				onSave: function(td){
+					var special = $(td).find('input[name="special"]')
+					if (special) {
+						$(special).siblings('span').html('{{ currency_symbol_left }}'+number_format($(special).val(),2)+'{{ currency_symbol_right }}')
+					}
+				},
+				onSuccess: function(data, textStatus, jqXHR){
+					if (data.status) {
+						$('#hidden-alert-success span').html(data.message)
+						$('#hidden-alert-success').show()
+					} else {
+						$('#hidden-alert-danger span').html(data.message)
+						$('#hidden-alert-danger').show()
+					}
+				}
+			});
+		{% endif %}
+	}
+
+	var $tableCategory = $('table.special-manager-category')
+	
+	$tableCategory.bootstrapTable({
+		locale: '{{ lang_code }}',
+		onResetView: function(){
+			if (!$($tableCategory).find('.no-records-found').length) {
+				initEditableCategory()
+				initDatePicker()
+			} 
+		}
+	})	
+
+	function initEditableCategory(){
+		if ($($tableCategory).find('.tabledit-toolbar.btn-toolbar').length){
+			return
+		}
+
+		{% if categories %}
+			$($tableCategory).Tabledit({
+				url: 'index.php?route=extension/module/boost_special_manager/updatecat&user_token={{ user_token }}',
+				columns: {
+					identifier: [1, 'cat_special_id'],
+					editable: [
+						[getIndex($tableCategory, 'discount'), 'discount'],
+						[getIndex($tableCategory, 'discount_type'), 'discount_type', '{"0": "{{ entry_percentage_discount }}", "1":"{{ entry_fixed_discount }}", "2":"{{ entry_flat_price }}"}'],
+						[getIndex($tableCategory, 'date_start'), 'date_start', , 'date'],
+						[getIndex($tableCategory, 'date_end'), 'date_end', , 'date'],
+						[getIndex($tableCategory, 'customer_group_id'), 'customer_group_id', '{{json_customer_group|json_encode()}}'],
+						[getIndex($tableCategory, 'priority'), 'priority'],
+					]
+				},
+				buttons: {
+					edit: {
+						class: 'btn btn-sm btn-default',
+						html: '<i class="fa fa-pencil"></i>',
+						action: 'edit'
+					},
+					delete: {
+						class: 'btn btn-sm btn-default',
+						html: '<i class="fa fa-trash-o"></i>',
+						action: 'delete'
+					},
+					cancel: {
+						class: 'btn btn-sm btn-default',
+						html: '<i class="fa fa-times"></i>'
+					},
+					save: {
+						class: 'btn btn-sm btn-success',
+						html: '<i class="fa fa-save"></i>'
+					},
+					restore: {
+						class: 'btn btn-sm btn-warning',
+						html: 'Restore',
+						action: 'restore'
+					},
+					confirm: {
+						class: 'btn btn-sm btn-danger',
+						html: '<i class="fa fa-check"></i>'
+					}
+				},
+				onDraw: function(){
+					initDatePicker()
+				},
+				
+				onValidate: function(td){
+					var value = $(td).find('input[name="discount"]').val()
+					$('.input-error').remove()
+					if ($.trim(value) == '') {
+						//return 'Units is required.';
+					}
+					if (($.isNumeric(value) == '') && ($.trim(value) !== 'EA')) {
+						$(td).find('input[name="discount"]').after('<div class="input-error" style="color:red;">{{ error_entry_value }}</div>')
+						return false;
+					}
+					
+					var priority = $(td).find('input[name="priority"]').val()
+					$('.input-error').remove()
+					if ($.trim(priority) == '') {
+						//return 'Units is required.';
+					}
+					if (($.isNumeric(priority) == '') && ($.trim(priority) !== 'EA')) {
+						$(td).find('input[name="priority"]').after('<div class="input-error" style="color:red;">{{ error_entry_value }}</div>')
+						return false;
+					}
+				},
+				onAjax: function(action, serialize) {
+					return {{ modify_permission ? 'true' : 'false' }};
+				},
+				onSave: function(td){
+					var discount = $(td).find('input[name="discount"]')
+					if (discount) {
+						var value = '{{ currency_symbol_left }}'+number_format($(discount).val(),2)+'{{ currency_symbol_right }}'
+						if($(td).find('select[name="discount_type"]').val() == '0') value = $(discount).val() + '%'
+						$(discount).siblings('span').html(value)
+					}
+				},
+				onSuccess: function(data, textStatus, jqXHR){
+					if(data.status){
+						$('#hidden-alert-success span').html(data.message)
+						$('#hidden-alert-success').show()
+					} else {
+						$('#hidden-alert-danger span').html(data.message)
+						$('#hidden-alert-danger').show()
+					}
+				}
+			});
+		{% endif %}
+	}
+
+	function initDatePicker(){
+		$('.tabledit-datepicker')
+			.datetimepicker({
+				language: 'en-gb',
+				pickTime: false
+			})
+		.prop('disabled', true)
+	}
+
+	initDatePicker()
+
+	$('#remove').click(function() {
+		var ids = $.map($tableProduct.bootstrapTable('getSelections'), function (row) {
+			return row.id
+		})
+
+		if (ids.length) {
+			if (confirm('{{ confirm_delete }}')) { 
+				$.ajax({
+					data: {
+						'action': 'delete',
+						'value': ids
+					},
+					url: '{{ deleteurl }}',
+					method: 'post'
+				}).done(function(response) {
+					response = JSON.parse(response)
+
+					if (response.status) {
+						$('#hidden-alert-success span').html(response.message)
+						$('#hidden-alert-success').show()
+						
+						$tableProduct.bootstrapTable('remove', {
+							field: 'id',
+							values: ids
+						})
+						
+					} else {					
+						$('#hidden-alert-danger span').html(response.message)
+						$('#hidden-alert-danger').show()
+					}
+				})		
+			} else {
+				return false;
+			}
+		}
+	})
+
+	$('#remove2').click(function() {
+		var ids = $.map($tableCategory.bootstrapTable('getSelections'), function (row) {
+			return row.id
+		})
+
+		if (ids.length) {
+			if (confirm('{{ confirm_delete }}')) { 
+				$.ajax({
+					data: {
+						'action': 'delete',
+						'value': ids
+					},
+					url: '{{ deletecaturl }}',
+					method: 'post'
+				}).done(function(response) {
+					response = JSON.parse(response)
+					
+					if (response.status) {
+						$('#hidden-alert-success span').html(response.message)
+						$('#hidden-alert-success').show()
+						$tableCategory.bootstrapTable('remove', {
+							field: 'id',
+							values: ids
+						})
+					} else {
+						$('#hidden-alert-danger span').html(response.message)
+						$('#hidden-alert-danger').show()
+					}
+				})
+			} else {
+				return false;
+			}
+		}
+	})
+	
+	$('li.dropdown-item-marker input[data-field=id]').parents('li').hide()
+
+	$('#tabspecial a:first').tab('show');
+
+	{% if showtab == 'category' %}
+		$('a[href="#tab-category"]').click();
+	{% endif %}
+
+	{% if showtab == 'setting' %}
+		$('a[href="#tab-setting"]').click();
+	{% endif %}
+</script> 
+
+<script type="text/javascript">
+$('.btn-toggle').click(function() {
+	$(this).find('.btn').toggleClass('active');  
+	if ($(this).find('.btn-primary').size()>0) {
+		$(this).find('.btn').toggleClass('btn-primary');
+	}
+	if ($(this).find('.btn-danger').size()>0) {
+		$(this).find('.btn').toggleClass('btn-danger');
+	}
+	if ($(this).find('.btn-success').size()>0) {
+		$(this).find('.btn').toggleClass('btn-success');
+	}
+	if ($(this).find('.btn-info').size()>0) {
+		$(this).find('.btn').toggleClass('btn-info');
+	}
+	$(this).find('.btn').toggleClass('btn-default');
+});
+</script>
+</div>
+{{ footer }}
+

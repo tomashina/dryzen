@@ -1,0 +1,1022 @@
+{#
+//  Related Options / Связанные опции
+//  Support: support@liveopencart.com / Поддержка: help@liveopencart.ru
+#}
+{{ header }}{{ column_left }}
+<div id="content">
+	
+	<style>
+		[v-cloak] { display: none; }
+		[data-v="loading-spinner"] { display: none; }
+		[v-cloak][data-v="loading-spinner"] {
+			display: inline-block;
+		}
+	</style>
+	
+	<div class="page-header">
+    <div class="container-fluid">
+		<div class="pull-right">
+			<button type="submit" form="form-related-options" data-toggle="tooltip" title="{{ button_save }}" class="btn btn-primary"><i class="fa fa-save"></i></button>
+			<a href="{{ cancel }}" data-toggle="tooltip" title="{{ button_cancel }}" class="btn btn-default"><i class="fa fa-reply"></i></a></div>
+			<h1>{{ module_name }}</h1>
+			<ul class="breadcrumb">
+				{% for breadcrumb in breadcrumbs %}
+					<li><a href="{{ breadcrumb['href'] }}">{{ breadcrumb['text'] }}</a></li>
+				{% endfor %}
+			</ul>
+		</div>
+	</div>
+	<div class="container-fluid">
+		{% if (error_warning ?? false) %}
+			<div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i> {{ error_warning }}
+				<button type="button" class="close" data-dismiss="alert">&times;</button>
+			</div>
+		{% endif %}
+		{% if (updated ?? false) %}
+			<div class="alert alert-success"><i class="fa fa-exclamation-circle"></i> {{ updated }}
+				<button type="button" class="close" data-dismiss="alert">&times;</button>
+			</div>
+		{% endif %}
+		{% if (success ?? false) %}
+			<div class="alert alert-success"><i class="fa fa-exclamation-circle"></i> {{ success }}
+				<button type="button" class="close" data-dismiss="alert">&times;</button>
+			</div>
+		{% endif %}
+    
+		{% macro display_setting(modules, field) %}
+			
+			
+			<div class="form-group"
+				{% if field.parent %}
+					style="display:none;" data-parent="{{ field.parent }}"
+				{% endif %}
+			>
+				<label class="col-sm-2 control-label" for="{{ field.name }}" >
+					{% if field.help %}
+						<span data-toggle="tooltip" title="" data-original-title="{{ field.help }}">{{ field.title }}</span>
+					{% else %}
+						{{ field.title }}
+					{% endif %}
+				</label>
+				
+				{% if field.values %}
+					
+					{# select #}
+					
+					<div
+						{% if field.delimiters %}
+							class="col-sm-2"
+						{% else %}
+							class="col-sm-10" 
+						{% endif %}
+					>
+					
+						<select name="related_options[{{ field.name }}]" id="{{ field.name }}" class="form-control" form="form-related-options">
+						
+							{% for val_id, val_text in field.values %}
+								<option value="{{ val_id }}" 
+									{% if modules[field.name] is defined and modules[field.name] == val_id %}
+										selected
+									{% endif %}
+								>{{ val_text }}</option>
+							{% endfor %}
+						
+						</select>
+					</div>
+					
+					{% if field.delimiters %}
+						{% set delimiters = ['_delimiter_product', '_delimiter_ro'] %}
+						{% for delimiter in field.delimiters %}
+							<label class="col-sm-2 control-label" for="{{ delimiter.name }}" style="display:none;">
+								{{ delimiter.title }}
+							</label>
+							<div class="col-sm-2" style="display:none;">
+								{% set delimiter_value = ( modules[delimiter.name] ?? '' ) %}
+								<input type="text" class="form-control" name="related_options[{{ delimiter.name }}]" id="{{ delimiter.name }}" value="{{ delimiter_value }}"
+									form="form-related-options"
+								>
+							</div>
+						{% endfor %}
+					{% endif %}
+					
+				{% else %}
+					
+					{% if ( field.type ?? false ) == 'input' %}
+						<div class="col-sm-10" >
+							<input type="text" class="form-control" id="{{ field.name }}" name="related_options[{{ field.name }}]" value="{{ modules[field.name] ?? '' }}"
+								form="form-related-options"
+							>
+						</div>
+					{% else %}
+						{# checkbox #}
+					
+						<div class="col-sm-10" >
+							<div class="checkbox">
+								<label>
+									<input type="checkbox" id="{{ field.name }}" name="related_options[{{ field.name }}]" value="1"
+										{% if ( modules[field.name] ?? false ) %}
+											checked
+										{% endif %}
+										form="form-related-options"
+									>
+								</label>
+							</div>
+						</div>
+					{% endif %}	
+				{% endif %}
+			</div>
+		{% endmacro display_setting %}
+		
+		{% import _self as self_macro %}
+    
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h3 class="panel-title"><i class="fa fa-pencil"></i> {{ text_edit }}</h3>
+			</div>
+			<div class="panel-body">
+				
+				<ul class="nav nav-tabs">
+					<li class="active"><a href="#tab-settings" data-toggle="tab">{{ entry_settings }}</a></li>
+					<li><a href="#tab-customer-section" data-toggle="tab">{{ entry_customer_section_settings }}</a></li>
+					<li><a href="#tab-additional" data-toggle="tab">{{ entry_additional }}</a></li>
+					<li><a href="#tab-export-new" data-toggle="tab">{{ entry_export_new }}</a></li>
+					<li><a href="#tab-import-new" data-toggle="tab">{{ entry_import_new }}</a></li>
+					<li><a href="#tab-import" data-toggle="tab">{{ entry_import }}</a></li>
+					<li><a href="#tab-about" data-toggle="tab" id="tab-about-button">{{ entry_about }}</a></li>
+				</ul>
+				
+				<div class="tab-content">
+					
+					<div class="tab-pane active form-horizontal" id="tab-settings">
+						
+						{# some inputs from other tabs are also included to the form by 'form="..."' #}
+						<form action="{{ action }}" method="post" enctype="multipart/form-data" id="form-related-options" class="form-horizontal">
+						
+							{% for field in settings_main %}
+								{{ self_macro.display_setting(modules, field) }}
+							{% endfor %}
+						
+							<div class="form-group">
+								<div class="col-sm-12">
+									
+									{% include 'extension/module/related_options_edit_variants.twig' %}
+									
+								</div>
+							</div>
+							<input type="hidden" name="related_options[related_options_version]" value="{{ related_options_version }}" form="form-related-options">
+						</form>
+					</div>
+							
+					<div class="tab-pane form-horizontal" id="tab-customer-section">
+		  
+						{% for field in settings_customer_section %}
+							{{ self_macro.display_setting(modules, field) }}
+						{% endfor %}
+						
+					</div>
+				
+					<div class="tab-pane form-horizontal" id="tab-additional">
+				  
+						<div class="form-group">
+							<div class="col-sm-12">{{ entry_additional_fields }}</div>
+						</div>
+								
+						{% for field in additional_fields %}
+							{{ self_macro.display_setting(modules, field) }}
+						{% endfor %}
+								
+					</div>
+		
+					<div class="tab-pane form-horizontal" id="tab-import">
+						<div style="margin-bottom: 30px;">{{ entry_import_description }}</div>
+						
+						<div class="alert alert-danger" role="alert" >{{ warning_import_old }}</div>
+		  
+						{% if import_export_is_possible %}
+	  
+							<div class="form-group" >
+							
+								<label class="col-sm-2 control-label"></label>
+							
+								<div class="col-sm-10" >
+							
+									<label class="radio">
+										<input type="radio" name="import_delete_before" value="0" checked>{{ entry_import_nothing_before }}
+									</label>
+									<label class="radio">
+										<input type="radio" name="import_delete_before" value="1">{{ entry_import_delete_before }}
+									</label>
+									<label class="radio">
+										<input type="radio" name="import_delete_before" value="2">{{ entry_import_product_before }}
+									</label>
+								
+								</div>	
+		 
+							</div>
+	  
+							<div class="form-group">
+								<label class="col-sm-2 control-label"></label>
+								<div class="col-sm-10" >
+									<button type="button" id="button-upload" data-toggle="tooltip" title="" class='btn btn-primary' data-original-title="{{ button_upload }}">{{ button_upload }}</button>
+									<span class="help-block">{{ button_upload_help }}</span>
+								</div>
+							</div>
+		
+		
+						{% endif %}
+						
+						{% if xlsx_lib_error ?? false %}
+							<div class="alert alert-danger">
+								<i class="fa fa-exclamation-circle"></i> {{ error_xlsx_lib_is_not_found|format(xlsx_lib_name) }}</b>
+								<br><br>
+								<button type="button" class="btn" data-poip="button-install-xlsx-lib">{{ button_install_xlsx_lib|format(xlsx_lib_name) }}</button>
+							</div>
+						{% endif %}
+	  
+	  
+	  
+						<div style="margin-top: 30px;" id="import_result"></div>
+	  
+						<div style="margin-top: 30px;" id="import_result_text"></div>
+					</div>
+					
+					<div class="tab-pane form-horizontal" id="tab-export-new">
+						<div style="margin-bottom: 30px;">{{ entry_export_new_description }}</div>
+						
+						<form id="export_new_form" action="{{ export_new_action }}" method="post" target="export_new_frame">
+							
+							
+							<div class="form-group" >
+								<label class="col-sm-2 control-label">
+									{{ entry_export_new_fields }}
+								</label>
+								<div class="col-sm-10" >
+									{% for field in export_new_fields %}
+										<div class="checkbox">
+											<label>
+												<input type="checkbox" name="export_fields[]" value="{{ field }}"
+													  {% if export_new_settings.export_fields is defined and (field in export_new_settings.export_fields) %}
+														  checked
+													  {% endif %}
+												>
+												{{ field }}
+											</label>
+										</div>
+									{% endfor %}
+									<br>
+									<button type="button" onclick="$('#export_new_form input[type=checkbox]').prop('checked', true);" data-toggle="tooltip" title="" class='btn btn-primary' data-original-title="{{ entry_export_new_check_all }}">{{ entry_export_new_check_all }}</button>
+								</div>	
+							</div>
+							
+							<div class="form-group" >
+								<label class="col-sm-2 control-label">
+									{{ ro_entry_export_method }}
+								</label>
+								<div class="col-sm-10" >
+									<select name="export_new_method" class="form-control">
+										<option value="0">{{ ro_entry_export_method_all }}</option>
+										<option value="1">{{ ro_entry_export_method_by_product_ids }}</option>
+										<option value="2">{{ ro_entry_export_method_by_ro_variant }}</option>
+									</select>
+								</div>
+							</div>
+		  
+							<div class="form-group" id="export_settings_by_product_ids" style="display: none;">
+								<label class="col-sm-2 control-label">
+									{{ ro_entry_start_product_id }} ( {{ ro_entry_min_product_id }} {{ min_product_id }} )
+								</label>
+								<div class="col-sm-2" >
+									<input name="export_new_start_product_id" class="form-control" value="">
+								</div>	
+								<label class="col-sm-2 control-label">
+									{{ ro_entry_end_product_id }} ( {{ ro_entry_max_product_id }} {{ max_product_id }} )
+								</label>
+								<div class="col-sm-2" >
+									<input name="export_new_end_product_id" class="form-control" value="">
+								</div>	
+							</div>
+							
+							<div class="form-group" id="export_settings_by_ro_variant" style="display: none;">
+								<label class="col-sm-2 control-label">
+									{{ ro_entry_export_by_variant }}
+								</label>
+								<div class="col-sm-10" >
+									<select name="export_new_variant_id" class="form-control">
+										{% for vo_id, vo_data in variants_options %}
+											<option value="{{ vo_id }}">{{ vo_data.name }}</option>
+										{% endfor %}
+									</select>
+								</div>	
+							</div>
+			
+							{% if import_export_is_possible %}
+								
+								<div class="form-group" >
+									<label class="col-sm-2 control-label">
+									</label>
+									<div class="col-sm-10" >
+										<button type="button" onclick="$('#export_new_form').submit();" data-toggle="tooltip" title="" class='btn btn-primary' data-original-title="{{ entry_export_new_get_file }}">{{ entry_export_new_get_file }}</button>
+									</div>	
+								</div>
+								
+							{% endif %}
+							
+							{% if xlsx_lib_error ?? false %}
+								<div class="alert alert-danger">
+									<i class="fa fa-exclamation-circle"></i> {{ error_xlsx_lib_is_not_found|format(xlsx_lib_name) }}</b>
+									<br><br>
+									<button type="button" class="btn" data-poip="button-install-xlsx-lib">{{ button_install_xlsx_lib|format(xlsx_lib_name) }}</button>
+								</div>
+							{% endif %}
+			
+							<iframe name="export_new_frame" src="" id="export_new_frame" style="display: none">
+							</iframe>
+			
+						</form>
+		  
+					</div>
+		
+					<div class="tab-pane form-horizontal" id="tab-import-new">
+						<div class="form-group" >
+							<div class="col-sm-12" >
+								{{ entry_import_new_description }}
+							</div>
+						</div>
+		  
+						{% if import_export_is_possible %}
+							
+							<div class="form-group" >
+								<div class="col-sm-12" >
+							
+									<div style="padding-left: 20px;">
+				
+										<label class="radio">
+											<input type="radio" name="import_new_delete_before" value="0" checked> {{ entry_import_new_nothing_before }}
+										</label>
+										<label class="radio">
+											<input type="radio" name="import_new_delete_before" value="1"> {{ entry_import_new_delete_before }}
+										</label>
+										<label class="radio">
+											<input type="radio" name="import_new_delete_before" value="2"> {{ entry_import_new_product_before }}
+										</label>
+									</div>
+								</div>
+							</div>
+							
+							<div class="form-group" id="import_without_remove_method_container" style="display:none;">
+								<div class="col-sm-12" >
+							
+									<div style="padding-left: 20px;">
+				
+										<label class="radio">
+											<input type="radio" name="import_without_remove_method" value="0" checked> {{ entry_import_new_everything }}
+										</label>
+										<label class="radio">
+											<input type="radio" name="import_without_remove_method" value="1"> {{ entry_import_new_only_discounts }}
+										</label>
+									</div>
+								</div>
+							</div>
+							
+							<script>
+								$('[name="import_new_delete_before"]').change(function(){
+									$('#import_without_remove_method_container').toggle( $('[name="import_new_delete_before"]:checked').val() == '0' );
+								});
+								$('[name="import_new_delete_before"]').first().change();
+							</script>
+							
+							<div class="form-group" >
+								<div class="col-sm-12" >
+										
+									<div class="input-group">
+										<label class="input-group-btn">
+											<span class="btn btn-primary">
+												{{ button_browse_file }}
+												<input type="file" name="file_import" id="ro_file_import" class="form-control-file" style="display: none;"
+													onchange="$('#file_import_name').val(this.files[0] ? this.files[0].name || '' : '');"
+												>
+											</span>
+										</label>
+										<input type="text" id="file_import_name" class="form-control" readonly>
+									</div>
+									
+									<br>
+									<button type="button" id="import-new-button-upload" data-toggle="tooltip" title="" class='btn btn-primary' data-original-title="{{ entry_import_new_button_upload }}">{{ entry_import_new_button_upload }}</button>
+		
+								</div>
+							</div>
+		
+							<div class="form-group" >
+								<div class="col-sm-12" >
+									<div style="margin-top: 30px;" id="import_new_result"></div>
+			  
+									<div style="margin-top: 30px;" id="import_new_result_text"></div>
+									
+								</div>
+							</div>	
+		
+						{% endif %}
+						
+						{% if xlsx_lib_error ?? false %}
+							<div class="alert alert-danger">
+								<i class="fa fa-exclamation-circle"></i> {{ error_xlsx_lib_is_not_found|format(xlsx_lib_name) }}</b>
+								<br><br>
+								<button type="button" class="btn" data-poip="button-install-xlsx-lib">{{ button_install_xlsx_lib|format(xlsx_lib_name) }}</button>
+							</div>
+						{% endif %}
+	  
+					</div>
+		
+					<div class="tab-pane form-horizontal" id="tab-about">
+						
+						<div id="module_description">
+							{{ module_description }}
+						</div>
+						
+						<hr>
+						{{ text_conversation }}
+						<hr>
+						
+						<br>
+						<h4>{{ entry_we_recommend }}</h4><br>
+						<div id="we_recommend">
+							{{ text_we_recommend }}
+						</div>
+						
+					</div>
+		
+				</div>
+	
+	  
+	
+				<hr>
+				<span class="help-block">{{ entry_ro_version }}: {{ module_version }} | {{ text_ro_support }} | <span id="module_page">{{ text_ro_page }}</span></span><span class="help-block" style="font-size: 80%; line-height: 130%; margin-bottom: 0px;">{{ module_copyright }}</span>
+			</div>
+		</div>
+	</div>
+</div>
+			
+<div id="modal-edit-variant" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="editVariant" aria-hidden="true">
+	<div class="modal-dialog" style="width: 80%;">
+		<div class="modal-content">
+			
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title">{{ text_ro_edit_variant }}</h4>
+			</div>
+			<div class="modal-body">
+				<div data-loading="container-variant-edit"><i class="fa fa-circle-o-notch fa-spin fa-2x fa-fw"></i><span>{{ text_loading }}</span></div>
+				<div id="container-variant-edit">
+					<div id="app-variant-edit">
+						{% include 'extension/module/related_options_edit_variants.twig' %}
+					</div>
+				</div>
+				
+			</div>
+			<div class="modal-footer">
+				<div class="pull-right">
+					<div style="display: inline-block;">
+						<div data-loading="button-save-variant">
+							<i class="fa fa-circle-o-notch fa-spin fa-2x fa-fw"></i>
+						</div>
+					</div>
+					<button type="button" class="btn btn-primary" title={{ button_save }} id="button-save-variant"><i class="fa fa-save"></i> {{ button_save_directly }}</button>
+					<button type="button" class="btn btn-default" title={{ button_cancel }} data-dismiss="modal"><i class="fa fa-reply"></i></button>
+				</div>
+			</div>
+			
+		</div>
+	</div>
+</div>
+
+<script>
+	
+	var edit_variant_request = false;
+	
+	let $container_variant_edit_loading_spinner = $('[data-loading="container-variant-edit"]');
+	let $container_variant_edit = $('#container-variant-edit');
+	let $button_save_variant = $('#button-save-variant');
+	
+	
+	$('#modal-edit-variant').on('hidden.bs.modal', function(){
+		if (edit_variant_request) {
+			edit_variant_request.abort();
+		}
+		endLoading();
+		clearVariantSaveAlerts();
+	});
+	
+	function setPopupAppVariant(variant) {
+		if (!window.ro_app_variant_edit) {
+			// init app
+			let ro_vue_app_opts_variant_edit = $.extend(true, {}, ro_vueAppOptions);
+			ro_vue_app_opts_variant_edit.el 				= '#app-variant-edit';
+			ro_vue_app_opts_variant_edit.data.edit_single 	= true;
+			window.ro_app_variant_edit = getNewROApp(ro_vue_app_opts_variant_edit);
+			window.ro_app_variant_edit.setUseVariantsStatus(true);
+			window.ro_app_variant_edit.loadOptions({{ options|json_encode }});
+		} else {
+			window.ro_app_variant_edit.removeVariant(0);
+		}
+		window.ro_app_variant_edit.addVariant(variant);
+	}
+	
+	function editVariantInPopup(rov_id) {
+		
+		if (edit_variant_request) {
+			edit_variant_request.abort();
+		}
+		
+		$container_variant_edit_loading_spinner.show();
+		$container_variant_edit.hide();
+		hideVariantSaveLoadings();
+		clearVariantSaveAlerts();
+		
+		
+		if ( !rov_id ) { // new variant
+			setPopupAppVariant({});
+			$container_variant_edit_loading_spinner.hide();
+			$container_variant_edit.show();
+		} else {
+			edit_variant_request = $.ajax({
+				url: 'index.php?route=extension/module/related_options/getVariant&user_token={{ user_token }}&rov_id='+rov_id,
+				type: 'post',		
+				dataType: 'json',
+				cache: false,
+				contentType: false,
+				processData: false,		
+				beforeSend: function() {
+					
+				},
+				complete: function() {
+					$container_variant_edit_loading_spinner.hide();
+					$container_variant_edit.show();
+				},	
+				success: function(json) {
+					
+					if (json && json.error) {
+						$container_variant_edit.html('Error: '+json.error);
+					} else if (!json || !json.variant) {
+						$container_variant_edit.html('Error: unexpected response');
+					} else {
+						setPopupAppVariant(json.variant);
+					}
+		  
+				},			
+				error: function(xhr, ajaxOptions, thrownError) {
+					$container_variant_edit.html('Error: '+thrownError+' <br> '+xhr.statusText);
+					alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+					console.debug(xhr);
+				},
+			});
+		}
+		
+		$('#modal-edit-variant').modal({show:true});
+	};
+	
+	$button_save_variant.click(function(){
+		
+		let $button = $(this);
+	
+		$.ajax({
+			url: 'index.php?route=extension/module/related_options/saveVariant&user_token={{ user_token }}',
+			type: 'post',		
+			dataType: 'json',
+			data: $('#container-variant-edit :input[name]').serialize(),
+			cache: false,
+			beforeSend: function() {
+				beginLoading();
+			},
+			complete: function() {
+				endLoading();
+			},
+			success: function(json) {
+				
+				let error_txt = '';
+				if (json && json.error) {
+					error_txt = 'Error: '+json.error;
+				} else if (!json || !json.variant) {
+					error_txt = 'Error: unexpected response';
+				}
+				if (error_txt) {
+					showVariantSaveError(error_txt);
+				} else {
+					setPopupAppVariant(json.variant);
+					
+					ro_app.addOrUpdateVariant(json.variant);
+					
+					//$button.parent().before('<div class="alert alert-success alert-dismissible" data-alert="'+$button.attr('id')+'" style="display: inline-block; margin-right: 10px;" role="alert">{{ text_ro_variant_saved }}</div>');
+					//$('[data-alert="'+$button.attr('id')+'"]').fadeTo(1000, 0, function(){
+					//	$(this).remove();
+					//});
+					$('#modal-edit-variant').modal('hide');
+				}
+	  
+			},			
+			error: function(xhr, ajaxOptions, thrownError) {
+				showVariantSaveError('Error: '+xhr.statusText+' <br> '+thrownError);
+				alert('Error: '+xhr.statusText + "\r\n" + thrownError + "\r\n" + xhr.responseText);
+				console.debug(xhr);
+			},
+		});
+		
+	});
+	
+	function showVariantSaveError(error_txt) {
+		let $button = $button_save_variant;
+		clearVariantSaveAlerts();
+		$button.parent().before('<div class="alert alert-danger alert-dismissible" data-alert="'+$button.attr('id')+'" role="alert" style="display: inline-block; margin-right: 10px;">'+error_txt+'</div> ');
+	}
+	
+	function clearVariantSaveAlerts() {
+		let $button = $button_save_variant;
+		$('[data-alert="'+$button.attr('id')+'"]').remove();
+	}
+	
+	function hideVariantSaveLoadings() {
+		let $button = $button_save_variant;
+		$('[data-loading="'+$button.attr('id')+'"]').hide();
+	}
+	function showVariantSaveLoadings() {
+		let $button = $button_save_variant;
+		$('[data-loading="'+$button.attr('id')+'"]').show();
+	}
+	
+	function beginLoading() {
+		let $button = $button_save_variant;
+		showVariantSaveLoadings();
+		$button.button('loading');
+		clearVariantSaveAlerts();
+	}
+	
+	function endLoading() {
+		let $button = $button_save_variant;
+		hideVariantSaveLoadings();
+		$button.button('reset');
+	}
+	
+	function beginLoadingSingleButton($button) {
+		if ($button) {
+			if (!$button.data('original-html')) {
+				$button.data('original-html', $button.attr('html'));
+			}
+			$button.attr('html', '<i data-v="loading-spinner" class="fa fa-circle-o-notch fa-spin fa-1x loading-spinner"></i>');
+			$button.prop('disabled', true);
+		}
+	}
+	
+	function endLoadingSingleButton($button) {
+		if ($button) {
+			$button.attr('html', $button.data('original-html'));
+			$button.prop('disabled', false);
+		}
+	}
+	
+	//function clearVariantSaveLoadings() {
+	//	let $button = $button_save_variant;
+	//	$('[data-loading="'+$button.attr('id')+'"]').remove();
+	//}
+	
+	function removeVariantDirectly(rov_id, $button) {
+		
+		$.ajax({
+			url: 'index.php?route=extension/module/related_options/removeVariant&user_token={{ user_token }}',
+			type: 'post',		
+			dataType: 'json',
+			data: 'rov_id='+rov_id,
+			cache: false,
+			beforeSend: function() {
+				beginLoadingSingleButton($button);
+			},
+			complete: function() {
+				endLoadingSingleButton($button);
+			},
+			success: function(json) {
+				
+				let error_txt = '';
+				if (json && json.error) {
+					error_txt = 'Error: '+json.error;
+				} else if (!json || !json.success) {
+					error_txt = 'Error: unexpected response';
+				}
+				if (error_txt) {
+					alert(error_txt);
+				} else {
+					ro_app.removeVariantByROVId(rov_id);
+				}
+	  
+			},			
+			error: function(xhr, ajaxOptions, thrownError) {
+				alert('Error: '+xhr.statusText + "\r\n" + thrownError + "\r\n" + xhr.responseText);
+				console.debug(xhr);
+			},
+		});
+	}
+	
+	
+	
+</script>
+
+
+
+<script type="text/javascript">
+
+var import_upload_timer;
+$('#button-upload').on('click', function() {
+	$('#form-upload').remove();
+	
+	$('body').prepend('<form enctype="multipart/form-data" id="form-upload" style="display: none;"><input type="file" name="file" /></form>');
+
+	$('#form-upload input[name="file"]').trigger('click');
+	
+
+	clearInterval(import_upload_timer);
+	import_upload_timer = setInterval(function() {
+    
+    if ( !$('#form-upload input[name="file"]').length ) {
+      clearInterval(import_upload_timer);
+      return;
+    }
+    
+		if ($('#form-upload input[name=\'file\']').val() != '') {
+			clearInterval(import_upload_timer);		
+			
+			var form_data = new FormData($('#form-upload')[0]);
+			
+			form_data.append("import_delete_before", $('input:radio[name="import_delete_before"]:checked').val() );
+			
+			$.ajax({
+				url: 'index.php?route=extension/module/related_options/import&user_token={{ user_token }}',
+				type: 'post',		
+				dataType: 'json',
+				data: form_data,
+				//data: new FormData($('#form-upload')[0]),
+				cache: false,
+				contentType: false,
+				processData: false,		
+				beforeSend: function() {
+					$('#button-upload').button('loading');
+				},
+				complete: function() {
+					$('#button-upload').button('reset');
+				},	
+				success: function(json) {
+					
+					$('#import_result_text').html("{{ entry_server_response }}: "+json);
+						
+					if (json['success']) {
+						alert(json['success']);
+					}
+        
+					if (json['error']) {
+						$('#import_result_text').html('Error: '+json['error']);
+					} else {
+						$('#import_result_text').html('{{ entry_import_result }}: '+json['products']+'/'+json['relatedoptions']);
+						if (json['warning']) {
+							$('#import_result_text').append('<br><br>Warning: '+json['warning']);
+						}
+					}
+          
+				},			
+				error: function(xhr, ajaxOptions, thrownError) {
+					alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+				}
+			});
+      
+			$('#form-upload').remove();
+      
+		}
+	}, 500);
+});
+
+$('#import-new-button-upload').on('click', function() {
+
+	$file_input = $('#ro_file_import');
+	if ( $file_input.val() ) {
+		var form_data = new FormData($('#form-upload')[0]);
+		
+		form_data.append("import_delete_before", $('input:radio[name="import_new_delete_before"]:checked').val() );
+		form_data.append("import_without_remove_method", $('input:radio[name="import_without_remove_method"]:checked').val() );
+		form_data.append("file_import", $file_input[0].files[0], $file_input[0].files[0].name );
+		
+		$.ajax({
+			url: 'index.php?route=extension/module/related_options/import_new&user_token={{ user_token }}',
+			type: 'post',		
+			dataType: 'json',
+			data: form_data,
+			//data: form_data,
+			cache: false,
+			contentType: false,
+			processData: false,		
+			beforeSend: function() {
+				$('#import-new-button-upload').button('loading');
+				$('#import_new_result_text').html('<i id="loading-animation" class="fa fa-cog fa-spin fa-2x fa-fw"></i>');
+			},
+			complete: function() {
+				$('#import-new-button-upload').button('reset');
+				$('#loading-animation').remove();
+			},	
+			success: function(json) {
+				
+				// in case of wrong server response
+				html = "{{ entry_server_response }}: "+json;
+				
+				if (json['success']) {
+					alert(json['success']);
+				}
+	
+				if (json['errors'] && json['errors'].length) {
+					var html = '';
+					for (var i in json['errors']) {
+						html+= '<br>'+json['errors'][i]+'';
+					}
+					html = '{{ entry_import_new_error }}'+html;
+				} else {
+					var html = '{{ entry_import_new_result }}: '+json['products']+'/'+json['relatedoptions'];
+				}
+				$('#import_new_result_text').html(html);
+			},			
+			error: function(xhr, ajaxOptions, thrownError) {
+				alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+			}
+		});
+	}
+	
+});
+
+  
+var variant_cnt = 0;
+var options_cnt = 0;
+//var all_options = {{ options|json_encode }};
+
+$('#spec_model').change(function(){
+	
+	var show_delimiter_product = ( $(this).val() == 3);
+	var delimiter_product = 'spec_model_delimiter_product';
+	$('#'+delimiter_product).parent().toggle(show_delimiter_product);
+	$('label[for="'+delimiter_product+'"]').toggle(show_delimiter_product);
+	
+	{% if version_pro %}
+		var show_delimiter_ro = ( $(this).val() == 2 || $(this).val() == 3);
+		var delimiter_ro = 'spec_model_delimiter_ro';
+		$('#'+delimiter_ro).parent().toggle(show_delimiter_ro);
+		$('label[for="'+delimiter_ro+'"]').toggle(show_delimiter_ro);
+	{% endif %}
+});
+$('#spec_model').change();
+
+
+$('button[data-poip="button-install-xlsx-lib"]').click(function(){
+		
+	let $button = $(this);
+	let install_texts = {{ {
+		success_install_xlsx_lib: success_install_xlsx_lib|format(xlsx_lib_name),
+	}|json_encode }};
+	
+	$.ajax({
+		url: 'index.php?route=extension/module/related_options/installXLSXLib&user_token={{ user_token }}',
+		type: 'get',		
+		dataType: 'json',
+		//data: form_data,
+		cache: false,
+		//contentType: false,
+		//processData: false,		
+		beforeSend: function() {
+			$button.button('loading');
+		},
+		complete: function() {
+			$button.button('reset');
+		},	
+		success: function(json) {
+			
+			if ( json.error ) {
+				console.debug(json);
+				alert(json.error);
+			} else {
+				alert(install_texts.success_install_xlsx_lib);
+				$button.replaceWith(install_texts.success_install_xlsx_lib);
+			}
+			
+		},			
+		error: function(xhr, ajaxOptions, thrownError) {
+			console.debug(xhr);
+			console.debug(thrownError);
+			alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+		}
+	});
+});
+
+function check_for_updates() {
+	$.ajax({
+		url: '//update.liveopencart.com/upd.php',
+		type: 'post',
+		data: { module: '{{ extension_code }}', version:'{{ module_version }}', lang: '{{ config_admin_language }}' },
+		dataType: 'json',
+
+		success: function(data) {
+			
+			if (data) {
+				
+				if (data['recommend']) {
+					$('#we_recommend').html(data['recommend']);
+				}
+				if (data['update']) {
+					$('#tab-about-button').append('&nbsp;&nbsp;<font style="color:red;font-weight:normal;">{{ text_update_alert|e }}</font>');
+					$('#module_description').after('<hr><div class="alert alert-info" role="alert">'+data['update']+'</div>');
+				}
+				if (data['product_pages']) {
+					$('#module_page').html(data['product_pages']);
+				}
+			}
+		}
+	});	
+}
+
+
+
+
+$().ready(  function () {
+
+	check_for_updates();
+	
+} );
+
+$('select[name="export_new_method"]').change(function(){
+	$('#export_settings_by_product_ids').toggle( $(this).val()==1 );
+	$('#export_settings_by_ro_variant').toggle( $(this).val()==2 );
+})
+.change();
+
+$('div[data-parent]').each(function(){
+	
+	var $element = $(this);
+	var parent_selector = '#'+$element.attr('data-parent');
+	$(parent_selector).change(function(){
+		var $parent = $(this);
+		if ( $parent.is(':checkbox') ) {
+			selected = $parent.is(':checked');
+		} else { // select
+			selected = $parent.val() && $parent.val() != '0';
+		}
+		$element.toggle(selected);
+	})
+	.change();
+});
+
+
+
+{% if (export_new_settings ?? false)  %}
+	
+	var export_new_settings = {{ export_new_settings|json_encode }};
+	if ( export_new_settings['export_new_method'] ) {
+		$('select[name="export_new_method"]').val(export_new_settings['export_new_method'])
+		.change();
+	}
+	if ( export_new_settings['export_new_variant_id'] ) {
+		$('select[name="export_new_variant_id"]').val(export_new_settings['export_new_variant_id']);
+	}
+	if ( export_new_settings['export_new_start_product_id'] ) {
+		$('input[name="export_new_start_product_id"]').val(export_new_settings['export_new_start_product_id']);
+	}
+	if ( export_new_settings['export_new_end_product_id'] ) {
+		$('input[name="export_new_end_product_id"]').val(export_new_settings['export_new_end_product_id']);
+	}
+{% endif %}
+  
+
+  
+</script>
+
+<script>
+	var ro_texts = {{ ro_texts|json_encode }};
+</script>
+
+<script src="{{ ro_module_page_script }}"></script>
+<script type="module">
+	import Vue from '{{ ro_vue_source }}'
+	
+	window.getNewROApp = function(app_options) {
+		return new Vue($.extend(true, {}, app_options));
+	}
+	
+	
+	/*
+	import Vue from '{{ ro_vue_source }}'
+	window.ro_app = new Vue(ro_vueAppOptions);
+	*/
+	
+	window.ro_app = getNewROApp(ro_vueAppOptions);
+	
+	window.ro_app.edit_separately = {{ (modules.ro_edit_variants_separately) ? 'true' : 'false' }};
+	window.ro_app.setUseVariantsStatus($('#ro_use_variants').is(':checked'));
+	window.ro_app.loadOptions({{ options|json_encode }});
+	window.ro_app.loadVariants({{ variants_options|json_encode }});
+	
+</script>
+<script>
+	$(document).on('change', '#ro_use_variants', function(){
+		ro_app.setUseVariantsStatus($(this).is(':checked'));
+	});
+</script>
+
+{{ footer }}

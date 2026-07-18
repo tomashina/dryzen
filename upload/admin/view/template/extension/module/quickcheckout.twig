@@ -1,0 +1,924 @@
+{{ header }} {{ column_left }} 
+<div id="content">
+  <div class="page-header">
+    <div class="container-fluid">
+      <div class="pull-right">
+        <button type="submit" form="form" data-toggle="tooltip" title="{{ button_save }}" class="btn btn-success"><i class="fa fa-save"></i></button>
+        <a onclick="$('#form').attr('action', '{{ continue }}');$('#form').submit();" data-toggle="tooltip" title="{{ button_continue }}" class="btn btn-primary"><i class="fa fa-check"></i></a>
+        <a href="{{ cancel }}" data-toggle="tooltip" title="{{ button_cancel }}" class="btn btn-default"><i class="fa fa-reply"></i></a></div>
+      <h1>{{ heading_title }}</h1>
+      <ul class="breadcrumb">
+        {% for breadcrumb in breadcrumbs %} 
+        <li><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+        {% endfor %} 
+      </ul>
+    </div>
+  </div>
+  <div class="container-fluid">
+    {% if success %} 
+    <div class="alert alert-success"><i class="fa fa-check-circle"></i>{{ success }} 
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+    </div>
+    {% endif %} 
+	{% if error_warning %} 
+    <div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i>{{ error_warning }} 
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+    </div>
+    {% endif %} 
+	<div class="alert alert-info">
+	  {{ entry_store }} 
+	  <select onchange="store();" name="store_id">
+		<option value="0"{{ store_id  == '0' ? ' selected="selected"' }}>{{ text_default_store }}</option>
+		{% for store in stores %} 
+		<option value="{{ store.store_id }}"{{ store_id == store.store_id ? ' selected="selected"' }}>{{ store.name }}</option>
+		{% endfor %} 
+	  </select>
+    </div>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title"><i class="fa fa-pencil"></i>{{ text_edit }}</h3>
+      </div>
+      <div class="panel-body">
+        <form action="{{ action }}" method="post" enctype="multipart/form-data" id="form" class="form-horizontal">
+		  <ul class="nav nav-tabs">
+			<li class="active"><a href="#tab-home" data-toggle="tab"><i data-toggle="tooltip" title="{{ tab_home }}" class="fa fa-home"></i></a></li>
+			<li><a href="#tab-general" data-toggle="tab"><i data-toggle="tooltip" title="{{ tab_general }}" class="fa fa-gear"></i></a></li>
+			<li><a href="#tab-design" data-toggle="tab"><i data-toggle="tooltip" title="{{ tab_design }}" class="fa fa-television"></i></a></li>
+			<li><a href="#tab-field" data-toggle="tab"><i data-toggle="tooltip" title="{{ tab_field }}" class="fa fa-bars"></i></a></li>
+			<li><a href="#tab-module" data-toggle="tab"><i data-toggle="tooltip" title="{{ tab_module }}" class="fa fa-puzzle-piece"></i></a></li>
+			<li><a href="#tab-payment" data-toggle="tab"><i data-toggle="tooltip" title="{{ tab_payment }}" class="fa fa-credit-card"></i></a></li>
+			<li><a href="#tab-shipping" data-toggle="tab"><i data-toggle="tooltip" title="{{ tab_shipping }}" class="fa fa-ship"></i></a></li>
+			<li><a href="#tab-survey" data-toggle="tab"><i data-toggle="tooltip" title="{{ tab_survey }}" class="fa fa-edit"></i></a></li>
+			<li><a href="#tab-delivery" data-toggle="tab"><i data-toggle="tooltip" title="{{ tab_delivery }}" class="fa fa-truck"></i></a></li>
+			<li><a href="#tab-countdown" data-toggle="tab"><i data-toggle="tooltip" title="{{ tab_countdown }}" class="fa fa-clock-o"></i></a></li>
+			<!--<li><a href="#tab-analytics" data-toggle="tab"><i data-toggle="tooltip" title="{{ tab_analytics }}" class="fa fa-line-chart"></i></a></li>-->
+		  </ul>
+		  <div class="tab-content">
+			<div class="tab-pane active" id="tab-home">
+			  <div class="row">
+				<div class="col-xs-4 text-center">
+				  <a href="#tab-general" data-toggle="tab" onclick="show('#tab-general');"><i title="{{ text_general }}" data-toggle="tooltip" class="fa fa-gear fa-5x fa-fw"></i></a>
+				</div>
+				<div class="col-xs-4 text-center">
+				  <a href="#tab-design" data-toggle="tab" onclick="show('#tab-design');"><i title="{{ text_design }}" data-toggle="tooltip" class="fa fa-television fa-5x fa-fw"></i></a>
+				</div>
+				<div class="col-xs-4 text-center">
+				  <a href="#tab-field" data-toggle="tab" onclick="show('#tab-field')"><i title="{{ text_field }}" data-toggle="tooltip" class="fa fa-bars fa-5x fa-fw"></i></a>
+				</div>
+			  </div><br />
+			  <div class="row">
+				<div class="col-xs-4 text-center">
+				  <a href="#tab-module" data-toggle="tab" onclick="show('#tab-module')"><i title="{{ text_module_home }}" data-toggle="tooltip" class="fa fa-puzzle-piece fa-5x fa-fw"></i></a>
+				</div>
+				<div class="col-xs-4 text-center">
+				  <a href="#tab-payment" data-toggle="tab" onclick="show('#tab-payment')"><i title="{{ text_payment }}" data-toggle="tooltip" class="fa fa-credit-card fa-5x fa-fw"></i></a>
+				</div>
+				<div class="col-xs-4 text-center">
+				  <a href="#tab-shipping" data-toggle="tab" onclick="show('#tab-shipping')"><i title="{{ text_shipping }}" data-toggle="tooltip" class="fa fa-ship fa-5x fa-fw"></i></a>
+				</div>
+			  </div><br />
+			  <div class="row">
+			    <div class="col-xs-4 text-center">
+				  <a href="#tab-survey" data-toggle="tab" onclick="show('#tab-survey')"><i title="{{ text_survey }}" data-toggle="tooltip" class="fa fa-edit fa-5x fa-fw"></i></a>
+				</div>
+				<div class="col-xs-4 text-center">
+				  <a href="#tab-delivery" data-toggle="tab" onclick="show('#tab-delivery')"><i title="{{ text_delivery }}" data-toggle="tooltip" class="fa fa-truck fa-5x fa-fw"></i></a>
+				</div>
+				<div class="col-xs-4 text-center">
+				  <a href="#tab-countdown" data-toggle="tab" onclick="show('#tab-countdown')"><i title="{{ text_countdown }}" data-toggle="tooltip" class="fa fa-clock-o fa-5x fa-fw"></i></a>
+				</div>
+			  </div><br />
+			  <div class="row">
+			    <div class="col-xs-4 text-center">
+				  <a href="#tab-analytics" data-toggle="tab" onclick="show('#tab-analytics')"><i title="{{ text_analytics }}" data-toggle="tooltip" class="fa fa-line-chart fa-5x fa-fw"></i></a>
+				</div>
+			    <div class="col-xs-4 text-center">
+				  <a href="#tab-about" data-toggle="tab" onclick="show('#tab-about')"><i title="About Quick Checkout" data-toggle="tooltip" class="fa fa-question-circle fa-5x fa-fw"></i></a>
+				</div>
+			  </div>
+			</div>
+            <div class="tab-pane" id="tab-general">
+			  <div class="row">
+			    <div class="form-group col-sm-6">
+				  <label class="col-sm-4 control-label" for="input-status"><span title="{{ help_status }}" data-toggle="tooltip">{{ entry_status }}</span></label>
+				  <div class="col-sm-8">
+					<select name="quickcheckout_status" id="input-status" class="form-control">
+					  <option value="1"{{ quickcheckout_status ? ' selected="selected"' : '' }}>{{ text_enabled }}</option>
+					  <option value="0"{{ quickcheckout_status ? '' : ' selected="selected"' }}>{{ text_disabled }}</option>
+					</select>
+				  </div>
+				</div>
+				<div class="form-group col-sm-6">
+				  <label class="col-sm-4 control-label" for="input-minimum-order"><span title="{{ help_minimum_order }}" data-toggle="tooltip">{{ entry_minimum_order }}</span></label>
+				  <div class="col-sm-8">
+					<input type="text" name="quickcheckout_minimum_order" value="{{ quickcheckout_minimum_order }}" class="form-control" />
+				  </div>
+				</div>
+			  </div>
+			  <div class="row">
+				<div class="form-group col-sm-6">
+				  <label class="col-sm-4 control-label" for="input-debug"><span title="{{ help_debug }}" data-toggle="tooltip">{{ entry_debug }}</span></label>
+				  <div class="col-sm-8">
+					<select name="quickcheckout_debug" id="input-debug" class="form-control">
+					  <option value="1"{{ quickcheckout_debug ? ' selected="selected"' : '' }}>{{ text_enabled }}</option>
+					  <option value="0"{{ quickcheckout_debug ? '' : ' selected="selected"' }}>{{ text_disabled }}</option>
+					</select>
+				  </div>
+				</div>
+				<div class="form-group col-sm-6">
+				  <label class="col-sm-4 control-label" for="input-confirmation-page"><span title="{{ help_confirmation_page }}" data-toggle="tooltip">{{ entry_confirmation_page }}</span></label>
+				  <div class="col-sm-8">
+					<select name="quickcheckout_confirmation_page" id="input-confirmation-page" class="form-control">
+					  <option value="1"{{ quickcheckout_confirmation_page ? ' selected="selected"' : '' }}>{{ text_enabled }}</option>
+					  <option value="0"{{ quickcheckout_confirmation_page ? '' : ' selected="selected"' }}>{{ text_disabled }}</option>
+					</select>
+				  </div>
+				</div>
+			  </div>
+			  <div class="row">
+				<div class="form-group col-sm-6">
+				  <label class="col-sm-4 control-label" for="input-save-data"><span title="{{ help_save_data }}" data-toggle="tooltip">{{ entry_save_data }}</span></label>
+				  <div class="col-sm-8">
+					<select name="quickcheckout_save_data" id="input-save-data" class="form-control">
+					  <option value="1"{{ quickcheckout_save_data ? ' selected="selected"' : '' }}>{{ text_enabled }}</option>
+					  <option value="0"{{ quickcheckout_save_data ? '' : ' selected="selected"' }}>{{ text_disabled }}</option>
+					</select>
+				  </div>
+				</div>
+				<div class="form-group col-sm-6">
+				  <label class="col-sm-4 control-label" for="input-edit-cart"><span title="{{ help_edit_cart }}" data-toggle="tooltip">{{ entry_edit_cart }}</span></label>
+				  <div class="col-sm-8">
+					<select name="quickcheckout_edit_cart" id="input-edit-cart" class="form-control">
+					  <option value="1"{{ quickcheckout_edit_cart ? ' selected="selected"' : '' }}>{{ text_enabled }}</option>
+					  <option value="0"{{ quickcheckout_edit_cart ? '' : ' selected="selected"' }}>{{ text_disabled }}</option>
+					</select>
+				  </div>
+				</div>
+			  </div>
+			  <div class="row">
+				<div class="form-group col-sm-6">
+				  <label class="col-sm-4 control-label" for="input-highlight-error"><span title="{{ help_highlight_error }}" data-toggle="tooltip">{{ entry_highlight_error }}</span></label>
+				  <div class="col-sm-8">
+					<select name="quickcheckout_highlight_error" id="input-highlight-error" class="form-control">
+					  <option value="1"{{ quickcheckout_highlight_error ? ' selected="selected"' : '' }}>{{ text_enabled }}</option>
+					  <option value="0"{{ quickcheckout_highlight_error ? '' : ' selected="selected"' }}>{{ text_disabled }}</option>
+					</select>
+				  </div>
+				</div>
+				<div class="form-group col-sm-6">
+				  <label class="col-sm-4 control-label" for="input-text-error"><span title="{{ help_text_error }}" data-toggle="tooltip">{{ entry_text_error }}</span></label>
+				  <div class="col-sm-8">
+					<select name="quickcheckout_text_error" id="input-text-error" class="form-control">
+					  <option value="1"{{ quickcheckout_text_error ? ' selected="selected"' : '' }}>{{ text_enabled }}</option>
+					  <option value="0"{{ quickcheckout_text_error ? '' : ' selected="selected"' }}>{{ text_disabled }}</option>
+					</select>
+				  </div>
+				</div>
+			  </div>
+			  <div class="row">
+				<div class="form-group col-sm-6">
+				  <label class="col-sm-4 control-label" for="input-auto-submit"><span title="{{ help_auto_submit }}" data-toggle="tooltip">{{ entry_auto_submit }}</span></label>
+				  <div class="col-sm-8">
+					<select name="quickcheckout_auto_submit" id="input-auto-submit" class="form-control">
+					  <option value="1"{{ quickcheckout_auto_submit ? ' selected="selected"' : '' }}>{{ text_enabled }}</option>
+					  <option value="0"{{ quickcheckout_auto_submit ? '' : ' selected="selected"' }}>{{ text_disabled }}</option>
+					</select>
+				  </div>
+				</div>
+				<div class="form-group col-sm-6">
+				  <label class="col-sm-4 control-label" for="input-payment-target"><span title="{{ help_payment_target }}" data-toggle="tooltip">{{ entry_payment_target }}</span></label>
+				  <div class="col-sm-8">
+				    <input type="text" name="quickcheckout_payment_target" id="input-payment-target" class="form-control" value="{{ quickcheckout_payment_target }}" />
+				  </div>
+				</div>
+			  </div>
+			  <div class="row">
+			    <div class="form-group col-sm-6">
+				  <label class="col-sm-4 control-label" for="input-proceed-button-text"><span title="{{ help_proceed_button_text }}" data-toggle="tooltip">{{ entry_proceed_button_text }}</span></label>
+				  <div class="col-sm-8">
+					{% for language in languages %} 
+					  <div class="input-group">
+						<span class="input-group-addon"><img src="language/{{ language.code }}/{{ language.code }}.png" title="{{ language.name }}" /></span>
+						<input type="text" name="quickcheckout_proceed_button_text[{{ language.language_id }}]" value="{{ quickcheckout_proceed_button_text[language.language_id] }}" class="form-control" />
+					  </div>
+					{% endfor %} 
+				  </div>
+				</div>
+			  </div>
+			</div>
+			<div class="tab-pane" id="tab-design">
+			  <div class="row">
+			    <div class="form-group col-sm-6">
+				  <label class="col-sm-4 control-label" for="input-load-screen"><span title="{{ help_load_screen }}" data-toggle="tooltip">{{ entry_load_screen }}</span></label>
+				  <div class="col-sm-8">
+					<select name="quickcheckout_load_screen" id="input-load-screen" class="form-control">
+					  <option value="1"{{ quickcheckout_load_screen ? ' selected="selected"' : '' }}>{{ text_enabled }}</option>
+					  <option value="0"{{ quickcheckout_load_screen ? '' : ' selected="selected"' }}>{{ text_disabled }}</option>
+					</select>
+				  </div>
+				</div>
+				<div class="form-group col-sm-6">
+				  <label class="col-sm-4 control-label" for="input-loading-display"><span title="{{ help_loading_display }}" data-toggle="tooltip">{{ entry_loading_display }}</span></label>
+				  <div class="col-sm-8">
+					<select name="quickcheckout_loading_display" id="input-loading-display" class="form-control">
+					  <option value="1"{{ quickcheckout_loading_display ? ' selected="selected"' : '' }}>{{ text_spinner }}</option>
+					  <option value="0"{{ quickcheckout_loading_display ? '' : ' selected="selected"' }}>{{ text_overlay }}</option>
+					</select>
+				  </div>
+				</div>
+			  </div>
+			  <div class="row">
+				<div class="form-group col-sm-6">
+				  <label class="col-sm-4 control-label" for="input-layout"><span title="{{ help_layout }}" data-toggle="tooltip">{{ entry_layout }}</span></label>
+				  <div class="col-sm-8">
+					<select name="quickcheckout_layout" id="input-layout" class="form-control">
+					  <option value="1"{{ quickcheckout_layout == '1' ? ' selected="selected"' : '' }}>{{ text_one_column }}</option>
+					  <option value="2"{{ quickcheckout_layout == '2' ? ' selected="selected"' : '' }}>{{ text_two_column }}</option>
+					  <option value="3"{{ quickcheckout_layout == '3' ? ' selected="selected"' : '' }}>{{ text_three_column }}</option>
+					</select>
+				  </div>
+				</div>
+				<div class="form-group col-sm-6">
+				  <label class="col-sm-4 control-label" for="input-responsive"><span title="{{ help_responsive }}" data-toggle="tooltip">{{ entry_responsive }}</span></label>
+				  <div class="col-sm-8">
+					<select name="quickcheckout_responsive" id="input-responsive" class="form-control">
+					  <option value="1"{{ quickcheckout_responsive ? ' selected="selected"' : '' }}>{{ text_enabled }}</option>
+					</select>
+				  </div>
+				</div>
+			  </div>
+			  <div class="row">
+				<div class="form-group col-sm-6">
+				  <label class="col-sm-4 control-label" for="input-slide-effect"><span title="{{ help_slide_effect }}" data-toggle="tooltip">{{ entry_slide_effect }}</span></label>
+				  <div class="col-sm-8">
+					<select name="quickcheckout_slide_effect" id="input-slide-effect" class="form-control">
+					  <option value="1"{{ quickcheckout_slide_effect ? ' selected="selected"' : '' }}>{{ text_enabled }}</option>
+					  <option value="0"{{ quickcheckout_slide_effect ? '' : ' selected="selected"' }}>{{ text_disabled }}</option>
+					</select>
+				  </div>
+				</div>
+				<div class="form-group col-sm-6">
+				  <label class="col-sm-4 control-label" for="input-custom-css">{{ entry_custom_css }}</label>
+				  <div class="col-sm-8">
+				    <textarea name="quickcheckout_custom_css" id="input-custom-css" class="form-control" rows="5">{{ quickcheckout_custom_css }}</textarea>
+				  </div>
+				</div>
+			  </div>
+			</div>
+			<div class="tab-pane table-responsive" id="tab-field">
+			  <table class="table table-bordered table-hover table-striped">
+				<tr>
+				  <td></td>
+				  <td class="text-center">{{ text_display }}</td>
+				  <td class="text-center">{{ text_required }}</td>
+				  <td>{{ text_default }}</td>
+				  <td>{{ text_placeholder }}</td>
+				  <td>{{ text_sort_order }}</td>
+				</tr>
+				{% for field in fields %} 
+				  {% if field == 'country' %} 
+				  <tr>
+					<td>{{ attribute(_context, 'entry_field_' ~ field) }}</td>
+					<td class="text-center"><input type="checkbox" name="quickcheckout_field_{{ field }}[display]"{{ attribute(_context, 'quickcheckout_field_' ~ field).display ? ' checked' }} /></td>
+					<td class="text-center"><input type="checkbox" name="quickcheckout_field_{{ field }}[required]"{{ attribute(_context, 'quickcheckout_field_' ~ field).required ? ' checked' }} /></td>
+					<td><select name="quickcheckout_field_{{ field }}[default]" class="form-control">
+						<option value="">{{ text_select }}</option>
+						{% for country in countries %} 
+						  {% if attribute(_context, 'quickcheckout_field_' ~ field).default and attribute(_context, 'quickcheckout_field_' ~ field).default == country.country_id %}
+						  <option value="{{ country.country_id }}" selected="selected">{{ country.name }}</option>
+						  {% else %}   
+						  <option value="{{ country.country_id }}">{{ country.name }}</option>
+						  {% endif %}
+						{% endfor %}
+					  </select></td>
+					<td class="text-center">NA</td>
+					<td><input type="text" name="quickcheckout_field_{{ field }}[sort_order]" value="{{ attribute(_context, 'quickcheckout_field_' ~ field).sort_order }}" class="form-control" /></td>
+				  </tr>
+				  {% elseif field  == 'zone' %} 
+				  <tr>
+					<td>{{ attribute(_context, 'entry_field_' ~ field) }}</td>
+					<td class="text-center"><input type="checkbox" name="quickcheckout_field_{{ field }}[display]"{{ attribute(_context, 'quickcheckout_field_' ~ field).display ? ' checked' }} /></td>
+					<td class="text-center"><input type="checkbox" name="quickcheckout_field_{{ field }}[required]"{{ attribute(_context, 'quickcheckout_field_' ~ field).required ? ' checked' }} /></td>
+					<td><select name="quickcheckout_field_{{ field }}[default]" class="form-control"></select></td>
+					<td class="text-center">NA</td>
+					<td><input type="text" name="quickcheckout_field_{{ field }}[sort_order]" value="{{ attribute(_context, 'quickcheckout_field_' ~ field).sort_order }}" class="form-control" /></td>
+				  </tr>
+				  {% elseif field == 'customer_group' %}
+				  <tr>
+					<td>{{ attribute(_context, 'entry_field_' ~ field) }}</td>
+					<td class="text-center"><input type="checkbox" name="quickcheckout_field_{{ field }}[display]"{{ attribute(_context, 'quickcheckout_field_' ~ field).display ? ' checked' }} /></td>
+					<td class="text-center">NA</td>
+					<td class="text-center">NA</td>
+					<td class="text-center">NA</td>
+					<td><input type="text" name="quickcheckout_field_{{ field }}[sort_order]" value="{{ attribute(_context, 'quickcheckout_field_' ~ field).sort_order }}" class="form-control" /></td>
+				  </tr>
+				   {% elseif  field == 'register' or field == 'newsletter' %} 
+				  <tr>
+					<td>{{ attribute(_context, 'entry_field_' ~ field) }}</td>
+					<td class="text-center"><input type="checkbox" name="quickcheckout_field_{{ field }}[display]"{{ attribute(_context, 'quickcheckout_field_' ~ field).display ? ' checked' }} /></td>
+					<td class="text-center"><input type="checkbox" name="quickcheckout_field_{{ field }}[required]"{{ attribute(_context, 'quickcheckout_field_' ~ field).required ? ' checked' }} /></td>
+					<td class="text-center"><input type="checkbox" name="quickcheckout_field_{{ field }}[default]"{{ attribute(_context, 'quickcheckout_field_' ~ field).default ? ' checked' }} /></td>
+					<td class="text-center">NA</td>
+					<td><input type="text" name="quickcheckout_field_{{ field }}[sort_order]" value="{{ attribute(_context, 'quickcheckout_field_' ~ field).sort_order }}" class="form-control" /></td>
+				  </tr>
+				  {% else %}   
+				  <tr>
+					<td>{{ attribute(_context, 'entry_field_' ~ field) }}</td>
+					<td class="text-center"><input type="checkbox" name="quickcheckout_field_{{ field }}[display]"{{ attribute(_context, 'quickcheckout_field_' ~ field).display ? ' checked' }} /></td>
+					{% if field == 'postcode' %} 
+					<td class="text-center">NA</td>
+					{% else %}   
+					<td class="text-center"><input type="checkbox" name="quickcheckout_field_{{ field }}[required]"{{ attribute(_context, 'quickcheckout_field_' ~ field).required ? ' checked' }} /></td>
+					{% endif %}
+					<td>
+					  {% for language in languages %} 
+					  <div class="input-group">
+					    <span class="input-group-addon"><img src="language/{{ language.code }}/{{ language.code }}.png" title="{{ language.name }}" /></span>
+					    <input type="text" name="quickcheckout_field_{{ field }}[default][{{ language.language_id }}]" value="{{ attribute(_context, 'quickcheckout_field_' ~ field).default[language.language_id] }}" class="form-control" />
+					  </div>
+					  {% endfor %}
+					</td>
+					<td>
+					  {% for language in languages %} 
+					  <div class="input-group">
+					    <span class="input-group-addon"><img src="language/{{ language.code }}/{{ language.code }}.png" title="{{ language.name }}" /></span>
+					    <input type="text" name="quickcheckout_field_{{ field }}[placeholder][{{ language.language_id }}]" value="{{ attribute(_context, 'quickcheckout_field_' ~ field).placeholder[language.language_id] }}" class="form-control" />
+					  </div>
+					  {% endfor %}
+					</td>
+					{% if field == 'comment' %} 
+					<td class="text-center">NA</td>
+					{% else %}   
+					<td><input type="text" name="quickcheckout_field_{{ field }}[sort_order]" value="{{ attribute(_context, 'quickcheckout_field_' ~ field).sort_order }}" class="form-control" /></td>
+				    {% endif %}
+				  </tr>
+				  {% endif %}
+				{% endfor %}
+			  </table>
+			</div>
+			<div class="tab-pane" id="tab-module">
+			  <div class="row">
+				<div class="form-group col-sm-6">
+				  <label class="col-sm-4 control-label" for="input-coupon"><span title="{{ help_coupon }}" data-toggle="tooltip">{{ entry_coupon }}</span></label>
+				  <div class="col-sm-8">
+					<select name="quickcheckout_coupon" id="input-coupon" class="form-control">
+					  <option value="1"{{ quickcheckout_coupon ? ' selected="selected"' : '' }}>{{ text_enabled }}</option>
+					  <option value="0"{{ quickcheckout_coupon ? '' : ' selected="selected"' }}>{{ text_disabled }}</option>
+					</select>
+				  </div>
+				</div>
+				<div class="form-group col-sm-6">
+				  <label class="col-sm-4 control-label" for="input-voucher"><span title="{{ help_voucher }}" data-toggle="tooltip">{{ entry_voucher }}</span></label>
+				  <div class="col-sm-8">
+					<select name="quickcheckout_voucher" id="input-voucher" class="form-control">
+					  <option value="1"{{ quickcheckout_voucher ? ' selected="selected"' : '' }}>{{ text_enabled }}</option>
+					  <option value="0"{{ quickcheckout_voucher ? '' : ' selected="selected"' }}>{{ text_disabled }}</option>
+					</select>
+				  </div>
+				</div>
+			  </div>
+			  <div class="row">
+				<div class="form-group col-sm-6">
+				  <label class="col-sm-4 control-label" for="input-reward"><span title="{{ help_reward }}" data-toggle="tooltip">{{ entry_reward }}</span></label>
+				  <div class="col-sm-8">
+					<select name="quickcheckout_reward" id="input-reward" class="form-control">
+					  <option value="1"{{ quickcheckout_reward ? ' selected="selected"' : '' }}>{{ text_enabled }}</option>
+					  <option value="0"{{ quickcheckout_reward ? '' : ' selected="selected"' }}>{{ text_disabled }}</option>
+					</select>
+				  </div>
+				</div>
+				<div class="form-group col-sm-6">
+				  <label class="col-sm-4 control-label" for="input-cart"><span title="{{ help_cart }}" data-toggle="tooltip">{{ entry_cart }}</span></label>
+				  <div class="col-sm-8">
+					<select name="quickcheckout_cart" id="input-cart" class="form-control">
+					  <option value="1"{{ quickcheckout_cart ? ' selected="selected"' : '' }}>{{ text_enabled }}</option>
+					  <option value="0"{{ quickcheckout_cart ? '' : ' selected="selected"' }}>{{ text_disabled }}</option>
+					</select>
+				  </div>
+				</div>
+			  </div>
+			  <div class="row">
+				<div class="form-group col-sm-6">
+				  <label class="col-sm-4 control-label" for="input-login-module"><span title="{{ help_login_module }}" data-toggle="tooltip">{{ entry_login_module }}</span></label>
+				  <div class="col-sm-8">
+					<select name="quickcheckout_login_module" id="input-login-module" class="form-control">
+					  <option value="1"{{ quickcheckout_login_module ? ' selected="selected"' : '' }}>{{ text_enabled }}</option>
+					  <option value="0"{{ quickcheckout_login_module ? '' : ' selected="selected"' }}>{{ text_disabled }}</option>
+					</select>
+				  </div>
+				</div>
+			  </div>
+			  <div class="row">
+				<div class="form-group col-sm-6">
+				  <label class="col-sm-4 control-label" for="input-html-header"><span title="{{ help_html_header }}" data-toggle="tooltip">{{ entry_html_header }}</span></label>
+				  <div class="col-sm-8">
+					{% for language in languages %} 
+					  <div class="input-group">
+						<span class="input-group-addon"><img src="language/{{ language.code }}/{{ language.code }}.png" title="{{ language.name }}" /></span>
+						<textarea name="quickcheckout_html_header[{{ language.language_id }}]" rows="7" cols="30" class="form-control">{{ quickcheckout_html_header[language.language_id] }}</textarea>
+					  </div>
+					{% endfor %} 
+				  </div>
+				</div>
+				<div class="form-group col-sm-6">
+				  <label class="col-sm-4 control-label" for="input-html-footer"><span title="{{ help_html_footer }}" data-toggle="tooltip">{{ entry_html_footer }}</span></label>
+				  <div class="col-sm-8">
+					{% for language in languages %} 
+					  <div class="input-group">
+						<span class="input-group-addon"><img src="language/{{ language.code }}/{{ language.code }}.png" title="{{ language.name }}" /></span>
+						<textarea name="quickcheckout_html_footer[{{ language.language_id }}]" rows="7" cols="30" class="form-control">{{ quickcheckout_html_footer[language.language_id] }}</textarea>
+					  </div>
+					{% endfor %} 
+				  </div>
+				</div>
+			  </div>
+			</div>
+			<div class="tab-pane" id="tab-payment">
+			  <div class="row">
+			    <div class="form-group col-sm-6">
+				  <label class="col-sm-4 control-label" for="input-payment-module"><span title="{{ help_payment_module }}" data-toggle="tooltip">{{ entry_payment_module }}</span></label>
+				  <div class="col-sm-8">
+					<select name="quickcheckout_payment_module" id="input-payment-module" class="form-control">
+					  <option value="1"{{ quickcheckout_payment_module ? ' selected="selected"' : '' }}>{{ text_enabled }}</option>
+					  <option value="0"{{ quickcheckout_payment_module ? '' : ' selected="selected"' }}>{{ text_disabled }}</option>
+					</select>
+				  </div>
+				</div>
+				<div class="form-group col-sm-6">
+				  <label class="col-sm-4 control-label" for="input-payment-reload"><span title="{{ help_payment_reload }}" data-toggle="tooltip">{{ entry_payment_reload }}</span></label>
+				  <div class="col-sm-8">
+					<select name="quickcheckout_payment_reload" id="input-payment-reload" class="form-control">
+					  <option value="1"{{ quickcheckout_payment_reload ? ' selected="selected"' : '' }}>{{ text_enabled }}</option>
+					  <option value="0"{{ quickcheckout_payment_reload ? '' : ' selected="selected"' }}>{{ text_disabled }}</option>
+					</select>
+				  </div>
+				</div>
+			  </div>
+			  <div class="row">
+				<div class="form-group col-sm-6">
+				  <label class="col-sm-4 control-label" for="input-payment"><span title="{{ help_payment }}" data-toggle="tooltip">{{ entry_payment }}</span></label>
+				  <div class="col-sm-8">
+					<select name="quickcheckout_payment" id="input-payment" class="form-control">
+					  <option value="1"{{ quickcheckout_payment ? ' selected="selected"' : '' }}>{{ text_radio_type }}</option>
+					  <option value="0"{{ quickcheckout_payment ? '' : ' selected="selected"' }}>{{ text_select_type }}</option>
+					</select>
+				  </div>
+				</div>
+				<div class="form-group col-sm-6">
+				  <label class="col-sm-4 control-label" for="input-payment-default"><span title="{{ help_payment_default }}" data-toggle="tooltip">{{ entry_payment_default }}</span></label>
+				  <div class="col-sm-8">
+					<select name="quickcheckout_payment_default" id="input-payment-default" class="form-control">
+					  {% for payment_module in payment_modules %} 
+					  <option value="{{ payment_module.code }}"{{ quickcheckout_payment_default == payment_module.code ? ' selected="selected"' : '' }}>{{ payment_module.name }}</option>
+					  {% endfor %} 
+					</select>
+				  </div>
+				</div>
+			  </div>
+			  <table class="table table-bordered table-striped table-hover">
+			    <tr>
+				  <th></th>
+				  <th><span title="{{ help_payment_logo }}" data-toggle="tooltip">{{ entry_payment_logo }} <i class="fa fa-question-circle"></i></span></th>
+				</tr>
+				{% for payment_module in payment_modules %}
+				<tr>
+				  <td>{{ payment_module.name }}</td>
+				  <td><input type="text" name="quickcheckout_payment_logo[{{ payment_module.code }}]" value="{{ quickcheckout_payment_logo[payment_module.code] }}" class="form-control" /></td>
+				</tr>
+				{% endfor %} 
+				<tr>
+				  <td colspan="2" class="text-center">{{ help_display_more }}</td>
+				</tr>
+			  </table>
+			</div>
+			<div class="tab-pane" id="tab-shipping">
+			  <div class="row">
+			    <div class="form-group col-sm-6">
+				  <label class="col-sm-4 control-label" for="input-shipping-module"><span title="{{ help_shipping_module }}" data-toggle="tooltip">{{ entry_shipping_module }}</span></label>
+				  <div class="col-sm-8">
+					<select name="quickcheckout_shipping_module" id="input-shipping-module" class="form-control">
+					  <option value="1"{{ quickcheckout_shipping_module ? ' selected="selected"' : '' }}>{{ text_enabled }}</option>
+					  <option value="0"{{ quickcheckout_shipping_module ? '' : ' selected="selected"' }}>{{ text_disabled }}</option>
+					</select>
+				  </div>
+				</div>
+				<div class="form-group col-sm-6">
+				  <label class="col-sm-4 control-label" for="input-shipping-reload"><span title="{{ help_shipping_reload }}" data-toggle="tooltip">{{ entry_shipping_reload }}</span></label>
+				  <div class="col-sm-8">
+					<select name="quickcheckout_shipping_reload" id="input-shipping-reload" class="form-control">
+					  <option value="1"{{ quickcheckout_shipping_reload ? ' selected="selected"' : '' }}>{{ text_enabled }}</option>
+					  <option value="0"{{ quickcheckout_shipping_reload ? '' : ' selected="selected"' }}>{{ text_disabled }}</option>
+					</select>
+				  </div>
+				</div>
+			  </div>
+			  <div class="row">
+				<div class="form-group col-sm-6">
+				  <label class="col-sm-4 control-label" for="input-shipping"><span title="{{ help_shipping }}" data-toggle="tooltip">{{ entry_shipping }}</span></label>
+				  <div class="col-sm-8">
+					<select name="quickcheckout_shipping" id="input-shipping" class="form-control">
+					  <option value="1"{{ quickcheckout_shipping ? ' selected="selected"' : '' }}>{{ text_radio_type }}</option>
+					  <option value="0"{{ quickcheckout_shipping ? '' : ' selected="selected"' }}>{{ text_select_type }}</option>
+					</select>
+				  </div>
+				</div>
+				<div class="form-group col-sm-6">
+				  <label class="col-sm-4 control-label" for="input-shipping-default"><span title="{{ help_shipping_default }}" data-toggle="tooltip">{{ entry_shipping_default }}</span></label>
+				  <div class="col-sm-8">
+					<select name="quickcheckout_shipping_default" id="input-shipping-default" class="form-control">
+					  {% for shipping_module in shipping_modules %} 
+					  <option value="{{ shipping_module.code }}"{{ quickcheckout_shipping_default == shipping_module.code ? ' selected="selected"' : '' }}>{{ shipping_module.name }}</option>
+					  {% endfor %} 
+					</select>
+				  </div>
+				</div>
+			  </div>
+			  <table class="table table-bordered table-striped table-hover">
+			    <tr>
+				  <th></th>
+				  <th><span title="{{ help_shipping_logo }}" data-toggle="tooltip">{{ entry_shipping_logo }} <i class="fa fa-question-circle"></i></span></th>
+				</tr>
+				{% for shipping_module in shipping_modules %} 
+				<tr>
+				  <td>{{ shipping_module.name }}</td>
+				  <td><input type="text" name="quickcheckout_shipping_logo[{{ shipping_module.code }}]" value="{{ quickcheckout_shipping_logo[shipping_module.code] }}" class="form-control" /></td>
+				</tr>
+				{% endfor %} 
+				<tr>
+				  <td colspan="2" class="text-center">{{ help_display_more }}</td>
+				</tr>
+			  </table>
+			</div>
+			<div class="tab-pane" id="tab-survey">
+			  <div class="row">
+				<div class="form-group col-sm-6">
+				  <label class="col-sm-4 control-label" for="input-survey">{{ entry_survey }}</label>
+				  <div class="col-sm-8">
+					<select name="quickcheckout_survey" id="input-survey" class="form-control">
+					  <option value="1"{{ quickcheckout_survey ? ' selected="selected"' : '' }}>{{ text_enabled }}</option>
+					  <option value="0"{{ quickcheckout_survey ? '' : ' selected="selected"' }}>{{ text_disabled }}</option>
+					</select>
+				  </div>
+				</div>
+				<div class="form-group col-sm-6">
+				  <label class="col-sm-4 control-label" for="input-survey-required"><span title="{{ help_survey_required }}" data-toggle="tooltip">{{ entry_survey_required }}</span></label>
+				  <div class="col-sm-8">
+					<select name="quickcheckout_survey_required" id="input-survey-required" class="form-control">
+					  <option value="1"{{ quickcheckout_survey_required ? ' selected="selected"' : '' }}>{{ text_enabled }}</option>
+					  <option value="0"{{ quickcheckout_survey_required ? '' : ' selected="selected"' }}>{{ text_disabled }}</option>
+					</select>
+				  </div>
+				</div>
+			  </div>
+			  <div class="row">
+				<div class="form-group col-sm-6">
+				  <label class="col-sm-4 control-label" for="input-survey-text"><span title="{{ help_survey_text }}" data-toggle="tooltip">{{ entry_survey_text }}</span></label>
+				  <div class="col-sm-8">
+					{% for language in languages %} 
+					  <div class="input-group">
+						<span class="input-group-addon"><img src="language/{{ language.code }}/{{ language.code }}.png" title="{{ language.name }}" /></span>
+						<input type="text" name="quickcheckout_survey_text[{{ language.language_id }}]" value="{{ quickcheckout_survey_text[language.language_id] }}" class="form-control" />
+					  </div>
+					{% endfor %} 
+				  </div>
+				</div>
+				<div class="form-group col-sm-6">
+				  <label class="col-sm-4 control-label" for="input-survey-type"><span title="{{ help_survey_type }}" data-toggle="tooltip">{{ entry_survey_type }}</span></label>
+				  <div class="col-sm-8">
+					<select name="quickcheckout_survey_type" id="input-survey-type" class="form-control">
+					  <option value="1"{{ quickcheckout_survey_type ? ' selected="selected"' : '' }}>{{ text_select_type }}</option>
+					  <option value="0"{{ quickcheckout_survey_type ? '' : ' selected="selected"' }}>{{ text_text_type }}</option>
+					</select>
+				  </div>
+				</div>
+			  </div>
+			  <div class="table-responsive">
+				<table id="survey-answer" class="table table-hover table-bordered">
+				  <thead>
+				  <tr>
+					<td class="text-left" colspan="2">{{ entry_survey_answer }}</td>
+				  </tr>
+				  </thead>
+				  <tbody>
+				  {% set survey_answer_row = 0 %}
+				  {% for survey_answer in quickcheckout_survey_answers %} 
+				  <tr id="survey-answer-{{ survey_answer_row }}">
+					<td class="text-left">{% for language in languages %}
+					  <div class="input-group">
+						<span class="input-group-addon"><img src="language/{{ language.code }}/{{ language.code }}.png" title="{{ language.name }}" /></span>
+						<input type="text-text" name="quickcheckout_survey_answers[{{ survey_answer_row }}][{{ language.language_id }}]" value="{{ survey_answer[language.language_id] }}" class="form-control" />
+					  </div>
+					{% endfor %}</td>
+					<td class="text-right"><a class="btn btn-danger" onClick="$('#survey-answer-{{ survey_answer_row }}').remove();">{{ button_remove }}</a></td>
+					{% set survey_answer_row = survey_answer_row + 1 %} 
+				  </tr>
+				  {% endfor %} 
+				  </tbody>
+				  <tfoot>
+				  <tr>
+					<td class="text-right" colspan="2"><a class="btn btn-success" onClick="addAnswer();">{{ button_add }}</a></td>
+				  </tr>
+				  </tfoot>
+				</table>
+			  </div>
+			</div>
+			<div class="tab-pane" id="tab-delivery">
+			  <div class="row">
+				<div class="form-group col-sm-6">
+				  <label class="col-sm-4 control-label" for="input-delivery"><span title="{{ help_delivery }}" data-toggle="tooltip">{{ entry_delivery }}</span></label>
+				  <div class="col-sm-8">
+					<select name="quickcheckout_delivery" id="input-delivery" class="form-control">
+					  <option value="1"{{ quickcheckout_delivery ? ' selected="selected"' : '' }}>{{ text_enabled }}</option>
+					  <option value="0"{{ quickcheckout_delivery ? '' : ' selected="selected"' }}>{{ text_disabled }}</option>
+					</select>
+				  </div>
+				</div>
+				<div class="form-group col-sm-6">
+				  <label class="col-sm-4 control-label" for="input-delivery-time"><span title="{{ help_delivery_time }}" data-toggle="tooltip">{{ entry_delivery_time }}</span></label>
+				  <div class="col-sm-8">
+					<select name="quickcheckout_delivery_time" id="input-delivery-time" class="form-control">
+					  <option value="1"{{ quickcheckout_delivery_time == 1 ? ' selected="selected"' : '' }}>{{ text_choose }}</option>
+					  <option value="2"{{ quickcheckout_delivery_time == 2 ? ' selected="selected"' : '' }}>{{ text_estimate }}</option>
+					  <option value="3"{{ quickcheckout_delivery_time == 3 ? ' selected="selected"' : '' }}>{{ text_select_type }}</option>
+					  <option value="0"{{ quickcheckout_delivery_time == 0 ? ' selected="selected"' : '' }}>{{ text_disabled }}</option>
+					</select>
+				  </div>
+				</div>
+			  </div>
+			  <div class="row">
+				<div class="form-group col-sm-6">
+				  <label class="col-sm-4 control-label" for="input-delivery-required"><span title="{{ help_delivery_required }}" data-toggle="tooltip">{{ entry_delivery_required }}</span></label>
+				  <div class="col-sm-8">
+					<select name="quickcheckout_delivery_required" id="input-delivery-required" class="form-control">
+					  <option value="1"{{ quickcheckout_delivery_required ? ' selected="selected"' : '' }}>{{ text_enabled }}</option>
+					  <option value="0"{{ quickcheckout_delivery_required ? '' : ' selected="selected"' }}>{{ text_disabled }}</option>
+					</select>
+				  </div>
+				</div>
+				<div class="form-group col-sm-6">
+				  <label class="col-sm-4 control-label" for="input-delivery-unavailable"><span title="{{ help_delivery_unavailable }}" data-toggle="tooltip">{{ entry_delivery_unavailable }}</span></label>
+				  <div class="col-sm-8">
+					<textarea name="quickcheckout_delivery_unavailable" rows="5" class="form-control">{{ quickcheckout_delivery_unavailable }}</textarea>
+				  </div>
+				</div>
+			  </div>
+			  <div class="row">
+				<div class="form-group col-sm-6">
+				  <label class="col-sm-4 control-label" for="input-delivery-min"><span title="{{ help_delivery_min }}" data-toggle="tooltip">{{ entry_delivery_min }}</span></label>
+				  <div class="col-sm-8">
+					<input type="text" name="quickcheckout_delivery_min" value="{{ quickcheckout_delivery_min }}" class="form-control" />
+				  </div>
+				</div>
+				<div class="form-group col-sm-6">
+				  <label class="col-sm-4 control-label" for="input-delivery-max"><span title="{{ help_delivery_max }}" data-toggle="tooltip">{{ entry_delivery_max }}</span></label>
+				  <div class="col-sm-8">
+					<input type="text" name="quickcheckout_delivery_max" value="{{ quickcheckout_delivery_max }}" class="form-control" />
+				  </div>
+				</div>
+			  </div>
+			  <div class="row">
+				<div class="form-group col-sm-6">
+				  <label class="col-sm-4 control-label" for="input-delivery-min-hour"><span title="{{ help_delivery_min_hour }}" data-toggle="tooltip">{{ entry_delivery_min_hour }}</span></label>
+				  <div class="col-sm-8">
+					<input type="text" name="quickcheckout_delivery_min_hour" value="{{ quickcheckout_delivery_min_hour }}" class="form-control" />
+				  </div>
+				</div>
+				<div class="form-group col-sm-6">
+				  <label class="col-sm-4 control-label" for="input-delivery-max-hour"><span title="{{ help_delivery_max_hour }}" data-toggle="tooltip">{{ entry_delivery_max_hour }}</span></label>
+				  <div class="col-sm-8">
+					<input type="text" name="quickcheckout_delivery_max_hour" value="{{ quickcheckout_delivery_max_hour }}" class="form-control" />
+				  </div>
+				</div>
+			  </div>
+			  <div class="row">
+				<div class="form-group col-sm-6">
+				  <label class="col-sm-4 control-label" for="input-delivery-days-of-week"><span title="{{ help_delivery_days_of_week }}" data-toggle="tooltip">{{ entry_delivery_days_of_week }}</span></label>
+				  <div class="col-sm-8">
+					<input type="text" name="quickcheckout_delivery_days_of_week" value="{{ quickcheckout_delivery_days_of_week }}" class="form-control" />
+				  </div>
+				</div>
+			  </div>
+			  <div class="table-responsive">
+				<table id="delivery-time" class="table table-bordered table-hover">
+				  <thead>
+				  <tr>
+					<td class="text-left" colspan="2">{{ entry_delivery_times }}</td>
+				  </tr>
+				  </thead>
+				  <tbody>
+				  {% set delivery_time_row = 0 %}
+				  {% for delivery_time in quickcheckout_delivery_times %} 
+				  <tr id="delivery-time-{{ delivery_time_row }}">
+				    <td class="text-left">{% for language in languages %} 
+					  <div class="input-group">
+						<span class="input-group-addon"><img src="language/{{ language.code }}/{{ language.code }}.png" title="{{ language.name }}" /></span>
+						<input type="text" name="quickcheckout_delivery_times[{{ delivery_time_row }}][{{ language.language_id }}]" value="{{ delivery_time[language.language_id] }}" class="form-control" />
+					  </div>
+					{% endfor %}</td>
+					<td class="text-right"><a class="btn btn-danger" onClick="$('#delivery-time-{{ delivery_time_row }}').remove();">{{ button_remove }}</a></td>
+					{% set delivery_time_row = delivery_time_row + 1 %} 
+				  </tr>
+				  {% endfor %} 
+				  </tbody>
+				  <tfoot>
+				  <tr>
+				    <td class="text-right" colspan="2"><a class="btn btn-success" onClick="addTime();">{{ button_add }}</a></td>
+				  </tr>
+				  </tfoot>
+				</table>
+			  </div>
+			</div>
+			<div class="tab-pane" id="tab-countdown">
+			  <div class="row">
+				<div class="form-group col-sm-6">
+				  <label class="col-sm-4 control-label" for="input-countdown"><span title="{{ help_countdown }}" data-toggle="tooltip">{{ entry_countdown }}</span></label>
+				  <div class="col-sm-8">
+					<select name="quickcheckout_countdown" id="input-countdown" class="form-control">
+					  <option value="1"{{ quickcheckout_countdown ? ' selected="selected"' : '' }}>{{ text_enabled }}</option>
+					  <option value="0"{{ quickcheckout_countdown ? '' : ' selected="selected"' }}>{{ text_disabled }}</option>
+					</select>
+				  </div>
+				</div>
+				<div class="form-group col-sm-6">
+				  <label class="col-sm-4 control-label" for="input-countdown-start"><span title="{{ help_countdown_start }}" data-toggle="tooltip">{{ entry_countdown_start }}</span></label>
+				  <div class="col-sm-8">
+					<select name="quickcheckout_countdown_start" id="input-countdown-start" class="form-control">
+					  <option value="1"{{ quickcheckout_countdown_start ? ' selected="selected"' : '' }}>{{ text_day }}</option>
+					  <option value="0"{{ quickcheckout_countdown_start ? '' : ' selected="selected"' }}>{{ text_specific }}</option>
+					</select>
+				  </div>
+				</div>
+			  </div>
+			  <div class="row" id="countdown-date">
+				<div class="form-group col-sm-6">
+				  <label class="col-sm-4 control-label" for="input-countdown-date-start"><span title="{{ help_countdown_date_start }}" data-toggle="tooltip">{{ entry_countdown_date_start }}</span></label>
+				  <div class="col-sm-8">
+					<input type="text" name="quickcheckout_countdown_date_start" value="{{ quickcheckout_countdown_date_start }}" class="date form-control" data-date-format="YYYY-MM-DD HH:mm:ss" />
+				  </div>
+				</div>
+				<div class="form-group col-sm-6">
+				  <label class="col-sm-4 control-label" for="input-countdown-date-end"><span title="{{ help_countdown_date_end }}" data-toggle="tooltip">{{ entry_countdown_date_end }}</span></label>
+				  <div class="col-sm-8">
+					<input type="text" name="quickcheckout_countdown_date_end" value="{{ quickcheckout_countdown_date_end }}" class="date form-control" data-date-format="YYYY-MM-DD HH:mm:ss" />
+				  </div>
+				</div>
+			  </div>
+			  <div class="row" id="countdown-time">
+				<div class="form-group col-sm-12">
+				  <label class="col-sm-2 control-label" for="input-countdown-time"><span title="{{ help_countdown_time }}" data-toggle="tooltip">{{ entry_countdown_time }}</span></label>
+				  <div class="col-sm-10">
+					<input type="text" name="quickcheckout_countdown_time" value="{{ quickcheckout_countdown_time }}" class="form-control" />
+				  </div>
+				</div>
+			  </div>
+			  <div class="row">
+				<div class="form-group col-sm-12">
+				  <label class="col-sm-2 control-label" for="input-countdown-text"><span title="{{ help_countdown_text }}" data-toggle="tooltip">{{ entry_countdown_text }}</span></label>
+				  <div class="col-sm-10">
+					{% for language in languages %} 
+					  <div class="input-group">
+					    <span class="input-group-addon"><img src="language/{{ language.code }}/{{ language.code }}.png" title="{{ language.name }}" /></span>
+						<textarea name="quickcheckout_countdown_text[{{ language.language_id }}]" class="form-control" rows="5">{{ quickcheckout_countdown_text[language.language_id] }}</textarea>
+					  </div>
+					{% endfor %} 
+				  </div>
+				</div>
+			  </div>
+			</div>
+			<div class="tab-pane text-center" id="tab-analytics">
+			  {% if analytics %} 
+			  <a href="{{ analytics }}" class="btn btn-lg btn-success">Recover Abandoned Cart</a>
+			  {% else %}   
+			  <p>{{ text_purchase_analytics }}</p>
+			  <a href="https://www.marketinsg.com/recover-abandoned-carts" class="btn btn-lg btn-warning" target="_blank">More Information</a>
+			  {% endif %}
+			</div>
+		  </div>
+		</form>
+      </div>
+    </div>
+  </div>
+</div>
+<style type="text/css">
+.form-group + .form-group {
+	border: none;
+}
+</style>
+<script type="text/javascript"><!--
+function show(element) {
+	$(element).tab('show');
+	
+	$('a[href=\'' + element + '\']').parent('li').siblings().removeClass('active');
+	
+	$('a[href=\'' + element + '\']').parent('li').addClass('active');
+	
+	return false;
+}
+
+$(document).ready(function() {
+	$('.date').datetimepicker();
+});
+
+$('select[name=\'quickcheckout_field_country[default]\']').on('change', function() {
+	$.ajax({
+		url: 'index.php?route=extension/module/quickcheckout/country{{ equotix_token }}&country_id=' + this.value,
+		dataType: 'json',		
+		success: function(json) {
+			html = '<option value="">{{ text_select }}</option>';
+			
+			if (json['zone'] != '') {
+				for (i = 0; i < json['zone'].length; i++) {
+        			html += '<option value="' + json['zone'][i]['zone_id'] + '"';
+	    			
+					if (json['zone'][i]['zone_id'] == '{{ quickcheckout_field_zone.default }}') {
+	      				html += ' selected="selected"';
+	    			}
+	
+	    			html += '>' + json['zone'][i]['name'] + '</option>';
+				}
+			} else {
+				html += '<option value="0" selected="selected">{{ text_none }}</option>';
+			}
+			
+			$('select[name=\'quickcheckout_field_zone[default]\']').html(html);
+		}
+	});
+});
+
+$('select[name=\'quickcheckout_field_country[default]\']').trigger('change');
+
+$('select[name=\'quickcheckout_countdown_start\']').change(function() {
+	if ($('select[name=\'quickcheckout_countdown_start\']').val() == '1') {
+		$('#countdown-time').fadeIn();
+		$('#countdown-date').fadeOut();
+	} else {
+		$('#countdown-date').fadeIn();
+		$('#countdown-time').fadeOut();
+	}
+});
+
+$('select[name=\'quickcheckout_countdown_start\']').trigger('change');
+
+$('select[name=\'quickcheckout_survey_type\']').change(function() {
+	if ($('select[name=\'quickcheckout_survey_type\']').val() == '1') {
+		$('#survey-answer').fadeIn();
+	} else {
+		$('#survey-answer').fadeOut();
+	}
+});
+
+$('select[name=\'quickcheckout_survey_type\']').trigger('change');
+
+var survey_answer_row = {{ survey_answer_row }} ;
+
+function addAnswer() {
+	html  = '<tr id="survey-answer-' + survey_answer_row + '">';
+	html += '  <td class="left">';
+	{% for language in languages %} 
+	html += '<div class="input-group"><span class="input-group-addon"><img src="language/{{ language.code }}/{{ language.code }}.png" title="{{ language.name }}" /></span>';
+	html += '<input type="text-text" name="quickcheckout_survey_answers[' + survey_answer_row + '][{{ language.language_id }}]" value="" class="form-control" />';
+	html += '</div>';
+	{% endfor %} 
+	html += '  </td>';
+	html += '  <td class="text-right"><a class="btn btn-danger" onClick="$(\'#survey-answer-' + survey_answer_row + '\').remove();">{{ button_remove }}</a></td>';
+	html += '</tr>';
+	
+	$('#survey-answer tbody').append(html);
+	
+	survey_answer_row++;
+}
+
+$('select[name=\'quickcheckout_delivery_time\']').change(function() {
+	if ($('select[name=\'quickcheckout_delivery_time\']').val() == '3') {
+		$('#delivery-time').fadeIn();
+	} else {
+		$('#delivery-time').fadeOut();
+	}
+});
+
+$('select[name=\'quickcheckout_delivery_time\']').trigger('change');
+
+var delivery_time_row = {{ delivery_time_row }} ;
+
+function addTime() {
+	html  = '<tr id="delivery-time-' + delivery_time_row + '">';
+	html += '  <td class="left">';
+	{% for language in languages %} 
+	html += '<div class="input-group"><span class="input-group-addon"><img src="language/{{ language.code }}/{{ language.code }}.png" title="{{ language.name }}" /></span>';
+	html += '<input type="text" name="quickcheckout_delivery_times[' + delivery_time_row + '][{{ language.language_id }}]" value="" class="form-control" />';
+	html += '</div>';
+	{% endfor %} 
+	html += '  </td>';
+	html += '  <td class="text-right"><a class="btn btn-danger" onClick="$(\'#delivery-time-' + delivery_time_row + '\').remove();">{{ button_remove }}</a></td>';
+	html += '</tr>';
+	
+	$('#delivery-time tbody').append(html);
+	
+	delivery_time_row++;
+}
+
+function store() {
+	location = 'index.php?route=extension/module/quickcheckout{{ equotix_token }}&store_id=' + $('select[name=\'store_id\']').val();
+}
+//--></script>
+{{ footer }}

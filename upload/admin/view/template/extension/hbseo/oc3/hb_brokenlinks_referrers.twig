@@ -1,0 +1,30 @@
+<div class="table-responsive">
+<table class="table table-bordered table-hover">
+<thead>
+	<tr>
+    	<td class="text-left">{{ column_referrer }}</td>
+		<td class="text-left">{{ column_useragent }}</td>
+		<td class="text-right">{{ column_ip }}</td>
+        <td class="text-right">{{ column_datetime }}</td>
+		
+    </tr>
+</thead>
+<tbody>
+    {% if (records) %} 
+		{% for referrer in referrers %} 
+			<tr>
+			<td class="text-left" style="word-break:break-all;">{{ referrer['referrer'] }}</td>
+			<td class="text-left" style="word-break:break-all;">{{ referrer['user_agent'] }}</td>
+			<td class="text-right">{{ referrer['ip'] }}</td>
+			<td class="text-right">{{ referrer['datetime'] }}</td>
+			</tr>
+		{% endfor %} 
+    {% else %} 
+    		<tr>
+              <td class="text-center" colspan="4">{{ text_no_results }}</td>
+            </tr> 
+    {% endif %} 
+</tbody>    
+
+</table>
+</div>

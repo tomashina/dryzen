@@ -1,0 +1,312 @@
+{{ header }}
+{#
+==============================================
+Special Manager
+Author 	: OpenCartBoost
+Email 	: support@opencartboost.com
+Website : http://www.opencartboost.com
+==============================================
+#}
+{{ column_left }}
+<div id="content">
+  <div class="page-header">
+    <div class="container-fluid">
+      <div class="pull-right">
+        <button type="submit" form="form-product" data-toggle="tooltip" title="{{ button_save }}" class="btn btn-primary"><i class="fa fa-save"></i></button>
+        <a href="{{ cancel }}" data-toggle="tooltip" title="{{ button_cancel }}" class="btn btn-default"><i class="fa fa-reply"></i></a>
+	  </div>
+      <h1>{{ text_title }}</h1>
+      <ul class="breadcrumb">
+        {% for breadcrumb in breadcrumbs %}
+        <li><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+  <div class="container-fluid">
+    {% if error_warning %}
+      <div class="alert alert-danger alert-dismissible"><i class="fa fa-exclamation-circle"></i> {{ error_warning }}
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+      </div>
+    {% endif %}
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title"><i class="fa fa-pencil"></i> {{ text_form_product_special }}</h3>
+      </div>
+      <div class="panel-body">
+        <form action="{{ action }}" method="post" enctype="multipart/form-data" id="form-product" class="form-horizontal">
+          
+		  <fieldset>
+            <legend>{{ text_products }}</legend>
+            <div class="row">	
+              <div class="col-sm-6">
+                <div class="form-group">
+                  <label class="col-sm-4 control-label" for="category_id">{{ entry_categories }}</label>
+                  <div class="col-sm-8">
+                    <select name="category_id" id="category_id" class="form-control">
+                      <option value="0">{{ text_select }}</option>
+                      {% for category in categoriesx %}
+		                {% if category.category_id == category_id %}
+                          <option value="{{ category.category_id }}" selected="selected">{{ category.name }} ( {{ category.category_id }} )</option>
+                        {% else %}
+                          <option value="{{ category.category_id }}">{{ category.name }} ( {{ category.category_id }} )</option>
+                        {% endif %}
+                      {% endfor %}
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <div class="form-group">
+                  <label class="col-sm-4 control-label" for="manufacturer_id">{{ entry_manufacturers }}</label>
+                  <div class="col-sm-8">
+                    <select name="manufacturer_id" id="manufacturer_id" class="form-control">
+                     <option value="0">{{ text_select }}</option>
+                     {% for manufacturer in manufacturers %}
+                       {% if manufacturer.manufacturer_id == manufacturer_id %}
+                         <option value="{{ manufacturer.manufacturer_id }}" selected="selected">{{ manufacturer.name }} ( {{ manufacturer.manufacturer_id }} )</option>
+                       {% else %}
+                         <option value="{{ manufacturer.manufacturer_id }}">{{ manufacturer.name }} ( {{ manufacturer.manufacturer_id }} )</option>
+                        {% endif %}
+                      {% endfor %}
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+			  <label class="col-sm-2 control-label">{{ entry_products }}</label>
+			  <div class="col-sm-4">
+			    <select multiple="" name="all_product_list" id="all_product_list" class="form-control" style="min-height: 250px;"></select>
+			  </div>
+			  <div class="col-sm-2">
+			    <br>
+			    <br>
+			    <input type="button" id="add-selected" class="form-control" value=">" style="width:50%; margin:auto;" data-toggle="tooltip" title="" data-original-title="{{ button_add_selected }}"><br>
+			    <input type="button" id="remove-selected" class="form-control" value="<" style="width:50%; margin:auto;" data-toggle="tooltip" title="" data-original-title="{{ button_remove_selected }}"><br>
+			    <input type="button" id="add-all" class="form-control" value=">>" style="width:50%; margin:auto;" data-toggle="tooltip" title="" data-original-title="{{ button_add_all }}"><br>
+			    <input type="button" id="remove-all" class="form-control" value="<<" style="width:50%; margin:auto;" data-toggle="tooltip" title="" data-original-title="{{ button_remove_all }}"><br>
+			  </div>
+			  <div class="col-sm-4">
+			    <select multiple="" name="selected_product_lists[]" id="selected_product_lists" class="form-control" style="min-height: 250px;"></select>
+                {% if error_product_list %}
+                <div class="text-danger">{{ error_product_list }}</div>
+                {% endif %}
+			  </div>
+		    </div>
+		  </fieldset>
+              
+      <fieldset>
+            <legend>{{ text_rule }}</legend> 
+		  	<div class="row">
+              <div class="col-sm-6">
+                <div class="form-group">
+                  <label class="col-sm-4 control-label" >{{ entry_discount_type }}</label>
+                  <div class="col-sm-8">
+                    <select name="discount_type" id="input-discount-type" class="form-control">
+                      <option value="0" selected="selected">{{ entry_percentage_discount }}</option>
+			          <option value="1">{{ entry_fixed_discount }}</option>
+                      <option value="2">{{ entry_flat_price }}</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+			  <div class="col-sm-6">
+                <div class="form-group">
+                  <label class="col-sm-4 control-label" for="input-customer-group">{{ entry_customer_groups }}</label>
+                  <div class="col-sm-8">
+                    <select name="customer_group_id" id="input-customer-group" class="form-control">
+                      <option value="0">{{ text_select }}</option>
+                      {% for customer_group in customer_groups %}
+                        {% if customer_group.customer_group_id == customer_group_id %}
+                          <option value="{{ customer_group.customer_group_id }}" selected="selected">{{ customer_group.name }}</option>
+                        {% else %}
+                          <option value="{{ customer_group.customer_group_id }}">{{ customer_group.name }}</option>
+                        {% endif %}
+                      {% endfor %}
+                    </select>
+                    {% if error_customer_group_id %}
+                      <div class="text-danger">{{ error_customer_group_id }}</div>
+                    {% endif %}
+				  </div>
+                </div>
+              </div>
+		    </div>
+		    <div class="row">	
+              <div class="col-sm-6">
+                <div class="form-group">
+                  <label class="col-sm-4 control-label" for="price">{{ entry_value }}</label>
+                  <div class="col-sm-8">
+                    <input type="text" name="price" value="" placeholder="{{ entry_value }}" id="price" class="form-control" />
+                    {% if error_value %}
+                    <div class="text-danger">{{ error_value }}</div>
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <div class="form-group">
+                  <label class="col-sm-4 control-label" for="priority">{{ entry_priority }}</label>
+                  <div class="col-sm-8">
+                    <input type="text" name="priority" value="" placeholder="{{ entry_priority }}" id="priority" class="form-control" />
+                  </div>
+                </div>
+              </div>
+		    </div>
+			<div class="row">
+              <div class="col-sm-6">
+                <div class="form-group">
+                  <label class="col-sm-4 control-label" for="input-date-start">{{ entry_date_start }}</label>
+                  <div class="col-sm-8">
+                    <div class="input-group date"><input type="text" name="date_start" id="input-date-start" value="" placeholder="{{ entry_date_start }}" data-date-format="YYYY-MM-DD" class="form-control"><span class="input-group-btn"><button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button></span></div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <div class="form-group">
+                  <label class="col-sm-4 control-label" for="input-date-end">{{ entry_date_end }}</label>
+                  <div class="col-sm-8">
+			        <div class="input-group date"><input type="text" name="date_end" id="input-date-end" value="" placeholder="{{ entry_date_end }}" data-date-format="YYYY-MM-DD" class="form-control"><span class="input-group-btn"><button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button></span></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+		  </fieldset>
+        </form>
+      </div>
+    </div>
+  </div>
+  
+  {{ footer }}
+</div>
+
+<script type="text/javascript">
+$("#form-product").on('submit', function(){
+	var ProductList = "";
+	
+	$("#selected_product_lists option").each(function(index){
+		if (index != 0) {
+			ProductList += ","+$(this).val();
+		} else {
+			ProductList += $(this).val();
+		}
+	})
+	
+	$("#form-product").append("<input type='hidden' name='ProductList' value='"+ProductList+"' />");
+	
+	if (ProductList === "") {
+		//$('#errormsg').css();
+		//alert('error');
+		//return false;
+	}
+});
+
+$('#add-selected').on('click', function() {
+	$("#all_product_list option:selected").each(function(index, data){	
+		$(this).remove();
+		
+		if($("#selected_product_lists option[value='"+data.value+"']").length == 0){
+			$("#selected_product_lists").append('<option style="padding:2px;" value="'+data.value+'">'+data.text+'</option>');		
+		}		
+	})
+});
+
+$('#remove-selected').on('click', function() {
+	$("#selected_product_lists option:selected").each(function(index, data){	
+		$(this).remove();
+		
+		if($("#all_product_list option[value='"+data.value+"']").length == 0){
+			$("#all_product_list").append('<option style="padding:2px;" value="'+data.value+'">'+data.text+'</option>');
+		}
+	})
+});
+
+$('#add-all').on('click', function() {
+	$("#all_product_list option").each(function(index, data){	
+		$(this).remove();
+		if($("#selected_product_lists option[value='"+data.value+"']").length == 0){
+			$("#selected_product_lists").append('<option style="padding:2px;" value="'+data.value+'">'+data.text+'</option>');		
+		}
+	})
+});
+
+$('#remove-all').on('click', function() {
+	$("#selected_product_lists option").each(function(index, data){	
+		$(this).remove();
+		
+		if($("#all_product_list option[value='"+data.value+"']").length == 0){
+			$("#all_product_list").append('<option style="padding:2px;" value="'+data.value+'">'+data.text+'</option>');
+		}
+	})
+});
+
+$('#category_id').on('change', function() {
+	$('#manufacturer_id').val("");
+	
+	$.ajax({
+		url: '{{ getproductsbycategory }}&catid=' +  $(this).val(),
+		success: function(json) {
+			console.log(json);
+			
+			if (json) {
+				jsonObj = JSON.parse(json);
+				var ProductData = "";
+				
+				jsonObj.forEach(function(DataValue, DataIndex){				
+					ProductData += '<option style="padding:2px;" value="'+DataValue.product_id+'">'+DataValue.name+' ('+DataValue.model+')</option>';
+				});
+			
+				$("#all_product_list").html(ProductData);
+			
+			} else {
+				$("#all_product_list option").each(function(index, data){	
+					$(this).remove();
+				})
+			}
+		}
+	});
+});
+
+$('#manufacturer_id').on('change', function() {
+	$('#category_id').val("");
+	
+	$.ajax({
+		url: '{{ getproductsbymanufacturer }}&manid=' +  $(this).val(),
+		success: function(json) {
+			console.log(json);
+			
+			if (json) {
+				jsonObj = JSON.parse(json);
+				var ProductData = "";
+					
+				jsonObj.forEach(function(DataValue, DataIndex){				
+					ProductData += '<option style="padding:2px;" value="'+DataValue.product_id+'">'+DataValue.name+' ('+DataValue.model+')</option>';
+				});
+				
+				$("#all_product_list").html(ProductData);
+
+			} else {
+				$("#all_product_list option").each(function(index, data){	
+					$(this).remove();
+				})
+			}
+		}
+	});
+});
+
+$('.date').datetimepicker({
+	language: 'en-gb',
+	pickTime: false
+});
+
+$('.time').datetimepicker({
+	language: 'en-gb',
+	pickDate: false
+});
+
+$('.datetime').datetimepicker({
+	language: 'en-gb',
+	pickDate: true,
+	pickTime: true
+});
+</script>

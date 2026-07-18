@@ -1,0 +1,41 @@
+{% for page in pages %}
+<div class="table-responsive">
+<table class="table table-hover table-bordered">
+	<thead>
+		<tr class="info">
+			<td class="col-sm-2">{{ page.title }}</td>
+			<td class="text-center">{{ col_total_items }}</td>
+			{% for language in languages %}
+				<td class="text-center">
+					<img src="language/{{ language.code }}/{{ language.code }}.png" title="{{ language.name }}" /> {{ language.name }}
+				</td>
+			{% endfor %}
+			<td class="text-center col-sm-2">{{ col_action }}</td>
+		</tr>
+	</thead>
+	<tbody>
+		{% for key, value in page.items %}
+		<tr>
+			<td><strong>{{ value }}</strong></td>
+			<td class="text-center">{{ page.total_items }}</td>
+			{% for language in languages %}
+				<td class="text-center {{ page.total_items == page.counts[key][language.language_id] ? 'success' : 'danger' }}" id="cell_{{ page.code }}_{{ key }}_{{ language.language_id }}">
+					{{ page.counts[key][language.language_id] }}
+				</td>
+			{% endfor %}
+			<td class="text-center">
+				<div class="btn-group">
+					<a class="btn btn-sm btn-primary" onclick="generateElement('{{ page.code }}','{{ key }}');" id="button_generate_{{ page.code }}_{{ key }}">
+						<i class="fa fa-play-circle-o"></i> {{ button_generate }}
+					</a>
+					<a class="btn btn-sm btn-danger" onclick="clearTags('{{ page.code }}','{{ key }}')">
+						<i class="fa fa-trash"></i> {{ button_clear }}
+					</a>
+				</div>
+			</td>
+		</tr>
+		{% endfor %}
+	</tbody>
+</table>
+</div>
+{% endfor %}

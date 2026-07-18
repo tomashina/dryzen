@@ -1,0 +1,10 @@
+<div class="widget">
+    <div class="main-menu vertical vertical-menu-bg">
+    <h4 class="menu-heading"><b>{{ heading_title }}</b></h4>
+        <ul class="categories vertical-menu-bg">
+            {% for key, row in menu %}
+            {% include 'basel/template/common/menus/mega_menu.twig' %}
+            {% endfor %}
+        </ul>
+    </div>
+</div>

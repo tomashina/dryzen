@@ -1,0 +1,82 @@
+{{ header }}
+<div class="container">
+  <ul class="breadcrumb">
+    {% for breadcrumb in breadcrumbs %}
+    <li><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+    {% endfor %}
+  </ul>
+  <div class="row">{{ column_left }}
+    {% if column_left and column_right %}
+    {% set class = 'col-sm-6' %}
+    {% elseif column_left or column_right %}
+    {% set class = 'col-md-9 col-sm-8' %}
+    {% else %}
+    {% set class = 'col-sm-12' %}
+    {% endif %}
+    <div id="content" class="{{ class }}">{{ content_top }}
+      <div class="blog">
+		
+        <h1 id="page-title">{{ heading_title }}</h1>
+  		
+        {% if blog_category_description %}
+		<div class="main_description">
+		{{ blog_category_description }}
+		</div>
+		{% endif %}
+        
+  	{% if blogs %}
+		<div class="grid-holder grid{{ list_columns }}">
+            
+            {% for blog in blogs %}
+				<div class="item single-blog">
+                
+                {% if blog.image %}
+                <div class="banner_wrap hover-zoom hover-darken">
+				<img class="zoom_image" src="{{ blog.image }}" alt="{{ blog.title }}" title="{{ blog.title }}" />
+                <a href="{{ blog.href }}" class="effect-holder"></a>
+                {% if date_added_status %}
+                <div class="date_added">
+                <span class="day">{{ blog.date_added_day }}</span>
+                <b class="month">{{ blog.date_added_month }}</b>
+                </div>
+                {% endif %}
+                {% if blog.tags %}
+                <div class="tags-wrapper">
+                <div class="tags primary-bg-color">
+                {% for tag in blog.tags|slice(0,2) %}
+                <a href="index.php?route=extension/blog/home&tag={{ tag|trim }}">{{ tag|trim }}</a>
+                {% endfor %}
+                </div>
+                </div>
+                {% endif %}
+
+                </div>
+				{% endif %}
+                
+                <div class="summary">
+                <h3 class="blog-title"><a href="{{ blog.href }}">{{ blog.title }}</a></h3>
+                
+                <div class="blog_stats">
+                {% if author_status %}<i>{{ text_posted_by }}: {{ blog.author }}</i>{% endif %}
+                {% if comments_count_status %}<i>{{ text_comments }}: {{ blog.comment_total }}</i>{% endif %}
+                {% if page_view_status %}<i>{{ text_read }}: {{ blog.count_read }}</i>{% endif %}
+                </div>
+                
+				<p class="short-description">{{ blog.short_description }}</p>
+                <a class="u-lined" href="{{ blog.href }}">{{ text_read_more }}</a>
+                </div>
+               </div>
+			{% endfor %}
+          </div>
+		<div class="row pagination-holder">
+        <div class="col-sm-6 xs-text-center">{{ pagination }}</div>
+        <div class="col-sm-6 text-right xs-text-center"><span class="pagination-text">{{ results }}</span></div>
+      </div>
+	{% else %}
+		{{ text_no_blog_posts }}
+	{% endif %}
+    </div>
+      {{ content_bottom }}</div>
+    {{ column_right }}</div>
+</div>
+{{ footer }} 

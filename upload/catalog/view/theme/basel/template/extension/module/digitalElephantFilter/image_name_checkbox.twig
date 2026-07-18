@@ -1,0 +1,31 @@
+<div class="filter_type_image digitalElephantFilter_type_checkbox">
+    {% for input_data in inputs_data %}
+        {% if input_data.image %}
+            <label>
+                {% set attr_checked = '' %}
+
+                {% if check_data_on_active[input_data['input_name']][section['id']] and input_data['input_value'] in check_data_on_active[input_data['input_name']][section['id']] %}
+                    {% set attr_checked = 'checked="checked"' %}
+                {% endif %}
+
+                {% if input_data['is_enable'] %}
+                    {% set attr_disabled = '' %}
+                {% else %}
+                    {% set attr_disabled = 'disabled="disabled"' %}
+                {% endif %}
+                <input
+                        style="display: none;"
+                        type="checkbox"
+                        name="{{ input_data['input_name'] }}[{{ section['id'] }}][]"
+                        value="{{ input_data['input_value'] }}"
+                        {{ attr_checked }}
+                        {{ attr_disabled }}
+                >
+                <img
+                        src="{{ input_data['image'] }}"
+                        title="{{ input_data['input_label'] }}"/>
+                <span>{{ input_data['input_label'] }}</span>
+            </label>
+        {% endif %}
+    {% endfor %}
+</div>

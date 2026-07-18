@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<!--[if IE 8 ]><html dir="{{ direction }}" lang="{{ lang }}" class="ie8"><![endif]-->
+<!--[if IE 9 ]><html dir="{{ direction }}" lang="{{ lang }}" class="ie9"><![endif]-->
+<!--[if (gt IE 9)|!(IE)]><!-->
+<html dir="{{ direction }}" lang="{{ lang }}">
+<!--<![endif]-->
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="google-site-verification" content="JZYE6lTXt0bMjmAkTQWZTl0tdU8HpxuXJcM74NUmpg4" />
+<title>{{ title }}</title>
+<base href="{{ base }}" />
+<meta name="google-site-verification" content="eZXFBfY_q6xpP_ZT043YaAnDL4H8BkCPtxx3Atwko3o" />
+{% if description %}<meta name="description" content="{{ description }}" />{% endif %}
+{% if keywords %}<meta name="keywords" content= "{{ keywords }}" />{% endif %}
+<!-- Load essential resources -->
+<script src="catalog/view/javascript/jquery/jquery-2.1.1.min.js"></script>
+<link href="catalog/view/javascript/bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen" />
+<script src="catalog/view/javascript/bootstrap/js/bootstrap.min.js"></script>
+<script src="catalog/view/theme/basel/js/slick.min.js"></script>
+<script src="catalog/view/theme/basel/js/basel_common.js"></script>
+<!-- Main stylesheet -->
+<link href="catalog/view/theme/basel/stylesheet/stylesheet.css" rel="stylesheet">
+
+<!-- Mandatory Theme Settings CSS -->
+<style id="basel-mandatory-css">{{ basel_mandatory_css }}</style>
+<!-- Plugin Stylesheet(s) -->
+{% for style in styles %}
+<link href="{{ style.href }}" rel="{{ style.rel }}" media="{{ style.media }}" />
+{% endfor %}
+{% if direction == 'rtl' %}
+<link href="catalog/view/theme/basel/stylesheet/rtl.css" rel="stylesheet">
+{% endif %}
+<!-- Pluing scripts(s) -->
+{% for script in scripts %}
+<script src="{{ script }}"></script>
+{% endfor %}
+<!-- Page specific meta information -->
+{% for link in links %}
+{% if link.rel == 'image' %}
+
+{% else %}
+<link href="{{ link.href }}" rel="{{ link.rel }}" />
+{% endif %}
+{% endfor %}
+<!-- Analytic tools -->
+{% for analytic in analytics %}
+{{ analytic }}
+{% endfor %}
+{% if basel_styles_status %}
+<!-- Custom Color Scheme -->
+<style id="basel-color-scheme">{{ basel_styles_cache }};</style>
+{% endif %}
+{% if basel_typo_status %}
+<!-- Custom Fonts -->
+<style id="basel-fonts">{{ basel_fonts_cache }}</style>
+{% endif %}
+{% if basel_custom_css_status %}
+<!-- Custom CSS -->
+<style id="basel-custom-css">
+{{ basel_custom_css }}
+</style>
+{% endif %}
+{% if basel_custom_js_status %}
+<!-- Custom Javascript -->
+<script>
+{{ basel_custom_js }}
+</script>
+{% endif %}
+</head>
+<body class="{{ class }}{{ basel_body_class }}">
+
+{% include 'basel/template/common/mobile-nav.twig' %}
+<div class="outer-container main-wrapper">
+{% if notification_status %}
+<div class="top_notificaiton">
+  <div class="container{% if top_promo_close %} has-close{% endif %} {{ top_promo_width }} {{ top_promo_align }}">
+    <div class="table">
+    <div class="table-cell w100"><div class="ellipsis-wrap">{{ top_promo_text }}</div></div>
+    {% if top_promo_close %}
+    <div class="table-cell text-right">
+    <a onClick="addCookie('basel_top_promo', 1, 30);$(this).closest('.top_notificaiton').slideUp();" class="top_promo_close">&times;</a>
+    </div>
+    {% endif %}
+    </div>
+  </div>
+</div>
+{% endif %}
+{% include 'basel/template/common/headers/' ~ basel_header ~ '.twig' %}
+<!-- breadcrumb -->
+<div class="breadcrumb-holder">
+<div class="container">
+<span id="title-holder">&nbsp;</span>
+<div class="links-holder">
+<a class="basel-back-btn" onClick="history.go(-1); return false;"><i></i></a><span>&nbsp;</span>
+</div>
+</div>
+</div>
+<div class="container">
+{{ position_top }}
+</div>

@@ -1,0 +1,213 @@
+{{ header }}
+<div class="container">
+  <ul class="breadcrumb">
+    {% for breadcrumb in breadcrumbs %}
+    <li><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+    {% endfor %}
+  </ul>
+  <div class="row">{{ column_left }}
+
+
+
+    {% set class = 'col-sm-12' %}
+    
+    <div id="content" class="{{ class }}">{{ content_top }}
+    <div class="blog blog_post">
+    
+    {% if main_thumb and blogsetting_post_thumb %}
+    <div class="main_thumb">
+    <img src="{{ main_thumb }}" alt="{{ heading_title }}" title="{{ heading_title }}" />
+    {% if post_date_added_status %}
+    <div class="date_added">
+    <span class="day">{{ date_added_day }}</span>
+    <b class="month">{{ date_added_month }}</b>
+    </div>
+    {% endif %}
+    </div>
+    {% endif %}
+    
+	<h1 id="page-title" class="contrast-font">{{ heading_title }}</h1>
+	
+    <div class="blog_stats">
+	{% if post_author_status %}<i>{{ text_posted_by }}: {{ author }}</i>{% endif %}
+	{% if post_page_view_status %}<i>{{ text_read }}: {{ new_read_counter_value }}</i>{% endif %}
+	{% if post_comments_count_status %}<i>{{ text_comments }}: {{ comment_total }}</i>{% endif %}
+	</div>
+    
+    <div class="main_description">
+	{{ description }}
+    </div>
+    
+    {% if tags %}
+	<p class="post_tags">
+    {{ text_tags }}
+	{% for i in 0..tags|length %}
+    {% if i < (tags|length - 1) %} 
+    <a href="{{ tags[i].href }}">{{ tags[i].tag }}</a>,
+    {% else %} 
+    <a href="{{ tags[i].href }}">{{ tags[i].tag }}</a> {% endif %}
+    {% endfor %}
+	</p>
+	{% endif %}
+
+        <script type='text/javascript' src='https://platform-api.sharethis.com/js/sharethis.js#property=61a636a5d0a9e10012e4df2d&product=sop' async='async'></script>
+        <!-- ShareThis BEGIN -->
+        <div class="sharethis-inline-share-buttons" style="text-align:center; margin-bottom:50px"></div>
+	
+    <!-- Related Products -->
+    {% if products %}
+      <h3 class="section-title"><b>{{ text_related_products }}</b></h3>
+        <div class="grid-holder grid grid{{ rel_prod_per_row }}">
+        {% for product in products %}
+        {% include 'basel/template/product/single_product.twig' %}
+        {% endfor %}
+      </div>
+      {% endif %}
+	 <!-- Related Products End -->
+     
+     
+     {% if related_blogs %}
+		<h3 class="section-title"><b>{{ text_related_blog }}</b></h3>
+        <div class="grid-holder grid{{ rel_per_row }}">
+            {% for blog in related_blogs %}
+            <div class="item single-blog related">
+                {% if blog.image and rel_thumb_status %}
+                <div class="banner_wrap hover-zoom hover-darken">
+				<img class="zoom_image" src="{{ blog.image }}" alt="{{ blog.title }}" title="{{ blog.title }}" />
+                <a href="{{ blog.href }}" class="effect-holder"></a>
+                {% if date_added_status %}
+                <div class="date_added">
+                <span class="day">{{ blog.date_added_full|date('d') }}</span>
+                <b class="month">{{ blog.date_added_full|date('M') }}</b>
+                </div>
+                {% endif %}
+                {% if blog.tags %}
+                <div class="tags-wrapper">
+                <div class="tags primary-bg-color">
+                {% for tag in blog.tags|slice(0,2) %}
+                <a href="index.php?route=extension/blog/home&tag={{ tag|trim }}">{{ tag|trim }}</a>
+                {% endfor %}
+                </div>
+                </div>
+                {% endif %}
+                </div>
+				{% endif %}
+                <div class="summary">
+                <h3 class="blog-title"><a href="{{ blog.href }}">{{ blog.title }}</a></h3>
+                <div class="blog_stats">
+                {% if author_status %}<i>{{ text_posted_by }}: {{ blog.author }}</i>{% endif %}
+				{% if comments_count_status %}<i>{{ text_comments }}: {{ blog.comment_total }}</i>{% endif %}
+                {% if page_view_status %}<i>{{ text_read }}: {{ blog.count_read }}</i>{% endif %}
+                </div>
+				<p class="short-description">{{ blog.short_description }}</p>
+                <a class="u-lined" href="{{ blog.href }}">{{ text_read_more }}</a>
+                </div>
+               </div>
+			{% endfor %}           
+		</div>
+	{% endif %}
+	 <!-- Related Blog End -->
+	 
+
+      </div>
+     
+      {{ content_bottom }}</div>
+    {{ column_right }}</div>
+</div>
+<script><!--
+$('#comment').delegate('.pagination a', 'click', function(e) {
+  e.preventDefault();
+	$("html,body").animate({scrollTop:(($("#comment").offset().top)-50)},500);
+    $('#comment').fadeOut(50);
+
+    $('#comment').load(this.href);
+
+    $('#comment').fadeIn(500);
+	
+});
+
+$('#comment').load('index.php?route=extension/blog/blog/comment&blog_id={{ blog_id }}');
+//--></script>
+
+<script><!--
+
+$('#button-comment').on('click', function() {
+	$.ajax({
+		url: 'index.php?route=extension/blog/blog/write&blog_id={{ blog_id }}',
+		type: 'post',
+		dataType: 'json',
+		data: $("#comment_form").serialize(),
+		
+		complete: function() {
+			$('#button-comment').button('reset');
+			$('#captcha_comment').attr('src', 'index.php?route=extension/blog/blog/captcha');
+			$('input[name=\'captcha_comment\']').val('');
+		},
+		success: function(json) {
+			$('.alert-success, .alert-danger').remove();
+			
+			if (json.error) {
+				$('#write_response').html('<div class="alert alert-sm alert-danger"><i class="fa fa-exclamation-circle"></i> ' + json.error + '</div>');
+			}
+			
+			if (json.success) {
+				$('#write_response').html('<div class="alert alert-sm alert-success"><i class="fa fa-check-circle"></i> ' + json.success + '</div>');
+				
+				$('input[name=\'name\']').val('');
+				$('input[name=\'email\']').val('');
+				$('textarea[name=\'comment\']').val('');
+				$('input[name=\'captcha_comment\']').val('');
+			}
+		}
+	});
+});    
+// Sharing buttons
+var share_url = encodeURIComponent(window.location.href);
+var page_title = '{{ heading_title }}';
+{% if main_thumb %}
+var thumb = '{{ main_thumb }}';
+{% endif %}
+$('.fb_share').attr("href", 'https://www.facebook.com/sharer/sharer.php?u=' + share_url + '');
+$('.twitter_share').attr("href", 'https://twitter.com/intent/tweet?source=' + share_url + '&text=' + page_title + ': ' + share_url + '');
+$('.google_share').attr("href", 'https://plus.google.com/share?url=' + share_url + '');
+$('.pinterest_share').attr("href", 'http://pinterest.com/pin/create/button/?url=' + share_url + '&media=' + thumb + '&description=' + page_title + '');
+$('.vk_share').attr("href", 'http://vkontakte.ru/share.php?url=' + share_url + '');
+</script>
+
+<script type="application/ld+json">
+{
+"@context": "http://schema.org",
+"@type": "NewsArticle",
+"mainEntityOfPage": {
+"@type": "WebPage",
+"@id": "https://google.com/article"
+},
+"headline": "{{ heading_title }}",
+{% if main_thumb %}
+"image": {
+"@type": "ImageObject",
+"url": "{{ main_thumb }}",
+"height": {{ img_height }},
+"width": {{ img_width }}
+},
+{% endif %}
+"datePublished": "{{ date_added_full }}",
+"dateModified": "{{ date_added_full }}",
+"author": {
+"@type": "Person",
+"name": "{{ author }}"
+},
+"publisher": {
+"@type": "Organization",
+"name": "{{ store }}",
+{% if logo %}
+"logo": {
+"@type": "ImageObject",
+"url": "{{ logo }}"
+}
+{% endif %}
+},
+"description": "{{ short_description }}"
+}
+</script>
+{{ footer }} 

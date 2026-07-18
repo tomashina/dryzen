@@ -1,0 +1,93 @@
+{% if pagetype == 'product' %}
+<div class="input-group" style="width:100%;">
+	<input type="text" id="redirect_product_lookup" class="form-control" autocomplete="off" placeholder="{{ text_product_lookup }}">
+	<input type="hidden" id="redirect_product_id">
+</div>
+
+<script type="text/javascript">
+$('#redirect_product_lookup').autocomplete({
+	'source': function(request, response) {
+		$.ajax({
+			url: 'index.php?route={{ base_route }}/redirect_disabled/product_autocomplete&user_token={{ user_token }}&filter_name=' +  encodeURIComponent(request),
+			dataType: 'json',
+			success: function(json) {
+				response($.map(json, function(item) {
+					return {
+						label: item['name'],
+						value: item['product_id']
+					}
+				}));
+			}
+		});
+	},
+	'select': function(item) {
+		$('#redirect_product_id').val(item['value']);
+    	$('#redirect_product_lookup').val(item['label']);
+	}
+});
+</script>
+{% endif %}
+
+{% if pagetype == 'category' %}
+<div class="input-group" style="width:100%;">
+	<input type="text" id="redirect_category_lookup" class="form-control" autocomplete="off" placeholder="{{ text_category_lookup }}">
+	<input type="hidden" id="redirect_category_id">
+</div>
+
+<script type="text/javascript">
+$('#redirect_category_lookup').autocomplete({
+	'source': function(request, response) {
+		$.ajax({
+			url: 'index.php?route={{ base_route }}/redirect_disabled/category_autocomplete&user_token={{ user_token }}&filter_name=' +  encodeURIComponent(request),
+			dataType: 'json',
+			success: function(json) {
+				response($.map(json, function(item) {
+					return {
+						label: item['name'],
+						value: item['category_id']
+					}
+				}));
+			}
+		});
+	},
+	'select': function(item) {
+		$('#redirect_category_id').val(item['value']);
+    	$('#redirect_category_lookup').val(item['label']);
+	}
+});
+</script>
+{% endif %}
+
+{% if pagetype == 'information' %}
+<div class="input-group" style="width:100%;">
+	<input type="text" id="redirect_information_lookup" class="form-control" autocomplete="off" placeholder="{{ text_information_lookup }}">
+	<input type="hidden" id="redirect_information_id">
+</div>
+
+<script type="text/javascript">
+$('#redirect_information_lookup').autocomplete({
+	'source': function(request, response) {
+		$.ajax({
+			url: 'index.php?route={{ base_route }}/redirect_disabled/information_autocomplete&user_token={{ user_token }}&filter_name=' +  encodeURIComponent(request),
+			dataType: 'json',
+			success: function(json) {
+				response($.map(json, function(item) {
+					return {
+						label: item['name'],
+						value: item['information_id']
+					}
+				}));
+			}
+		});
+	},
+	'select': function(item) {
+		$('#redirect_information_id').val(item['value']);
+    	$('#redirect_information_lookup').val(item['label']);
+	}
+});
+</script>
+{% endif %}
+
+{% if pagetype == 'custom' %}
+	<input type="text" id="redirect_custom" class="form-control" placeholder="{{ text_custom_placeholder }}">	
+{% endif %}

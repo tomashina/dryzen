@@ -1,0 +1,172 @@
+<div class="container">
+    {{ position_bottom_half }}
+</div>
+<div class="container">
+    {{ position_bottom }}
+</div>
+<div id="footer">
+
+
+    <div class="container">
+        {% if footer_block_1 and footer_block_1 != '<p><br></p>' %}
+            <div class="footer-top-block">
+                {{ footer_block_1 }}
+            </div>
+        {% endif %}
+        <div class="row links-holder">
+            <div class="col-xs-12 col-sm-12">
+                <div class="row">
+                    {% if custom_links %}
+                        {% for column in basel_footer_columns %}
+                     <div class="footer-column col-xs-12 col-sm-3 {% if loop.first %}col-sm-offset-2{% endif %} eq_height">
+                                {% if column.title %}
+                                    <p class="h5">
+                                        <a  role="button" data-toggle="collapse" href="#collapse{{ column.sort }}9" aria-expanded="false" aria-controls="collapse{{ column.sort }}9">
+                                            {{ column.title }}  <b class="pull-right visible-xs">+</b>
+                                        </a>
+                                    </p>
+                                {% endif %}
+
+                                <div class="collapse in" id="collapse{{ column.sort }}9">
+                                    {% if column.links is defined %}
+                                        <ul class="list-unstyled">
+                                            {% for link in column.links %}
+                                                <li><a href="{{ link.target }}">{{ link.title }}</a></li>
+                                            {% endfor %}
+                                        </ul>
+                                    {% endif %}
+
+                                </div>
+
+                                <script>
+                                    $(document).ready(function(){
+                                        if ($(window).width() <= 768) {
+                                            $("#collapse19").removeClass("in");
+                                            $("#collapse29").removeClass("in");
+                                            $("#collapse49").removeClass("in");
+                                        }
+                                    });
+                                </script>
+
+
+
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        {% if informations %}
+                            <div class="footer-column col-xs-6 col-sm-3 eq_height">
+                                <h5>{{ text_information }}</h5>
+                                <ul class="list-unstyled">
+                                    {% for information in informations %}
+                                        <li><a href="{{ information.href }}">{{ information.title }}</a></li>
+                                    {% endfor %}
+                                    <li><a href="{{ contact }}">{{ text_contact }}</a></li>
+                                </ul>
+                            </div>
+                        {% endif %}
+                        <div class="footer-column col-xs-6 col-sm-3 eq_height">
+                            <h5>{{ text_extra }}</h5>
+                            <ul class="list-unstyled">
+                                <li><a href="{{ manufacturer }}">{{ text_manufacturer }}</a></li>
+                                <li><a href="{{ voucher }}">{{ text_voucher }}</a></li>
+                                <li><a href="{{ affiliate }}">{{ text_affiliate }}</a></li>
+                                <li><a href="{{ special }}">{{ text_special }}</a></li>
+                                <li><a href="{{ sitemap }}">{{ text_sitemap }}</a></li>
+                            </ul>
+                        </div>
+                        <div class="footer-column col-xs-6 col-sm-3 eq_height">
+                            <h5>{{ text_account }}</h5>
+                            <ul class="list-unstyled">
+                                <li><a href="{{ account }}">{{ text_account }}</a></li>
+                                <li><a href="{{ order }}">{{ text_order }}</a></li>
+                                <li><a href="{{ return }}">{{ text_return }}</a></li>
+                                <li class="is_wishlist"><a href="{{ wishlist }}">{{ text_wishlist }}</a></li>
+                                <li><a href="{{ newsletter }}">{{ text_newsletter }}</a></li>
+                            </ul>
+                        </div>
+                    {% endif %}
+                    <div class="footer-column col-xs-12 col-sm-3 eq_height">
+                        <img class="skare-footer visible-xs" src="image/divider-footer.svg" alt="WOB divider">
+                        <div class="footer-custom-wrapper">
+                            {% if footer_block_title is defined %}
+                                <p class="h5">{{ footer_block_title }}</p>
+                            {% endif %}
+                            {% if footer_block_2 and footer_block_2 != '<p><br></p>' %}
+                                <div class="custom_block">{{ footer_block_2 }}</div>
+                            {% endif %}
+                            {% if footer_infoline_1 is defined %}
+                                <p class="infoline">{{ footer_infoline_1 }}</p>
+                            {% endif %}
+                            {% if footer_infoline_2 is defined %}
+                                <p class="infoline">{{ footer_infoline_2 }}</p>
+                            {% endif %}
+                            {% if footer_infoline_3 is defined %}
+                                <p class="infoline">{{ footer_infoline_3 }}</p>
+                            {% endif %}
+                            {% if payment_img %}
+                                <img class="payment_img" src="{{ payment_img }}" alt="" />
+                            {% endif %}
+                        </div>
+                    </div>
+                </div><!-- .row ends -->
+            </div><!-- .col-md-8 ends -->
+
+            <div class="col-xs-12 text-center cards-holder" >
+                <img class="cards-img" src="image/catalog/credit-cards/visa.jpg" alt="Visa" height="30" width="50"></a>
+                <img class="cards-img" src="image/catalog/credit-cards/maestro-new.svg" alt="Mestroa" height="30" width="50"></a>
+                <img class="cards-img" src="image/catalog/credit-cards/master-new.svg" alt="MasterCard" height="30" width="50"></a>
+                <img class="cards-img" src="image/catalog/credit-cards/diners.svg" alt="Diners" height="30" width="50"></a>
+
+                <img class="cards-img" src="image/google_pay.svg" alt="GooglePay" height="30" width="50">
+                <img class="cards-img" src="image/apple_pay.svg" alt="ApplePay" height="30" width="50">
+                <img class="cards-img p4 hidden-xs" src="image/corvus-logo-i.svg" alt="CorvusPay" height="30" width="114">
+
+            </div>
+            <div class="clearfix"></div>
+
+        </div><!-- .row ends -->
+
+
+
+
+    </div>
+    <div class="continer-fluid">
+        {% if basel_copyright %}
+            <div class="footer-copyright">{{ basel_copyright }}</div>
+        {% endif %}
+    </div>
+
+</div>
+
+
+<link  href="catalog/view/javascript/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
+<link href="catalog/view/theme/basel/js/lightgallery/css/lightgallery.css" rel="stylesheet" />
+<script src="catalog/view/theme/basel/js/jquery.matchHeight.min.js"></script>
+<script src="catalog/view/theme/basel/js/countdown.js"></script>
+<script src="catalog/view/theme/basel/js/featherlight.js"></script>
+{% if view_popup %}
+    <!-- Popup -->
+    <script>
+        $(document).ready(function() {
+            if ($(window).width() > {{ popup_width_limit }}) {
+                setTimeout(function() {
+                    $.featherlight({ajax: 'index.php?route=extension/basel/basel_features/basel_popup', variant:'popup-wrapper'});
+                }, {{ popup_delay }});
+            }
+        });
+    </script>
+{% endif %}
+{% if sticky_columns %}
+    <!-- Sticky columns -->
+    <script>
+        if ($(window).width() > 767) {
+            $('#column-left, #column-right').theiaStickySidebar({containerSelector:$(this).closest('.row'),additionalMarginTop:{{ sticky_columns_offset }}});
+        }
+    </script>
+{% endif %}
+
+</div><!-- .outer-container ends -->
+
+<a class="scroll-to-top top primary-bg-color " onclick="$('html, body').animate({scrollTop:0});"><img src="image/up.svg" class="ikona" alt="Na vrh"></a>
+<div id="featherlight-holder"></div>
+</body></html>

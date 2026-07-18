@@ -1,0 +1,408 @@
+{{ header }}{{ column_left }}
+<div id="content" class="mp-content">
+  <div class="page-header">
+    <div class="container-fluid">
+    	<div class="pull-right">
+        <a href="{{ cancel }}" data-toggle="tooltip" title="{{ button_cancel }}" class="btn btn-warning"><i class="fa fa-reply"></i> {{ button_cancel }}</a>
+      </div>
+      <h1>{{ heading_title }}</h1>
+      <ul class="breadcrumb">
+        {% for breadcrumb in breadcrumbs %}
+        <li><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+  <div class="container-fluid" id="form-product-export">
+    {% if error_warning %}
+    <div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i> {{ error_warning }} ?>
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+    </div>
+    {% endif %}
+    <div class="panel panel-default first-panel">
+      <div class="panel-heading">
+        <h3 class="panel-title"><i class="fa fa-filter"></i> {{  text_form }}</h3>
+      </div>
+      <div class="panel-body">
+        <div class="alert alert-info"><i class="fa fa-info-circle"></i> <strong>{{ text_filters_note }}</strong></div>
+        <ul class="nav nav-tabs" style="position: relative;">
+          <li class="active"><a href="#tab-general" data-toggle="tab"><i class="fa fa-cog"></i> <span>{{ tab_general }}</span></a></li>
+          <li><a href="#tab-support" data-toggle="tab"><i class="fa fa-thumbs-up"></i> <span>{{ tab_support }}</span></a></li>
+        </ul>
+        <div class="tab-content">
+          <div class="tab-pane active" id="tab-general">
+          	<div class="row">
+							<div class="col-sm-7">
+								<div class="well">
+									<div class="row">
+										<div class="col-sm-6">
+											<div class="form-group">
+												<label class="control-label" for="input-qty"><span data-toggle="tooltip" title="{{ help_qty }}">{{ entry_qty }}</span></label>
+												<input type="text" name="find_quantity_start" placeholder="{{ placeholder_quantity_start }} : 0" id="input-qty" class="form-control" value="" />
+											</div>
+										</div>
+										<div class="col-sm-6">
+											<div class="form-group">
+												<label class="control-label" for="input-qty-limit">&nbsp; &nbsp; </label>
+												<input type="text" name="find_quantity_limit"  placeholder="{{ placeholder_quantity_limit }} : 1000" id="input-qty-limit" class="form-control" value="" />
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-sm-6">
+											<div class="form-group">
+												<label class="control-label" for="input-price"><span data-toggle="tooltip" title="{{ help_price }}">{{ entry_price }}</span></label>
+												<input type="text" name="find_price_start" placeholder="{{ placeholder_price_start }} : 0" id="input-price" class="form-control" value="" />
+											</div>
+										</div>
+										<div class="col-sm-6">
+											<div class="form-group">
+												<label class="control-label" for="input-price-limit">&nbsp; &nbsp; </label>
+												<input type="text" placeholder="{{ placeholder_price_limit }} : 1000" name="find_price_limit" id="input-price-limit" class="form-control" value="" />
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-sm-6">
+											<div class="form-group">
+												<label class="control-label" for="input-product"><span data-toggle="tooltip" title="{{ help_product_limit }}">{{ entry_product_limit }}</span></label>
+												<input type="text" name="find_product_start" placeholder="{{ placeholder_product_start }} : 0" id="input-product" class="form-control" value="" />
+											</div>
+										</div>
+										<div class="col-sm-6">
+											<div class="form-group">
+												<label class="control-label" for="input-product-limit">&nbsp; &nbsp; </label>
+												<input type="text" name="find_product_limit" placeholder="{{ placeholder_product_limit }} : 1000" id="input-product-limit" class="form-control" value="" />
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-sm-12">
+											<div class="form-group">
+												<label class="control-label" for="input-model">{{ entry_model }}</label>
+												<input type="text" name="find_model" id="input-model" class="form-control" value="" placeholder="{{ entry_model }}" />
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-sm-6">
+											<div class="form-group">
+												<label class="control-label" for="input-store">{{ entry_store }}</label>
+												<select name="find_store_id" id="input-store" class="form-control">
+													{% for store in stores %}
+													<option value="{{ store.store_id }}">{{ store.name }}</option>
+													{% endfor %}
+												</select>
+											</div>
+										</div>
+										<div class="col-sm-6">
+											<div class="form-group">
+												<label class="control-label" for="input-language">{{ entry_language }}</label>
+												<select name="find_language_id" id="input-language" class="form-control">
+													{% for language in languages %}
+													<option value="{{ language.language_id }}">{{ language.name }}</option>
+													{% endfor %}
+												</select>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-sm-6">
+											<div class="form-group">
+												<label class="control-label" for="input-status">{{ entry_status }}</label>
+												<select name="find_status" id="input-status" class="form-control">
+													<option value="">{{ text_all_status }}</option>
+													<option value="1">{{ text_enabled }}</option>
+													<option value="0">{{ text_disabled }}</option>
+												</select>
+											</div>
+										</div>
+										<div class="col-sm-6">
+											<div class="form-group">
+												<label class="control-label" for="input-stock-status">{{ entry_stock_status }}</label>
+												<select name="find_stock_status_id" id="input-stock-status" class="form-control">
+													<option value="">{{ text_all_stock_status }}</option>
+													{% for stock_status in stock_statuses %}
+													<option value="{{ stock_status.stock_status_id }}">{{ stock_status.name }}</option>
+													{% endfor %}
+												</select>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="panel panel-default">
+				    			<div class="panel-heading">
+				        		<h3 class="panel-title" data-toggle="collapse" href="#export_fields_collapse" role="button" aria-expanded="false" aria-controls="export_fields_collapse"><label class="control-label"><i class="fa fa-download"></i> <span data-toggle="tooltip" title="{{ help_cell_operation }}">{{ entry_cell_operation }}</span></label></h3>
+				      		</div>
+				      		<div class="abs-position">
+				      			<a onclick="$('.export-table-body').parent().find(':checkbox').prop('checked', true);" class="btn btn-info btn-sm">{{ text_all }}</a>
+						        <a onclick="$('.export-table-body').parent().find(':checkbox').prop('checked', false);"  class="btn btn-info btn-sm">{{ text_unall }}</a>
+						        <a class="btn btn-success btn-sm save_field_settings"><i class="fa fa-refresh" data-class="fa fa-refresh"></i> {{ button_save }}</a>
+				      		</div>
+				      		<div class="panel-body collapse in" id="export_fields_collapse">
+				      			<div class="export-table-body" id="find-fields-settings">
+				              {% set i = 1 %}
+				              <div class="row">
+				                {% for find_field_value in find_fields %}
+				                <div class="col-sm-4">
+				                  {{ i }} <label class="control-label"><input type="checkbox" name="productexport_setting_fields[{{ find_field_value.code }}][code]" value="1" {% if productexport_setting_fields[find_field_value.code] and productexport_setting_fields[find_field_value.code].code  %}checked="checked"{% endif %} /> {% if find_field_value.help %}<span data-toggle="tooltip" title="{{ find_field_value.help }}"> {{ find_field_value.title }}</span>{% else %}{{ find_field_value.title }}{% endif %}</label>
+				                </div>
+				                {% set i = i + 1 %}
+				                {% endfor %}
+				              </div>
+				      			</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-5">
+								<div class="panel panel-default">
+				    			<div class="panel-heading">
+				        		<h3 class="panel-title" data-toggle="collapse" href="#input_product_lists_collapse" role="button" aria-expanded="false" aria-controls="input_product_lists_collapse"><label class="control-label" for="input-product-lists"><i class="fa fa-tags"></i> <span data-toggle="tooltip" title="{{ help_product }}">{{ entry_product }}</span></label></h3>
+				      		</div>
+				      		<div class="panel-body collapse in" id="input_product_lists_collapse">
+				      			<input type="text" name="product_name" value="" placeholder="{{ entry_product }}" id="input-product-lists" class="form-control" />
+										<div id="export-product" class="well well-sm">
+										</div>
+				      		</div>
+				      	</div>
+				      	<div class="panel panel-default">
+				    			<div class="panel-heading">
+				        		<h3 class="panel-title" data-toggle="collapse" href="#input_manufacturer_collapse" role="button" aria-expanded="false" aria-controls="input_manufacturer_collapse"><label class="control-label" for="input-manufacturer"><i class="fa fa-tags"></i> <span data-toggle="tooltip" title="{{ help_manufacturer }}">{{ entry_manufacturer }}</span></label></h3>
+				      		</div>
+				      		<div class="panel-body collapse in" id="input_manufacturer_collapse">
+				      			<input type="text" name="manufacturer_name" value="" placeholder="{{ entry_manufacturer }}" id="input-manufacturer" class="form-control" />
+										<div id="export-manufacturer" class="well well-sm">
+										</div>
+				      		</div>
+				      	</div>
+				      	<div class="panel panel-default">
+				    			<div class="panel-heading">
+				        		<h3 class="panel-title" data-toggle="collapse" href="#input_category_collapse" role="button" aria-expanded="false" aria-controls="input_category_collapse"><label class="control-label" for="input-category"><i class="fa fa-tags"></i> <span data-toggle="tooltip" title="{{ help_category }}">{{ entry_category }}</span></label></h3>
+				      		</div>
+				      		<div class="panel-body collapse in" id="input_category_collapse">
+				      			<input type="text" name="category_name" value="" placeholder="{{ entry_category }}" id="input-category" class="form-control" />
+										<div id="export-category" class="well well-sm">
+										</div>
+				      		</div>
+				      	</div>
+				      	<div class="panel panel-default">
+									<div class="panel-heading">
+										<h3 class="panel-title"><label class="control-label" for="export-format"><span data-toggle="tooltip" title="{{ help_format }}"><i class="fa fa-file-o"></i>{{ entry_format }}</span></label></h3>
+									</div>
+									<div class="panel-body">
+										<div class="form-group mp-buttons">
+											<select name="find_format" class="form-control" id="export-format">
+											<option value="xls">{{ text_xls }}</option>
+											<option value="xlsx">{{ text_xlsx }}</option>
+											<option value="csv">{{ text_csv }}</option>
+											<option value="xml">{{ text_xml }}</option>
+											<option value="json">{{ text_json }}</option>
+											</select>
+
+										</div>
+										<div class="buttons exports">
+											<button type="button" class="btn btn-success btn-block" id="exporter-product"><i class="fa fa-download" aria-hidden="true"></i> {{ button_export }}</button>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+          </div>
+          <div class="tab-pane" id="tab-support">
+	        	<div class="bs-callout bs-callout-info">
+		          <h4>ModulePoints {{ heading_title }}</h4>
+		          <center><strong>{{ heading_title }} - Version 2.0 </strong></center> <br/>
+		          <p>{{ heading_title }} v2 comes with new features and few bug fixes. With this extension you have multiple filters and many export fields, so you get only data which you required. It's a upgraded version of "Old {{ heading_title }}" extension with various new features and bug fixes.</p>
+		        </div>
+	        	<fieldset>
+	            <div class="form-group">
+	              <div class="col-md-12 col-xs-12">
+	                <h4 class="text-mpsuccess text-center"><i class="fa fa-thumbs-up" aria-hidden="true"></i> Thanks For Choosing Our Extension</h4>
+	                 <ul class="list-group">
+	                  <li class="list-group-item clearfix">Installed Version <span class="badge"><i class="fa fa-gg" aria-hidden="true"></i> V.2.0</span></li>
+	                </ul>
+	                <h4 class="text-mpsuccess text-center"><i class="fa fa-phone" aria-hidden="true"></i> Please Contact Us In Case Any Issue OR Give Feedback!</h4>
+	                <ul class="list-group">
+	                  <li class="list-group-item clearfix">support@modulepoints.com <span class="badge"><a href="mailto:support@modulepoints.com?Subject=Request Support: {{ heading_title }} Extension"><i class="fa fa-envelope"></i> Contact Us</a></span></li>
+	                </ul>
+	              </div>
+	            </div>
+	          </fieldset>
+	        </div>
+        </div>
+      </div>
+    </div>
+	</div>
+	<div class="mpteam"></div>
+<script type="text/javascript"><!--
+$(function() {
+	// Exporter Product
+	$('#exporter-product').click(function() {
+		$.ajax({
+			url: 'index.php?route={{ isdir_extension }}mpimporterexporter/export_product/export&{{ get_token }}={{ token }}',
+			type: 'post',
+			data: $('#form-product-export input[type=\'text\'], #form-product-export input[type=\'hidden\'], #form-product-export select, #form-product-export input[type=\'checkbox\']:checked, #form-product-export input[type=\'radio\']:checked'),
+			dataType: 'json',
+			beforeSend: function() {
+				$('.alert-danger, .alert-success').remove();
+				$('#exporter-product').button('loading');
+				$('.mpteam').after('<div class="modal-backdrop in mpteam_loader"></div> <div class="loader mpteam_loader"></div>');
+			},
+			complete: function() {
+				$('#exporter-product').button('reset');
+				$('.mpteam_loader').remove();
+			},
+			success: function(json) {
+				if(json['error']) {
+					$('.first-panel').before('<div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i> '+ json['error'] +' <button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+
+					$('html, body').animate({ scrollTop: 0 }, 'slow');
+				}
+
+				if(json['href']) {
+					window.location = json['href'];
+				}
+			},
+			error: function(xhr, ajaxOptions, thrownError) {
+				if(xhr.responseText) {
+					$('.first-panel').before('<div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i> '+ xhr.responseText +' <button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+				}
+			}
+		});
+	});
+
+	// Product
+	$('input[name=\'product_name\']').autocomplete({
+		'source': function(request, response) {
+			$.ajax({
+				url: 'index.php?route=catalog/product/autocomplete&{{ get_token }}={{ token }}&filter_name=' +  encodeURIComponent(request),
+				dataType: 'json',
+				success: function(json) {
+					response($.map(json, function(item) {
+						return {
+							label: item['name'],
+							value: item['product_id']
+						}
+					}));
+				}
+			});
+		},
+		'select': function(item) {
+			$('input[name=\'product_name\']').val('');
+
+			$('#export-product' + item['value']).remove();
+
+			$('#export-product').append('<div id="export-product' + item['value'] + '"><i class="fa fa-minus-circle"></i> ' + item['label'] + '<input type="hidden" name="find_product[]" value="' + item['value'] + '" /></div>');
+		}
+	});
+
+	$('#export-product').delegate('.fa-minus-circle', 'click', function() {
+		$(this).parent().remove();
+	});
+
+	// Manufacturer
+	$('input[name=\'manufacturer_name\']').autocomplete({
+		'source': function(request, response) {
+			$.ajax({
+				url: 'index.php?route=catalog/manufacturer/autocomplete&{{ get_token }}={{ token }}&filter_name=' +  encodeURIComponent(request),
+				dataType: 'json',
+				success: function(json) {
+					response($.map(json, function(item) {
+						return {
+							label: item['name'],
+							value: item['manufacturer_id']
+						}
+					}));
+				}
+			});
+		},
+		'select': function(item) {
+			$('input[name=\'manufacturer_name\']').val('');
+
+			$('#export-manufacturer' + item['value']).remove();
+
+			$('#export-manufacturer').append('<div id="export-manufacturer' + item['value'] + '"><i class="fa fa-minus-circle"></i> ' + item['label'] + '<input type="hidden" name="find_manufacturer[]" value="' + item['value'] + '" /></div>');
+		}
+	});
+	$('#export-manufacturer').delegate('.fa-minus-circle', 'click', function() {
+		$(this).parent().remove();
+	});
+
+	// Category
+	$('input[name=\'category_name\']').autocomplete({
+		'source': function(request, response) {
+			$.ajax({
+				url: 'index.php?route=catalog/category/autocomplete&{{ get_token }}={{ token }}&filter_name=' +  encodeURIComponent(request),
+				dataType: 'json',
+				success: function(json) {
+					response($.map(json, function(item) {
+						return {
+							label: item['name'],
+							value: item['category_id']
+						}
+					}));
+				}
+			});
+		},
+		'select': function(item) {
+			$('input[name=\'category_name\']').val('');
+
+			$('#export-category' + item['value']).remove();
+
+			$('#export-category').append('<div id="export-category' + item['value'] + '"><i class="fa fa-minus-circle"></i> ' + item['label'] + '<input type="hidden" name="find_category[]" value="' + item['value'] + '" /></div>');
+		}
+	});
+
+	$('#export-category').delegate('.fa-minus-circle', 'click', function() {
+		$(this).parent().remove();
+	});
+
+	$('.save_field_settings').on('click', function() {
+		var $this = $(this);
+
+		$.ajax({
+			url: 'index.php?route={{ isdir_extension }}mpimporterexporter/export_product/saveFieldSettings&{{ get_token }}={{ token }}',
+			type: 'post',
+			data: $('#find-fields-settings input[type=\'text\'], #find-fields-settings input[type=\'hidden\'], #find-fields-settings input[type=\'checkbox\']:checked, #find-fields-settings input[type=\'radio\']:checked').serialize(),
+			dataType: 'json',
+			beforeSend: function() {
+				$('.alert-danger, .alert-success').remove();
+				$this.attr('disabled','disabled').find('i').attr('class','fa fa-spinner fa-spin');
+			},
+			complete: function() {
+				$this.removeAttr('disabled').find('i').attr('class', $this.find('i').attr('data-class'));
+			},
+			success: function(json) {
+				if (json['error']) {
+					if (typeof json['error']['warning']) {
+						$this.closest('.abs-position').after('<div class="alert alert-danger"><i class="fa fa-check-circle"></i> ' + json['error']['warning'] + ' <button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+					}
+					{#
+					if (typeof json['error']['sort_order']) {
+						for (var i in json['error']['sort_order']) {
+							$('#sort_alphabet-' + i).closest('td').css('color','#f00');
+	    				$('#sort_alphabet-' + i).css('color','#f00').css('border-color','#f00');
+							json['error']['sort_order'][i]
+						}
+					}
+					#}
+				}
+				if (json['success']) {
+					$this.closest('.abs-position').after('<div class="alert alert-success"><i class="fa fa-check-circle"></i> ' + json['success'] + ' <button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+				}
+			},
+			error: function(xhr, ajaxOptions, thrownError) {
+			}
+		});
+	});
+
+	$('#export_fields_collapse').on('shown.bs.collapse', function() {
+		$('.abs-position .btn').removeAttr('disabled')
+	});
+	$('#export_fields_collapse').on('hidden.bs.collapse', function() {
+		$('.abs-position .btn').attr('disabled','disabled')
+	});
+});
+//--></script>
+</div>
+{{ footer }}

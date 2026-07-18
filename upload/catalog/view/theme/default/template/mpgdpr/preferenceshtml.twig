@@ -1,0 +1,350 @@
+<div class="mpgdpr-wrap">
+  <div class="mpgdpr-cookie">
+    <div class="mpgdpr-container">
+      <div class="mpgdpr-text">
+        <h3>{{ text_heading }}</h3>
+          <label><input type="checkbox" checked="checked" disabled="disabled" value="m:required" /> {{ text_cookie_strickly }}</label>
+          <br/><p>{{ text_cookie_strickly_detail }}</p>
+          <label><input type="checkbox" name="mcookie_analytics" value="m:required" /> {{ text_cookie_analytics }}</label>
+          <br/><p>{{ text_cookie_analytics_detail }}</p>
+          <label><input type="checkbox" name="mcookie_marketing" value="m:required" /> {{ text_cookie_marketing }}</label>
+          <br/><p>{{ text_cookie_marketing_detail }}</p>
+      </div>
+      <div class="set-btns">
+        <a class="mcookie-btn mp-prefrences-close">{{ button_close }}</a>
+        <a class="mcookie-btn mpprefrences-update">{{ button_update }}</a>
+      </div>
+    </div>
+  </div>
+</div>
+<style type="text/css">
+  .mpgdpr-wrap { position: fixed; width: 100%; top: 50px; left: 0; z-index: 9999; display: none; }
+  .mpgdpr-cookie { padding: 15px 25px; background: #fff; color: #000;  margin: auto;  overflow-y: auto; position: fixed; left:15px;bottom:200px}
+  .mpgdpr-cookie .mpgdpr-container { margin: auto; }
+  .mpgdpr-cookie .mpgdpr-text{ display: block; vertical-align: top; }
+  .mpgdpr-cookie .set-btns{ display: block; text-align: center; margin-top: 25px;margin-bottom:25px }
+  .mpgdpr-cookie .mcookie-btn{ border: none; padding: 10px 15px; cursor: pointer;  background: #1C75BC; color: #fff; display: inline-block;  margin-right: 10px}
+  .mpgdpr-cookie h3{font-size: 16px; margin-top: 0; color: #1C75BC;}
+
+  @media(min-width: 768px){
+    .mpgdpr-cookie{width: 496px; height: auto;}
+    .mpgdpr-cookie .mcookie-btn{font-size: 16px;}
+  }
+   @media(max-width: 767px){
+    .mpgdpr-cookie{height: 280px;}
+    .mpgdpr-cookie .mcookie-btn{font-size: 12px;}
+  }
+  {{ cbcss }}
+</style>
+<script type="text/javascript">
+   var mpgdpr = {
+    mcookies : {
+      {#
+      var cookie = get('tracking');
+      cookie['tracking']
+      or
+      var cookies = get(['tracking','currency','language']);
+      cookies['tracking']
+      cookies['currency']
+      cookies['language']
+      or
+      var cookies = get();
+      all cookies in array {cookie-name1 : cookie-value1,cookie-name2 : cookie-value2}
+      #}
+      get : function(name) {
+        function getCookie(name) {
+          if(name) {
+            var value = '; ' + document.cookie;
+            var parts = value.split('; ' + name + '=');
+            return parts.length < 2 ? undefined : parts.pop().split(';').shift();
+          }
+          var cookies = document.cookie.split('; ');
+          var data = {};
+          for(var i in cookies) {
+            var cookie = cookies[i].split('=');
+            if(cookie.length==2) {
+              data[cookie[0]] = cookie[1];
+            }
+          }
+          return data;
+        }
+        var data = {};
+        if(typeof name == 'string') {
+          data[name] = getCookie(name);
+        }
+        
+        if(typeof name == 'object') {
+          for(var i in name) {
+            data[name[i]] =  getCookie(name[i]); 
+          } 
+        }
+        if(typeof name == 'undefined' || '' == name) {
+          data = getCookie();
+        }
+        return data;
+      },
+      {#
+        set([{
+          'name' : name of the cookie,
+          'value' : value,
+          'expiryDays' : specified in days (specify -1 for no expiry),
+          'domain' : domain that the cookie 'name' belongs to. The cookie can only be read on this domain.,
+          'path' : the url path that the cookie 'name' belongs to. The cookie can only be read at this location,
+          'secure' : true the cookie will be created with the secure flag. Secure cookies will only be transmitted via HTTPS. true/false,
+        }]);
+        or
+        set(
+          name of the cookie;
+          value;
+          specified in days (specify -1 for no expiry);
+          domain that the cookie 'name' belongs to. The cookie can only be read on this domain.;
+          the url path that the cookie 'name' belongs to. The cookie can only be read at this location;
+          true the cookie will be created with the secure flag. Secure cookies will only be transmitted via HTTPS. true/false;
+        );
+      #}
+      set: function(cookies) {
+        function setCookie(name, value, expiryDays, domain, path, secure) {
+          
+          if(expiryDays == -1) {
+            var cookie = [
+              name + '=' + value,
+              'expires=' + 'Thu, 01 Jan 1970 00:00:01 GMT',
+              'path=' + (path || '/')
+            ];
+          } else {
+             var exdate = new Date();
+            exdate.setDate(exdate.getDate() + (expiryDays || 365));
+
+            var cookie = [
+              name + '=' + value,
+              'expires=' + exdate.toUTCString(),
+              'path=' + (path || '/')
+            ];
+          }
+          if (domain) {
+            cookie.push('domain=' + domain);
+          }
+          if (secure) {
+            cookie.push('secure');
+          }
+          {% if logging %}console.log("final setting cookie : " + cookie.join(';')+';'); {% endif %}
+          document.cookie = cookie.join(';')+';';
+        }
+
+        if(typeof cookies == 'undefined' || '' == cookies) {
+          return;
+        }
+        if(typeof cookies == 'string') {
+          var parts = cookies.split(";");
+          {% if logging %}
+            console.log("cookies string : " + cookies);
+            console.log("parts : ");
+            console.log(parts);
+          {% endif %}
+          cookies = [{
+            'name' : parts[0],
+            'value' : parts[1],
+            'expiryDays' : parts[3],
+            'domain' : parts[4],
+            'path' : parts[5],
+            'secure' : parts[6],
+          }];
+        }
+        {% if logging %}
+          console.log("set cookies : ");
+          console.log(cookies)
+        {% endif %}
+        for(var i in cookies) {
+          setCookie(
+            cookies[i]['name'], 
+            cookies[i]['value'], 
+            cookies[i]['expiryDays'],
+            cookies[i]['domain'],
+            cookies[i]['path'],
+            cookies[i]['secure']
+          ); 
+        }
+      },
+      {#
+        clear([{
+          'name' : name of the cookie,
+          'domain' : domain that the cookie 'name' belongs to. The cookie can only be read on this domain.,
+          'path' : the url path that the cookie 'name' belongs to. The cookie can only be read at this location,
+        }]);
+        or
+        clear(
+          name of the cookie;
+          domain that the cookie 'name' belongs to. The cookie can only be read on this domain.;
+          the url path that the cookie 'name' belongs to. The cookie can only be read at this location;
+        ]);
+      #}
+      clear : function(cookies) {
+        function clearCookie(name, domain, path) {
+          mpgdpr.mcookies.set([{
+            'name' : name,
+            'value' : '',
+            'expiryDays' : -1,
+            'domain' : domain,
+            'path' : path
+          }]);
+        }
+
+        if(typeof cookies == 'undefined' || '' == cookies) {
+          return;
+        }
+        if(typeof cookies == 'string') {
+          var parts = cookies.split(";");
+          {% if logging %}
+          console.log("cookie string :" + cookies);
+          console.log("parts")
+          console.log(parts)
+          {% endif %}
+          cookies = [{
+            'name' : parts[0],
+            'domain' : parts[1],
+            'path' : parts[2]
+          }];
+        }
+        for(var i in cookies) {
+          clearCookie(
+            cookies[i]['name'],
+            cookies[i]['domain'],
+            cookies[i]['path']
+          );
+        }
+      },
+    },
+    instance : null ,
+    err : null,
+    deniedCookiess : {{ deniedCookiess }}, {# ['analytics', 'marketing'] // values comes as per user preferences #}
+    cookies : {
+      analytics : {{ cookies_analytics }},
+      marketing : {{ cookies_marketing }},
+    },
+    domains : {{ cookie_domain }}, {# ['.system','system'], #}
+
+    handle_cookie:function() {
+      $('body').delegate('.mp-prefrences','click', function() {
+        $('.mpgdpr-wrap').fadeIn('slow');
+      });
+
+      $('body').delegate('.mp-prefrences-close','click', function() {
+        $('.mpgdpr-wrap').fadeOut('slow');
+      });
+
+      {# deny all cookies #}
+      $('body').delegate('a.cc-mpdeny','click', function() {
+        {# here we disable all the cookies #}
+        {% if logging %}
+        console.log("deny all cookies");
+        {% endif %}
+        
+
+       {# first we detect user prefrences. if user allow analytics or marketing cookies. If allowed then we will not disable them other wise disable according to the settings #}
+
+        var disable = [];
+        if(!(mpgdpr.deniedCookiess.indexOf('analytics') >= 0) && ({% if cbaction_close == 'cookieanalytic_block' or cbaction_close == 'cookieanalyticmarketing_block' %}true{% else %}false{% endif %}) ) {
+          disable.push('analytics');
+          $('input[name="mcookie_analytics"]').prop('checked',false);
+        }
+        if(!(mpgdpr.deniedCookiess.indexOf('marketing') >= 0) && ({% if cbaction_close == 'cookiemarketing_block' or cbaction_close == 'cookieanalyticmarketing_block' %}true{% else %}false{% endif %}) ) {
+          disable.push('marketing');
+          $('input[name="mcookie_marketing"]').prop('checked',false);
+        }
+
+        if(disable.length) {
+          mpgdpr.mcookies.set('mpcookie_preferencesdisable;'+ disable.join(',') +';365');
+          mpgdpr.deniedCookiess = disable;
+        }
+
+      });
+
+      $('body').delegate('a.cc-mpallow','click', function() {
+        {% if cbpptrack and cbpolicy and cbpolicy_page_url %}
+        $.get('{{ base }}index.php?route=mpgdpr/mpgdpr/acceptanceOfPp');
+        {% endif %}
+      });
+
+      $('body').delegate('a.mpprefrences-update','click', function() {
+        {# here we disable all the cookies #}
+        {% if logging %}
+        console.log("update preferences as  per selections");
+        {% endif %}
+        var disable = [];
+
+        if(!$('input[name="mcookie_marketing"]').prop('checked')) disable.push('marketing');
+        if(!$('input[name="mcookie_analytics"]').prop('checked')) disable.push('analytics');
+        {% if logging %}
+        console.log(disable);
+        console.log('mpcookie_preferencesdisable;'+disable.join(',')+';365');
+        {% endif %}
+
+        mpgdpr.mcookies.set('mpcookie_preferencesdisable;'+disable.join(',')+';365');
+
+        mpgdpr.deniedCookiess = disable;
+        $('input[name="mcookie_analytics"]').prop('checked', !(disable.indexOf('analytics') >= 0));
+        $('input[name="mcookie_marketing"]').prop('checked', !(disable.indexOf('marketing') >= 0));
+
+        $('.mpgdpr-wrap').fadeToggle('slow');
+      });
+
+    },
+
+    maintainance_cookies:function() {
+    
+      var analytics = mpgdpr.deniedCookiess.indexOf('analytics') >= 0;
+      var marketing = mpgdpr.deniedCookiess.indexOf('marketing') >= 0;
+      {# first we detect user prefrences. if user disabled analytics or marketing cookies. If disabled then we will clear cookies accordingly other wise clear cookies according to the settings #}
+      {% if ((cbinitial == 'cookieanalytic_block' or cbinitial == 'cookieanalyticmarketing_block') and (cookieconsent_status not in cookieconsentstatuss))  %}if(!analytics) { analytics = true; }{% endif %}
+      {% if((cbinitial == 'cookiemarketing_block' or cbinitial == 'cookieanalyticmarketing_block') and (cookieconsent_status not in cookieconsentstatuss))  %}if(!marketing) { marketing = true; }{% endif %}
+      $('input[name="mcookie_analytics"]').prop('checked', (!analytics));
+      $('input[name="mcookie_marketing"]').prop('checked', (!marketing));
+
+      $.each(mpgdpr.mcookies.get(), function(key, value) {
+        if(analytics && mpgdpr.cookies.analytics.indexOf(key) >= 0) {
+          for(var i in mpgdpr.domains) {
+            mpgdpr.mcookies.clear(key+';'+mpgdpr.domains[i]+';'+'/');
+          }
+        }
+        if(marketing && mpgdpr.cookies.marketing.indexOf(key) >= 0) {
+          for(var i in mpgdpr.domains) {
+            mpgdpr.mcookies.clear(key+';'+mpgdpr.domains[i]+';'+'/');
+          }
+        }
+      });
+
+    },
+    cookieconsent:function() {
+      window.cookieconsent.initialise({
+        {# autoOpen : true, #}
+        type: 'opt-in',
+        position: '{{ position }}',
+        {% if static %}
+        static: true,
+        {% endif %}
+        palette: { "popup": { "background": "{{ cbcolor.box_bg }}", "text": "{{ cbcolor.box_text }}" }, "button": { "background": "{{ cbcolor.btn_bg }}", "text": "{{ cbcolor.btn_text }}", "padding": "{{ cbcolor.btn_padding.top~cbcolor.btn_padding.unit }} {{ cbcolor.btn_padding>right~cbcolor.btn_padding.unit }} {{ cbcolor.btn_padding.bottom~cbcolor.btn_padding.unit }} {{ cbcolor.btn_padding.left~cbcolor.btn_padding.unit }}" } },    
+        "revokable" : !!{{ cbshowagain }},
+        "showLink" : !!{{ cbpolicy }},
+        content: {          
+          "message": "{{ text_cookielang_msg }}",          
+          "deny" : "{{ text_cookielang_btn_deny }}",
+          "allow" : "{{ text_cookielang_btn_accept }}",
+          "prefrences" : "{{ text_cookielang_btn_prefrence }}",
+          {% if cbpolicy_page_url and cbpolicy %}
+          "link" : '{{ cbpolicy_page_text }}',
+          "href" : '{{ cbpolicy_page_url }}',
+          {% endif %}
+          "policy" : '{{ text_cookielang_btn_showagain }}'
+        },
+
+      },
+      function(popup) {
+        mpgdpr.instance = popup;
+      },
+      function(err, popup) {
+        mpgdpr.instance = popup;
+        mpgdpr.err = err;
+      });
+    },
+  };
+</script>

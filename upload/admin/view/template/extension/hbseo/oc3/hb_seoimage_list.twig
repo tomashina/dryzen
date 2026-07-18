@@ -1,0 +1,21 @@
+<div class="table-responsive">
+<table class="table table-bordered table-hover table-condensed">
+{% if (records) %} 
+	{% for record in records %} 
+		<tr>
+			<td class="text-center"><a href="{{ record['edit'] }}" target="_blank">{{ record['id'] }}</a></td>
+			<td class="text-left">{{ record['image'] }}</td>
+		</tr>
+	{% endfor %} 
+{% else %} 
+	<tr>
+		<td>No Record Found</td>
+	</tr>
+{% endif %} 
+</table>
+</div>
+
+<div class="row">
+  <div class="col-sm-6 text-left">{{ pagination }}</div>
+  <div class="col-sm-6 text-right">{{ results }}</div>
+</div>

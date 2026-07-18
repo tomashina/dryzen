@@ -1,0 +1,30 @@
+<form name="pay" action="{{ action }}" method="post">
+ <input type="hidden" name="ShopID" value="{{ merchant }}">
+<input type="hidden" name="ShoppingCartID" value="{{ order_id }}">
+<input type="hidden" name="TotalAmount" value="{{ total }}">
+<input type="hidden" name="Signature" value="{{ md5 }}">
+<input type="hidden" name="CustomerFirstName" value="{{ firstname }}">
+<input type="hidden" name="CustomerLastName" value="{{ lastname }}">
+<input type="hidden" name="CustomerAddress" value="{{ address }}">
+<input type="hidden" name="CustomerCity" value="{{ city }}">
+<input type="hidden" name="CustomerCountry" value="{{ country }}">
+<input type="hidden" name="CustomerZIP" value="{{ postcode }}">
+<input type="hidden" name="CustomerPhone" value="{{ telephone }}">
+<input type="hidden" name="CustomerEmail" value="{{ email }}">
+
+<input type="hidden" name="Lang" value="HR">
+
+
+<input type="hidden" name="ReturnErrorURL" value="{{ cancel_url }}">
+<input type="hidden" name="ReturnURL" value="{{ return_url }}">
+<input type="hidden" name="CancelURL" value="{{ cancel_url }}">
+
+
+<div class="buttons pull-right">
+     <input type="submit" value="{{ button_confirm }}" class="btn btn-primary" />
+        
+        
+    </div>
+    <div class="clearfix"></div>
+    
+</form>

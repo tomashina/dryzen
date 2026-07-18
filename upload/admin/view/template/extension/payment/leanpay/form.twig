@@ -1,0 +1,217 @@
+{{ header }}
+{{ column_left }}
+<div id="content">
+  <div class="page-header">
+    <div class="container-fluid">
+      <div class="pull-right">
+        <button type="submit" form="form-leanpay" data-toggle="tooltip" title="{{ button_save }}" class="btn btn-primary">
+          <i class="fa fa-save"></i>
+        </button>
+        <a href="{{ cancel }}" data-toggle="tooltip" title="{{ button_cancel }}" class="btn btn-default">
+          <i class="fa fa-reply"></i>
+        </a>
+      </div>
+      <h1>{{ heading_title }}</h1>
+      <ul class="breadcrumb">
+        {% for breadcrumb in breadcrumbs %}
+          <li><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+  <div class="container-fluid">
+    {% if success %}
+      <div class="alert alert-success alert-dismissible">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <i class="fa fa-check-circle"></i>
+        {{ success }}
+      </div>
+    {% endif %}
+    {% if errors %}
+      <div class="alert alert-danger alert-dismissible">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <i class="fa fa-exclamation-circle"></i> {{ errors.title }}<br/><br/>
+        {% for key, error in errors %}
+          {% if key != 'title' %}
+            <i class="fa fa-exclamation-circle"></i> {{ error }}<br/>
+          {% endif %}
+        {% endfor %}
+      </div>
+    {% endif %}
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">
+          <i class="fa fa-pencil"></i> {{ text_edit }}
+        </h3>
+      </div>
+      <div class="panel-body">
+        <form action="{{ form_action }}" method="post" enctype="multipart/form-data" id="form-leanpay" class="form-horizontal">
+          {% if stores|length > 1 %}
+            <div class="form-group">
+              <label class="col-sm-2 control-label" for="input-global-config">
+                <span data-toggle="tooltip" title="{{ entry_multistore_tip }}">{{ entry_multistore }}</span>
+              </label>
+              <div class="col-sm-10">
+                <div class="checkbox">
+                  <label>
+                    <input id="input-global-config" type="checkbox" name="payment_leanpay_global_settings" value="1"{% if payment_leanpay_global_settings == 1 and store_id_config == 0 %} checked{% endif %}>
+                    {{ entry_global_settings }}
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="col-sm-2 control-label" for="input-store">
+                <span data-toggle="tooltip" title="{{ entry_store_tip }}">{{ entry_store }}</span>
+              </label>
+              <div class="col-sm-10">
+                <select id="input-store" class="form-control" data-url="{{ form_base_url }}">
+                  {% for store_id, store_name in stores %}
+                    <option value="{{ store_id }}"{% if (store_id_config == '0' and store_id == store_id_config) or store_id_config == store_id %} selected{% endif %}>{{ store_name }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+            </div>
+          {% endif %}
+          <div class="form-group">
+            <label class="col-sm-2 control-label" for="input-status">{{ entry_status }}</label>
+            <div class="col-sm-10">
+              <select name="payment_leanpay_status" id="input-status" class="form-control">
+                <option value="1"{% if payment_leanpay_status %} selected{% endif %}>{{ text_enabled }}</option>
+                <option value="0"{% if not payment_leanpay_status %} selected{% endif %}>{{ text_disabled }}</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="col-sm-2 control-label" for="input-country">
+              <span data-toggle="tooltip" title="{{ entry_country_tip }}">{{ entry_country }}</span>
+            </label>
+            <div class="col-sm-10">
+              <select name="payment_leanpay_country" id="input-country" class="form-control">
+                <option value="SI"{% if not payment_leanpay_country or payment_leanpay_country == 'SI' %} selected{% endif %}>Slovenia</option>
+                <option value="HR"{% if payment_leanpay_country == 'HR' %} selected{% endif %}>Croatia</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="col-sm-2 control-label" for="input-api-key">
+              {{ entry_payment_api_key }}
+            </label>
+            <div class="col-sm-10">
+              <input type="text" name="payment_leanpay_api_key" value="{{ payment_leanpay_api_key }}" id="input-api-key" class="form-control">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="col-sm-2 control-label" for="input-secret-word">
+              <span data-toggle="tooltip" title="{{ entry_payment_secret_word_tip }}">
+                  {{ entry_payment_secret_word }}
+              </span>
+            </label>
+            <div class="col-sm-10">
+              <input type="text" name="payment_leanpay_secret_word" value="{{ payment_leanpay_secret_word }}" id="input-secret-word" class="form-control">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="col-sm-2 control-label" for="input-test-mode">{{ entry_payment_test_mode }}</label>
+            <div class="col-sm-10">
+              <select name="payment_leanpay_test_mode" id="input-test-mode" class="form-control">
+                <option value="1"{% if payment_leanpay_test_mode %} selected{% endif %}>{{ text_enabled }}</option>
+                <option value="0"{% if not payment_leanpay_test_mode %} selected{% endif %}>{{ text_disabled }}</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="col-sm-2 control-label" for="input-order-status">
+              <span data-toggle="tooltip" title="{{ entry_order_status_tip }}">{{ entry_order_status }}</span>
+            </label>
+            <div class="col-sm-10">
+              <select name="payment_leanpay_order_status_id" id="input-order-status" class="form-control">
+                {% for order_status in order_statuses %}
+                  <option value="{{ order_status.order_status_id }}"{% if order_status.order_status_id == payment_leanpay_order_status_id %} selected{% endif %}>{{ order_status.name }}</option>
+                {% endfor %}
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="col-sm-2 control-label" for="input-payment-status">
+              <span data-toggle="tooltip" title="{{ entry_order_status_paid_tip }}">{{ entry_order_status_paid }}</span>
+            </label>
+            <div class="col-sm-10">
+              <select name="payment_leanpay_payment_status_id" id="input-payment-status" class="form-control">
+                {% for order_status in order_statuses %}
+                  <option value="{{ order_status.order_status_id }}"{% if order_status.order_status_id == payment_leanpay_payment_status_id %} selected{% endif %}>{{ order_status.name }}</option>
+                {% endfor %}
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="col-sm-2 control-label" for="input-status-url">
+              <span data-toggle="tooltip" title="{{ entry_payment_status_url_tip }}">{{ entry_payment_status_url }}</span>
+            </label>
+            <div class="col-sm-10">
+              <input type="text" value="{{ payment_leanpay_status_url }}" id="input-status-url" class="form-control" disabled>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="col-sm-2 control-label" for="input-total-min">
+              <span data-toggle="tooltip" title="{{ entry_total_min_tip }}">{{ entry_total_min }}</span>
+            </label>
+            <div class="col-sm-10">
+              <input type="text" name="payment_leanpay_total_min" value="{{ payment_leanpay_total_min }}" id="input-total-min" class="form-control">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="col-sm-2 control-label" for="input-total-max">
+              <span data-toggle="tooltip" title="{{ entry_total_max_tip }}">{{ entry_total_max }}</span>
+            </label>
+            <div class="col-sm-10">
+              <input type="text" name="payment_leanpay_total_max" value="{{ payment_leanpay_total_max }}" id="input-total-max" class="form-control">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="col-sm-2 control-label" for="input-geo-zone">{{ entry_geo_zone }}</label>
+            <div class="col-sm-10">
+              <select name="payment_leanpay_geo_zone_id" id="input-geo-zone" class="form-control">
+                <option value="0">{{ text_all_zones }}</option>
+                {% for geo_zone in geo_zones %}
+                  <option value="{{ geo_zone.geo_zone_id }}"{% if geo_zone['geo_zone_id'] == payment_leanpay_geo_zone_id %} selected{% endif %}>{{ geo_zone.name }}</option>
+                {% endfor %}
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="col-sm-2 control-label" for="input-sort-order">{{ entry_sort_order }}</label>
+            <div class="col-sm-10">
+              <input type="text" name="payment_leanpay_sort_order" value="{{ payment_leanpay_sort_order }}" placeholder="{{ entry_sort_order }}" id="input-sort-order" class="form-control"/>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="col-sm-2 control-label" for="input-debug">
+              <span data-toggle="tooltip" title="{{ entry_debug_tip }}">{{ entry_debug }}</span>
+            </label>
+            <div class="col-sm-10">
+              <select name="payment_leanpay_debug" id="input-debug" class="form-control">
+                <option value="1"{% if payment_leanpay_debug %} selected{% endif %}>{{ text_yes }}</option>
+                <option value="0"{% if not payment_leanpay_debug %} selected{% endif %}>{{ text_no }}</option>
+              </select>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{{ footer }}

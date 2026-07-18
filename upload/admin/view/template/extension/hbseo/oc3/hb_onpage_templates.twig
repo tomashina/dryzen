@@ -1,0 +1,33 @@
+<div class="table-responsive">
+	<table class="table table-hover table-bordered">
+		<thead>
+			<tr class="info">
+				<td>{{ table_heading }} 
+          <a class="btn btn-sm btn-primary" data-toggle="modal" data-target="#add-template" title="Add Template" onclick="setFieldOptions('{{ page_type }}','{{ element_type }}');"><i class="fa fa-plus-circle"></i>&nbsp;{{ button_add_template }}</a>
+          <a class="btn btn-sm btn-warning" data-toggle="tooltip" title="Clear All Templates" onclick="clearAllTemplates('{{ element_type }}');"><i class="fa fa-trash"></i>&nbsp;{{ button_clear_all }}</a>
+        </td>
+				<td class="text-center col-sm-2">{{ col_action }}</td>
+			</tr>
+		</thead>
+		<tbody>
+			{% if (templates) %} 
+			{% for template in templates %} 
+				<tr>
+					<td>{{ template.template }}</td>
+					<td class="text-center">
+						<a class="btn btn-sm btn-primary" data-toggle="tooltip" title="Preview Template" onclick="previewTemplate('{{ template.id }}');"><i class="fa fa-eye"></i></a>
+						<a class="btn btn-sm btn-danger" data-toggle="tooltip" title="Delete Template" onclick="deleteTemplate('{{ template.id }}','{{ block }}','{{ refreshlink }}');"><i class="fa fa-trash-o"></i></a>
+					</td>
+				</tr>
+			{% endfor %} 
+			{% else %} 
+				<tr>
+					<td colspan="2" class="text-danger">
+					{{ text_no_template }}
+					<a class="btn" data-toggle="modal" data-target="#add-template" onclick="setFieldOptions('{{ page_type }}','{{ element_type }}');">{{ button_add_template }}</a>
+					</td>
+				</tr>
+			{% endif %} 
+		</tbody>
+	</table>
+</div>

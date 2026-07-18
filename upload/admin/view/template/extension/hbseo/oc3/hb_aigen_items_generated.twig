@@ -1,0 +1,43 @@
+<div class="table-responsive">
+    <table class="table table-bordered table-condensed table-hover table-striped">
+        <thead>
+            <tr>
+                <td width="1" style="text-align: center;"><input type="checkbox" onclick="$('input[name*=\'selected\']').prop('checked', this.checked);" /></td>
+                <td class="text-center">{{ column_id }}</td>
+                <td class="text-left">{{ column_type }}</td>
+                <td class="text-left">{{ column_item_id }}</td>
+                <td class="text-left">{{ column_element }}</td>
+                <td class="text-left">{{ column_language }}</td>
+                <td class="text-left col-sm-4">{{ column_previous_value }}</td> 
+                <td class="text-left col-sm-4">{{ column_value }}</td>           
+            </tr>
+        </thead>
+        <tbody>
+            {% if (records) %}
+                {% for record in records %}
+                    <tr>
+                        <td style="text-align: center;">
+                            <input type="checkbox" name="selected[]" value="{{ record.id }}" />
+                        </td>
+                        <td class="text-left">{{ record.id }}</td>
+                        <td class="text-left">{{ record.type }}</td>
+                        <td class="text-left">{{ record.item_id }}</td>
+                        <td class="text-left">{{ record.element }}</td>
+                        <td class="text-left">{{ record.language }}</td>
+                        <td class="text-left text-danger">{{ record.previous_value }}</td>                        
+                        <td class="text-left text-success">{{ record.value }}</td>
+                    </tr>
+                {% endfor %}
+            {% else %}
+                <tr>
+                    <td class="text-center" colspan="8">{{ text_no_records }}</td>
+                </tr>
+            {% endif %}
+        </tbody>
+    </table>
+</div>
+
+<div class="row">
+	<div class="col-sm-6 text-left">{{ pagination }}</div>
+	<div class="col-sm-6 text-right">{{ results }}</div>
+</div>

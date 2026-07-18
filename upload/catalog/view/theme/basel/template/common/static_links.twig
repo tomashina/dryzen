@@ -1,0 +1,10 @@
+{% if use_custom_links %}
+{% for basel_link in basel_links %}
+<li class="static-link"><a class="anim-underline" href="{{ basel_link.target }}">{{ basel_link.text }}</a></li>
+{% endfor %}
+{% else %}
+<li class="static-link"><a class="anim-underline"  href="{{ account }}" title="{{ text_account }}">{{ text_account }}</a></li>
+<li class="static-link is_wishlist"><a class="anim-underline wishlist-total" href="{{ wishlist }}" title="{{ text_wishlist }}"><span>{{ text_wishlist }}</span></a></li>
+<li class="static-link"><a class="anim-underline"  href="{{ shopping_cart }}" title="{{ text_shopping_cart }}">{{ text_shopping_cart }}</a></li>
+<li class="static-link"><a class="anim-underline"  href="{{ checkout }}" title="{{ text_checkout }}">{{ text_checkout }}</a></li>
+{% endif %}

@@ -1,0 +1,596 @@
+{{ header }}{{ column_left }} 
+<!--Main Content block start-->
+
+<div id="content">
+	<!--Header Start-->
+	<div class="page-header">
+		<div class="container-fluid">
+			<div class="pull-right">
+				<button type="button" class="btn btn-warning" data-toggle="modal" data-target="#add-template"><i class="fa fa-plus"></i>&nbsp;{{ button_add_template }}</button>
+				<a onClick="document.getElementById('form-language').submit();" form="form-language" data-toggle="tooltip" title="{{ button_save }}" id="button-save" class="btn btn-primary"><i class="fa fa-save"></i>&nbsp;{{ button_save }}</a>
+				<a id="set-samples" class="btn btn-success"><i class="fa fa-flask"></i>&nbsp;{{ button_load_samples }}</a>
+				<a id="clear-all-templates" class="btn btn-danger"><i class="fa fa-trash"></i>&nbsp;{{ button_clear_all_templates }}</a>
+				<a href="{{ doc_link }}" target="_blank" class="btn btn-default"><i class="fa fa-book"></i>&nbsp;{{ button_doc }}</a>
+				<a href="{{ cancel }}" data-toggle="tooltip" title="{{ button_cancel }}" class="btn btn-default"><i class="fa fa-reply"></i></a>
+			</div>
+			<h1>{{ heading_title }}</h1>
+			<ul class="breadcrumb">
+				{% for breadcrumb in breadcrumbs %}
+				<li><a href="{{ breadcrumb['href'] }}">{{ breadcrumb['text'] }}</a></li>
+				{% endfor %}
+			</ul>
+		</div>
+	</div>
+	<!--Header End-->
+<!--Container 1 start -->
+<div class="container-fluid">
+	<!--Start - Error / Success Message if any -->
+	{% if (error_warning) %}
+	<div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i> {{ error_warning }}
+		<button type="button" class="close" data-dismiss="alert">&times;</button>
+	</div>
+	{% endif %}
+	{% if (success) %}
+	<div class="alert alert-success"><i class="fa fa-check-circle"></i> {{ success }}
+		<button type="button" class="close" data-dismiss="alert">&times;</button>
+	</div>
+	{% endif %}
+	<!--End - Error / Success Message if any -->
+	<div id="msgoutput"></div>
+	<!--Panel Content Start-->
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			<h3 class="panel-title"><i class="fa fa-pencil"></i> {{ heading_title }}</h3>
+			{% if (stores) %}
+			<div class="pull-right">
+				<select id="store">
+					<option value="0" {{ store_id == 0 ? 'selected' : '' }}>Default Store</option>
+					{% for store in stores %}
+					<option value="{{ store['store_id'] }}" {{ store_id == store['store_id'] ? 'selected' : '' }}>{{ store['name'] }}</option>
+					{% endfor %}
+				</select>
+			</div>
+			{% endif %}
+		</div>
+		<div class="panel-body">
+
+			<!--Tabs UL Starts-->
+			<ul class="nav nav-tabs" id="tabs">
+				<li class="active"><a href="#tab-dashboard" onclick="loadBlock('dashboard');" data-toggle="tab"><i class="fa fa-tachometer"></i> {{ tab_dashboard }}</a></li>
+
+				{% for page, page_label in pageTypes %}
+				<li><a href="#tab-{{ page }}" onclick="loadLanguageBlock('{{ page }}', '{{ first_language }}');" data-toggle="tab"><i class="fa fa-newspaper-o"></i> {{ text_templates }}: {{ page_label }}</a></li>
+				{% endfor %}
+
+				<li><a href="#tab-setting" data-toggle="tab"><i class="fa fa-cogs"></i> {{ tab_setting }}</a></li>
+				<li><a href="#tab-tools" onclick="loadBlock('tools');" data-toggle="tab"><i class="fa fa-magic"></i> {{ tab_tools }}</a></li>
+				<li><a href="#tab-logs" onclick="loadBlock('logs');" data-toggle="tab"><i class="fa fa-calendar-plus-o"></i> {{ tab_logs }}</a></li>
+			</ul>
+			<!--Tabs UL Ends-->
+			<div class="tab-content">
+
+				<div class="tab-pane active" id="tab-dashboard">
+					<div id="dashboard-block"></div>
+				</div>
+
+				{% for page, page_label in pageTypes %}
+				<div class="tab-pane" id="tab-{{ page }}">
+					<ul class="nav nav-tabs" id="{{ page }}-languages">
+						{% for language in languages %}
+						<li><a href="#{{ page }}-language{{ language.language_id }}" onclick="loadLanguageBlock('{{ page }}', '{{ language.language_id }}');" data-toggle="tab"><img src="language/{{ language['code'] }}/{{ language['code'] }}.png" title="{{ language['name'] }}" /> {{ language['name'] }}</a></li>
+						{% endfor %}
+					</ul>
+
+					<div class="tab-content"> <!-- language tab content -->
+						{% for language in languages %}
+						<div class="tab-pane" id="{{ page }}-language{{ language.language_id }}">
+							{% for element in elements[page] %}
+							<div id="{{ page }}_{{ element }}_block{{ language.language_id }}"></div>
+							{% endfor %}
+						</div>
+						{% endfor %}
+					</div> <!-- language tab content end -->
+				</div>
+				{% endfor %}
+
+				<!--SETUP-->
+				<div class="tab-pane" id="tab-setting">
+					<form action="{{ action }}" method="post" enctype="multipart/form-data" id="form-language" class="form-horizontal">
+						<div class="form-group">
+							<label class="col-sm-3 control-label">{{ text_enable_logs }}</label>
+							<div class="col-sm-9">
+								<input type="checkbox" data-toggle="toggle" data-onstyle="success" name="hb_onpage_logs" class="form-control" value="1" {{ hb_onpage_logs == '1' ? 'checked' : '' }} />
+							</div>
+						</div> 
+
+						<div class="form-group">
+							<label class="col-sm-3 control-label">{{ text_auth_password_key }}</label>
+							<div class="col-sm-9">
+								<input type="text" name="hb_onpage_authkey" value="{{ hb_onpage_authkey }}" class="form-control" />
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label class="col-sm-3 control-label">{{ text_run_script_admin_pages }}</label>
+							<div class="col-sm-9">
+								<input type="checkbox" data-toggle="toggle" data-onstyle="success" name="hb_onpage_auto" class="form-control" value="1" {{ hb_onpage_auto == '1' ? 'checked' : '' }} />
+							</div>
+						</div> 
+
+						<div class="form-group">
+							<label class="col-sm-3 control-label">{{ text_auto_mode_record_limit }}</label>
+							<div class="col-sm-9">
+								<input type="number" name="hb_onpage_autolimit" value="{{ hb_onpage_autolimit }}" class="form-control" />
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label class="col-sm-3 control-label">{{ text_cron_command }}</label>
+							<div class="col-sm-9">
+								<div class="well">{{ hb_onpage_cron }}</div>
+							</div>
+						</div>
+				   </form>
+				</div>
+				
+				<!--TOOLS-->
+				<div class="tab-pane" id="tab-tools">
+					<div id="tools-block"></div>
+				</div>
+				
+				<div id="tab-logs" class="tab-pane">
+					<div id="logs-block"></div>
+
+					<div class="pull-right" style="margin-top:10px;">
+					<a onclick="confirm('{{ text_confirm }}') ? location.href='{{ clear }}' : false;" data-toggle="tooltip" title="{{ button_clear }}" class="btn btn-danger"><i class="fa fa-trash"></i>&nbsp;{{ button_clear_logs }}</a>
+					</div>
+				</div><!--tab-logs-->
+				
+			  </div><!--tab-content block end-->
+        
+		
+		<!--ADD NEW TEMPLATE FORM START-->
+		<div class="modal fade" id="add-template" tabindex="-1" role="dialog" aria-labelledby="add-templateLabel">
+		  <div class="modal-dialog modal-lg" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span>&times;</span></button>
+					<h4 class="modal-title"><i class="fa fa-newspaper-o"></i>&nbsp;{{ text_add_template }}</h4>
+				</div>
+			  	<div class="modal-body">
+					<form class="form-horizontal" id="form-add-template">
+						<div class="form-group">
+							<div class="col-sm-6">
+								<h4>{{ entry_page_type }}</h4>
+								<select id="page_type" name="page_type" class="form-control">
+									{% for value, label in pageTypes %}
+										<option value="{{ value }}">{{ label }}</option>
+									{% endfor %}
+								</select>
+							</div>
+							<div class="col-sm-6">
+								<h4>{{ entry_element_type }}</h4>
+								<select id="element_type" name="element_type" class="form-control">
+									{% for value, label in elementTypes %}
+										<option value="{{ value }}">{{ label }}</option>
+									{% endfor %}
+								</select>
+							</div>
+						</div>
+
+						<div class="form-group">
+							<div class="col-sm-12">
+								<h4>{{ entry_template }}</h4>
+								{% for language in languages %}			
+								<div class="input-group col-sm-12" style="margin-bottom: 10px;">
+									<span class="input-group-addon"><img src="language/{{ language.code }}/{{ language.code }}.png" alt="{{ language.name }}" title="{{ language.name }}" /> {{ language.name }}</span>
+									<input type="text" class="form-control" name="template[{{ language.language_id }}]" id="template{{ language.language_id }}">
+								</div>			
+								{% endfor %}
+							</div>
+
+							<div class="col-sm-12">
+								<div class="alert alert-info" id="short-codes-block"></div>
+							</div>
+
+							<div class="col-sm-12">
+								<div id="addentry-result" style="text-align:center;"></div>
+							</div>
+						</div>   
+					</form>
+			  	</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i>&nbsp;{{ button_close }}</button>
+					<button type="button" class="btn btn-primary" id="add-template-entry"><i class="fa fa-plus"></i>&nbsp;{{ button_add }}</button>
+				</div>			  	
+			</div>
+		  </div>
+		</div>
+		<!--ADD NEW TEMPLATE FORM END-->
+
+		<!--PREVIEW TEMPLATE MODAL START-->
+		<div class="modal fade" id="preview-modal" tabindex="-1" role="dialog">
+		  <div class="modal-dialog modal-md" role="document">
+			<div class="modal-content">
+			  <div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span>&times;</span></button>
+				<h4 class="modal-title"><i class="fa fa-eye"></i>&nbsp;{{ text_preview }}</h4>
+			  </div>
+			  <div class="modal-body">
+			  		<div id="preview-block"></div>
+			  </div>
+			</div>
+		  </div>
+		</div>
+		<!--PREVIEW TEMPLATE MODAL END-->
+		
+      </div>
+    </div>
+    <!--Panel Content End-->
+    <!--Huntbee copyrights-->
+    <div class="container-fluid">
+      <center>
+        <span class="help">{{ heading_title }} - {{ extension_version }} &copy; <a href="https://www.huntbee.com/">WWW.HUNTBEE.COM</a> | <a href="https://www.huntbee.com/get-support">SUPPORT</a></span>
+      </center>
+    </div>
+    <!--Huntbee copyrights end-->
+  </div>
+  <!--Container 1 start -->
+</div>
+<!--Main Content block end-->
+
+<style type="text/css"> 
+	a {cursor:pointer;}
+	.loaddiv{margin:100px;color:#0099CC;}
+	body{font-family: sans-serif; }
+</style>
+
+<link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+<script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>	   
+
+<script type="text/javascript"><!--
+$('#product-languages a:first').tab('show');
+$('#category-languages a:first').tab('show');
+$('#manufacturer-languages a:first').tab('show');
+$('#information-languages a:first').tab('show');
+//--></script>
+
+<script type="text/javascript">
+$(document).ready(function() {
+	loadBlock('dashboard');
+	availableShortCodes();
+	if ({{ store_id }} != 0) {
+		$('a[href="#tab-dashboard"]').parent().hide();
+		$('a[href="#tab-setting"]').parent().hide();
+		$('a[href="#tab-tools"]').parent().hide();
+		$('a[href="#tab-logs"]').parent().hide();
+		$('a[form="form-language"]').hide();
+		$('#button-save').hide();
+		$('#tabs a[href="#tab-product"]').tab('show');
+		loadLanguageBlock('product', '{{ first_language }}');
+	}
+});
+
+function loadBlock(name) {
+    $('body').prepend('<div id="loader" class="text-center" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 9999;"><i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i></div>');
+    $('#loader').show();
+    $('#' + name + '-block').load('index.php?route={{ base_route }}/hb_onpage/' + name + '&user_token={{ user_token }}&store_id={{ store_id }}', function() {
+        $('#loader').fadeOut(function() {
+            $(this).remove();
+        });
+    });
+}
+
+
+var elements = {
+	{% for page_type, page_elements in elements %}
+		'{{ page_type }}': {{ page_elements | json_encode | raw }},
+	{% endfor %}
+};
+
+function loadLanguageBlock(page_type, language_id) {
+	if (elements[page_type]) {
+        elements[page_type].reduce((promise, element) => {
+            return promise.then(() => {
+                return new Promise((resolve) => {
+                    loadLanguageElementBlock(page_type, element, language_id);
+                    resolve();
+                });
+            });
+        }, Promise.resolve());
+    }
+}
+
+function loadLanguageElementBlock(page_type, element_type, language_id){
+	$("#"+page_type+"_"+element_type+"_block"+language_id).html('<center><i class="fa fa-spinner fa-pulse fa-fw"></i></center>');
+	$("#"+page_type+"_"+element_type+"_block"+language_id).load("index.php?route={{ base_route }}/hb_onpage/loadblock&user_token={{ user_token }}&page_type="+page_type+"&element_type="+element_type+"&store_id={{ store_id }}&language_id="+language_id);
+}
+
+function reloadActiveTab(){
+	var activeTab = $('#tabs .active a').attr('href').substring(1); // Get active tab ID without '#'
+
+	if (activeTab === 'tab-product') {
+		loadLanguageBlock('product', '{{ first_language }}');
+	} else if (activeTab === 'tab-category') {
+		loadLanguageBlock('category', '{{ first_language }}');
+	} else if (activeTab === 'tab-manufacturer') {
+		loadLanguageBlock('manufacturer', '{{ first_language }}');
+	} else if (activeTab === 'tab-information') {
+		loadLanguageBlock('information', '{{ first_language }}');
+	}
+}
+</script>
+
+<script type="text/javascript">
+$('#set-samples').on('click', function() {
+	if (!confirm('{{ text_confirm_samples }}')) {
+		return false;
+	}
+	$('#msgoutput').html('');
+	$.ajax({
+		url: 'index.php?route={{ base_route }}/hb_onpage/setsamples&user_token={{ user_token }}&store_id={{ store_id }}',
+		dataType: 'json',
+		beforeSend: function() {
+			$('#set-samples').button('loading');
+		},
+		complete: function() {
+			$('#set-samples').button('reset');
+		},
+		success: function(json) {
+			if (json['success']) {
+				$('#msgoutput').html('<div class="alert alert-success"><i class="fa fa-check-circle"></i> '+json['success']+'<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+				reloadActiveTab();
+			}
+		}
+	});	
+});
+
+$('#add-template-entry').on('click', function() {
+	$('#addentry-result').html('');
+	$.ajax({
+		type: 'post',
+		url: 'index.php?route={{ base_route }}/hb_onpage/add_template&user_token={{ user_token }}&store_id={{ store_id }}',
+		data: $('#form-add-template').serialize(),
+		dataType: 'json',
+		success: function(json) {
+			if (json['success']) {
+				$('#addentry-result').html('<div class="alert alert-success"><i class="fa fa-check-circle"></i> '+json['success']+'<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+				reloadActiveTab();
+			}
+			if (json['error']) {
+				$('#addentry-result').html('<div class="alert alert-danger"><i class="fa fa-warning"></i> '+json['error']+'<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+			}
+		},			
+		error: function(xhr, ajaxOptions, thrownError) {
+			console.log(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+			$('#addentry-result').html('<div class="alert alert-danger"><i class="fa fa-warning"></i> '+thrownError+'<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+		}
+	 });	
+});
+
+$('#page_type').on('change', function() {
+	availableShortCodes();
+	checkSelection();
+});
+$('#element_type').on('change', function() {
+	checkSelection();
+});
+
+function availableShortCodes() {
+    var page_type = $('#page_type').val();
+    
+    var shortcodesMap = {
+        'product': '{name} - Product Name, {category} - Category Assigned, {manufacturer} - Manufacturer Assigned, {model} - Model, {upc} - UPC, {tag} - Tags, {xname} - Product Name (Cleaned), {xcategory} - Category Assigned (Cleaned), {xmanufacturer} - Manufacturer Assigned (Cleaned), {xmodel} - Model (Cleaned), {description} - First line of description',
+        'category': '{name} - Category Name, {xname} - Category Name (Cleaned), {description} - First line of description',
+        'manufacturer': '{name} - Manufacturer Name, {xname} - Manufacturer Name (Cleaned), {description} - First line of description',
+        'information': '{name} - Information Title, {xname} - Information Title (Cleaned), {description} - First line of description'
+    };
+    
+    var shortcodes = shortcodesMap[page_type] || '';
+
+    $('#short-codes-block').html('<b>Short-codes:</b> ' + shortcodes);
+}
+
+function setFieldOptions(page_type, element_type){
+	$('#page_type').val(page_type);
+	$('#element_type').val(element_type);
+	checkSelection();
+	availableShortCodes();
+}
+
+function checkSelection() {
+	var page_type = $('#page_type').val();
+	var element_type = $('#element_type').val();
+	var disabled_elements = ['h1', 'h2', 'image_alt', 'image_title'];
+
+	if (page_type === 'information' && disabled_elements.includes(element_type)) {
+		$('#add-template-entry').attr("disabled", true);
+	} else {
+		$('#add-template-entry').removeAttr("disabled");
+	}
+}
+
+function deleteTemplate(id, block, refreshlink){
+	$('#msgoutput').html('<div class="text-center"><i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i></div>');
+	$.ajax({
+		  type: 'post',
+		  url: 'index.php?route={{ base_route }}/hb_onpage/delete_template&user_token={{ user_token }}&store_id={{ store_id }}',
+		  data: {id : id},
+		  dataType: 'json',
+		  success: function(json) {
+			if (json['success']) {
+				$('#msgoutput').html('<div class="alert alert-success"><i class="fa fa-check-circle"></i> '+json['success']+'<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+				$("#"+block).load(refreshlink).fadeIn('slow');
+			}
+		  }
+	});
+}
+
+$('#clear-all-templates').on('click', function() {
+	if (confirm('{{ text_confirm_clear_all }}')) {
+		$('#msgoutput').html('<div class="text-center"><i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i></div>');
+		$.ajax({
+			url: 'index.php?route={{ base_route }}/hb_onpage/clear_all_templates&user_token={{ user_token }}&store_id={{ store_id }}',
+			dataType: 'json',
+			success: function(json) {
+				if (json['success']) {
+					$('#msgoutput').html('<div class="alert alert-success"><i class="fa fa-check-circle"></i> ' + json['success'] + '<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+					reloadActiveTab()
+				}
+			},
+			error: function(xhr, ajaxOptions, thrownError) {
+				alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+			}
+		});
+	}
+});
+
+function clearAllTemplates(element_type) {
+	if (confirm('{{ text_confirm }}')) {
+		$('#msgoutput').html('<div class="text-center"><i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i></div>');
+		$.ajax({
+			url: 'index.php?route={{ base_route }}/hb_onpage/clear_templates_by_element&user_token={{ user_token }}&store_id={{ store_id }}&element_type=' + element_type,
+			dataType: 'json',
+			success: function(json) {
+				if (json['success']) {
+					$('#msgoutput').html('<div class="alert alert-success"><i class="fa fa-check-circle"></i> ' + json['success'] + '<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+					reloadActiveTab();
+				}
+			},
+			error: function(xhr, ajaxOptions, thrownError) {
+				alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+			}
+		});
+	}
+}
+
+function previewTemplate(id){
+	$('#preview-block').html('<div class="text-center"><i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i></div>');
+	$.ajax({
+		type: 'post',
+		url: '../index.php?route=extension/module/hb_onpage/preview',
+		data: {template_id: id, store_id: '{{ store_id }}'},
+		dataType: 'json',
+		success: function(json) {
+			if (json['success']) {
+				$('#preview-block').html('<div class="alert alert-success">' +json['success'] + '</div>');
+			}
+			if (json['count']) {
+				$('#preview-block').append('<span class="text text-info">' +json['count'] + '</span>');
+			}
+		}
+	});
+	$('#preview-modal').modal('show');
+}
+
+function generateElement(page_type, element, previous_count = 0) {
+	//$('#msgoutput').html('<div class="alert alert-info text-center"><i class="fa fa-cog fa-spin fa-fw"></i> Generating... </div>');
+	$('#button_generate_'+page_type+'_'+element).html('<i class="fa fa-circle-o-notch fa-spin fa-fw"></i> {{ button_generate }}');
+	$.ajax({
+		type: 'post',
+		url: '../index.php?route=extension/module/hb_onpage/generate_element&store_id={{ store_id }}&previous_count=' + previous_count,
+		data: {page_type: page_type, element: element, authkey: '{{ hb_onpage_authkey }}'},
+		dataType: 'json',
+		success: function(json) {
+			console.log(json);
+			$('.alert, .text-danger').remove();
+
+			if (json['error']) {
+				$('#msgoutput').html('<div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i> ' + json['error'] + '<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+			}
+
+			if (json['success']) {
+				$('#msgoutput').html('<div class="alert alert-success"><i class="fa fa-check-circle"></i>  ' + json['success'] + '<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+			}
+			
+			if (json['next'] ) {
+				generateElement(page_type, element, json['count']);
+			}else{
+				$('#button_generate_'+page_type+'_'+element).html('<i class="fa fa-check"></i> {{ button_generate }}');
+			}
+		},
+		error: function(xhr, ajaxOptions, thrownError) {
+			console.log(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+			$('#msgoutput').html('<div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i> ' + thrownError + '<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+		}
+	});
+
+	{% for language in languages %}
+	$('#cell_'+page_type+'_'+element+'_{{ language.language_id }}').load('index.php?route={{ base_route }}/hb_onpage/get_element_total&user_token={{ user_token }}&page_type='+page_type+'&element_type='+element+'&language_id={{ language.language_id }}');
+	{% endfor %}
+	//$('#dashboard-block').load('index.php?route={{ base_route }}/hb_onpage/dashboard&user_token={{ user_token }}&store_id={{ store_id }}');
+}
+
+function clearTags(page_type, element){
+	$('#msgoutput').html('<div class="text-center"><i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i></div>');
+	$.ajax({
+		type: 'post',
+		url: 'index.php?route={{ base_route }}/hb_onpage/clear_tags&user_token={{ user_token }}&store_id={{ store_id }}',
+		data: {page_type: page_type, element: element},
+		dataType: 'json',	
+		success: function(json) {
+			if (json['success']) {
+				$('#msgoutput').html('<div class="alert alert-success"><i class="fa fa-check-circle"></i>  '+json['success']+'<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+				loadBlock('dashboard');
+			}
+
+			if (json['error']) {
+				$('#msgoutput').html('<div class="alert alert-danger"><i class="fa fa-warning"></i> '+json['error']+'<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+			}
+		},			
+		error: function(xhr, ajaxOptions, thrownError) {
+			console.log(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+			$('#msgoutput').html('<div class="alert alert-danger"><i class="fa fa-warning"></i> '+thrownError+'<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+		}
+	});
+}
+
+function fixLanguageEntries(){
+	$('#msgoutput').html('<div class="text-center"><i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i></div>');
+	$.ajax({
+		  url: 'index.php?route={{ base_route }}/hb_onpage/fixlanguageentries&user_token={{ user_token }}&store_id={{ store_id }}',
+		  dataType: 'json',
+		  success: function(json) {
+				if (json['success']) {
+					$('#msgoutput').html('<div class="alert alert-success"><i class="fa fa-check-circle"></i> '+json['success']+'<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+					loadBlock('tools');
+				}
+		  }
+	 });
+}
+
+function clearMetaTitleIssues(page_type){
+	$('#msgoutput').html('<div class="text-center"><i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i></div>');
+	$.ajax({
+		  url: 'index.php?route={{ base_route }}/hb_onpage/clearmetatitleissues&user_token={{ user_token }}&store_id={{ store_id }}&page_type='+page_type,
+		  dataType: 'json',
+		  success: function(json) {
+				if (json['success']) {
+					$('#msgoutput').html('<div class="alert alert-success"><i class="fa fa-check-circle"></i> '+json['success']+'<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+					loadBlock('tools');
+				}
+		  }
+	 });
+}
+
+function clearMetaDescIssues(page_type){
+	$('#msgoutput').html('<div class="text-center"><i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i></div>');
+	$.ajax({
+		  url: 'index.php?route={{ base_route }}/hb_onpage/clearmetadescissues&user_token={{ user_token }}&store_id={{ store_id }}&page_type='+page_type,
+		  dataType: 'json',
+		  success: function(json) {
+				if (json['success']) {
+					$('#msgoutput').html('<div class="alert alert-success"><i class="fa fa-check-circle"></i> '+json['success']+'<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+					loadBlock('tools');
+				}
+		  }
+	 });
+}
+</script>
+
+<script type="text/javascript">
+$('#store').on('change', function() {
+	window.location.href = 'index.php?route={{ base_route }}/hb_onpage&user_token={{ user_token }}&store_id='+$('#store').val();
+});
+</script>
+{{ footer }}

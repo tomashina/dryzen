@@ -1,0 +1,38 @@
+{% include 'extension/module/msmart_search/_header.twig' %}
+
+<table class="table">
+	<thead>
+		<tr>
+			<td colspan="2">{{ heading_title }}</td>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td width="200">{{ entry_ext_version }}</td>
+			<td>{{ ext_version }}</td>
+			<td rowspan="6" width="50%" class="text-center" style="vertical-align: middle;">
+				<h2>{{ text_need_support }}</h2>
+				<br />
+				<a href="https://support.ocdemo.eu" target="_blank" class="btn btn-primary">{{ text_open_ticket }}</a>
+			</td>
+		</tr>
+		<tr>
+			<td>{{ entry_author }}</td>
+			<td><a href="mailto:support@ocdemo.eu" target="_blank">support@ocdemo.eu</a></td>
+		</tr>
+		<tr>
+			<td>{{ entry_forum }}</td>
+			<td><a href="https://forum.ocdemo.eu" target="_blank" class="btn btn-default btn-xs"><i class="fa fa-external-link"></i> {{ text_open_forum }}</a></td>
+		</tr>
+		<tr>
+			<td>{{ entry_support }}</td>
+			<td><a href="https://support.ocdemo.eu" target="_blank" class="btn btn-default btn-xs"><i class="fa fa-life-ring"></i> {{ text_go_to_support }}</a></td>
+		</tr>
+		<tr>
+			<td>{{ entry_documentation }}</td>
+			<td><a href="https://docs.ocdemo.eu/mss/" target="_blank" class="btn btn-default btn-xs"><i class="fa fa-external-link"></i> {{ text_open_documentation }}</a></td>
+		</tr>
+	</tbody>
+</table>
+			
+{% include 'extension/module/msmart_search/_footer.twig' %}

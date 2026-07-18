@@ -1,0 +1,257 @@
+{% include 'extension/module/msmart_search/_header.twig' %}
+
+<div class="text-center">
+	<a href="{{ tab_extra_fields_link }}" class="btn btn-primary btn-sm"><i class="fa fa-reply"></i> {{ text_back_to_list }}</a>
+</div>
+<div class="clearfix"></div>
+<br />
+
+	<table class="table table-tbody">
+		<tbody>
+			<tr>
+				<td width="100">{{ entry_type }}:</td>
+				<td>
+					<label><input type="radio" name="type" value="product" {{ type == 'product' ? ' checked="checked"' : '' }}/> {{ text_type_product }}</label>
+					&nbsp;&nbsp;&nbsp;
+					<label><input type="radio" name="type" value="category" {{ type == 'category' ? ' checked="checked"' : '' }}/> {{ text_type_category }}</label>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+	<table class="table table-bordered table-hover table-striped">
+		<tbody id="db-relations"></tbody>
+	</table>
+
+	<div id="form-guide" style="padding: 10px; border-radius: 3px; border-left: 1px solid #1e91cf; border-bottom: 1px solid #e9dddd; border-left-width: 5px; background: #ffffdf; margin-bottom: 10px; display: block;">{{ error_please_select_type }}</div>
+
+	<center><button type="submit" class="btn btn-primary" id="btn-save">{{ text_save }}</button></center>
+	
+<script type="text/javascript">
+	(function(){
+		var $relations = $('#db-relations'),
+			extra_field = {{ extra_field }};
+			
+		$('[type=radio][name=type]').change(function(){
+			var table = $(this).val();
+				
+			$('#form-guide').html( '{{ text_add_extra_field_guide }}'.replace('{table}', table) );
+		}).filter(':checked').trigger('change');
+					
+		if( extra_field.length ) {
+			$('#btn-save').html('<i class="fa fa-spin fa-spinner"></i>').prop('disabled', true);
+		}
+		
+		function finish() {
+			extra_field = [];
+			
+			$('#btn-save').html('{{ text_save }}').prop('disabled', false);
+		}
+			
+		function removeLevels( level ) {
+			$relations.find('> tr').each(function(){
+				var l = parseInt( $(this).data('level') );
+				
+				if( l > level ) {
+					$(this).remove();
+				}
+			});
+		}
+		
+		$(document).on('change', '.db-table', function(){
+			selectTable( $(this), function( $table, columns ){
+				var $tr = $table.parent().parent().parent().parent().parent().parent(),
+					bind = $table.data('bind'),
+					level = parseInt( $tr.data('level') );
+				
+				if( bind == 'join-table' ) {
+					removeLevels( level );
+					createLevel( level + 1 );
+				}
+			});
+		});
+		
+		$(document).on('change', 'input[name*=action]', function(){
+			var $tr = $(this).parent().parent().parent().parent().parent().parent().parent(),
+				level = parseInt( $tr.data('level') ),
+				val = $(this).val();
+				
+			removeLevels( level );
+			
+			$tr.find('.condition')[val=='condition'?'removeClass':'addClass']('hide');
+			$tr.find('.join')[val=='join'?'removeClass':'addClass']('hide');
+			
+			if( val == 'condition' ) {
+				$tr.find('select[name*=join_table],select[name*=join_column]');
+			} else {
+				
+			}
+		});
+		
+		function createLevel( level ) {
+			var tables = [];
+			
+			$('.db-table[data-bind="join-table"]').each(function(){
+				var v = $(this).val();
+				
+				if( v ) {
+					tables.push( v );
+				}
+			});
+			
+			$relations.append(
+				'<tr data-level="' + level + '">' +
+					'<td colspan="3">' +
+						'<table width="100%">' +
+							'<tr>' +
+								'<td width="180" style="padding: 0 5px">' +
+									'<label style="vertical-align: middle; padding: 0 5px">' +
+										'<input type="radio" name="extra_field[' + level + '][action]" value="join" /> {{ text_join }}' +
+									'</label>' +
+									'<label style="vertical-align: middle; padding: 0 5px">' +
+										'<input type="radio" name="extra_field[' + level + '][action]" value="condition" /> {{ text_condition }}' + 
+									'</label>' +
+								'</td>' +
+								'<td width="80" class="hide join text-center" style="vertical-align: middle; padding: 0 5px;">LEFT JOIN</td>' +
+								'<td class="hide join" style="padding: 0 5px">' +
+									'<select name="extra_field[' + level + '][join_table]" class="db-table form-control" data-bind="join-table">' +
+										'<option value="">--- {{ text_select_table }} ---</option>' +
+											{% for table in db_tables %}
+												( tables.indexOf('{{ table }}') <= 0 ? '<option value="{{ table }}">{{ table }}</option>' : '' ) +
+											{% endfor %}
+									'</select>' +
+								'</td>' +
+								'<td width="20" class="hide join text-center" style="vertical-align: middle; padding: 0 5px;">ON</td>' +
+								'<td class="table-name hide join text-center" style="vertical-align: middle; padding: 0 5px;"></td>' +
+								'<td class="hide join" style="vertical-align: middle; padding: 0 5px;">.</td>' +
+								'<td class="hide join" style="padding: 0 5px">' +
+									'<select name="extra_field[' + level + '][join_column]" class="db-columns form-control" data-binded="join-table">' +
+										'<option value="">--- {{ text_please_select_table }} ---</option>' +
+									'</select>' +
+								'</td>' +
+								'<td width="20" class="hide join text-center" style="vertical-align: middle; padding: 0 5px;">=</td>' +
+								'<td class="hide join" style="padding: 0 5px">' +
+									'<select name="extra_field[' + level + '][on_table]" class="db-table form-control" data-bind="on-table">' +
+										'<option value="">---</option>' +
+										( level ? 
+											{% for table in db_tables %}
+												( tables.indexOf( '{{ table }}' ) > -1 ? '<option value="{{ table }}">{{ table }}</option>' : '' ) +
+											{% endfor %}
+											'' : '<option value="product">product</option>'
+										) +
+									'</select>' +
+								'</td>' +
+								'<td class="hide join" style="vertical-align: middle; padding: 0 5px;">.</td>' +
+								'<td class="hide join" style="padding: 0 5px">' +
+									'<select name="extra_field[' + level + '][on_column]" class="db-columns form-control" data-binded="on-table">' +
+										'<option value="">--- {{ text_please_select_table }} ---</option>' +
+									'</select>' +
+								'</td>' +
+								'<td class="hide condition" style="padding: 0 5px">' +
+									'<select name="extra_field[' + level + '][condition_table]" class="db-table form-control" data-bind="condition-table">' +
+										'<option value="">--- {{ text_select_table }} ---</option>' +
+										{% for table in db_tables %}
+											( tables.indexOf( '{{ table }}' ) > -1 || ! level ? '<option' + ( typeof extra_field[level] != 'undefined' && extra_field[level].condition_table == '{{ table }}' ? ' selected="selected"' : '' ) + ' value="{{ table }}">{{ table }}</option>' : '' ) +
+										{% endfor %}
+									'</select>' +
+								'</td>' +
+								'<td class="hide condition" style="vertical-align: middle; padding: 0 5px;">.</td>' +
+								'<td class="hide condition" style="padding: 0 5px">' +
+									'<select name="extra_field[' + level + '][condition_column]" class="db-columns form-control" data-binded="condition-table">' +
+										'<option value="">--- {{ text_please_select_table }} ---</option>' +
+									'</select>' +
+								'</td>' +
+								'<td class="hide condition" style="padding: 0 5px" width="160">' +
+									'<select name="extra_field[' + level + '][condition_type]" class="form-control">' +
+										'<option value="LIKE %...%">LIKE %...%</option>' +
+										'<option value="LIKE">LIKE</option>' +
+										'<option value="NOT LIKE %...%">NOT LIKE %...%</option>' +
+										'<option value="NOT LIKE">NOT LIKE</option>' +
+										'<option value="=">=</option>' +
+										'<option value="!=">!=</option>' +
+									'</select>' +
+								'</td>' +
+								'<td class="hide condition" style="padding: 0 5px" width="80">' +
+									'{phrase}' +
+								'</td>' +
+							'</tr>' +
+						'</table>' +
+					'</td>' +
+				'</tr>'
+			);
+		
+			if( typeof extra_field[level] != 'undefined' ) {
+				var $tr = $relations.find('[data-level="' + level + '"]'),
+					sel = [ 'join_table', 'join_column', 'on_table', 'on_column', 'condition_table', 'condition_column', 'condition_type' ];
+				
+				$tr.find('input[name*=action][value="' + extra_field[level].action + '"]').prop('checked', true).trigger('change');
+				
+				for( var i = 0; i < sel.length; i++ ) {
+					(function( n ){
+						$tr.find('[name*=' + n + '] option').each(function(i){
+							if( $(this).val() == extra_field[level][n] ) {
+								$(this).parent().prop('selectedIndex', i).trigger('change');
+								return false;
+							}
+						});
+					})( sel[i] );
+				}
+			}
+		}
+		
+		function selectTable( $table, callback ) {
+			var $tr = $table.parent().parent(),
+				action = $tr.find('input[name*=action]:checked').val(),
+				level = $tr.parent().parent().parent().parent().data('level'),
+				table = $table.val(),
+				bind = $table.data('bind'),
+				name = $table.attr('name'),
+				$db_columns = $tr.find('.db-columns' + ( bind ? '[data-binded="' + bind + '"]' : '')).html('<option value="">--- {{ text_please_select_table }} ---</option>'),
+				n = $db_columns.attr('name').replace('extra_field[' + level + '][', '').replace(/\]$/, '');
+			
+			if( bind == 'join-table' && action == 'join' ) {
+				$tr.find('.table-name').html( table );
+				
+				if( table == '' ) {
+					finish();
+				}
+			}
+			
+			if( table == '' ) return;
+			
+			$db_columns.html('<option value="">{{ text_loading }}</option>');
+			
+			getTableColumns( table, function( columns ){
+				var html = '<option value="">---</option>';
+				
+				for( var i = 0; i < columns.length; i++ ) {
+					//if( name.indexOf( 'condition_' ) == 0 /*|| ( table == 'product' && columns[i] == 'product_id' ) || table != 'product'*/ ) {
+						html += '<option' + ( typeof extra_field[level] != 'undefined' && extra_field[level][n] == columns[i] ? ' selected="selected"' : '' ) + ' value="' + columns[i] + '">' + columns[i] + '</option>';
+					//}
+				}
+				
+				$db_columns.html( html );
+				
+				if( typeof extra_field[level] == 'undefined' ) {
+					$db_columns.prop('selectedIndex', 0);
+				}
+				
+				callback($table, columns);
+			}, level);
+		}
+		
+		function getTableColumns( table, callback, level ) {
+			$.post('{{ get_columns_url }}'.replace(/&amp;/g, '&'), {
+				table: table
+			}, function(response){
+				callback( response );
+				
+				if( extra_field.length && level == extra_field.length - 1 ) {
+					finish();
+				}
+			});
+		}
+		
+		createLevel( 0 );
+	})( jQuery );
+</script>
+{% include 'extension/module/msmart_search/_footer.twig' %}

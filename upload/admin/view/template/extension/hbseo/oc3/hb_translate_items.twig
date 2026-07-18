@@ -1,0 +1,55 @@
+<div class="table-responsive">
+<table class="table table-bordered table-hover">
+<thead>
+	<tr>
+		<td width="1" style="text-align: center;"><input type="checkbox" onclick="$('input[name*=\'selected\']').prop('checked', this.checked);" /></td>
+
+		{% if type == 'category' %}
+		<td class="text-center col-sm-1">{{ col_category_id }}</td>
+		<td class="text-left">{{ col_name }}</td>
+		{% elseif type == 'information' %}
+		<td class="text-center col-sm-1">{{ col_information_id }}</td>
+		<td class="text-left">{{ col_title }}</td>
+		{% elseif type == 'manufacturer' %}
+		<td class="text-center col-sm-1">{{ col_manufacturer_id }}</td>
+		<td class="text-left">{{ col_name }}</td>
+		{% else %}
+    	<td class="text-center col-sm-1">{{ col_product_id }}</td>
+		<td class="text-left">{{ col_name }}</td>
+		<td class="text-left">{{ col_model }}</td>
+		{% endif %}
+		<td class="text-left">{{ col_meta_title }}</td>
+		<td class="text-left">{{ col_reference_meta_title }}&nbsp;<img src="language/{{ reference_language['code'] }}/{{ reference_language['code'] }}.png" title="{{ reference_language['name'] }}" /></td>
+    </tr>
+</thead>
+<tbody>
+    {% if (records) %} 
+		{% for record in records %} 
+			<tr>
+			<td style="text-align: center;">
+				<input type="checkbox" name="selected[]" value="{{ record.item_id }}" />
+			</td>	
+			<td class="text-center">{{ record.item_id }}</td>
+			<td class="text-left">{{ record.name }}</td>
+			
+			{% if type == 'product' %}
+			<td class="text-left">{{ record.model }}</td>
+			{% endif %}
+			<td class="text-left">{{ record.meta_title }}</td>
+			<td class="text-left">{{ record.reference_meta_title }}</td>
+			</tr>
+		{% endfor %} 
+    {% else %} 
+    		<tr>
+              <td class="text-center" colspan="5">{{ text_no_records }}</td>
+            </tr> 
+    {% endif %} 
+</tbody>    
+
+</table>
+</div>
+
+<div class="row">
+	<div class="col-sm-6 text-left">{{ pagination }}</div>
+	<div class="col-sm-6 text-right">{{ results }}</div>
+</div>

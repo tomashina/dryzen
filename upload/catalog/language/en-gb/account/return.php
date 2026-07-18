@@ -1,0 +1,79 @@
+<?php
+// Heading
+$_['heading_title']      = 'Product Returns';
+
+// Text
+$_['text_account']       = 'Account';
+$_['text_return']        = 'Return Information';
+$_['text_return_detail'] = 'Return Details';
+$_['text_description']   = 'Please complete the return form. After sending it, you will receive confirmation by e-mail.';
+$_['text_order']         = 'Customer and Invoice Details';
+$_['text_product']       = 'Items for Return';
+$_['text_reason']        = 'Reason for Return';
+$_['text_message']       = '<p>Thank you for submitting your return request. Your request has been sent to the relevant department for processing.</p><p> You will be notified via e-mail as to the status of your request.</p>';
+$_['text_return_id']     = 'Return ID:';
+$_['text_order_id']      = 'Invoice Number:';
+$_['text_date_ordered']  = 'Invoice Date:';
+$_['text_status']        = 'Status:';
+$_['text_date_added']    = 'Date Added:';
+$_['text_comment']       = 'Return Comments';
+$_['text_history']       = 'Return History';
+$_['text_empty']         = 'You have not made any previous returns!';
+$_['text_agree']         = 'I have read and agree to the <a href="%s" class="agree"><b>%s</b></a>';
+$_['text_return_products_title'] = 'Items you are returning';
+$_['mail_return_admin_subject']    = '%s - new return request #%s';
+$_['mail_return_customer_subject'] = '%s - return request received #%s';
+$_['mail_return_admin_intro']      = 'A new return request has been submitted through the online form.';
+$_['mail_return_customer_intro']   = 'We have received your return request. Below is a copy of the data you submitted.';
+$_['mail_return_customer_footer']  = 'We will contact you after processing the request.';
+$_['mail_return_label_return_id']  = 'Return request number';
+
+// Column
+$_['column_return_id']   = 'Return ID';
+$_['column_order_id']    = 'Invoice Number';
+$_['column_status']      = 'Status';
+$_['column_date_added']  = 'Date Added';
+$_['column_customer']    = 'Customer';
+$_['column_product']     = 'Product Name';
+$_['column_model']       = 'Model';
+$_['column_quantity']    = 'Quantity';
+$_['column_price']       = 'Price';
+$_['column_opened']      = 'Opened';
+$_['column_comment']     = 'Comment';
+$_['column_reason']      = 'Reason';
+$_['column_action']      = 'Action';
+
+// Entry
+$_['entry_order_id']     = 'Order ID';
+$_['entry_date_ordered'] = 'Order Date';
+$_['entry_invoice_number'] = 'Invoice Number';
+$_['entry_invoice_date']   = 'Invoice Date';
+$_['entry_firstname']    = 'First Name';
+$_['entry_lastname']     = 'Last Name';
+$_['entry_email']        = 'E-Mail';
+$_['entry_telephone']    = 'Telephone';
+$_['entry_product']      = 'Product Name';
+$_['entry_model']        = 'Product Code';
+$_['entry_product_code'] = 'Product Code';
+$_['entry_quantity']     = 'Quantity';
+$_['entry_price']        = 'Price';
+$_['entry_reason']       = 'Reason for Return';
+$_['entry_opened']       = 'Product is opened';
+$_['entry_fault_detail'] = 'Note';
+$_['entry_refund_iban']  = 'Refund IBAN';
+$_['button_add_product'] = 'Add item';
+
+// Error
+$_['text_error']         = 'The returns you requested could not be found!';
+$_['error_order_id']     = 'Invoice number required!';
+$_['error_date_ordered'] = 'Invoice date required!';
+$_['error_firstname']    = 'First Name must be between 1 and 32 characters!';
+$_['error_lastname']     = 'Last Name must be between 1 and 32 characters!';
+$_['error_email']        = 'E-Mail Address does not appear to be valid!';
+$_['error_telephone']    = 'Telephone must be between 3 and 32 characters!';
+$_['error_product']      = 'Product Name must be greater than 3 and less than 255 characters!';
+$_['error_model']        = 'Product Model must be greater than 3 and less than 64 characters!';
+$_['error_reason']       = 'You must select a return product reason!';
+$_['error_return_products'] = 'Enter at least one return item with product code, quantity, and price.';
+$_['error_refund_iban']     = 'Refund IBAN required!';
+$_['error_agree']        = 'Warning: You must agree to the %s!';

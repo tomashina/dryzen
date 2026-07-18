@@ -1,0 +1,55 @@
+<div class="table-responsive">
+<table class="table table-bordered table-hover">
+	<thead>
+		<tr>
+		<td width="1" style="text-align: center;"><input type="checkbox" onclick="$('input[name*=\'selected404\']').prop('checked', this.checked);" /></td>
+		<td class="text-left col-sm-6">{{ column_error_url }} <span class="label label-danger">404</span> & {{ column_redirect_url }}</td>
+		<td class="text-center">{{ column_hits }}</td>
+		<td class="text-center">{{ column_redirect_hits }}</td>
+		<td class="text-center">{{ column_referrer }}</td>
+		<td class="text-center">{{ column_author }}</td>
+		<td class="text-right">{{ column_date }}</td>
+		</tr>
+	</thead>
+	<tbody>
+		{% if (records) %} 
+		{% for record in records %} 
+		<tr>
+		<td style="text-align: center;">{% if (record['selected404']) %} 
+			<input type="checkbox" name="selected404[]" value="{{ record['id'] }}" checked="checked" />
+			{% else %} 
+			<input type="checkbox" name="selected404[]" value="{{ record['id'] }}" />
+			{% endif %}
+		</td>
+						
+		<td class="text-left col-sm-6" style="word-break:break-all;">
+			{{ record['error'] }} 
+			<div class="input-group">
+				<input class="form-control col-sm-3" name="redirect" id="redirect" value="{{ record['redirect'] }}" onblur="updateredirect(this.value,'{{ record['id'] }}')">
+				<div class="input-group-addon">{{ record['type'] }}</div>
+			</div>				
+			<div id="msg{{ record['id'] }}"></div>
+		</td>
+
+		<td class="text-center">{{ record['hits'] }}</td>
+		<td class="text-center">{{ record['redirect_hits'] }}</td>
+		<td class="text-center"><button type="button" class="btn btn-default" onclick="showreferrer('{{ record['id'] }}')"><i class="fa fa-eye" aria-hidden="true"></i>&nbsp;{{ text_view_referrers }}</button></td>
+		<td class="text-center">{{ record['author'] }}</td>
+		<td class="text-right">
+			<span class="label label-primary">{{ text_first }}</span> {{ record['date_added'] }}<br /><br />
+			<span class="label label-warning">{{ text_last }}</span> {{ record['date_modified'] }} 
+		</td>
+		</tr>
+		{% endfor %} 
+		{% else %} 
+		<tr><td class="text-center" colspan="9">{{ text_no_results }}</td></tr>
+		{% endif %}				
+	</tbody>
+</table>
+</div>
+
+<div class="row">
+	<div class="col-sm-6 text-left">{{ pagination }}</div>
+	<div class="col-sm-6 text-right">{{ results }}</div>
+</div>
+

@@ -1,0 +1,181 @@
+{% include 'extension/module/msmart_search/_header.twig' %}
+<br />
+<table class="table table-tbody">
+	<tbody>
+		<tr>
+			<td width="250">{{ entry_enabled_module }}</td>
+			<td>
+				<input type="checkbox" name="{{ _name }}[enabled]" value="1" {{ settings['enabled'] is empty ? '' : ' checked="checked"' }}/>
+			</td>
+		</tr>
+		<tr>
+			<td>{{ entry_enabled_search_history }}</td>
+			<td>
+				<input type="checkbox" name="{{ _name }}[history_enabled]" value="1" {{ settings['history_enabled'] is empty ? '' : ' checked="checked"' }}/>
+			</td>
+		</tr>
+		<tr>
+			<td>{{ entry_redirect_if_1_result }}</td>
+			<td>
+				<input type="checkbox" name="{{ _name }}[redirect_if_1_result]" value="1" {{ settings['redirect_if_1_result'] is empty ? '' : ' checked="checked"' }}/>
+			</td>
+		</tr>
+		<tr>
+			<td>{{ entry_strict_search }}</td>
+			<td>
+				<input type="checkbox" name="{{ _name }}[strict_search]" value="1" {{ settings['strict_search'] is empty ? '' : ' checked="checked"' }}/>
+				<span class="help">{{ text_strict_search }}</span>
+			</td>
+		</tr>
+		<tr>
+			<td>{{ entry_singularisation }}</td>
+			<td>
+				<input type="checkbox" name="{{ _name }}[singularisation]" value="1" {{ settings['singularisation'] is empty ? '' : ' checked="checked"' }}/>
+				<span class="help">{{ text_singularisation }}</span>
+			</td>
+		</tr>
+		<tr>
+			<td>{{ entry_any_keyword }}</td>
+			<td>
+				<input type="checkbox" name="{{ _name }}[any_keyword]" value="1" {{ settings['any_keyword'] is empty ? '' : ' checked="checked"' }}/>
+				<span class="help">{{ text_any_keyword }}</span>
+			</td>
+		</tr>
+		<tr>
+			<td>{{ entry_required_number_of_results }}</td>
+			<td>
+				<input type="text" class="form-control" placeholder="1" style="max-width: 100px;" name="{{ _name }}[required_number_of_results]" value="{{ settings['required_number_of_results'] is defined ? settings['required_number_of_results'] : '' }}" />
+				<span class="help">{{ text_required_number_of_results_help }}</span>
+			</td>
+		</tr>
+		<tr>
+			<td>{{ entry_minify_support }}</td>
+			<td>
+				<input type="checkbox" name="{{ _name }}[minify_support]" value="1" {{ settings['minify_support'] is empty ? '' : ' checked="checked"' }}/>
+			</td>
+		</tr>
+		<tr>
+			<td>{{ entry_fix_polish_l }}</td>
+			<td>
+				<input type="checkbox" name="{{ _name }}[fix_polish_l]" value="1" {{ settings['fix_polish_l'] is empty ? '' : ' checked="checked"' }}/>
+				<span class="help">{{ text_fix_polish_l }}</span>
+			</td>
+		</tr>
+		<tr>
+			<td>{{ entry_exclude_products }}</td>
+			<td>
+				<input type="checkbox" name="{{ _name }}[exclude_products]" value="1" {{ settings['exclude_products'] is empty ? '' : ' checked="checked"' }}/>
+				<span class="help">{{ text_exclude_products }}</span>
+				<hr />
+				
+				<table id="exclude-products" class="table">
+					<thead>
+						<tr>
+							<th>{{ text_type }}</th>
+							<th>{{ text_operator }}</th>
+							<th>{{ text_value }}</th>
+							<th width="1"></th>
+						</tr>
+					</thead>
+					<tbody>
+						{% if ( settings['exclude_products_rules'] is not empty ) %} 
+							{% for i,rule in settings['exclude_products_rules'] %} 
+								<tr>
+									<td>
+										<select class="form-control" name="{{ _name }}[exclude_products_rules][{{ i }}][type]">
+											<option {{ rule['type'] == 'quantity' ? 'selected="selected"' : '' }} value="quantity">{{ text_quantity }}</option>
+											<option {{ rule['type'] == 'product_status' ? 'selected="selected"' : '' }} value="product_status">{{ text_product_status }}</option>
+											<option {{ rule['type'] == 'stock_status_id' ? 'selected="selected"' : '' }} value="stock_status_id">{{ text_stock_status_id }}</option>
+											<option {{ rule['type'] == 'product_id' ? 'selected="selected"' : '' }} value="product_id">{{ text_product_id }}</option>
+											<option {{ rule['type'] == 'category_id' ? 'selected="selected"' : '' }} value="category_id">{{ text_category_id }}</option>
+										</select>
+									</td>
+									<td>
+										<select class="form-control" name="{{ _name }}[exclude_products_rules][{{ i }}][operator]">
+											<option {{ rule['operator'] == 'less' ? 'selected="selected"' : '' }} value="less">&lt;</option>
+											<option {{ rule['operator'] == 'more' ? 'selected="selected"' : '' }} value="more">&gt;</option>
+											<option {{ rule['operator'] == 'is' ? 'selected="selected"' : '' }} value="is">=</option>
+											<option {{ rule['operator'] == 'not' ? 'selected="selected"' : '' }} value="not">≠</option>
+											<option {{ rule['operator'] == 'in' ? 'selected="selected"' : '' }} value="in">IN</option>
+										</select>
+									</td>
+									<td><input type="text" class="form-control" name="{{ _name }}[exclude_products_rules][{{ i }}][value]" value="{{ rule['value'] }}" /></td>
+									<td style="vertical-align: middle;"><button type="button" class="btn btn-danger btn-xs"><i class="fa fa-remove"></i> {{ text_remove }}</button></td>
+								</tr>
+							{% endfor %} 
+						{% endif %} 
+	</tbody>
+					<tfoot>
+						<tr>
+							<td colspan="4" class="text-right">
+								<button type="button" id="add-rule" class="btn btn-xs btn-primary"><i class="fa fa-plus-circle"></i> {{ text_add_rule }}</button>
+							</td>
+						</tr>
+					</tfoot>
+</table>
+			</td>
+		</tr>
+	</tbody>
+</table>
+			
+<script type="text/javascript">
+	(function(){
+		var $cnt = $('#exclude-products tbody'),
+			idx = $cnt.find('> tr').length;
+			
+		function init() {
+			$cnt.find('> tr:not(.initialized)').addClass('initialized').find('button').click(function(){
+				$(this).parent().parent().remove();
+			});
+		}
+		
+		$('#add-rule').click(function(){
+			var html = '';
+			
+			html += '<tr>';
+			
+			// type
+			html += '<td>';
+			html += '<select class="form-control" name="{{ _name }}[exclude_products_rules][' + idx + '][type]">';
+			html += '<option value="quantity">{{ text_quantity }}</option>';
+			html += '<option value="product_status">{{ text_product_status }}</option>';
+			html += '<option value="stock_status_id">{{ text_stock_status_id }}</option>';
+			html += '<option value="product_id">{{ text_product_id }}</option>';
+			html += '<option value="category_id">{{ text_category_id }}</option>';
+			html += '</select>';
+			html += '</td>';
+			
+			// opearator
+			html += '<td>';
+			html += '<select class="form-control" name="{{ _name }}[exclude_products_rules][' + idx + '][operator]">';
+			html += '<option value="less">&lt;</option>';
+			html += '<option value="more">&gt;</option>';
+			html += '<option value="is">=</option>';
+			html += '<option value="not">≠</option>';
+			html += '<option value="in">IN</option>';
+			html += '</select>';
+			html += '</td>';
+			
+			// value
+			html += '<td>';
+			html += '<input type="text" class="form-control" name="{{ _name }}[exclude_products_rules][' + idx + '][value]" value="" />';
+			html += '</td>';
+			
+			html += '<td style="vertical-align: middle;">';
+			html += '<button type="button" class="btn btn-danger btn-xs"><i class="fa fa-remove"></i> {{ text_remove }}</button>';
+			html += '</button>';
+			
+			html += '</tr>';
+			
+			$cnt.append(html);
+			
+			init();
+			
+			idx++;
+		});
+		
+		init();
+	})();
+</script>
+			
+{% include 'extension/module/msmart_search/_footer.twig' %}

@@ -1,0 +1,387 @@
+{{ header }}{{ column_left }} 
+<!--Main Content block start-->
+
+<div id="content">
+  <!--Header Start-->
+  <div class="page-header">
+    <div class="container-fluid">
+      <div class="pull-right">
+        <button type="submit" form="form-hbtags" data-toggle="tooltip" title="{{ button_save }}" class="btn btn-primary"><i class="fa fa-save"></i>&nbsp;{{ button_save }}</button>
+		<a href="{{ doc_link }}" target="_blank" class="btn btn-default"><i class="fa fa-book"></i>&nbsp;{{ button_doc }}</a>
+		<a href="{{ cancel }}" data-toggle="tooltip" title="{{ button_cancel }}" class="btn btn-default"><i class="fa fa-reply"></i></a>
+	  </div>
+      <h1>{{ heading_title }}</h1>
+      <ul class="breadcrumb">
+        {% for breadcrumb in breadcrumbs %} 
+        <li><a href="{{ breadcrumb['href'] }}">{{ breadcrumb['text'] }}</a></li>
+        {% endfor %} 
+      </ul>
+    </div>
+  </div>
+  <!--Header End-->
+  <!--Container 1 start -->
+  <div class="container-fluid">
+    <!--Start - Error / Success Message if any -->
+    {% if (error_warning) %} 
+    <div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i> {{ error_warning }} 
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+    </div>
+    {% endif %} 
+    {% if (success) %} 
+    <div class="alert alert-success"><i class="fa fa-check-circle"></i> {{ success }} 
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+    </div>
+    {% endif %} 
+    <!--End - Error / Success Message if any -->
+	<div id="msgoutput"></div>
+	
+    <!--Panel Content Start-->
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title"><i class="fa fa-pencil"></i> {{ heading_title }}</h3>
+      </div>
+      	<div class="panel-body">
+        <form action="{{ action }}" method="post" enctype="multipart/form-data" id="form-hbtags" class="form-horizontal">
+			<!--Tabs UL Starts-->
+			<ul class="nav nav-tabs" id="tabs">
+                <li class="active"><a href="#tab-dashboard" data-toggle="tab" onclick="loadBlock('stats');"><i class="fa fa-tachometer"></i>&nbsp;{{ tab_dashboard }}</a></li>
+				<li><a href="#tab-products" data-toggle="tab" onclick="loadBlock('products');"><i class="fa fa-list"></i>&nbsp;{{ tab_products }}</a></li>
+				<li><a href="#tab-setting" data-toggle="tab"><i class="fa fa-cogs"></i>&nbsp;{{ tab_setting }}</a></li>
+				<li><a href="#tab-logs" data-toggle="tab" onclick="loadBlock('logs');"><i class="fa fa-calendar-plus-o"></i>&nbsp;{{ tab_logs }}</a></li>
+	        </ul>
+			<!--Tabs UL Ends-->
+			<div class="tab-content">
+
+				<div class="tab-pane active" id="tab-dashboard">
+					<div class="col-sm-8" id="stats-block" class="ajax-block"></div>
+
+					<div class="col-sm-4">
+						<div class="col-sm-12" style="margin-bottom: 20px;">
+							<a class="btn btn-success btn-lg col-sm-12" id="button-generate" onclick="generateTags('../index.php?route=extension/module/hb_tags/manual&key={{ hb_tags_authkey }}');"><i class="fa fa-play"></i>&nbsp;{{ button_generate_tags }}</a>
+						</div>
+
+						<div class="col-sm-12">
+							<a class="btn btn-danger btn-lg col-sm-12" id="button-clear" onclick="clearTags();"><i class="fa fa-trash"></i>&nbsp;{{ button_clear_tags }}</a>
+						</div>
+					</div>
+				</div>
+
+				<div class="tab-pane" id="tab-products">
+					<div class="row" style="margin-bottom:10px;">
+						<div class="col-sm-6">
+							<div class="input-group">
+								<input type="text" id="search-products-value" class="form-control" placeholder="{{ text_search_product }}">
+								<span class="input-group-addon btn" id="search-products-button" onclick="searchRecord('products');"><i class="fa fa-search"></i></span>
+							</div>
+						</div>
+						<div class="col-sm-2">
+							<a class="btn btn-success col-sm-12" id="button-generate-tags"><i class="fa fa-play"></i>&nbsp;{{ button_generate_tags }}</a>							
+						</div>
+						<div class="col-sm-2">
+							<a class="btn btn-danger col-sm-12" id="button-delete-tags"><i class="fa fa-trash"></i>&nbsp;{{ button_delete }}</a>							
+						</div>
+						<div class="col-sm-2">
+							<select id="language_id" name="language_id" class="selectpicker" data-html="true">
+								{% for language in languages %} 
+									<option value="{{ language.language_id }}" data-content="<img src='language/{{ language.code }}/{{ language.code }}.png' /> {{ language.name }}" {{ language_id == language.language_id ? 'selected':'' }}>{{ language.name }}</option>
+								{% endfor %} 
+							</select>
+						</div>
+					</div>
+
+					<div id="products-block" class="ajax-block"></div>
+				</div>
+				
+				<!--SETUP-->
+				<div class="tab-pane" id="tab-setting">	
+					<div class="panel panel-default">
+						<div class="panel-body">
+							<ul class="nav nav-tabs" id="languages">
+							{% for language in languages %} 
+							<li><a href="#language{{ language['language_id'] }}" data-toggle="tab"><img src="language/{{ language['code'] }}/{{ language['code'] }}.png" title="{{ language['name'] }}" /> {{ language['name'] }}</a></li>
+							{% endfor %} 
+							</ul>
+						
+							<div class="tab-content"> <!-- language tab content -->
+							{% for language in languages %} 
+							<div class="tab-pane" id="language{{ language['language_id'] }}">	
+								<div class="form-group">
+									<label class="col-sm-3 control-label">{{ text_stop_words }}</label>
+									<div class="col-sm-9">
+										<textarea name="hb_tags_stopwords{{ language['language_id'] }}" class="form-control">{{ hb_tags_stopwords[language['language_id']] }}</textarea>
+									</div>
+								</div>
+							
+								<div class="form-group">
+									<label class="col-sm-3 control-label">{{ text_template }}</label>
+									<div class="col-sm-9">
+										<input type="text" name="hb_tags_pattern{{ language['language_id'] }}" placeholder="products" value="{{ hb_tags_pattern[language['language_id']] }}" class="form-control" />
+										<div class="alert alert-info">{{ text_shortcodes }}</div>
+									</div>
+								</div>							
+							</div>
+							{% endfor %} 
+							</div> <!-- language tab content end-->	
+
+						</div>
+					</div>
+					
+					<div class="panel panel-default">
+						<div class="panel-heading"><h4>{{ text_additional_rules }}</h4></div>
+						<div class="panel-body">
+							<div class="form-group">
+							<label class="col-sm-3 control-label">{{ text_rule_a }}</label>
+							<div class="col-sm-9">
+								<input type="checkbox" data-toggle="toggle" data-onstyle="success" name="hb_tags_rule_a" class="form-control" value="1" {{ hb_tags_rule_a == '1'? 'checked':'' }} />
+							</div>
+							</div>
+							
+							<div class="form-group">
+							<label class="col-sm-3 control-label">{{ text_rule_b }}</label>
+							<div class="col-sm-9">
+								<input type="checkbox" data-toggle="toggle" data-onstyle="success" name="hb_tags_rule_b" class="form-control" value="1" {{ hb_tags_rule_b == '1'? 'checked':'' }} />
+							</div>
+							</div> 
+						
+						</div>
+					</div>				
+
+					<div class="panel panel-default">
+						<div class="panel-body">
+							<div class="form-group">
+								<label class="col-sm-3 control-label">{{ text_enable_logs }}</label>
+								<div class="col-sm-9">
+									<input type="checkbox" data-toggle="toggle" data-onstyle="success" name="hb_tags_logs" class="form-control" value="1" {{ hb_tags_logs == '1'? 'checked':'' }} />
+									<input type="hidden" name="hb_tags_authkey"  value="{{ hb_tags_authkey }}" class="form-control" />
+								</div>
+							</div>
+							
+							<div class="form-group">
+								<label class="col-sm-3 control-label">{{ text_enable_auto }}</label>
+								<div class="col-sm-9">
+									<input type="checkbox" data-toggle="toggle" data-onstyle="success" name="hb_tags_auto" class="form-control" value="1" {{ hb_tags_auto == '1'? 'checked':'' }} />
+								</div>
+							</div> 
+							
+							<div class="form-group">
+								<label class="col-sm-3 control-label">{{ text_cron_count }}</label>
+								<div class="col-sm-9">
+									<input type="number" name="hb_tags_autolimit"  value="{{ hb_tags_autolimit }}" class="form-control" />
+								</div>
+							</div>
+							
+							<div class="form-group">
+								<label class="col-sm-3 control-label">{{ text_cron_command }}</label>
+								<div class="col-sm-9">
+									<div class="input-group">
+										<span class="input-group-addon"><i class="fa fa-clock-o"></i></span>
+										<textarea class="form-control" readonly>{{ hb_tags_cron }}</textarea>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>			
+					
+				<!--LOGS-->
+				<div class="tab-pane" id="tab-logs">
+					<div id="logs-block" class="ajax-block"></div>
+		
+					<div class="pull-right" style="margin-top:10px;">
+						<a onclick="confirm('{{ text_confirm }}') ? location.href='{{ clear }}' : false;" data-toggle="tooltip" title="{{ button_clear_logs }}" class="btn btn-danger"><i class="fa fa-eraser"></i>&nbsp;{{ button_clear_logs }}</a>
+					</div>
+				</div>
+			
+			</div><!--tab-content block end-->
+		</form>
+    	</div>
+    </div>
+    <!--Panel Content End-->
+    <!--Huntbee copyrights-->
+    <div class="container-fluid">
+      <center>
+        <span class="help">{{ heading_title }} - {{ extension_version }} &copy; <a href="https://www.huntbee.com/">WWW.HUNTBEE.COM</a> | <a href="https://www.huntbee.com/get-support">SUPPORT</a></span>
+      </center>
+    </div>
+    <!--Huntbee copyrights end-->
+  </div>
+  <!--Container 1 start -->
+</div>
+<!--Main Content block end-->
+<link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+<script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>	   
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.18/css/bootstrap-select.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.18/js/bootstrap-select.min.js"></script>
+
+<script type="text/javascript"><!--
+$('#languages a:first').tab('show');
+//--></script>
+
+<script type="text/javascript">
+$(document).ready(function() {
+	loadBlock('stats');
+	$('.selectpicker').selectpicker();
+});
+</script>
+
+<script type="text/javascript">
+function loadBlock(name){
+	$('.ajax-block').html('');
+	//$('#'+name+'-block').html('<center><div class="loaddiv"><i class="fa fa-circle-o-notch fa-spin fa-3x fa-fw"></i></div></center>');
+	$('#'+name+'-block').load('index.php?route={{ base_route }}/hb_tags/'+name+'&user_token={{ user_token }}&language_id={{ language_id }}');
+}
+
+$('#products-block').delegate('.pagination a', 'click', function(e) {
+	e.preventDefault();
+	$('#products-block').load(this.href);
+});
+
+function searchRecord(item) {
+	var search_value = $('#search-'+item+'-value').val();
+	$('#'+item+'-block').fadeOut().load('index.php?route={{ base_route }}/hb_tags/'+item+'&user_token={{ user_token }}&language_id={{ language_id }}&search='+encodeURIComponent(search_value)).fadeIn('slow');
+}
+</script>
+
+<script type="text/javascript">
+function generateTags(url) {
+	$.ajax({
+		url: url,
+		dataType: 'json',
+		success: function(json) {
+			$('.alert, .text-danger').remove();
+			loadBlock('stats');
+			console.log(json);
+			if (json['success']) {
+				$('#msgoutput').html('<div class="alert alert-success"><i class="fa fa-check"></i>&nbsp;'+json['success']+'<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+	
+				if (json['next']) {
+					generateTags(json['next']);
+				}else{
+					$('#button-generate').html('<i class="fa fa-check"></i>&nbsp;{{ button_generate_tags }}');
+				}
+			}
+
+			if (json['error']) {
+				$('#msgoutput').html('<div class="alert alert-danger">'+json['error']+'<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+				$('#button-generate').html('<i class="fa fa-times"></i>&nbsp;{{ button_generate_tags }}');
+			}
+		},
+		error: function(xhr, ajaxOptions, thrownError) {
+			alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+		}
+	});
+	
+}
+
+function clearTags(){
+	$('#msgoutput').html('');
+	$.ajax({
+		url: 'index.php?route=extension/hbseo/hb_tags/clear_tags&user_token={{ user_token }}',
+		dataType: 'json',		
+		beforeSend: function() {
+			$('#button-clear').button('loading');
+		},
+		complete: function() {
+			$('#button-clear').button('reset');
+		},
+		success: function(json) {
+			if (json['success']) {
+				$('#msgoutput').html('<div class="alert alert-success"><i class="fa fa-check"></i>&nbsp;'+json['success']+'<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+				loadBlock('stats');
+			}
+			if (json['error']) {
+				$('#msgoutput').html('<div class="alert alert-danger">'+json['error']+'<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+			}
+		},			
+		error: function(xhr, ajaxOptions, thrownError) {
+			alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+		}
+
+	 });
+}
+
+$('#button-generate-tags').on('click', function() {
+	if (!confirm("{{ text_confirm }}")) {
+		return false;
+	}
+
+	$('#button-generate-tags').html('<center><i class="fa fa-circle-o-notch fa-spin fa-fw"></i></center>');
+	var arraydata = $('input[name="selected[]"]:checked').map(function(){
+        return this.value;
+    }).get()
+	
+	$.ajax({
+		type: 'post',
+		url: '../index.php?route=extension/module/hb_tags/manual_selected&key={{ hb_tags_authkey }}',
+		data: {selected : arraydata},
+		dataType: 'json',
+		success: function(json) {
+			if (json['success']) {
+				$('#msgoutput').html('<div class="alert alert-success"><i class="fa fa-check"></i>&nbsp;'+json['success']+'<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+				$('#button-generate-tags').html('<i class="fa fa-check"></i>&nbsp;{{ button_generate_tags }}');
+				loadBlock('products');
+			}
+
+			if (json['error']) {
+				$('#msgoutput').html('<div class="alert alert-danger">'+json['error']+'<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+				$('#button-generate-tags').html('<i class="fa fa-play"></i>&nbsp;{{ button_generate_tags }}');
+			}
+		},			
+		error: function(xhr, ajaxOptions, thrownError) {
+			alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+		}
+	 });	
+});
+
+$('#button-delete-tags').on('click', function() {
+	if (!confirm("{{ text_confirm }}")) {
+		return false;
+	}
+
+	$('#button-delete-tags').html('<center><i class="fa fa-circle-o-notch fa-spin fa-fw"></i></center>');
+	var arraydata = $('input[name="selected[]"]:checked').map(function(){
+        return this.value;
+    }).get()
+	
+	$.ajax({
+		type: 'post',
+		url: 'index.php?route={{ base_route }}/hb_tags/delete_tags&user_token={{ user_token }}',
+		data: {selected : arraydata},
+		dataType: 'json',
+		success: function(json) {
+			if (json['success']) {
+				$('#msgoutput').html('<div class="alert alert-success"><i class="fa fa-check"></i>&nbsp;'+json['success']+'<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+				$('#button-delete-tags').html('<i class="fa fa-check"></i>&nbsp;{{ button_delete }}');
+				loadBlock('products');
+			}
+
+			if (json['error']) {
+				$('#msgoutput').html('<div class="alert alert-danger">'+json['error']+'<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+				$('#button-delete-tags').html('<i class="fa fa-trash"></i>&nbsp;{{ button_delete }}');
+			}
+		},			
+		error: function(xhr, ajaxOptions, thrownError) {
+			alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+		}
+	 });	
+});
+</script>
+
+<script type="text/javascript">
+// JavaScript to trigger the search button when Enter key is pressed
+document.getElementById("search-products-value").addEventListener("keydown", function(event) {
+    if (event.key === "Enter") {
+        event.preventDefault();  // Prevent form submission if the input is in a form
+        document.getElementById("search-products-button").click();  // Trigger the search button click
+    }
+});
+</script>
+
+<script type="text/javascript">
+$('#language_id').on('change', function() {
+	window.location.href = 'index.php?route={{ base_route }}/hb_tags&user_token={{ user_token }}&language_id='+$('#language_id').val();
+});
+</script>
+
+{{ footer }}

@@ -1,0 +1,113 @@
+{{ header }}{{ column_left }} 
+
+<div id="content">
+	<link type="text/css" href="{{ HTTP_URL }}view/stylesheet/mss/css/bootstrap.css" rel="stylesheet" />
+	<link type="text/css" href="{{ HTTP_URL }}view/stylesheet/mss/css/jquery-ui.min.css" rel="stylesheet" />
+	<link type="text/css" href="{{ HTTP_URL }}view/stylesheet/mss/css/style.css" rel="stylesheet" />
+	
+	<script type="text/javascript">
+		$().ready(function(){
+			$('[data-toggle="dropdown"]').dropdown();
+		});
+	</script>
+
+	<div class="page-header">
+		<div class="container-fluid">
+			<div class="pull-right">
+				{% if ( action_save is not empty ) %} 
+					<button id="smf-save-form" type="button" data-toggle="tooltip" title="{{ button_save }}" class="btn btn-primary"><i class="fa fa-save"></i></button>
+				{% endif %} 
+				{% if ( action_add is not empty ) %} 
+					<a href="{{ action_add }}" class="btn btn-primary"><i class="fa fa-plus"></i></a>
+				{% endif %} 
+				<a href="{{ action_back }}" data-toggle="tooltip" title="{{ button_back }}" class="btn btn-default"><i class="fa fa-reply"></i></a>
+			</div>
+			
+			<script type="text/javascript">
+				jQuery('#smf-save-form').click(function(){
+					jQuery('#smf-form').submit();
+						
+					return false;
+				});
+			</script>
+			
+			<h1>{{ heading_title }}</h1>
+			<ul class="breadcrumb">
+				{% for breadcrumb in breadcrumbs %} 
+					<li><a href="{{ breadcrumb['href'] }}">{{ breadcrumb['text'] }}</a></li>
+				{% endfor %} 
+			</ul>
+		</div>
+	</div>
+	<div class="container-fluid">
+		{% if ( notification_new_version_is_available is not empty ) %} 
+			<div class="alert alert-info"><i class="fa fa-exclamation-circle"></i> {{ notification_new_version_is_available }} 
+				<button type="button" class="close" data-dismiss="alert" id="close-notification-new-version">&times;</button>
+			</div>
+		
+			<script>
+				$('#close-notification-new-version').click(function(){
+					$.get( mf_fix_url( '{{ action_close_notification_new_version }}' ) );
+				});
+			</script>
+		{% endif %} 
+		{% if ( _error_warning is not empty ) %} 
+			<div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i> {{ _error_warning }} 
+				<button type="button" class="close" data-dismiss="alert">&times;</button>
+			</div>
+		{% endif %}  
+		{% if ( _error_warning2 is not empty ) %} 
+			<div class="alert alert-warning"><i class="fa fa-exclamation-circle"></i> {{ _error_warning2 }} 
+				<button type="button" class="close" data-dismiss="alert">&times;</button>
+			</div>
+		{% endif %} 
+		{% if ( _success is not empty ) %} 
+			<div class="alert alert-success"><i class="fa fa-exclamation-circle"></i> {{ _success }} 
+				<button type="button" class="close" data-dismiss="alert">&times;</button>
+			</div>
+		{% endif %} 
+		{% if ( refresh_ocmod_cache is not empty ) %} 
+			<div class="alert alert-info" id="mss-refresh_ocmod_cache"><i class="fa fa-exclamation-circle"></i> <span>Refreshing cache of OCMod, please wait...</span>
+				<button type="button" class="close" data-dismiss="alert">&times;</button>
+			</div>
+		
+			<script type="text/javascript">
+				(function(){
+					var urls = {{ refresh_ocmod_cache }};
+					
+					function next() {
+						var url = urls.shift();
+						
+						$.get( url.replace( /&amp;/, '&' ), {}, function(){
+							if( urls.length ) {
+								next();
+							} else {
+								$('#mss-refresh_ocmod_cache').removeClass('alert-info').addClass('alert-success').find('span').text('OCMod cache has been refreshed');
+							}
+						});
+					}
+					
+					next();
+				})();
+			</script>
+		{% endif %} 
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h3 class="panel-title"><i class="fa fa-pencil"></i> {{ heading_panel_title }}</h3>
+			</div>
+			<div class="panel-body mega-smart-filter" id="sm-mafin-content">
+				{% if ( action_save is not empty ) %} 
+					<form action="{{ action_save }}" method="post" enctype="multipart/form-data" id="smf-form" class="form-horizontal">
+				{% endif %} 
+					{% if ( tab_active == 'index' or tab_active == 'about' or tab_active == 'settings' or tab_active == 'search_history' or tab_active == 'live_filter' or tab_active == 'replace_phrase' or tab_active == 'recommended_products' or tab_active == 'extra_fields' or tab_active == 'add_extra_field' ) %}
+						<ul class="nav nav-tabs">
+							<li{% if ( tab_active == 'index' ) %} class="active"{% endif %}><a href="{{ tab_config_link }}"><i class="fa fa-cog"></i> {{ tab_config }}</a></li>
+							<li{% if ( tab_active == 'live_filter' ) %} class="active"{% endif %}><a href="{{ tab_live_filter_link }}"><i class="fa fa-search"></i> {{ tab_live_filter }}</a></li>
+							<li{% if ( tab_active == 'settings' ) %} class="active"{% endif %}><a href="{{ tab_settings_link }}"><i class="fa fa-wrench"></i> {{ tab_settings }}</a></li>
+							<li{% if ( tab_active == 'search_history' ) %} class="active"{% endif %}><a style="display: block" href="{{ tab_search_history_link }}"><i class="fa fa-history" aria-hidden="true"></i> {{ tab_search_history }}</a></li>
+							<li{% if ( tab_active == 'replace_phrase' ) %} class="active"{% endif %}><a style="display: block" href="{{ tab_replace_phrase_link }}"><i class="fa fa-search" aria-hidden="true"></i> {{ tab_replace_phrase }}</a></li>
+							<li{% if ( tab_active == 'recommended_products' ) %} class="active"{% endif %}><a style="display: block" href="{{ tab_recommended_link }}"><i class="fa fa-star" aria-hidden="true"></i> {{ tab_recommended }}</a></li>
+							<li{% if ( tab_active == 'extra_fields' or tab_active == 'add_extra_field' ) %} class="active"{% endif %}><a style="display: block" href="{{ tab_extra_fields_link }}"><i class="fa fa-star" aria-hidden="true"></i> {{ tab_extra_fields }}</a></li>
+							<li{% if ( tab_active == 'about' ) %} class="active"{% endif %}><a style="display: block" href="{{ tab_about_link }}"><i class="glyphicon glyphicon-question-sign"></i> {{ tab_about }}</a></li>
+						</ul>
+					{% endif %}
