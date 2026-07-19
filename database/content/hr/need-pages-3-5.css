@@ -1,4 +1,4 @@
-__PAGE_SCOPE__ .outer-container.main-wrapper > .container:has(#content.info) {
+__PAGE_SCOPE__ #content.info {
   display: none;
 }
 

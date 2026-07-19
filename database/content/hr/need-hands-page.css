@@ -1,4 +1,4 @@
-body.information-information-__INFORMATION_ID__ .outer-container.main-wrapper > .container:has(#content.info) {
+body.information-information-__INFORMATION_ID__ #content.info {
   display: none;
 }
 

@@ -237,8 +237,9 @@
 		$styles .= '.title_in_bc .breadcrumb-holder {background-color:' . $this->config->get('basel_bc_bg_color') . ';}';
 		$styles .= '.title_in_bc .breadcrumb-holder, .title_in_bc .breadcrumb-holder .basel-back-btn {color:' . $this->config->get('basel_bc_color') . ';}';
 		$styles .= '.title_in_bc .basel-back-btn>i,.title_in_bc .basel-back-btn>i:after {background-color:' . $this->config->get('basel_bc_color') . ';}';
-		if ($this->config->get('basel_bc_bg_img')) {
-		$styles .= '.title_in_bc .breadcrumb-holder {background-position:' . $this->config->get('basel_bc_bg_img_pos') . ';background-repeat:' . $this->config->get('basel_bc_bg_img_repeat') . ';background-size:' . $this->config->get('basel_bc_bg_img_size') . ';background-attachment:' . $this->config->get('basel_bc_bg_img_att') . ';background-image:url(' . $server . 'image/' . $this->config->get('basel_bc_bg_img') . ');}';}		
+		$breadcrumbBackgroundImage = ltrim((string) $this->config->get('basel_bc_bg_img'), '/\\');
+		if ($breadcrumbBackgroundImage !== '' && is_file(DIR_IMAGE . $breadcrumbBackgroundImage)) {
+		$styles .= '.title_in_bc .breadcrumb-holder {background-position:' . $this->config->get('basel_bc_bg_img_pos') . ';background-repeat:' . $this->config->get('basel_bc_bg_img_repeat') . ';background-size:' . $this->config->get('basel_bc_bg_img_size') . ';background-attachment:' . $this->config->get('basel_bc_bg_img_att') . ';background-image:url(' . $server . 'image/' . $breadcrumbBackgroundImage . ');}';}
 		$styles .= '.btn-primary, a.btn-primary,.btn-neutral {background-color:' . $this->config->get('basel_default_btn_bg') . ';color:' . $this->config->get('basel_default_btn_color') . ';}';
 		$styles .= '.btn-primary:hover,.btn-primary.active,.btn-primary:focus,.btn-default:hover,.btn-default.active,.btn-default:focus {background-color:' . $this->config->get('basel_default_btn_bg_hover') . '!important;color:' . $this->config->get('basel_default_btn_color_hover') . ' !important;}';
 		$styles .= '.btn-contrast-outline {border-color:' . $this->config->get('basel_contrast_btn_bg') . ';color:' . $this->config->get('basel_contrast_btn_bg') . ';}';
