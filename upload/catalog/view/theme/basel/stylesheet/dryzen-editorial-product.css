@@ -1,0 +1,925 @@
+.product-layout.dryzen-product-editorial {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 1520px;
+  padding-right: clamp(28px, 3vw, 48px);
+  padding-left: clamp(28px, 3vw, 48px);
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.product-layout.dryzen-product-editorial > .row {
+  margin-right: 0;
+  margin-left: 0;
+}
+
+.product-layout.dryzen-product-editorial #content.product-main {
+  padding-right: 0;
+  padding-left: 0;
+}
+
+.dryzen-product-editorial .dryzen-product-top {
+  display: grid;
+  grid-template-columns: minmax(0, 1.04fr) minmax(420px, 0.96fr);
+  gap: clamp(48px, 4.5vw, 72px);
+  align-items: start;
+  width: 100%;
+  margin: clamp(34px, 3.5vw, 52px) 0 clamp(72px, 7vw, 104px);
+}
+
+.dryzen-product-editorial .dryzen-product-top > .table-cell {
+  display: block;
+  width: auto;
+  padding: 0;
+}
+
+.dryzen-product-editorial .dryzen-product-gallery {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 4px;
+  width: 100% !important;
+  min-width: 0;
+  max-width: none;
+}
+
+.dryzen-product-editorial .dryzen-editorial-tile {
+  position: relative;
+  display: block;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  background: #eef4f6;
+}
+
+.dryzen-product-editorial .dryzen-editorial-tile:first-child {
+  border-radius: 24px 0 0 0;
+}
+
+.dryzen-product-editorial .dryzen-editorial-tile:nth-child(2) {
+  border-radius: 0 24px 0 0;
+}
+
+.dryzen-product-editorial .dryzen-editorial-tile:nth-child(odd):last-child {
+  grid-column: 1 / -1;
+  aspect-ratio: 2 / 1;
+  border-radius: 0 0 24px 24px;
+}
+
+.dryzen-product-editorial .dryzen-editorial-tile:nth-child(odd):nth-last-child(2) {
+  border-radius: 0 0 0 24px;
+}
+
+.dryzen-product-editorial .dryzen-editorial-tile:nth-child(even):last-child {
+  border-radius: 0 0 24px;
+}
+
+.dryzen-product-editorial .dryzen-product-gallery:has(> .dryzen-editorial-tile:nth-child(5):last-child) {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.dryzen-product-editorial .dryzen-product-gallery:has(> .dryzen-editorial-tile:nth-child(5):last-child) > .dryzen-editorial-tile {
+  grid-column: auto;
+  aspect-ratio: 1 / 1;
+}
+
+.dryzen-product-editorial .dryzen-product-gallery:has(> .dryzen-editorial-tile:nth-child(5):last-child) > .dryzen-editorial-tile:first-child,
+.dryzen-product-editorial .dryzen-product-gallery:has(> .dryzen-editorial-tile:nth-child(5):last-child) > .dryzen-editorial-tile:nth-last-child(-n + 2) {
+  grid-column: 1 / -1;
+  aspect-ratio: 2 / 1;
+}
+
+.dryzen-product-editorial .dryzen-product-gallery:has(> .dryzen-editorial-tile:nth-child(5):last-child) > .dryzen-editorial-tile:first-child {
+  border-radius: 24px 24px 0 0;
+}
+
+.dryzen-product-editorial .dryzen-product-gallery:has(> .dryzen-editorial-tile:nth-child(5):last-child) > .dryzen-editorial-tile:nth-child(2),
+.dryzen-product-editorial .dryzen-product-gallery:has(> .dryzen-editorial-tile:nth-child(5):last-child) > .dryzen-editorial-tile:nth-child(3) {
+  border-radius: 0;
+}
+
+.dryzen-product-editorial .dryzen-product-gallery:has(> .dryzen-editorial-tile:nth-child(5):last-child) > .dryzen-editorial-tile:nth-child(4) {
+  border-radius: 0;
+}
+
+.dryzen-product-editorial .dryzen-product-gallery:has(> .dryzen-editorial-tile:nth-child(5):last-child) > .dryzen-editorial-tile:nth-child(5) {
+  border-radius: 0 0 24px 24px;
+}
+
+.dryzen-product-editorial .dryzen-editorial-tile img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .dryzen-product-editorial .dryzen-editorial-tile:hover img,
+  .dryzen-product-editorial .dryzen-editorial-tile:focus-visible img {
+    transform: scale(1.045);
+  }
+}
+
+.dryzen-product-editorial .dryzen-product-summary {
+  position: sticky;
+  top: 32px;
+  padding: clamp(4px, 0.8vw, 12px) 0 0;
+}
+
+.dryzen-product-editorial .product-h1 {
+  margin-bottom: 0;
+}
+
+.dryzen-product-editorial .dryzen-product-summary .product-h1 #page-title {
+  max-width: 590px;
+  margin: 0;
+  font-size: clamp(32px, 2.4vw, 40px) !important;
+  line-height: 1.1 !important;
+  letter-spacing: -0.024em;
+  text-wrap: balance;
+}
+
+.dryzen-product-subtitle {
+  display: block;
+  max-width: 560px;
+  margin-top: 12px;
+  color: #53626f;
+  font-size: clamp(15px, 1.1vw, 17px);
+  font-weight: 500;
+  line-height: 1.55;
+  letter-spacing: 0;
+  text-wrap: pretty;
+}
+
+.dryzen-product-editorial .dryzen-product-summary ul.price {
+  margin: 22px 0 0;
+  padding: 0 0 18px;
+  border-bottom: 1px solid #dfe8ed;
+}
+
+.dryzen-product-editorial .dryzen-product-summary .live-price,
+.dryzen-product-editorial .dryzen-product-summary .live-price-new {
+  display: flex;
+  gap: 10px;
+  align-items: baseline;
+  flex-wrap: wrap;
+  color: #172431;
+  font-size: clamp(27px, 1.95vw, 32px);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.dryzen-product-editorial .dryzen-product-summary .live-price small,
+.dryzen-product-editorial .dryzen-product-summary .live-price-new small {
+  color: #53626f;
+  font-size: 13px;
+  font-weight: 400;
+  letter-spacing: 0;
+}
+
+.dryzen-product-editorial .dryzen-product-summary .meta_description {
+  max-width: 610px;
+  margin: 20px 0 0;
+  color: #53626f;
+  font-size: 16px;
+  line-height: 1.68;
+}
+
+.dryzen-product-editorial .dryzen-product-summary #product {
+  margin-top: 22px;
+  padding-top: 0;
+  border-top: 0;
+}
+
+.dryzen-product-shell .cloud-zoom-wrap {
+  display: block;
+  overflow: hidden;
+  border-radius: 15px;
+  background-color: #fff;
+  background-image: none;
+}
+
+.dryzen-product-shell #main-image,
+.dryzen-product-shell #main-image img {
+  display: block;
+  background: #fff;
+  mix-blend-mode: normal;
+}
+
+.dryzen-product-editorial .dryzen-buy-box {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+  padding-top: 0;
+}
+
+.dryzen-product-editorial .dryzen-buy-box #button-cart {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: center;
+  min-width: 245px;
+  min-height: 52px;
+  padding: 0 30px;
+  border-radius: 14px;
+  font-weight: 700;
+  white-space: nowrap;
+  box-shadow: 0 14px 28px rgba(37, 191, 164, 0.22);
+  background: #007c68;
+  border-color: #007c68;
+  color: #fff;
+}
+
+.dryzen-product-editorial .dryzen-buy-box #button-cart:hover,
+.dryzen-product-editorial .dryzen-buy-box #button-cart:focus-visible {
+  background: #b83d1d;
+  border-color: #b83d1d;
+  color: #fff;
+}
+
+.dryzen-product-editorial .dryzen-buy-box .dryzen-qty-control {
+  display: flex;
+  overflow: hidden;
+  border: 1px solid #d7e0e5;
+  border-radius: 14px;
+  background: #fff;
+  align-items: center;
+  flex: 0 0 auto;
+  min-height: 52px;
+}
+
+.dryzen-product-editorial .dryzen-buy-box .dryzen-qty-btn {
+  width: 42px;
+  min-height: 52px;
+  padding: 0;
+  border: 0;
+  background: #fff;
+  color: #26323d;
+  font-size: 22px;
+  font-weight: 600;
+  line-height: 1;
+  transition: background-color 0.2s ease, color 0.2s ease, opacity 0.2s ease;
+}
+
+.dryzen-product-editorial .dryzen-buy-box .dryzen-qty-btn:hover,
+.dryzen-product-editorial .dryzen-buy-box .dryzen-qty-btn:focus {
+  outline: none;
+  background: #f4f8fb;
+  color: #111;
+}
+
+.dryzen-product-editorial .dryzen-buy-box .dryzen-qty-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.dryzen-product-editorial .dryzen-buy-box .input-quantity {
+  width: 52px;
+  min-width: 52px;
+  min-height: 52px;
+  margin: 0;
+  padding: 0 6px;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+  color: #1f2b37;
+  font-size: 16px;
+  font-weight: 700;
+  text-align: center;
+  -moz-appearance: textfield;
+}
+
+.dryzen-product-editorial .dryzen-buy-box .input-quantity:focus {
+  box-shadow: none;
+}
+
+.dryzen-product-editorial .dryzen-buy-box .input-quantity::-webkit-outer-spin-button,
+.dryzen-product-editorial .dryzen-buy-box .input-quantity::-webkit-inner-spin-button {
+  margin: 0;
+  -webkit-appearance: none;
+}
+
+.dryzen-product-editorial .dryzen-product-summary .rating {
+  margin-right: 6px;
+}
+
+.dryzen-product-editorial .dryzen-product-summary .review_link {
+  color: #7c8791;
+}
+
+.dryzen-product-editorial .dryzen-product-summary .dryzen-lowest-price {
+  margin: 10px 0 0;
+  color: #7c8791;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.dryzen-product-editorial .dryzen-product-actions {
+  margin-top: 18px;
+  padding-top: 16px;
+  border-top: 1px solid #edf1f4;
+}
+
+.dryzen-product-editorial .dryzen-product-actions .is_compare {
+  display: none;
+}
+
+.dryzen-product-editorial .dryzen-product-actions p.info.is_wishlist,
+.dryzen-product-editorial .dryzen-product-actions p.info.is_compare,
+.dryzen-product-editorial .dryzen-product-actions p.info.is_ask {
+  margin: 0 18px 0 0;
+}
+
+.dryzen-product-editorial .dryzen-product-actions p.info a,
+.dryzen-product-editorial .dryzen-product-actions p.info button {
+  color: #2e3943;
+  transition: color 0.2s ease;
+}
+
+.dryzen-product-editorial .dryzen-product-actions p.info a:hover,
+.dryzen-product-editorial .dryzen-product-actions p.info button:hover,
+.dryzen-product-editorial .dryzen-product-actions p.info button:focus-visible {
+  color: #00bfa5;
+}
+
+.dryzen-product-editorial .dryzen-product-meta {
+  margin-top: 16px;
+  padding-top: 0;
+  border-top: 1px solid #edf1f4;
+}
+
+.dryzen-product-editorial .dryzen-product-meta .info {
+  display: grid;
+  grid-template-columns: minmax(112px, auto) 1fr;
+  gap: 12px;
+  padding: 9px 0;
+  border-bottom-color: #edf2f4;
+  color: #25313b;
+  line-height: 1.6;
+}
+
+.dryzen-product-editorial .dryzen-product-meta .info:last-child {
+  border-bottom: 0;
+}
+
+.dryzen-product-editorial .dryzen-product-meta .info b {
+  color: #69747e;
+}
+
+.dryzen-product-editorial .dryzen-product-meta .info.in_stock {
+  color: #08764c;
+}
+
+.dryzen-product-editorial .dryzen-product-meta .info.tags {
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+
+.dryzen-product-editorial .dryzen-product-meta .info.tags b,
+.dryzen-product-editorial .dryzen-product-meta .info.tags span {
+  display: block;
+}
+
+.dryzen-product-editorial .dryzen-product-accordion {
+  margin-top: 28px;
+  border-top: 1px solid #dce6eb;
+}
+
+.dryzen-product-editorial .dryzen-product-accordion details {
+  margin: 0;
+  border-bottom: 1px solid #dce6eb;
+}
+
+.dryzen-product-editorial .dryzen-product-accordion summary {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-height: 58px;
+  padding: 15px 42px 15px 0;
+  color: #172431;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.45;
+  letter-spacing: 0.04em;
+  list-style: none;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.dryzen-product-editorial .dryzen-product-accordion summary::-webkit-details-marker {
+  display: none;
+}
+
+.dryzen-product-editorial .dryzen-product-accordion summary::before,
+.dryzen-product-editorial .dryzen-product-accordion summary::after {
+  position: absolute;
+  top: 50%;
+  right: 8px;
+  width: 14px;
+  height: 1.5px;
+  background: #2387bf;
+  content: "";
+  transition: transform 0.22s ease;
+}
+
+.dryzen-product-editorial .dryzen-product-accordion summary::after {
+  transform: rotate(90deg);
+}
+
+.dryzen-product-editorial .dryzen-product-accordion details[open] summary::after {
+  transform: rotate(0);
+}
+
+.dryzen-product-editorial .dryzen-product-accordion-content {
+  padding: 4px 30px 26px 0;
+  color: #53626f;
+  font-size: 16px;
+  line-height: 1.68;
+}
+
+.dryzen-product-editorial .dryzen-product-accordion-content h2,
+.dryzen-product-editorial .dryzen-product-accordion-content h3 {
+  max-width: 560px;
+  margin: 28px 0 16px;
+  color: #172431;
+  font-size: clamp(21px, 1.55vw, 24px) !important;
+  line-height: 1.28 !important;
+  letter-spacing: -0.02em;
+}
+
+.dryzen-product-editorial .dryzen-product-accordion-content h3 {
+  margin-top: 24px;
+  font-size: 18px !important;
+  letter-spacing: -0.01em;
+}
+
+.dryzen-product-editorial .dryzen-product-accordion-content p {
+  margin: 0 0 18px;
+}
+
+.dryzen-product-editorial .dryzen-product-accordion-content h2:first-child,
+.dryzen-product-editorial .dryzen-product-accordion-content h3:first-child {
+  margin-top: 2px;
+}
+
+.dryzen-product-editorial .dryzen-product-accordion-content p + h2,
+.dryzen-product-editorial .dryzen-product-accordion-content ul + h2,
+.dryzen-product-editorial .dryzen-product-accordion-content ol + h2 {
+  margin-top: 30px;
+}
+
+.dryzen-product-editorial .dryzen-product-accordion-content p:last-child,
+.dryzen-product-editorial .dryzen-product-accordion-content ul:last-child,
+.dryzen-product-editorial .dryzen-product-accordion-content ol:last-child {
+  margin-bottom: 0;
+}
+
+.dryzen-product-editorial .dryzen-product-accordion-content ul,
+.dryzen-product-editorial .dryzen-product-accordion-content ol {
+  margin: 16px 0 20px;
+  padding-left: 0;
+}
+
+.dryzen-product-editorial .dryzen-product-accordion-content li {
+  position: relative;
+  margin: 0;
+  padding: 10px 0 10px 28px;
+  border-bottom: 1px solid #e3ebef;
+  list-style: none;
+}
+
+.dryzen-product-editorial .dryzen-product-accordion-content li:last-child {
+  border-bottom: 0;
+}
+
+.dryzen-product-editorial .dryzen-product-accordion-content ul li::before {
+  position: absolute;
+  top: 1.05em;
+  left: 2px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #2387bf;
+  content: "";
+}
+
+.dryzen-product-editorial .dryzen-product-accordion-content ul li:nth-child(4n + 2)::before {
+  background: #49bba9;
+}
+
+.dryzen-product-editorial .dryzen-product-accordion-content ul li:nth-child(4n + 3)::before {
+  background: #ff6f43;
+}
+
+.dryzen-product-editorial .dryzen-product-accordion-content ul li:nth-child(4n + 4)::before {
+  background: #ef9ac0;
+}
+
+.dryzen-product-editorial .dryzen-product-accordion-content ol {
+  counter-reset: dryzen-steps;
+}
+
+.dryzen-product-editorial .dryzen-product-accordion-content ol li {
+  min-height: 46px;
+  padding-left: 42px;
+  counter-increment: dryzen-steps;
+}
+
+.dryzen-product-editorial .dryzen-product-accordion-content ol li::before {
+  position: absolute;
+  top: 8px;
+  left: 0;
+  display: grid;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #2387bf;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1;
+  content: counter(dryzen-steps);
+  place-items: center;
+}
+
+.dryzen-product-editorial .dryzen-product-accordion-content ol li:nth-child(4n + 2)::before {
+  background: #49bba9;
+}
+
+.dryzen-product-editorial .dryzen-product-accordion-content ol li:nth-child(4n + 3)::before {
+  background: #ff6f43;
+}
+
+.dryzen-product-editorial .dryzen-product-accordion-content ol li:nth-child(4n + 4)::before {
+  background: #ef9ac0;
+}
+
+.dryzen-product-editorial .dryzen-product-accordion-content a {
+  color: #157fbb;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.dryzen-product-editorial .inline-tabs {
+  display: none;
+}
+
+.outer-container.main-wrapper:has(.dryzen-product-editorial) .product-tabs-wrapper {
+  display: none;
+}
+
+.dryzen-product-editorial .dryzen-gallery-controls {
+  display: none;
+}
+
+@media (max-width: 1199px) {
+  .dryzen-product-editorial .dryzen-product-top {
+    grid-template-columns: minmax(0, 1fr) minmax(370px, 0.9fr);
+    gap: 42px;
+  }
+
+  .dryzen-product-editorial .dryzen-product-summary .product-h1 #page-title {
+    font-size: clamp(31px, 3.15vw, 36px) !important;
+  }
+}
+
+@media (max-width: 991px) {
+  .product-layout.dryzen-product-editorial {
+    width: 100%;
+    max-width: 820px;
+    padding-right: 30px;
+    padding-left: 30px;
+  }
+
+  .dryzen-product-editorial .dryzen-product-top {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 46px;
+  }
+
+  .dryzen-product-editorial .dryzen-product-summary {
+    position: static;
+    padding-top: 0;
+  }
+}
+
+@media (max-width: 767px) {
+  .product-layout.dryzen-product-editorial {
+    width: 100%;
+    max-width: none;
+    padding-right: 20px;
+    padding-left: 20px;
+  }
+
+  .dryzen-product-editorial .dryzen-product-top {
+    gap: 36px;
+    margin-top: 24px;
+    margin-bottom: 58px;
+  }
+
+  .dryzen-product-editorial .dryzen-product-gallery {
+    display: flex;
+    gap: 12px;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-behavior: smooth;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .dryzen-product-editorial .dryzen-product-gallery::-webkit-scrollbar {
+    display: none;
+  }
+
+  .dryzen-product-editorial .dryzen-editorial-tile,
+  .dryzen-product-editorial .dryzen-editorial-tile:nth-child(odd):last-child,
+  .dryzen-product-editorial .dryzen-editorial-tile:nth-child(odd):nth-last-child(2),
+  .dryzen-product-editorial .dryzen-editorial-tile:nth-child(even):last-child {
+    flex: 0 0 100%;
+    aspect-ratio: 1 / 1;
+    border-radius: 20px !important;
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+  }
+
+  .dryzen-product-editorial .dryzen-editorial-tile:first-child {
+    border-radius: 20px !important;
+  }
+
+  .dryzen-product-editorial .dryzen-editorial-tile:nth-child(2) {
+    border-radius: 20px !important;
+  }
+
+  .dryzen-product-editorial .dryzen-editorial-tile:last-child {
+    grid-column: auto;
+    border-radius: 20px !important;
+  }
+
+  .dryzen-product-editorial .dryzen-product-gallery:has(> .dryzen-editorial-tile:nth-child(5):last-child) > .dryzen-editorial-tile,
+  .dryzen-product-editorial .dryzen-product-gallery:has(> .dryzen-editorial-tile:nth-child(5):last-child) > .dryzen-editorial-tile:nth-last-child(-n + 2) {
+    grid-column: auto;
+    aspect-ratio: 1 / 1;
+    border-radius: 20px !important;
+  }
+
+  .dryzen-product-editorial .dryzen-gallery-controls {
+    display: grid;
+    grid-template-columns: 42px 1fr 42px;
+    gap: 14px;
+    align-items: center;
+    margin-top: 14px;
+  }
+
+  .dryzen-product-editorial .dryzen-gallery-arrow {
+    display: grid;
+    width: 42px;
+    height: 42px;
+    padding: 0;
+    border: 1px solid #d8e4ea;
+    border-radius: 50%;
+    background: #fff;
+    color: #172431;
+    font-size: 19px;
+    line-height: 1;
+    cursor: pointer;
+    transition: border-color 0.2s ease, color 0.2s ease, opacity 0.2s ease;
+    place-items: center;
+  }
+
+  .dryzen-product-editorial .dryzen-gallery-arrow:disabled {
+    opacity: 0.34;
+    cursor: default;
+  }
+
+  .dryzen-product-editorial .dryzen-gallery-dots {
+    display: flex;
+    gap: 2px;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .dryzen-product-editorial .dryzen-gallery-dot {
+    position: relative;
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    cursor: pointer;
+  }
+
+  .dryzen-product-editorial .dryzen-gallery-dot::before {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #9babb4;
+    content: "";
+    transform: translate(-50%, -50%);
+    transition: width 0.2s ease, border-radius 0.2s ease, background-color 0.2s ease;
+  }
+
+  .dryzen-product-editorial .dryzen-gallery-dot.is-active {
+    background: transparent;
+  }
+
+  .dryzen-product-editorial .dryzen-gallery-dot.is-active::before {
+    width: 20px;
+    border-radius: 999px;
+    background: #2387bf;
+  }
+
+  .dryzen-product-editorial .dryzen-product-summary .product-h1 #page-title {
+    max-width: 520px;
+    font-size: clamp(28px, 7.8vw, 32px) !important;
+    line-height: 1.12 !important;
+  }
+
+  .dryzen-product-subtitle {
+    margin-top: 12px;
+    font-size: 16px;
+  }
+
+  .dryzen-product-editorial .dryzen-product-summary .meta_description {
+    font-size: 16px;
+    line-height: 1.7;
+  }
+
+  .dryzen-product-editorial .dryzen-buy-box {
+    gap: 10px;
+  }
+
+  .dryzen-product-editorial .dryzen-buy-box .dryzen-qty-control,
+  .dryzen-product-editorial .dryzen-buy-box #button-cart {
+    width: 100%;
+  }
+
+  .dryzen-product-editorial .dryzen-buy-box .dryzen-qty-control {
+    justify-content: center;
+  }
+
+  .dryzen-product-editorial .dryzen-product-meta .info {
+    grid-template-columns: 105px 1fr;
+  }
+
+  .dryzen-product-editorial .dryzen-product-accordion summary {
+    min-height: 56px;
+    padding-right: 36px;
+    font-size: 13px;
+  }
+
+  .dryzen-product-editorial .dryzen-product-accordion-content {
+    padding-right: 2px;
+    font-size: 15px;
+    line-height: 1.65;
+  }
+
+  .dryzen-product-editorial .dryzen-product-accordion-content h2 {
+    margin-top: 26px;
+    font-size: 21px !important;
+    line-height: 1.3 !important;
+  }
+
+  .dryzen-product-editorial .dryzen-product-accordion-content h3 {
+    margin-top: 22px;
+    font-size: 17px !important;
+  }
+
+  .dryzen-product-editorial .dryzen-product-accordion-content h2:first-child,
+  .dryzen-product-editorial .dryzen-product-accordion-content h3:first-child {
+    margin-top: 2px;
+  }
+
+
+  .dryzen-product-editorial .dryzen-product-accordion-content li {
+    padding-top: 9px;
+    padding-bottom: 9px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dryzen-product-editorial .dryzen-editorial-tile img,
+  .dryzen-product-editorial .dryzen-product-accordion summary::after {
+    transition: none;
+  }
+}
+
+.pswp {
+  --pswp-bg: #000;
+  --pswp-placeholder-bg: #090909;
+  --pswp-root-z-index: 100000;
+  --pswp-icon-color: #fff;
+  --pswp-icon-color-secondary: #fff;
+  --pswp-error-text-color: #fff;
+}
+
+.pswp__bg {
+  background: #000 !important;
+  opacity: 1 !important;
+}
+
+.pswp__top-bar {
+  height: 72px;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.82), rgba(0, 0, 0, 0));
+}
+
+.pswp__counter {
+  display: flex;
+  min-width: 62px;
+  height: 42px;
+  margin: 14px 0 0 18px;
+  padding: 0 15px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 999px;
+  background: rgba(20, 20, 20, 0.74);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1;
+  opacity: 1;
+  align-items: center;
+  justify-content: center;
+}
+
+.pswp__button--close,
+.pswp__button--zoom {
+  width: 44px;
+  height: 44px;
+  margin: 14px 10px 0 0;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 50%;
+  background-color: rgba(20, 20, 20, 0.74);
+  opacity: 1;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.pswp__button--close:hover,
+.pswp__button--close:focus,
+.pswp__button--zoom:hover,
+.pswp__button--zoom:focus {
+  border-color: rgba(255, 255, 255, 0.42);
+  background-color: rgba(35, 135, 191, 0.94);
+}
+
+.pswp__button--arrow {
+  width: 84px;
+}
+
+.pswp__button--arrow .pswp__icn {
+  top: 50%;
+  width: 52px;
+  height: 52px;
+  padding: 12px;
+  margin-top: -26px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 50%;
+  background: rgba(20, 20, 20, 0.74);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.28);
+  opacity: 1;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.pswp__button--arrow--prev .pswp__icn {
+  left: 20px;
+}
+
+.pswp__button--arrow--next .pswp__icn {
+  right: 20px;
+  left: auto;
+}
+
+.pswp__button--arrow:hover .pswp__icn,
+.pswp__button--arrow:focus .pswp__icn {
+  border-color: rgba(255, 255, 255, 0.42);
+  background: rgba(35, 135, 191, 0.94);
+}
+
+.pswp__img {
+  background: transparent;
+}
+
+@media (max-width: 767px) {
+  .pswp__top-bar {
+    height: 62px;
+  }
+
+  .pswp__counter {
+    height: 38px;
+    margin: 12px 0 0 12px;
+    padding: 0 13px;
+  }
+
+  .pswp__button--close,
+  .pswp__button--zoom {
+    width: 40px;
+    height: 40px;
+    margin-top: 11px;
+    margin-right: 8px;
+  }
+
+  .pswp__button--arrow {
+    display: none;
+  }
+}

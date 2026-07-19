@@ -1,0 +1,2928 @@
+{
+    "created_at": "2026-07-19T08:16:29+00:00",
+    "product_ids": [
+        9,
+        10,
+        6,
+        15,
+        13,
+        14,
+        12,
+        19,
+        17,
+        18,
+        16,
+        20
+    ],
+    "product": [
+        {
+            "product_id": "6",
+            "model": "001",
+            "sku": "",
+            "upc": "",
+            "ean": "",
+            "jan": "",
+            "isbn": "",
+            "mpn": "",
+            "location": "",
+            "quantity": "100",
+            "stock_status_id": "9",
+            "image": "catalog/product-catalog-2026/hands-women/hands-women-01.jpg",
+            "manufacturer_id": "0",
+            "shipping": "1",
+            "price": "15.0000",
+            "points": "0",
+            "tax_class_id": "11",
+            "date_available": "2026-04-24",
+            "weight": "0.00000000",
+            "weight_class_id": "1",
+            "length": "0.00000000",
+            "width": "0.00000000",
+            "height": "0.00000000",
+            "length_class_id": "1",
+            "subtract": "1",
+            "minimum": "1",
+            "sort_order": "1",
+            "status": "1",
+            "viewed": "92",
+            "date_added": "2026-04-24 12:57:13",
+            "date_modified": "2026-07-19 10:02:15"
+        },
+        {
+            "product_id": "9",
+            "model": "002",
+            "sku": "",
+            "upc": "",
+            "ean": "",
+            "jan": "",
+            "isbn": "",
+            "mpn": "",
+            "location": "",
+            "quantity": "100",
+            "stock_status_id": "9",
+            "image": "catalog/product-catalog-2026/hands-men/hands-men-01.jpg",
+            "manufacturer_id": "0",
+            "shipping": "1",
+            "price": "15.0000",
+            "points": "0",
+            "tax_class_id": "11",
+            "date_available": "2026-04-24",
+            "weight": "0.00000000",
+            "weight_class_id": "1",
+            "length": "0.00000000",
+            "width": "0.00000000",
+            "height": "0.00000000",
+            "length_class_id": "1",
+            "subtract": "1",
+            "minimum": "1",
+            "sort_order": "1",
+            "status": "1",
+            "viewed": "43",
+            "date_added": "2026-05-26 09:33:49",
+            "date_modified": "2026-07-19 10:02:15"
+        },
+        {
+            "product_id": "10",
+            "model": "003",
+            "sku": "",
+            "upc": "",
+            "ean": "",
+            "jan": "",
+            "isbn": "",
+            "mpn": "",
+            "location": "",
+            "quantity": "100",
+            "stock_status_id": "9",
+            "image": "catalog/product-catalog-2026/hands-sport/hands-sport-01.jpg",
+            "manufacturer_id": "0",
+            "shipping": "1",
+            "price": "15.0000",
+            "points": "0",
+            "tax_class_id": "11",
+            "date_available": "2026-04-24",
+            "weight": "0.00000000",
+            "weight_class_id": "1",
+            "length": "0.00000000",
+            "width": "0.00000000",
+            "height": "0.00000000",
+            "length_class_id": "1",
+            "subtract": "1",
+            "minimum": "1",
+            "sort_order": "1",
+            "status": "1",
+            "viewed": "37",
+            "date_added": "2026-05-26 09:36:58",
+            "date_modified": "2026-07-19 10:02:15"
+        },
+        {
+            "product_id": "12",
+            "model": "005",
+            "sku": "",
+            "upc": "",
+            "ean": "",
+            "jan": "",
+            "isbn": "",
+            "mpn": "",
+            "location": "",
+            "quantity": "100",
+            "stock_status_id": "9",
+            "image": "catalog/product-catalog-2026/feet-women/feet-women-01.jpg",
+            "manufacturer_id": "0",
+            "shipping": "1",
+            "price": "15.0000",
+            "points": "0",
+            "tax_class_id": "11",
+            "date_available": "2026-04-24",
+            "weight": "0.00000000",
+            "weight_class_id": "1",
+            "length": "0.00000000",
+            "width": "0.00000000",
+            "height": "0.00000000",
+            "length_class_id": "1",
+            "subtract": "1",
+            "minimum": "1",
+            "sort_order": "1",
+            "status": "1",
+            "viewed": "38",
+            "date_added": "2026-05-26 09:57:37",
+            "date_modified": "2026-07-19 10:02:15"
+        },
+        {
+            "product_id": "13",
+            "model": "006",
+            "sku": "",
+            "upc": "",
+            "ean": "",
+            "jan": "",
+            "isbn": "",
+            "mpn": "",
+            "location": "",
+            "quantity": "100",
+            "stock_status_id": "9",
+            "image": "catalog/product-catalog-2026/feet-men/feet-men-01.jpg",
+            "manufacturer_id": "0",
+            "shipping": "1",
+            "price": "15.0000",
+            "points": "0",
+            "tax_class_id": "11",
+            "date_available": "2026-04-24",
+            "weight": "0.00000000",
+            "weight_class_id": "1",
+            "length": "0.00000000",
+            "width": "0.00000000",
+            "height": "0.00000000",
+            "length_class_id": "1",
+            "subtract": "1",
+            "minimum": "1",
+            "sort_order": "1",
+            "status": "1",
+            "viewed": "60",
+            "date_added": "2026-05-26 10:01:16",
+            "date_modified": "2026-07-19 10:02:15"
+        },
+        {
+            "product_id": "14",
+            "model": "007",
+            "sku": "",
+            "upc": "",
+            "ean": "",
+            "jan": "",
+            "isbn": "",
+            "mpn": "",
+            "location": "",
+            "quantity": "100",
+            "stock_status_id": "9",
+            "image": "catalog/product-catalog-2026/feet-sport/feet-sport-01.jpg",
+            "manufacturer_id": "0",
+            "shipping": "1",
+            "price": "15.0000",
+            "points": "0",
+            "tax_class_id": "11",
+            "date_available": "2026-04-24",
+            "weight": "0.00000000",
+            "weight_class_id": "1",
+            "length": "0.00000000",
+            "width": "0.00000000",
+            "height": "0.00000000",
+            "length_class_id": "1",
+            "subtract": "1",
+            "minimum": "1",
+            "sort_order": "1",
+            "status": "1",
+            "viewed": "32",
+            "date_added": "2026-05-26 10:03:08",
+            "date_modified": "2026-07-19 10:02:15"
+        },
+        {
+            "product_id": "15",
+            "model": "008",
+            "sku": "",
+            "upc": "",
+            "ean": "",
+            "jan": "",
+            "isbn": "",
+            "mpn": "",
+            "location": "",
+            "quantity": "100",
+            "stock_status_id": "9",
+            "image": "catalog/product-catalog-2026/feet-kids/feet-kids-01.jpg",
+            "manufacturer_id": "0",
+            "shipping": "1",
+            "price": "15.0000",
+            "points": "0",
+            "tax_class_id": "11",
+            "date_available": "2026-04-24",
+            "weight": "0.00000000",
+            "weight_class_id": "1",
+            "length": "0.00000000",
+            "width": "0.00000000",
+            "height": "0.00000000",
+            "length_class_id": "1",
+            "subtract": "1",
+            "minimum": "1",
+            "sort_order": "1",
+            "status": "1",
+            "viewed": "51",
+            "date_added": "2026-05-26 10:04:37",
+            "date_modified": "2026-07-19 10:02:15"
+        },
+        {
+            "product_id": "16",
+            "model": "009",
+            "sku": "",
+            "upc": "",
+            "ean": "",
+            "jan": "",
+            "isbn": "",
+            "mpn": "",
+            "location": "",
+            "quantity": "100",
+            "stock_status_id": "9",
+            "image": "catalog/product-catalog-2026/rollon-women/rollon-women-01.jpg",
+            "manufacturer_id": "0",
+            "shipping": "1",
+            "price": "15.0000",
+            "points": "0",
+            "tax_class_id": "11",
+            "date_available": "2026-04-24",
+            "weight": "0.00000000",
+            "weight_class_id": "1",
+            "length": "0.00000000",
+            "width": "0.00000000",
+            "height": "0.00000000",
+            "length_class_id": "1",
+            "subtract": "1",
+            "minimum": "1",
+            "sort_order": "1",
+            "status": "1",
+            "viewed": "37",
+            "date_added": "2026-05-26 10:06:21",
+            "date_modified": "2026-07-19 10:02:15"
+        },
+        {
+            "product_id": "17",
+            "model": "010",
+            "sku": "",
+            "upc": "",
+            "ean": "",
+            "jan": "",
+            "isbn": "",
+            "mpn": "",
+            "location": "",
+            "quantity": "100",
+            "stock_status_id": "9",
+            "image": "catalog/product-catalog-2026/rollon-men/rollon-men-01.jpg",
+            "manufacturer_id": "0",
+            "shipping": "1",
+            "price": "15.0000",
+            "points": "0",
+            "tax_class_id": "11",
+            "date_available": "2026-04-24",
+            "weight": "0.00000000",
+            "weight_class_id": "1",
+            "length": "0.00000000",
+            "width": "0.00000000",
+            "height": "0.00000000",
+            "length_class_id": "1",
+            "subtract": "1",
+            "minimum": "1",
+            "sort_order": "1",
+            "status": "1",
+            "viewed": "40",
+            "date_added": "2026-05-26 10:12:46",
+            "date_modified": "2026-07-19 10:02:15"
+        },
+        {
+            "product_id": "18",
+            "model": "011",
+            "sku": "",
+            "upc": "",
+            "ean": "",
+            "jan": "",
+            "isbn": "",
+            "mpn": "",
+            "location": "",
+            "quantity": "100",
+            "stock_status_id": "9",
+            "image": "catalog/product-catalog-2026/rollon-sport/rollon-sport-01.jpg",
+            "manufacturer_id": "0",
+            "shipping": "1",
+            "price": "15.0000",
+            "points": "0",
+            "tax_class_id": "11",
+            "date_available": "2026-04-24",
+            "weight": "0.00000000",
+            "weight_class_id": "1",
+            "length": "0.00000000",
+            "width": "0.00000000",
+            "height": "0.00000000",
+            "length_class_id": "1",
+            "subtract": "1",
+            "minimum": "1",
+            "sort_order": "1",
+            "status": "1",
+            "viewed": "43",
+            "date_added": "2026-05-26 10:14:59",
+            "date_modified": "2026-07-19 10:02:15"
+        },
+        {
+            "product_id": "19",
+            "model": "012",
+            "sku": "",
+            "upc": "",
+            "ean": "",
+            "jan": "",
+            "isbn": "",
+            "mpn": "",
+            "location": "",
+            "quantity": "100",
+            "stock_status_id": "9",
+            "image": "catalog/product-catalog-2026/rollon-kids/rollon-kids-01.jpg",
+            "manufacturer_id": "0",
+            "shipping": "1",
+            "price": "15.0000",
+            "points": "0",
+            "tax_class_id": "11",
+            "date_available": "2026-04-24",
+            "weight": "0.00000000",
+            "weight_class_id": "1",
+            "length": "0.00000000",
+            "width": "0.00000000",
+            "height": "0.00000000",
+            "length_class_id": "1",
+            "subtract": "1",
+            "minimum": "1",
+            "sort_order": "1",
+            "status": "1",
+            "viewed": "42",
+            "date_added": "2026-05-26 10:16:20",
+            "date_modified": "2026-07-19 10:02:15"
+        },
+        {
+            "product_id": "20",
+            "model": "013",
+            "sku": "",
+            "upc": "",
+            "ean": "",
+            "jan": "",
+            "isbn": "",
+            "mpn": "",
+            "location": "",
+            "quantity": "100",
+            "stock_status_id": "9",
+            "image": "catalog/product-catalog-2026/shoe-spray/shoe-spray-01.jpg",
+            "manufacturer_id": "0",
+            "shipping": "1",
+            "price": "15.0000",
+            "points": "0",
+            "tax_class_id": "11",
+            "date_available": "2026-04-24",
+            "weight": "0.00000000",
+            "weight_class_id": "1",
+            "length": "0.00000000",
+            "width": "0.00000000",
+            "height": "0.00000000",
+            "length_class_id": "1",
+            "subtract": "1",
+            "minimum": "1",
+            "sort_order": "1",
+            "status": "1",
+            "viewed": "36",
+            "date_added": "2026-05-26 10:20:05",
+            "date_modified": "2026-07-19 10:02:15"
+        }
+    ],
+    "product_description": [
+        {
+            "product_id": "6",
+            "language_id": "1",
+            "name": "DryZen Hand Wipes",
+            "subtitle": "Antiperspirant hand wipes",
+            "description": "&lt;p&gt;DryZen single-use antiperspirant wipes help with excessive palm sweating. The lightweight formulation absorbs quickly.&lt;/p&gt;\r\n\r\n&lt;h3&gt;Key benefits&lt;/h3&gt;\r\n\r\n&lt;ul&gt;\r\n\t&lt;li&gt;Helps control palm sweating&lt;/li&gt;\r\n\t&lt;li&gt;Practical for everyday use&lt;/li&gt;\r\n\t&lt;li&gt;Simple evening application&lt;/li&gt;\r\n&lt;/ul&gt;\r\n\r\n&lt;h3&gt;How to use&lt;/h3&gt;\r\n\r\n&lt;ul&gt;\r\n\t&lt;li&gt;Apply in the evening on clean, dry palms. Use one wipe per application. Repeat as needed.&lt;/li&gt;\r\n&lt;/ul&gt;\r\n\r\n&lt;h3&gt;Ingredients (INCI)&lt;/h3&gt;\r\n\r\n&lt;ul&gt;\r\n\t&lt;li&gt;Aqua, Aluminium Chloride, Sodium Benzoate, Parfum, Potassium Sorbate, Cocamidopropyl Betaine&lt;/li&gt;\r\n&lt;/ul&gt;\r\n\r\n&lt;h3&gt;Additional information&lt;/h3&gt;\r\n\r\n&lt;ul&gt;\r\n\t&lt;li&gt;Single-use&lt;/li&gt;\r\n\t&lt;li&gt;Best before: printed on packaging&lt;/li&gt;\r\n&lt;/ul&gt;\r\n\r\n&lt;h3&gt;Warnings&lt;/h3&gt;\r\n\r\n&lt;p&gt;For use on hands only. Avoid contact with eyes, mucous membranes, and damaged skin. Do not use on other parts of the body. Discontinue use in case of irritation. Do not flush.&lt;/p&gt;\r\n\r\n&lt;p&gt;&lt;strong&gt;Responsible person:&amp;nbsp;&lt;/strong&gt; Gordom usluge d.o.o., Zagreb | dryzen@dryzen.eu | www.dryzen.eu&lt;/p&gt;\r\n",
+            "tag": "",
+            "meta_title": "DryZen Hand Wipes -  Antiperspirant hand wipes",
+            "meta_description": "DryZen single-use antiperspirant wipes help with excessive palm sweating. The lightweight formulation absorbs quickly.",
+            "meta_keyword": "",
+            "h1": "",
+            "h2": "",
+            "image_alt": "",
+            "image_title": ""
+        },
+        {
+            "product_id": "6",
+            "language_id": "3",
+            "name": "DryZen maramice za ruke za žene",
+            "subtitle": "3 jednokratne antiperspirant maramice za kontrolu znojenja dlanova",
+            "description": "<p>Znoje li ti se dlanovi tijekom sastanaka, rukovanja, izlazaka ili drugih svakodnevnih situacija?</p><p>DryZen antiperspirant maramice za ruke za žene pomažu u kontroli znojenja dlanova kroz jednostavnu večernju rutinu. Razvijene su za žene koje žele manje razmišljati o znojenju tijekom dana, a više se usredotočiti na posao, obveze i svakodnevne aktivnosti.</p>",
+            "tag": "",
+            "meta_title": "DryZen maramice za ruke za žene | DryZen",
+            "meta_description": "DryZen antiperspirant maramice za ruke za žene pomažu u kontroli znojenja dlanova kroz jednostavnu večernju rutinu. Razvijene su za žene koje žele manje razmišljati o znojenju tijekom dana, a više se usredotočiti na posao, obveze i svakodnevne aktivnosti.",
+            "meta_keyword": "",
+            "h1": "",
+            "h2": "",
+            "image_alt": "DryZen maramice za ruke za žene",
+            "image_title": "DryZen maramice za ruke za žene"
+        },
+        {
+            "product_id": "9",
+            "language_id": "1",
+            "name": "DryZen Hand Wipes",
+            "subtitle": "Antiperspirant hand wipes",
+            "description": "&lt;p&gt;DryZen single-use antiperspirant wipes help with excessive palm sweating. The lightweight formulation absorbs quickly.&lt;/p&gt;\r\n\r\n&lt;h3&gt;Key benefits&lt;/h3&gt;\r\n\r\n&lt;ul&gt;\r\n\t&lt;li&gt;Helps control palm sweating&lt;/li&gt;\r\n\t&lt;li&gt;Practical for everyday use&lt;/li&gt;\r\n\t&lt;li&gt;Simple evening application&lt;/li&gt;\r\n&lt;/ul&gt;\r\n\r\n&lt;h3&gt;How to use&lt;/h3&gt;\r\n\r\n&lt;ul&gt;\r\n\t&lt;li&gt;Apply in the evening on clean, dry palms. Use one wipe per application. Repeat as needed.&lt;/li&gt;\r\n&lt;/ul&gt;\r\n\r\n&lt;h3&gt;Ingredients (INCI)&lt;/h3&gt;\r\n\r\n&lt;ul&gt;\r\n\t&lt;li&gt;Aqua, Aluminium Chloride, Sodium Benzoate, Parfum, Potassium Sorbate, Cocamidopropyl Betaine&lt;/li&gt;\r\n&lt;/ul&gt;\r\n\r\n&lt;h3&gt;Additional information&lt;/h3&gt;\r\n\r\n&lt;ul&gt;\r\n\t&lt;li&gt;Single-use&lt;/li&gt;\r\n\t&lt;li&gt;Best before: printed on packaging&lt;/li&gt;\r\n&lt;/ul&gt;\r\n\r\n&lt;h3&gt;Warnings&lt;/h3&gt;\r\n\r\n&lt;p&gt;For use on hands only. Avoid contact with eyes, mucous membranes, and damaged skin. Do not use on other parts of the body. Discontinue use in case of irritation. Do not flush.&lt;/p&gt;\r\n\r\n&lt;p&gt;&lt;strong&gt;Responsible person:&amp;nbsp;&lt;/strong&gt; Gordom usluge d.o.o., Zagreb | dryzen@dryzen.eu | www.dryzen.eu&lt;/p&gt;\r\n",
+            "tag": "",
+            "meta_title": "DryZen Hand Wipes -  Antiperspirant hand wipes",
+            "meta_description": "DryZen single-use antiperspirant wipes help with excessive palm sweating. The lightweight formulation absorbs quickly.",
+            "meta_keyword": "",
+            "h1": "",
+            "h2": "",
+            "image_alt": "",
+            "image_title": ""
+        },
+        {
+            "product_id": "9",
+            "language_id": "3",
+            "name": "DryZen maramice za ruke za muškarce",
+            "subtitle": "3 jednokratne antiperspirant maramice za kontrolu znojenja dlanova",
+            "description": "<p>Znoje li ti se dlanovi tijekom posla, rukovanja, vožnje ili drugih svakodnevnih situacija?</p><p>DryZen antiperspirant maramice za ruke za muškarce pomažu u kontroli znojenja dlanova kroz jednostavnu večernju rutinu. Razvijene su za muškarce koji žele manje razmišljati o znojenju tijekom dana, a više se usredotočiti na posao, obveze i aktivnosti.</p>",
+            "tag": "",
+            "meta_title": "DryZen maramice za ruke za muškarce | DryZen",
+            "meta_description": "DryZen antiperspirant maramice za ruke za muškarce pomažu u kontroli znojenja dlanova kroz jednostavnu večernju rutinu. Razvijene su za muškarce koji žele manje razmišljati o znojenju tijekom dana, a više se usredotočiti na posao, obveze i aktivnosti.",
+            "meta_keyword": "",
+            "h1": "",
+            "h2": "",
+            "image_alt": "DryZen maramice za ruke za muškarce",
+            "image_title": "DryZen maramice za ruke za muškarce"
+        },
+        {
+            "product_id": "10",
+            "language_id": "1",
+            "name": "DryZen Hand Wipes",
+            "subtitle": "Antiperspirant hand wipes",
+            "description": "&lt;p&gt;DryZen single-use antiperspirant wipes help with excessive palm sweating. The lightweight formulation absorbs quickly.&lt;/p&gt;\r\n\r\n&lt;h3&gt;Key benefits&lt;/h3&gt;\r\n\r\n&lt;ul&gt;\r\n\t&lt;li&gt;Helps control palm sweating&lt;/li&gt;\r\n\t&lt;li&gt;Practical for everyday use&lt;/li&gt;\r\n\t&lt;li&gt;Simple evening application&lt;/li&gt;\r\n&lt;/ul&gt;\r\n\r\n&lt;h3&gt;How to use&lt;/h3&gt;\r\n\r\n&lt;ul&gt;\r\n\t&lt;li&gt;Apply in the evening on clean, dry palms. Use one wipe per application. Repeat as needed.&lt;/li&gt;\r\n&lt;/ul&gt;\r\n\r\n&lt;h3&gt;Ingredients (INCI)&lt;/h3&gt;\r\n\r\n&lt;ul&gt;\r\n\t&lt;li&gt;Aqua, Aluminium Chloride, Sodium Benzoate, Parfum, Potassium Sorbate, Cocamidopropyl Betaine&lt;/li&gt;\r\n&lt;/ul&gt;\r\n\r\n&lt;h3&gt;Additional information&lt;/h3&gt;\r\n\r\n&lt;ul&gt;\r\n\t&lt;li&gt;Single-use&lt;/li&gt;\r\n\t&lt;li&gt;Best before: printed on packaging&lt;/li&gt;\r\n&lt;/ul&gt;\r\n\r\n&lt;h3&gt;Warnings&lt;/h3&gt;\r\n\r\n&lt;p&gt;For use on hands only. Avoid contact with eyes, mucous membranes, and damaged skin. Do not use on other parts of the body. Discontinue use in case of irritation. Do not flush.&lt;/p&gt;\r\n\r\n&lt;p&gt;&lt;strong&gt;Responsible person:&amp;nbsp;&lt;/strong&gt; Gordom usluge d.o.o., Zagreb | dryzen@dryzen.eu | www.dryzen.eu&lt;/p&gt;\r\n",
+            "tag": "",
+            "meta_title": "DryZen Hand Wipes -  Antiperspirant hand wipes",
+            "meta_description": "DryZen single-use antiperspirant wipes help with excessive palm sweating. The lightweight formulation absorbs quickly.",
+            "meta_keyword": "",
+            "h1": "",
+            "h2": "",
+            "image_alt": "",
+            "image_title": ""
+        },
+        {
+            "product_id": "10",
+            "language_id": "3",
+            "name": "DryZen maramice za ruke Sport",
+            "subtitle": "3 jednokratne antiperspirant maramice za kontrolu znojenja dlanova",
+            "description": "<p>Znoje li ti se dlanovi tijekom treninga, rekreacije ili drugih aktivnosti?</p><p>DryZen Sport antiperspirant maramice za ruke pomažu u kontroli znojenja dlanova kroz jednostavnu večernju rutinu. Namijenjene su aktivnim osobama koje žele manje razmišljati o znojenju tijekom treninga, sporta ili svakodnevnih aktivnosti.</p>",
+            "tag": "",
+            "meta_title": "DryZen maramice za ruke Sport | DryZen",
+            "meta_description": "DryZen Sport antiperspirant maramice za ruke pomažu u kontroli znojenja dlanova kroz jednostavnu večernju rutinu. Namijenjene su aktivnim osobama koje žele manje razmišljati o znojenju tijekom treninga, sporta ili svakodnevnih aktivnosti.",
+            "meta_keyword": "",
+            "h1": "",
+            "h2": "",
+            "image_alt": "DryZen maramice za ruke Sport",
+            "image_title": "DryZen maramice za ruke Sport"
+        },
+        {
+            "product_id": "12",
+            "language_id": "1",
+            "name": "DryZen Hand Wipes",
+            "subtitle": "Antiperspirant hand wipes",
+            "description": "&lt;p&gt;DryZen single-use antiperspirant wipes help with excessive palm sweating. The lightweight formulation absorbs quickly.&lt;/p&gt;\r\n\r\n&lt;h3&gt;Key benefits&lt;/h3&gt;\r\n\r\n&lt;ul&gt;\r\n\t&lt;li&gt;Helps control palm sweating&lt;/li&gt;\r\n\t&lt;li&gt;Practical for everyday use&lt;/li&gt;\r\n\t&lt;li&gt;Simple evening application&lt;/li&gt;\r\n&lt;/ul&gt;\r\n\r\n&lt;h3&gt;How to use&lt;/h3&gt;\r\n\r\n&lt;ul&gt;\r\n\t&lt;li&gt;Apply in the evening on clean, dry palms. Use one wipe per application. Repeat as needed.&lt;/li&gt;\r\n&lt;/ul&gt;\r\n\r\n&lt;h3&gt;Ingredients (INCI)&lt;/h3&gt;\r\n\r\n&lt;ul&gt;\r\n\t&lt;li&gt;Aqua, Aluminium Chloride, Sodium Benzoate, Parfum, Potassium Sorbate, Cocamidopropyl Betaine&lt;/li&gt;\r\n&lt;/ul&gt;\r\n\r\n&lt;h3&gt;Additional information&lt;/h3&gt;\r\n\r\n&lt;ul&gt;\r\n\t&lt;li&gt;Single-use&lt;/li&gt;\r\n\t&lt;li&gt;Best before: printed on packaging&lt;/li&gt;\r\n&lt;/ul&gt;\r\n\r\n&lt;h3&gt;Warnings&lt;/h3&gt;\r\n\r\n&lt;p&gt;For use on hands only. Avoid contact with eyes, mucous membranes, and damaged skin. Do not use on other parts of the body. Discontinue use in case of irritation. Do not flush.&lt;/p&gt;\r\n\r\n&lt;p&gt;&lt;strong&gt;Responsible person:&amp;nbsp;&lt;/strong&gt; Gordom usluge d.o.o., Zagreb | dryzen@dryzen.eu | www.dryzen.eu&lt;/p&gt;\r\n",
+            "tag": "",
+            "meta_title": "DryZen Hand Wipes -  Antiperspirant hand wipes",
+            "meta_description": "DryZen single-use antiperspirant wipes help with excessive palm sweating. The lightweight formulation absorbs quickly.",
+            "meta_keyword": "",
+            "h1": "",
+            "h2": "",
+            "image_alt": "",
+            "image_title": ""
+        },
+        {
+            "product_id": "12",
+            "language_id": "3",
+            "name": "DryZen maramice za stopala za žene",
+            "subtitle": "3 jednokratne antiperspirant maramice za kontrolu znojenja stopala",
+            "description": "<p>Znoje li ti se stopala tijekom dana, nošenja zatvorene obuće ili drugih svakodnevnih aktivnosti?</p><p>DryZen antiperspirant maramice za stopala za žene pomažu u kontroli znojenja stopala i doprinose smanjenju neugodnih mirisa povezanih sa znojenjem. Razvijene su za žene koje žele jednostavnu večernju rutinu kako bi se tijekom dana manje opterećivale znojenjem stopala.</p>",
+            "tag": "",
+            "meta_title": "DryZen maramice za stopala za žene | DryZen",
+            "meta_description": "DryZen antiperspirant maramice za stopala za žene pomažu u kontroli znojenja stopala i doprinose smanjenju neugodnih mirisa povezanih sa znojenjem. Razvijene su za žene koje žele jednostavnu večernju rutinu kako bi se tijekom dana manje opterećivale…",
+            "meta_keyword": "",
+            "h1": "",
+            "h2": "",
+            "image_alt": "DryZen maramice za stopala za žene",
+            "image_title": "DryZen maramice za stopala za žene"
+        },
+        {
+            "product_id": "13",
+            "language_id": "1",
+            "name": "DryZen Hand Wipes",
+            "subtitle": "Antiperspirant hand wipes",
+            "description": "&lt;p&gt;DryZen single-use antiperspirant wipes help with excessive palm sweating. The lightweight formulation absorbs quickly.&lt;/p&gt;\r\n\r\n&lt;h3&gt;Key benefits&lt;/h3&gt;\r\n\r\n&lt;ul&gt;\r\n\t&lt;li&gt;Helps control palm sweating&lt;/li&gt;\r\n\t&lt;li&gt;Practical for everyday use&lt;/li&gt;\r\n\t&lt;li&gt;Simple evening application&lt;/li&gt;\r\n&lt;/ul&gt;\r\n\r\n&lt;h3&gt;How to use&lt;/h3&gt;\r\n\r\n&lt;ul&gt;\r\n\t&lt;li&gt;Apply in the evening on clean, dry palms. Use one wipe per application. Repeat as needed.&lt;/li&gt;\r\n&lt;/ul&gt;\r\n\r\n&lt;h3&gt;Ingredients (INCI)&lt;/h3&gt;\r\n\r\n&lt;ul&gt;\r\n\t&lt;li&gt;Aqua, Aluminium Chloride, Sodium Benzoate, Parfum, Potassium Sorbate, Cocamidopropyl Betaine&lt;/li&gt;\r\n&lt;/ul&gt;\r\n\r\n&lt;h3&gt;Additional information&lt;/h3&gt;\r\n\r\n&lt;ul&gt;\r\n\t&lt;li&gt;Single-use&lt;/li&gt;\r\n\t&lt;li&gt;Best before: printed on packaging&lt;/li&gt;\r\n&lt;/ul&gt;\r\n\r\n&lt;h3&gt;Warnings&lt;/h3&gt;\r\n\r\n&lt;p&gt;For use on hands only. Avoid contact with eyes, mucous membranes, and damaged skin. Do not use on other parts of the body. Discontinue use in case of irritation. Do not flush.&lt;/p&gt;\r\n\r\n&lt;p&gt;&lt;strong&gt;Responsible person:&amp;nbsp;&lt;/strong&gt; Gordom usluge d.o.o., Zagreb | dryzen@dryzen.eu | www.dryzen.eu&lt;/p&gt;\r\n",
+            "tag": "",
+            "meta_title": "DryZen Hand Wipes -  Antiperspirant hand wipes",
+            "meta_description": "DryZen single-use antiperspirant wipes help with excessive palm sweating. The lightweight formulation absorbs quickly.",
+            "meta_keyword": "",
+            "h1": "",
+            "h2": "",
+            "image_alt": "",
+            "image_title": ""
+        },
+        {
+            "product_id": "13",
+            "language_id": "3",
+            "name": "DryZen maramice za stopala za muškarce",
+            "subtitle": "3 jednokratne antiperspirant maramice za kontrolu znojenja stopala",
+            "description": "<p>Znoje li ti se stopala tijekom radnog dana, dugog boravka u zatvorenoj obući ili svakodnevnih aktivnosti?</p><p>DryZen antiperspirant maramice za stopala za muškarce pomažu u kontroli znojenja stopala i doprinose smanjenju neugodnih mirisa povezanih sa znojenjem. Razvijene su za muškarce koji žele jednostavnu večernju rutinu kako bi tijekom dana manje razmišljali o znojenju stopala.</p>",
+            "tag": "",
+            "meta_title": "DryZen maramice za stopala za muškarce | DryZen",
+            "meta_description": "DryZen antiperspirant maramice za stopala za muškarce pomažu u kontroli znojenja stopala i doprinose smanjenju neugodnih mirisa povezanih sa znojenjem. Razvijene su za muškarce koji žele jednostavnu večernju rutinu kako bi tijekom dana manje razmišljali…",
+            "meta_keyword": "",
+            "h1": "",
+            "h2": "",
+            "image_alt": "DryZen maramice za stopala za muškarce",
+            "image_title": "DryZen maramice za stopala za muškarce"
+        },
+        {
+            "product_id": "14",
+            "language_id": "1",
+            "name": "DryZen Hand Wipes",
+            "subtitle": "Antiperspirant hand wipes",
+            "description": "&lt;p&gt;DryZen single-use antiperspirant wipes help with excessive palm sweating. The lightweight formulation absorbs quickly.&lt;/p&gt;\r\n\r\n&lt;h3&gt;Key benefits&lt;/h3&gt;\r\n\r\n&lt;ul&gt;\r\n\t&lt;li&gt;Helps control palm sweating&lt;/li&gt;\r\n\t&lt;li&gt;Practical for everyday use&lt;/li&gt;\r\n\t&lt;li&gt;Simple evening application&lt;/li&gt;\r\n&lt;/ul&gt;\r\n\r\n&lt;h3&gt;How to use&lt;/h3&gt;\r\n\r\n&lt;ul&gt;\r\n\t&lt;li&gt;Apply in the evening on clean, dry palms. Use one wipe per application. Repeat as needed.&lt;/li&gt;\r\n&lt;/ul&gt;\r\n\r\n&lt;h3&gt;Ingredients (INCI)&lt;/h3&gt;\r\n\r\n&lt;ul&gt;\r\n\t&lt;li&gt;Aqua, Aluminium Chloride, Sodium Benzoate, Parfum, Potassium Sorbate, Cocamidopropyl Betaine&lt;/li&gt;\r\n&lt;/ul&gt;\r\n\r\n&lt;h3&gt;Additional information&lt;/h3&gt;\r\n\r\n&lt;ul&gt;\r\n\t&lt;li&gt;Single-use&lt;/li&gt;\r\n\t&lt;li&gt;Best before: printed on packaging&lt;/li&gt;\r\n&lt;/ul&gt;\r\n\r\n&lt;h3&gt;Warnings&lt;/h3&gt;\r\n\r\n&lt;p&gt;For use on hands only. Avoid contact with eyes, mucous membranes, and damaged skin. Do not use on other parts of the body. Discontinue use in case of irritation. Do not flush.&lt;/p&gt;\r\n\r\n&lt;p&gt;&lt;strong&gt;Responsible person:&amp;nbsp;&lt;/strong&gt; Gordom usluge d.o.o., Zagreb | dryzen@dryzen.eu | www.dryzen.eu&lt;/p&gt;\r\n",
+            "tag": "",
+            "meta_title": "DryZen Hand Wipes -  Antiperspirant hand wipes",
+            "meta_description": "DryZen single-use antiperspirant wipes help with excessive palm sweating. The lightweight formulation absorbs quickly.",
+            "meta_keyword": "",
+            "h1": "",
+            "h2": "",
+            "image_alt": "",
+            "image_title": ""
+        },
+        {
+            "product_id": "14",
+            "language_id": "3",
+            "name": "DryZen maramice za stopala za sport",
+            "subtitle": "3 jednokratne antiperspirant maramice za kontrolu znojenja stopala",
+            "description": "<p>Znoje li ti se stopala tijekom treninga, rekreacije ili drugih aktivnosti?</p><p>DryZen Sport antiperspirant maramice za stopala pomažu u kontroli znojenja stopala i doprinose smanjenju neugodnih mirisa povezanih sa znojenjem. Namijenjene su aktivnim osobama koje žele jednostavnu večernju rutinu kako bi se tijekom dana mogle usredotočiti na trening, sport i kretanje, a manje razmišljati o znojenju stopala.</p>",
+            "tag": "",
+            "meta_title": "DryZen maramice za stopala za sport | DryZen",
+            "meta_description": "DryZen Sport antiperspirant maramice za stopala pomažu u kontroli znojenja stopala i doprinose smanjenju neugodnih mirisa povezanih sa znojenjem. Namijenjene su aktivnim osobama koje žele jednostavnu večernju rutinu kako bi se tijekom dana mogle…",
+            "meta_keyword": "",
+            "h1": "",
+            "h2": "",
+            "image_alt": "DryZen maramice za stopala za sport",
+            "image_title": "DryZen maramice za stopala za sport"
+        },
+        {
+            "product_id": "15",
+            "language_id": "1",
+            "name": "DryZen Hand Wipes",
+            "subtitle": "Antiperspirant hand wipes",
+            "description": "&lt;p&gt;DryZen single-use antiperspirant wipes help with excessive palm sweating. The lightweight formulation absorbs quickly.&lt;/p&gt;\r\n\r\n&lt;h3&gt;Key benefits&lt;/h3&gt;\r\n\r\n&lt;ul&gt;\r\n\t&lt;li&gt;Helps control palm sweating&lt;/li&gt;\r\n\t&lt;li&gt;Practical for everyday use&lt;/li&gt;\r\n\t&lt;li&gt;Simple evening application&lt;/li&gt;\r\n&lt;/ul&gt;\r\n\r\n&lt;h3&gt;How to use&lt;/h3&gt;\r\n\r\n&lt;ul&gt;\r\n\t&lt;li&gt;Apply in the evening on clean, dry palms. Use one wipe per application. Repeat as needed.&lt;/li&gt;\r\n&lt;/ul&gt;\r\n\r\n&lt;h3&gt;Ingredients (INCI)&lt;/h3&gt;\r\n\r\n&lt;ul&gt;\r\n\t&lt;li&gt;Aqua, Aluminium Chloride, Sodium Benzoate, Parfum, Potassium Sorbate, Cocamidopropyl Betaine&lt;/li&gt;\r\n&lt;/ul&gt;\r\n\r\n&lt;h3&gt;Additional information&lt;/h3&gt;\r\n\r\n&lt;ul&gt;\r\n\t&lt;li&gt;Single-use&lt;/li&gt;\r\n\t&lt;li&gt;Best before: printed on packaging&lt;/li&gt;\r\n&lt;/ul&gt;\r\n\r\n&lt;h3&gt;Warnings&lt;/h3&gt;\r\n\r\n&lt;p&gt;For use on hands only. Avoid contact with eyes, mucous membranes, and damaged skin. Do not use on other parts of the body. Discontinue use in case of irritation. Do not flush.&lt;/p&gt;\r\n\r\n&lt;p&gt;&lt;strong&gt;Responsible person:&amp;nbsp;&lt;/strong&gt; Gordom usluge d.o.o., Zagreb | dryzen@dryzen.eu | www.dryzen.eu&lt;/p&gt;\r\n",
+            "tag": "",
+            "meta_title": "DryZen Hand Wipes -  Antiperspirant hand wipes",
+            "meta_description": "DryZen single-use antiperspirant wipes help with excessive palm sweating. The lightweight formulation absorbs quickly.",
+            "meta_keyword": "",
+            "h1": "",
+            "h2": "",
+            "image_alt": "",
+            "image_title": ""
+        },
+        {
+            "product_id": "15",
+            "language_id": "3",
+            "name": "DryZen maramice za stopala za djecu",
+            "subtitle": "3 jednokratne antiperspirant maramice za kontrolu znojenja stopala",
+            "description": "<p>Znoje li se djetetu stopala tijekom škole, igre, sportskih aktivnosti ili nošenja zatvorene obuće?</p><p>DryZen Kids antiperspirant maramice za stopala pomažu u kontroli znojenja stopala kroz jednostavnu večernju rutinu. Razvijene su za djecu kojoj znojenje stopala može stvarati nelagodu tijekom svakodnevnih aktivnosti. Namijenjene su za korištenje djeci od 10 do 16 godina.</p>",
+            "tag": "",
+            "meta_title": "DryZen maramice za stopala za djecu | DryZen",
+            "meta_description": "DryZen Kids antiperspirant maramice za stopala pomažu u kontroli znojenja stopala kroz jednostavnu večernju rutinu. Razvijene su za djecu kojoj znojenje stopala može stvarati nelagodu tijekom svakodnevnih aktivnosti. Namijenjene su za korištenje djeci…",
+            "meta_keyword": "",
+            "h1": "",
+            "h2": "",
+            "image_alt": "DryZen maramice za stopala za djecu",
+            "image_title": "DryZen maramice za stopala za djecu"
+        },
+        {
+            "product_id": "16",
+            "language_id": "1",
+            "name": "DryZen Hand Wipes",
+            "subtitle": "Antiperspirant hand wipes",
+            "description": "&lt;p&gt;DryZen single-use antiperspirant wipes help with excessive palm sweating. The lightweight formulation absorbs quickly.&lt;/p&gt;\r\n\r\n&lt;h3&gt;Key benefits&lt;/h3&gt;\r\n\r\n&lt;ul&gt;\r\n\t&lt;li&gt;Helps control palm sweating&lt;/li&gt;\r\n\t&lt;li&gt;Practical for everyday use&lt;/li&gt;\r\n\t&lt;li&gt;Simple evening application&lt;/li&gt;\r\n&lt;/ul&gt;\r\n\r\n&lt;h3&gt;How to use&lt;/h3&gt;\r\n\r\n&lt;ul&gt;\r\n\t&lt;li&gt;Apply in the evening on clean, dry palms. Use one wipe per application. Repeat as needed.&lt;/li&gt;\r\n&lt;/ul&gt;\r\n\r\n&lt;h3&gt;Ingredients (INCI)&lt;/h3&gt;\r\n\r\n&lt;ul&gt;\r\n\t&lt;li&gt;Aqua, Aluminium Chloride, Sodium Benzoate, Parfum, Potassium Sorbate, Cocamidopropyl Betaine&lt;/li&gt;\r\n&lt;/ul&gt;\r\n\r\n&lt;h3&gt;Additional information&lt;/h3&gt;\r\n\r\n&lt;ul&gt;\r\n\t&lt;li&gt;Single-use&lt;/li&gt;\r\n\t&lt;li&gt;Best before: printed on packaging&lt;/li&gt;\r\n&lt;/ul&gt;\r\n\r\n&lt;h3&gt;Warnings&lt;/h3&gt;\r\n\r\n&lt;p&gt;For use on hands only. Avoid contact with eyes, mucous membranes, and damaged skin. Do not use on other parts of the body. Discontinue use in case of irritation. Do not flush.&lt;/p&gt;\r\n\r\n&lt;p&gt;&lt;strong&gt;Responsible person:&amp;nbsp;&lt;/strong&gt; Gordom usluge d.o.o., Zagreb | dryzen@dryzen.eu | www.dryzen.eu&lt;/p&gt;\r\n",
+            "tag": "",
+            "meta_title": "DryZen Hand Wipes -  Antiperspirant hand wipes",
+            "meta_description": "DryZen single-use antiperspirant wipes help with excessive palm sweating. The lightweight formulation absorbs quickly.",
+            "meta_keyword": "",
+            "h1": "",
+            "h2": "",
+            "image_alt": "",
+            "image_title": ""
+        },
+        {
+            "product_id": "16",
+            "language_id": "3",
+            "name": "DryZen roll-on za žene",
+            "subtitle": "Antiperspirant roll-on za kontrolu znojenja pazuha • 10 ml",
+            "description": "<p>Znoje li ti se pazusi tijekom posla, sastanaka, izlazaka ili drugih svakodnevnih aktivnosti?</p><p>DryZen antiperspirant roll-on za žene pomaže u kontroli znojenja pazuha i doprinosi smanjenju neugodnih mirisa povezanih sa znojenjem. Razvijen je za žene koje žele jednostavnu večernju rutinu kako bi se tijekom dana manje opterećivale znojenjem i više usredotočile na posao, obveze i svakodnevne aktivnosti.</p>",
+            "tag": "",
+            "meta_title": "DryZen roll-on za žene | DryZen",
+            "meta_description": "DryZen antiperspirant roll-on za žene pomaže u kontroli znojenja pazuha i doprinosi smanjenju neugodnih mirisa povezanih sa znojenjem. Razvijen je za žene koje žele jednostavnu večernju rutinu kako bi se tijekom dana manje opterećivale znojenjem i više…",
+            "meta_keyword": "",
+            "h1": "",
+            "h2": "",
+            "image_alt": "DryZen roll-on za žene",
+            "image_title": "DryZen roll-on za žene"
+        },
+        {
+            "product_id": "17",
+            "language_id": "1",
+            "name": "DryZen Hand Wipes",
+            "subtitle": "Antiperspirant hand wipes",
+            "description": "&lt;p&gt;DryZen single-use antiperspirant wipes help with excessive palm sweating. The lightweight formulation absorbs quickly.&lt;/p&gt;\r\n\r\n&lt;h3&gt;Key benefits&lt;/h3&gt;\r\n\r\n&lt;ul&gt;\r\n\t&lt;li&gt;Helps control palm sweating&lt;/li&gt;\r\n\t&lt;li&gt;Practical for everyday use&lt;/li&gt;\r\n\t&lt;li&gt;Simple evening application&lt;/li&gt;\r\n&lt;/ul&gt;\r\n\r\n&lt;h3&gt;How to use&lt;/h3&gt;\r\n\r\n&lt;ul&gt;\r\n\t&lt;li&gt;Apply in the evening on clean, dry palms. Use one wipe per application. Repeat as needed.&lt;/li&gt;\r\n&lt;/ul&gt;\r\n\r\n&lt;h3&gt;Ingredients (INCI)&lt;/h3&gt;\r\n\r\n&lt;ul&gt;\r\n\t&lt;li&gt;Aqua, Aluminium Chloride, Sodium Benzoate, Parfum, Potassium Sorbate, Cocamidopropyl Betaine&lt;/li&gt;\r\n&lt;/ul&gt;\r\n\r\n&lt;h3&gt;Additional information&lt;/h3&gt;\r\n\r\n&lt;ul&gt;\r\n\t&lt;li&gt;Single-use&lt;/li&gt;\r\n\t&lt;li&gt;Best before: printed on packaging&lt;/li&gt;\r\n&lt;/ul&gt;\r\n\r\n&lt;h3&gt;Warnings&lt;/h3&gt;\r\n\r\n&lt;p&gt;For use on hands only. Avoid contact with eyes, mucous membranes, and damaged skin. Do not use on other parts of the body. Discontinue use in case of irritation. Do not flush.&lt;/p&gt;\r\n\r\n&lt;p&gt;&lt;strong&gt;Responsible person:&amp;nbsp;&lt;/strong&gt; Gordom usluge d.o.o., Zagreb | dryzen@dryzen.eu | www.dryzen.eu&lt;/p&gt;\r\n",
+            "tag": "",
+            "meta_title": "DryZen Hand Wipes -  Antiperspirant hand wipes",
+            "meta_description": "DryZen single-use antiperspirant wipes help with excessive palm sweating. The lightweight formulation absorbs quickly.",
+            "meta_keyword": "",
+            "h1": "",
+            "h2": "",
+            "image_alt": "",
+            "image_title": ""
+        },
+        {
+            "product_id": "17",
+            "language_id": "3",
+            "name": "DryZen roll-on za muškarce",
+            "subtitle": "Antiperspirant roll-on za kontrolu znojenja pazuha • 10 ml",
+            "description": "<p>Znoje li ti se pazusi tijekom posla, sastanaka, putovanja ili drugih svakodnevnih aktivnosti?</p><p>DryZen antiperspirant roll-on za muškarce pomaže u kontroli znojenja pazuha i doprinosi smanjenju neugodnih mirisa povezanih sa znojenjem. Razvijen je za muškarce koji žele jednostavnu večernju rutinu kako bi se tijekom dana manje opterećivali znojenjem i više usredotočili na posao, obveze i svakodnevne aktivnosti.</p>",
+            "tag": "",
+            "meta_title": "DryZen roll-on za muškarce | DryZen",
+            "meta_description": "DryZen antiperspirant roll-on za muškarce pomaže u kontroli znojenja pazuha i doprinosi smanjenju neugodnih mirisa povezanih sa znojenjem. Razvijen je za muškarce koji žele jednostavnu večernju rutinu kako bi se tijekom dana manje opterećivali znojenjem…",
+            "meta_keyword": "",
+            "h1": "",
+            "h2": "",
+            "image_alt": "DryZen roll-on za muškarce",
+            "image_title": "DryZen roll-on za muškarce"
+        },
+        {
+            "product_id": "18",
+            "language_id": "1",
+            "name": "DryZen Hand Wipes",
+            "subtitle": "Antiperspirant hand wipes",
+            "description": "&lt;p&gt;DryZen single-use antiperspirant wipes help with excessive palm sweating. The lightweight formulation absorbs quickly.&lt;/p&gt;\r\n\r\n&lt;h3&gt;Key benefits&lt;/h3&gt;\r\n\r\n&lt;ul&gt;\r\n\t&lt;li&gt;Helps control palm sweating&lt;/li&gt;\r\n\t&lt;li&gt;Practical for everyday use&lt;/li&gt;\r\n\t&lt;li&gt;Simple evening application&lt;/li&gt;\r\n&lt;/ul&gt;\r\n\r\n&lt;h3&gt;How to use&lt;/h3&gt;\r\n\r\n&lt;ul&gt;\r\n\t&lt;li&gt;Apply in the evening on clean, dry palms. Use one wipe per application. Repeat as needed.&lt;/li&gt;\r\n&lt;/ul&gt;\r\n\r\n&lt;h3&gt;Ingredients (INCI)&lt;/h3&gt;\r\n\r\n&lt;ul&gt;\r\n\t&lt;li&gt;Aqua, Aluminium Chloride, Sodium Benzoate, Parfum, Potassium Sorbate, Cocamidopropyl Betaine&lt;/li&gt;\r\n&lt;/ul&gt;\r\n\r\n&lt;h3&gt;Additional information&lt;/h3&gt;\r\n\r\n&lt;ul&gt;\r\n\t&lt;li&gt;Single-use&lt;/li&gt;\r\n\t&lt;li&gt;Best before: printed on packaging&lt;/li&gt;\r\n&lt;/ul&gt;\r\n\r\n&lt;h3&gt;Warnings&lt;/h3&gt;\r\n\r\n&lt;p&gt;For use on hands only. Avoid contact with eyes, mucous membranes, and damaged skin. Do not use on other parts of the body. Discontinue use in case of irritation. Do not flush.&lt;/p&gt;\r\n\r\n&lt;p&gt;&lt;strong&gt;Responsible person:&amp;nbsp;&lt;/strong&gt; Gordom usluge d.o.o., Zagreb | dryzen@dryzen.eu | www.dryzen.eu&lt;/p&gt;\r\n",
+            "tag": "",
+            "meta_title": "DryZen Hand Wipes -  Antiperspirant hand wipes",
+            "meta_description": "DryZen single-use antiperspirant wipes help with excessive palm sweating. The lightweight formulation absorbs quickly.",
+            "meta_keyword": "",
+            "h1": "",
+            "h2": "",
+            "image_alt": "",
+            "image_title": ""
+        },
+        {
+            "product_id": "18",
+            "language_id": "3",
+            "name": "DryZen roll-on Sport",
+            "subtitle": "Antiperspirant roll-on za kontrolu znojenja pazuha • 10 ml",
+            "description": "<p>Znoje li ti se pazusi tijekom treninga, rekreacije ili drugih aktivnosti?</p><p>DryZen Sport antiperspirant roll-on pomaže u kontroli znojenja pazuha i doprinosi smanjenju neugodnih mirisa povezanih sa znojenjem. Namijenjen je aktivnim osobama koje žele jednostavnu večernju rutinu kako bi se tijekom dana mogle usredotočiti na trening, sport i kretanje, a manje razmišljati o znojenju.</p>",
+            "tag": "",
+            "meta_title": "DryZen roll-on Sport | DryZen",
+            "meta_description": "DryZen Sport antiperspirant roll-on pomaže u kontroli znojenja pazuha i doprinosi smanjenju neugodnih mirisa povezanih sa znojenjem. Namijenjen je aktivnim osobama koje žele jednostavnu večernju rutinu kako bi se tijekom dana mogle usredotočiti na…",
+            "meta_keyword": "",
+            "h1": "",
+            "h2": "",
+            "image_alt": "DryZen roll-on Sport",
+            "image_title": "DryZen roll-on Sport"
+        },
+        {
+            "product_id": "19",
+            "language_id": "1",
+            "name": "DryZen Hand Wipes",
+            "subtitle": "Antiperspirant hand wipes",
+            "description": "&lt;p&gt;DryZen single-use antiperspirant wipes help with excessive palm sweating. The lightweight formulation absorbs quickly.&lt;/p&gt;\r\n\r\n&lt;h3&gt;Key benefits&lt;/h3&gt;\r\n\r\n&lt;ul&gt;\r\n\t&lt;li&gt;Helps control palm sweating&lt;/li&gt;\r\n\t&lt;li&gt;Practical for everyday use&lt;/li&gt;\r\n\t&lt;li&gt;Simple evening application&lt;/li&gt;\r\n&lt;/ul&gt;\r\n\r\n&lt;h3&gt;How to use&lt;/h3&gt;\r\n\r\n&lt;ul&gt;\r\n\t&lt;li&gt;Apply in the evening on clean, dry palms. Use one wipe per application. Repeat as needed.&lt;/li&gt;\r\n&lt;/ul&gt;\r\n\r\n&lt;h3&gt;Ingredients (INCI)&lt;/h3&gt;\r\n\r\n&lt;ul&gt;\r\n\t&lt;li&gt;Aqua, Aluminium Chloride, Sodium Benzoate, Parfum, Potassium Sorbate, Cocamidopropyl Betaine&lt;/li&gt;\r\n&lt;/ul&gt;\r\n\r\n&lt;h3&gt;Additional information&lt;/h3&gt;\r\n\r\n&lt;ul&gt;\r\n\t&lt;li&gt;Single-use&lt;/li&gt;\r\n\t&lt;li&gt;Best before: printed on packaging&lt;/li&gt;\r\n&lt;/ul&gt;\r\n\r\n&lt;h3&gt;Warnings&lt;/h3&gt;\r\n\r\n&lt;p&gt;For use on hands only. Avoid contact with eyes, mucous membranes, and damaged skin. Do not use on other parts of the body. Discontinue use in case of irritation. Do not flush.&lt;/p&gt;\r\n\r\n&lt;p&gt;&lt;strong&gt;Responsible person:&amp;nbsp;&lt;/strong&gt; Gordom usluge d.o.o., Zagreb | dryzen@dryzen.eu | www.dryzen.eu&lt;/p&gt;\r\n",
+            "tag": "",
+            "meta_title": "DryZen Hand Wipes -  Antiperspirant hand wipes",
+            "meta_description": "DryZen single-use antiperspirant wipes help with excessive palm sweating. The lightweight formulation absorbs quickly.",
+            "meta_keyword": "",
+            "h1": "",
+            "h2": "",
+            "image_alt": "",
+            "image_title": ""
+        },
+        {
+            "product_id": "19",
+            "language_id": "3",
+            "name": "DryZen Kids roll-on",
+            "subtitle": "Antiperspirant roll-on za kontrolu znojenja pazuha • 10 ml",
+            "description": "<p>Znoji li se djetetu područje pazuha tijekom škole, igre, sportskih aktivnosti ili drugih svakodnevnih situacija?</p><p>DryZen Kids antiperspirant roll-on pomaže u kontroli znojenja pazuha i doprinosi smanjenju neugodnih mirisa povezanih sa znojenjem. Razvijen je za djecu od 10 do 16 godina kojoj znojenje pazuha može stvarati nelagodu tijekom svakodnevnih aktivnosti.</p>",
+            "tag": "",
+            "meta_title": "DryZen Kids roll-on | DryZen",
+            "meta_description": "DryZen Kids antiperspirant roll-on pomaže u kontroli znojenja pazuha i doprinosi smanjenju neugodnih mirisa povezanih sa znojenjem. Razvijen je za djecu od 10 do 16 godina kojoj znojenje pazuha može stvarati nelagodu tijekom svakodnevnih aktivnosti.",
+            "meta_keyword": "",
+            "h1": "",
+            "h2": "",
+            "image_alt": "DryZen Kids roll-on",
+            "image_title": "DryZen Kids roll-on"
+        },
+        {
+            "product_id": "20",
+            "language_id": "1",
+            "name": "DryZen Hand Wipes",
+            "subtitle": "Antiperspirant hand wipes",
+            "description": "&lt;p&gt;DryZen single-use antiperspirant wipes help with excessive palm sweating. The lightweight formulation absorbs quickly.&lt;/p&gt;\r\n\r\n&lt;h3&gt;Key benefits&lt;/h3&gt;\r\n\r\n&lt;ul&gt;\r\n\t&lt;li&gt;Helps control palm sweating&lt;/li&gt;\r\n\t&lt;li&gt;Practical for everyday use&lt;/li&gt;\r\n\t&lt;li&gt;Simple evening application&lt;/li&gt;\r\n&lt;/ul&gt;\r\n\r\n&lt;h3&gt;How to use&lt;/h3&gt;\r\n\r\n&lt;ul&gt;\r\n\t&lt;li&gt;Apply in the evening on clean, dry palms. Use one wipe per application. Repeat as needed.&lt;/li&gt;\r\n&lt;/ul&gt;\r\n\r\n&lt;h3&gt;Ingredients (INCI)&lt;/h3&gt;\r\n\r\n&lt;ul&gt;\r\n\t&lt;li&gt;Aqua, Aluminium Chloride, Sodium Benzoate, Parfum, Potassium Sorbate, Cocamidopropyl Betaine&lt;/li&gt;\r\n&lt;/ul&gt;\r\n\r\n&lt;h3&gt;Additional information&lt;/h3&gt;\r\n\r\n&lt;ul&gt;\r\n\t&lt;li&gt;Single-use&lt;/li&gt;\r\n\t&lt;li&gt;Best before: printed on packaging&lt;/li&gt;\r\n&lt;/ul&gt;\r\n\r\n&lt;h3&gt;Warnings&lt;/h3&gt;\r\n\r\n&lt;p&gt;For use on hands only. Avoid contact with eyes, mucous membranes, and damaged skin. Do not use on other parts of the body. Discontinue use in case of irritation. Do not flush.&lt;/p&gt;\r\n\r\n&lt;p&gt;&lt;strong&gt;Responsible person:&amp;nbsp;&lt;/strong&gt; Gordom usluge d.o.o., Zagreb | dryzen@dryzen.eu | www.dryzen.eu&lt;/p&gt;\r\n",
+            "tag": "",
+            "meta_title": "DryZen Hand Wipes -  Antiperspirant hand wipes",
+            "meta_description": "DryZen single-use antiperspirant wipes help with excessive palm sweating. The lightweight formulation absorbs quickly.",
+            "meta_keyword": "",
+            "h1": "",
+            "h2": "",
+            "image_alt": "",
+            "image_title": ""
+        },
+        {
+            "product_id": "20",
+            "language_id": "3",
+            "name": "DryZen sprej za obuću",
+            "subtitle": "Sprej za održavanje svježine unutrašnjosti obuće • 100 ml",
+            "description": "<p>Neugodni mirisi u obući nakon dugog dana, treninga ili nošenja zatvorenih cipela?</p><p>DryZen sprej za obuću razvijen je za održavanje svježine unutrašnjosti obuće i doprinosi smanjenju neugodnih mirisa. Jednostavno se koristi kao dio večernje rutine i prikladan je za obuću koju svakodnevno nosiš.</p>",
+            "tag": "",
+            "meta_title": "DryZen sprej za obuću | DryZen",
+            "meta_description": "DryZen sprej za obuću razvijen je za održavanje svježine unutrašnjosti obuće i doprinosi smanjenju neugodnih mirisa. Jednostavno se koristi kao dio večernje rutine i prikladan je za obuću koju svakodnevno nosiš.",
+            "meta_keyword": "",
+            "h1": "",
+            "h2": "",
+            "image_alt": "DryZen sprej za obuću",
+            "image_title": "DryZen sprej za obuću"
+        }
+    ],
+    "product_image": [
+        {
+            "product_image_id": "23",
+            "product_id": "6",
+            "image": "catalog/product-catalog-2026/hands-women/hands-women-02.jpg",
+            "sort_order": "1"
+        },
+        {
+            "product_image_id": "24",
+            "product_id": "6",
+            "image": "catalog/product-catalog-2026/hands-women/hands-women-03.jpg",
+            "sort_order": "2"
+        },
+        {
+            "product_image_id": "25",
+            "product_id": "6",
+            "image": "catalog/product-catalog-2026/hands-women/hands-women-04.jpg",
+            "sort_order": "3"
+        },
+        {
+            "product_image_id": "26",
+            "product_id": "6",
+            "image": "catalog/product-catalog-2026/hands-women/hands-women-05.jpg",
+            "sort_order": "4"
+        },
+        {
+            "product_image_id": "16",
+            "product_id": "9",
+            "image": "catalog/product-catalog-2026/hands-men/hands-men-02.jpg",
+            "sort_order": "1"
+        },
+        {
+            "product_image_id": "17",
+            "product_id": "9",
+            "image": "catalog/product-catalog-2026/hands-men/hands-men-03.jpg",
+            "sort_order": "2"
+        },
+        {
+            "product_image_id": "18",
+            "product_id": "9",
+            "image": "catalog/product-catalog-2026/hands-men/hands-men-04.jpg",
+            "sort_order": "3"
+        },
+        {
+            "product_image_id": "19",
+            "product_id": "10",
+            "image": "catalog/product-catalog-2026/hands-sport/hands-sport-02.jpg",
+            "sort_order": "1"
+        },
+        {
+            "product_image_id": "20",
+            "product_id": "10",
+            "image": "catalog/product-catalog-2026/hands-sport/hands-sport-03.jpg",
+            "sort_order": "2"
+        },
+        {
+            "product_image_id": "21",
+            "product_id": "10",
+            "image": "catalog/product-catalog-2026/hands-sport/hands-sport-04.jpg",
+            "sort_order": "3"
+        },
+        {
+            "product_image_id": "22",
+            "product_id": "10",
+            "image": "catalog/product-catalog-2026/hands-sport/hands-sport-05.jpg",
+            "sort_order": "4"
+        },
+        {
+            "product_image_id": "38",
+            "product_id": "12",
+            "image": "catalog/product-catalog-2026/feet-women/feet-women-02.jpg",
+            "sort_order": "1"
+        },
+        {
+            "product_image_id": "39",
+            "product_id": "12",
+            "image": "catalog/product-catalog-2026/feet-women/feet-women-03.jpg",
+            "sort_order": "2"
+        },
+        {
+            "product_image_id": "40",
+            "product_id": "12",
+            "image": "catalog/product-catalog-2026/feet-women/feet-women-04.jpg",
+            "sort_order": "3"
+        },
+        {
+            "product_image_id": "41",
+            "product_id": "12",
+            "image": "catalog/product-catalog-2026/feet-women/feet-women-05.jpg",
+            "sort_order": "4"
+        },
+        {
+            "product_image_id": "31",
+            "product_id": "13",
+            "image": "catalog/product-catalog-2026/feet-men/feet-men-02.jpg",
+            "sort_order": "1"
+        },
+        {
+            "product_image_id": "32",
+            "product_id": "13",
+            "image": "catalog/product-catalog-2026/feet-men/feet-men-03.jpg",
+            "sort_order": "2"
+        },
+        {
+            "product_image_id": "33",
+            "product_id": "13",
+            "image": "catalog/product-catalog-2026/feet-men/feet-men-04.jpg",
+            "sort_order": "3"
+        },
+        {
+            "product_image_id": "34",
+            "product_id": "14",
+            "image": "catalog/product-catalog-2026/feet-sport/feet-sport-02.jpg",
+            "sort_order": "1"
+        },
+        {
+            "product_image_id": "35",
+            "product_id": "14",
+            "image": "catalog/product-catalog-2026/feet-sport/feet-sport-03.jpg",
+            "sort_order": "2"
+        },
+        {
+            "product_image_id": "36",
+            "product_id": "14",
+            "image": "catalog/product-catalog-2026/feet-sport/feet-sport-04.jpg",
+            "sort_order": "3"
+        },
+        {
+            "product_image_id": "37",
+            "product_id": "14",
+            "image": "catalog/product-catalog-2026/feet-sport/feet-sport-05.jpg",
+            "sort_order": "4"
+        },
+        {
+            "product_image_id": "27",
+            "product_id": "15",
+            "image": "catalog/product-catalog-2026/feet-kids/feet-kids-02.jpg",
+            "sort_order": "1"
+        },
+        {
+            "product_image_id": "28",
+            "product_id": "15",
+            "image": "catalog/product-catalog-2026/feet-kids/feet-kids-03.jpg",
+            "sort_order": "2"
+        },
+        {
+            "product_image_id": "29",
+            "product_id": "15",
+            "image": "catalog/product-catalog-2026/feet-kids/feet-kids-04.jpg",
+            "sort_order": "3"
+        },
+        {
+            "product_image_id": "30",
+            "product_id": "15",
+            "image": "catalog/product-catalog-2026/feet-kids/feet-kids-05.jpg",
+            "sort_order": "4"
+        },
+        {
+            "product_image_id": "56",
+            "product_id": "16",
+            "image": "catalog/product-catalog-2026/rollon-women/rollon-women-02.jpg",
+            "sort_order": "1"
+        },
+        {
+            "product_image_id": "57",
+            "product_id": "16",
+            "image": "catalog/product-catalog-2026/rollon-women/rollon-women-03.jpg",
+            "sort_order": "2"
+        },
+        {
+            "product_image_id": "58",
+            "product_id": "16",
+            "image": "catalog/product-catalog-2026/rollon-women/rollon-women-04.jpg",
+            "sort_order": "3"
+        },
+        {
+            "product_image_id": "59",
+            "product_id": "16",
+            "image": "catalog/product-catalog-2026/rollon-women/rollon-women-05.jpg",
+            "sort_order": "4"
+        },
+        {
+            "product_image_id": "60",
+            "product_id": "16",
+            "image": "catalog/product-catalog-2026/rollon-women/rollon-women-06.jpg",
+            "sort_order": "5"
+        },
+        {
+            "product_image_id": "47",
+            "product_id": "17",
+            "image": "catalog/product-catalog-2026/rollon-men/rollon-men-02.jpg",
+            "sort_order": "1"
+        },
+        {
+            "product_image_id": "48",
+            "product_id": "17",
+            "image": "catalog/product-catalog-2026/rollon-men/rollon-men-03.jpg",
+            "sort_order": "2"
+        },
+        {
+            "product_image_id": "49",
+            "product_id": "17",
+            "image": "catalog/product-catalog-2026/rollon-men/rollon-men-04.jpg",
+            "sort_order": "3"
+        },
+        {
+            "product_image_id": "50",
+            "product_id": "17",
+            "image": "catalog/product-catalog-2026/rollon-men/rollon-men-05.jpg",
+            "sort_order": "4"
+        },
+        {
+            "product_image_id": "51",
+            "product_id": "18",
+            "image": "catalog/product-catalog-2026/rollon-sport/rollon-sport-02.jpg",
+            "sort_order": "1"
+        },
+        {
+            "product_image_id": "52",
+            "product_id": "18",
+            "image": "catalog/product-catalog-2026/rollon-sport/rollon-sport-03.jpg",
+            "sort_order": "2"
+        },
+        {
+            "product_image_id": "53",
+            "product_id": "18",
+            "image": "catalog/product-catalog-2026/rollon-sport/rollon-sport-04.jpg",
+            "sort_order": "3"
+        },
+        {
+            "product_image_id": "54",
+            "product_id": "18",
+            "image": "catalog/product-catalog-2026/rollon-sport/rollon-sport-05.jpg",
+            "sort_order": "4"
+        },
+        {
+            "product_image_id": "55",
+            "product_id": "18",
+            "image": "catalog/product-catalog-2026/rollon-sport/rollon-sport-06.jpg",
+            "sort_order": "5"
+        },
+        {
+            "product_image_id": "42",
+            "product_id": "19",
+            "image": "catalog/product-catalog-2026/rollon-kids/rollon-kids-02.jpg",
+            "sort_order": "1"
+        },
+        {
+            "product_image_id": "43",
+            "product_id": "19",
+            "image": "catalog/product-catalog-2026/rollon-kids/rollon-kids-03.jpg",
+            "sort_order": "2"
+        },
+        {
+            "product_image_id": "44",
+            "product_id": "19",
+            "image": "catalog/product-catalog-2026/rollon-kids/rollon-kids-04.jpg",
+            "sort_order": "3"
+        },
+        {
+            "product_image_id": "45",
+            "product_id": "19",
+            "image": "catalog/product-catalog-2026/rollon-kids/rollon-kids-05.jpg",
+            "sort_order": "4"
+        },
+        {
+            "product_image_id": "46",
+            "product_id": "19",
+            "image": "catalog/product-catalog-2026/rollon-kids/rollon-kids-06.jpg",
+            "sort_order": "5"
+        },
+        {
+            "product_image_id": "61",
+            "product_id": "20",
+            "image": "catalog/product-catalog-2026/shoe-spray/shoe-spray-02.jpg",
+            "sort_order": "1"
+        },
+        {
+            "product_image_id": "62",
+            "product_id": "20",
+            "image": "catalog/product-catalog-2026/shoe-spray/shoe-spray-03.jpg",
+            "sort_order": "2"
+        },
+        {
+            "product_image_id": "63",
+            "product_id": "20",
+            "image": "catalog/product-catalog-2026/shoe-spray/shoe-spray-04.jpg",
+            "sort_order": "3"
+        },
+        {
+            "product_image_id": "64",
+            "product_id": "20",
+            "image": "catalog/product-catalog-2026/shoe-spray/shoe-spray-05.jpg",
+            "sort_order": "4"
+        }
+    ],
+    "product_tabs_to_product": [
+        {
+            "tab_id": "29",
+            "product_id": "6"
+        },
+        {
+            "tab_id": "30",
+            "product_id": "6"
+        },
+        {
+            "tab_id": "31",
+            "product_id": "6"
+        },
+        {
+            "tab_id": "32",
+            "product_id": "6"
+        },
+        {
+            "tab_id": "33",
+            "product_id": "6"
+        },
+        {
+            "tab_id": "34",
+            "product_id": "6"
+        },
+        {
+            "tab_id": "35",
+            "product_id": "6"
+        },
+        {
+            "tab_id": "15",
+            "product_id": "9"
+        },
+        {
+            "tab_id": "16",
+            "product_id": "9"
+        },
+        {
+            "tab_id": "17",
+            "product_id": "9"
+        },
+        {
+            "tab_id": "18",
+            "product_id": "9"
+        },
+        {
+            "tab_id": "19",
+            "product_id": "9"
+        },
+        {
+            "tab_id": "20",
+            "product_id": "9"
+        },
+        {
+            "tab_id": "21",
+            "product_id": "9"
+        },
+        {
+            "tab_id": "22",
+            "product_id": "10"
+        },
+        {
+            "tab_id": "23",
+            "product_id": "10"
+        },
+        {
+            "tab_id": "24",
+            "product_id": "10"
+        },
+        {
+            "tab_id": "25",
+            "product_id": "10"
+        },
+        {
+            "tab_id": "26",
+            "product_id": "10"
+        },
+        {
+            "tab_id": "27",
+            "product_id": "10"
+        },
+        {
+            "tab_id": "28",
+            "product_id": "10"
+        },
+        {
+            "tab_id": "57",
+            "product_id": "12"
+        },
+        {
+            "tab_id": "58",
+            "product_id": "12"
+        },
+        {
+            "tab_id": "59",
+            "product_id": "12"
+        },
+        {
+            "tab_id": "60",
+            "product_id": "12"
+        },
+        {
+            "tab_id": "61",
+            "product_id": "12"
+        },
+        {
+            "tab_id": "62",
+            "product_id": "12"
+        },
+        {
+            "tab_id": "63",
+            "product_id": "12"
+        },
+        {
+            "tab_id": "43",
+            "product_id": "13"
+        },
+        {
+            "tab_id": "44",
+            "product_id": "13"
+        },
+        {
+            "tab_id": "45",
+            "product_id": "13"
+        },
+        {
+            "tab_id": "46",
+            "product_id": "13"
+        },
+        {
+            "tab_id": "47",
+            "product_id": "13"
+        },
+        {
+            "tab_id": "48",
+            "product_id": "13"
+        },
+        {
+            "tab_id": "49",
+            "product_id": "13"
+        },
+        {
+            "tab_id": "50",
+            "product_id": "14"
+        },
+        {
+            "tab_id": "51",
+            "product_id": "14"
+        },
+        {
+            "tab_id": "52",
+            "product_id": "14"
+        },
+        {
+            "tab_id": "53",
+            "product_id": "14"
+        },
+        {
+            "tab_id": "54",
+            "product_id": "14"
+        },
+        {
+            "tab_id": "55",
+            "product_id": "14"
+        },
+        {
+            "tab_id": "56",
+            "product_id": "14"
+        },
+        {
+            "tab_id": "36",
+            "product_id": "15"
+        },
+        {
+            "tab_id": "37",
+            "product_id": "15"
+        },
+        {
+            "tab_id": "38",
+            "product_id": "15"
+        },
+        {
+            "tab_id": "39",
+            "product_id": "15"
+        },
+        {
+            "tab_id": "40",
+            "product_id": "15"
+        },
+        {
+            "tab_id": "41",
+            "product_id": "15"
+        },
+        {
+            "tab_id": "42",
+            "product_id": "15"
+        },
+        {
+            "tab_id": "85",
+            "product_id": "16"
+        },
+        {
+            "tab_id": "86",
+            "product_id": "16"
+        },
+        {
+            "tab_id": "87",
+            "product_id": "16"
+        },
+        {
+            "tab_id": "88",
+            "product_id": "16"
+        },
+        {
+            "tab_id": "89",
+            "product_id": "16"
+        },
+        {
+            "tab_id": "90",
+            "product_id": "16"
+        },
+        {
+            "tab_id": "91",
+            "product_id": "16"
+        },
+        {
+            "tab_id": "71",
+            "product_id": "17"
+        },
+        {
+            "tab_id": "72",
+            "product_id": "17"
+        },
+        {
+            "tab_id": "73",
+            "product_id": "17"
+        },
+        {
+            "tab_id": "74",
+            "product_id": "17"
+        },
+        {
+            "tab_id": "75",
+            "product_id": "17"
+        },
+        {
+            "tab_id": "76",
+            "product_id": "17"
+        },
+        {
+            "tab_id": "77",
+            "product_id": "17"
+        },
+        {
+            "tab_id": "78",
+            "product_id": "18"
+        },
+        {
+            "tab_id": "79",
+            "product_id": "18"
+        },
+        {
+            "tab_id": "80",
+            "product_id": "18"
+        },
+        {
+            "tab_id": "81",
+            "product_id": "18"
+        },
+        {
+            "tab_id": "82",
+            "product_id": "18"
+        },
+        {
+            "tab_id": "83",
+            "product_id": "18"
+        },
+        {
+            "tab_id": "84",
+            "product_id": "18"
+        },
+        {
+            "tab_id": "64",
+            "product_id": "19"
+        },
+        {
+            "tab_id": "65",
+            "product_id": "19"
+        },
+        {
+            "tab_id": "66",
+            "product_id": "19"
+        },
+        {
+            "tab_id": "67",
+            "product_id": "19"
+        },
+        {
+            "tab_id": "68",
+            "product_id": "19"
+        },
+        {
+            "tab_id": "69",
+            "product_id": "19"
+        },
+        {
+            "tab_id": "70",
+            "product_id": "19"
+        },
+        {
+            "tab_id": "92",
+            "product_id": "20"
+        },
+        {
+            "tab_id": "93",
+            "product_id": "20"
+        },
+        {
+            "tab_id": "94",
+            "product_id": "20"
+        },
+        {
+            "tab_id": "95",
+            "product_id": "20"
+        },
+        {
+            "tab_id": "96",
+            "product_id": "20"
+        },
+        {
+            "tab_id": "97",
+            "product_id": "20"
+        },
+        {
+            "tab_id": "98",
+            "product_id": "20"
+        }
+    ],
+    "product_tabs": [
+        {
+            "tab_id": "15",
+            "sort_order": "1",
+            "status": "1",
+            "global": "0"
+        },
+        {
+            "tab_id": "16",
+            "sort_order": "2",
+            "status": "1",
+            "global": "0"
+        },
+        {
+            "tab_id": "17",
+            "sort_order": "3",
+            "status": "1",
+            "global": "0"
+        },
+        {
+            "tab_id": "18",
+            "sort_order": "4",
+            "status": "1",
+            "global": "0"
+        },
+        {
+            "tab_id": "19",
+            "sort_order": "5",
+            "status": "1",
+            "global": "0"
+        },
+        {
+            "tab_id": "20",
+            "sort_order": "6",
+            "status": "1",
+            "global": "0"
+        },
+        {
+            "tab_id": "21",
+            "sort_order": "7",
+            "status": "1",
+            "global": "0"
+        },
+        {
+            "tab_id": "22",
+            "sort_order": "1",
+            "status": "1",
+            "global": "0"
+        },
+        {
+            "tab_id": "23",
+            "sort_order": "2",
+            "status": "1",
+            "global": "0"
+        },
+        {
+            "tab_id": "24",
+            "sort_order": "3",
+            "status": "1",
+            "global": "0"
+        },
+        {
+            "tab_id": "25",
+            "sort_order": "4",
+            "status": "1",
+            "global": "0"
+        },
+        {
+            "tab_id": "26",
+            "sort_order": "5",
+            "status": "1",
+            "global": "0"
+        },
+        {
+            "tab_id": "27",
+            "sort_order": "6",
+            "status": "1",
+            "global": "0"
+        },
+        {
+            "tab_id": "28",
+            "sort_order": "7",
+            "status": "1",
+            "global": "0"
+        },
+        {
+            "tab_id": "29",
+            "sort_order": "1",
+            "status": "1",
+            "global": "0"
+        },
+        {
+            "tab_id": "30",
+            "sort_order": "2",
+            "status": "1",
+            "global": "0"
+        },
+        {
+            "tab_id": "31",
+            "sort_order": "3",
+            "status": "1",
+            "global": "0"
+        },
+        {
+            "tab_id": "32",
+            "sort_order": "4",
+            "status": "1",
+            "global": "0"
+        },
+        {
+            "tab_id": "33",
+            "sort_order": "5",
+            "status": "1",
+            "global": "0"
+        },
+        {
+            "tab_id": "34",
+            "sort_order": "6",
+            "status": "1",
+            "global": "0"
+        },
+        {
+            "tab_id": "35",
+            "sort_order": "7",
+            "status": "1",
+            "global": "0"
+        },
+        {
+            "tab_id": "36",
+            "sort_order": "1",
+            "status": "1",
+            "global": "0"
+        },
+        {
+            "tab_id": "37",
+            "sort_order": "2",
+            "status": "1",
+            "global": "0"
+        },
+        {
+            "tab_id": "38",
+            "sort_order": "3",
+            "status": "1",
+            "global": "0"
+        },
+        {
+            "tab_id": "39",
+            "sort_order": "4",
+            "status": "1",
+            "global": "0"
+        },
+        {
+            "tab_id": "40",
+            "sort_order": "5",
+            "status": "1",
+            "global": "0"
+        },
+        {
+            "tab_id": "41",
+            "sort_order": "6",
+            "status": "1",
+            "global": "0"
+        },
+        {
+            "tab_id": "42",
+            "sort_order": "7",
+            "status": "1",
+            "global": "0"
+        },
+        {
+            "tab_id": "43",
+            "sort_order": "1",
+            "status": "1",
+            "global": "0"
+        },
+        {
+            "tab_id": "44",
+            "sort_order": "2",
+            "status": "1",
+            "global": "0"
+        },
+        {
+            "tab_id": "45",
+            "sort_order": "3",
+            "status": "1",
+            "global": "0"
+        },
+        {
+            "tab_id": "46",
+            "sort_order": "4",
+            "status": "1",
+            "global": "0"
+        },
+        {
+            "tab_id": "47",
+            "sort_order": "5",
+            "status": "1",
+            "global": "0"
+        },
+        {
+            "tab_id": "48",
+            "sort_order": "6",
+            "status": "1",
+            "global": "0"
+        },
+        {
+            "tab_id": "49",
+            "sort_order": "7",
+            "status": "1",
+            "global": "0"
+        },
+        {
+            "tab_id": "50",
+            "sort_order": "1",
+            "status": "1",
+            "global": "0"
+        },
+        {
+            "tab_id": "51",
+            "sort_order": "2",
+            "status": "1",
+            "global": "0"
+        },
+        {
+            "tab_id": "52",
+            "sort_order": "3",
+            "status": "1",
+            "global": "0"
+        },
+        {
+            "tab_id": "53",
+            "sort_order": "4",
+            "status": "1",
+            "global": "0"
+        },
+        {
+            "tab_id": "54",
+            "sort_order": "5",
+            "status": "1",
+            "global": "0"
+        },
+        {
+            "tab_id": "55",
+            "sort_order": "6",
+            "status": "1",
+            "global": "0"
+        },
+        {
+            "tab_id": "56",
+            "sort_order": "7",
+            "status": "1",
+            "global": "0"
+        },
+        {
+            "tab_id": "57",
+            "sort_order": "1",
+            "status": "1",
+            "global": "0"
+        },
+        {
+            "tab_id": "58",
+            "sort_order": "2",
+            "status": "1",
+            "global": "0"
+        },
+        {
+            "tab_id": "59",
+            "sort_order": "3",
+            "status": "1",
+            "global": "0"
+        },
+        {
+            "tab_id": "60",
+            "sort_order": "4",
+            "status": "1",
+            "global": "0"
+        },
+        {
+            "tab_id": "61",
+            "sort_order": "5",
+            "status": "1",
+            "global": "0"
+        },
+        {
+            "tab_id": "62",
+            "sort_order": "6",
+            "status": "1",
+            "global": "0"
+        },
+        {
+            "tab_id": "63",
+            "sort_order": "7",
+            "status": "1",
+            "global": "0"
+        },
+        {
+            "tab_id": "64",
+            "sort_order": "1",
+            "status": "1",
+            "global": "0"
+        },
+        {
+            "tab_id": "65",
+            "sort_order": "2",
+            "status": "1",
+            "global": "0"
+        },
+        {
+            "tab_id": "66",
+            "sort_order": "3",
+            "status": "1",
+            "global": "0"
+        },
+        {
+            "tab_id": "67",
+            "sort_order": "4",
+            "status": "1",
+            "global": "0"
+        },
+        {
+            "tab_id": "68",
+            "sort_order": "5",
+            "status": "1",
+            "global": "0"
+        },
+        {
+            "tab_id": "69",
+            "sort_order": "6",
+            "status": "1",
+            "global": "0"
+        },
+        {
+            "tab_id": "70",
+            "sort_order": "7",
+            "status": "1",
+            "global": "0"
+        },
+        {
+            "tab_id": "71",
+            "sort_order": "1",
+            "status": "1",
+            "global": "0"
+        },
+        {
+            "tab_id": "72",
+            "sort_order": "2",
+            "status": "1",
+            "global": "0"
+        },
+        {
+            "tab_id": "73",
+            "sort_order": "3",
+            "status": "1",
+            "global": "0"
+        },
+        {
+            "tab_id": "74",
+            "sort_order": "4",
+            "status": "1",
+            "global": "0"
+        },
+        {
+            "tab_id": "75",
+            "sort_order": "5",
+            "status": "1",
+            "global": "0"
+        },
+        {
+            "tab_id": "76",
+            "sort_order": "6",
+            "status": "1",
+            "global": "0"
+        },
+        {
+            "tab_id": "77",
+            "sort_order": "7",
+            "status": "1",
+            "global": "0"
+        },
+        {
+            "tab_id": "78",
+            "sort_order": "1",
+            "status": "1",
+            "global": "0"
+        },
+        {
+            "tab_id": "79",
+            "sort_order": "2",
+            "status": "1",
+            "global": "0"
+        },
+        {
+            "tab_id": "80",
+            "sort_order": "3",
+            "status": "1",
+            "global": "0"
+        },
+        {
+            "tab_id": "81",
+            "sort_order": "4",
+            "status": "1",
+            "global": "0"
+        },
+        {
+            "tab_id": "82",
+            "sort_order": "5",
+            "status": "1",
+            "global": "0"
+        },
+        {
+            "tab_id": "83",
+            "sort_order": "6",
+            "status": "1",
+            "global": "0"
+        },
+        {
+            "tab_id": "84",
+            "sort_order": "7",
+            "status": "1",
+            "global": "0"
+        },
+        {
+            "tab_id": "85",
+            "sort_order": "1",
+            "status": "1",
+            "global": "0"
+        },
+        {
+            "tab_id": "86",
+            "sort_order": "2",
+            "status": "1",
+            "global": "0"
+        },
+        {
+            "tab_id": "87",
+            "sort_order": "3",
+            "status": "1",
+            "global": "0"
+        },
+        {
+            "tab_id": "88",
+            "sort_order": "4",
+            "status": "1",
+            "global": "0"
+        },
+        {
+            "tab_id": "89",
+            "sort_order": "5",
+            "status": "1",
+            "global": "0"
+        },
+        {
+            "tab_id": "90",
+            "sort_order": "6",
+            "status": "1",
+            "global": "0"
+        },
+        {
+            "tab_id": "91",
+            "sort_order": "7",
+            "status": "1",
+            "global": "0"
+        },
+        {
+            "tab_id": "92",
+            "sort_order": "1",
+            "status": "1",
+            "global": "0"
+        },
+        {
+            "tab_id": "93",
+            "sort_order": "2",
+            "status": "1",
+            "global": "0"
+        },
+        {
+            "tab_id": "94",
+            "sort_order": "3",
+            "status": "1",
+            "global": "0"
+        },
+        {
+            "tab_id": "95",
+            "sort_order": "4",
+            "status": "1",
+            "global": "0"
+        },
+        {
+            "tab_id": "96",
+            "sort_order": "5",
+            "status": "1",
+            "global": "0"
+        },
+        {
+            "tab_id": "97",
+            "sort_order": "6",
+            "status": "1",
+            "global": "0"
+        },
+        {
+            "tab_id": "98",
+            "sort_order": "7",
+            "status": "1",
+            "global": "0"
+        }
+    ],
+    "product_tabs_description": [
+        {
+            "tab_id": "15",
+            "language_id": "1",
+            "name": "Kada odabrati DryZen maramice za ruke?",
+            "description": "<p>Ako ti znojenje dlanova stvara nelagodu tijekom svakodnevnih aktivnosti, ovaj proizvod može biti pravi izbor.</p><p>Prikladne su za:</p><ul><li>posao i poslovne sastanke</li><li>rukovanje i kontakt s ljudima</li><li>vožnju</li><li>svakodnevne aktivnosti</li><li>putovanja</li></ul>"
+        },
+        {
+            "tab_id": "15",
+            "language_id": "3",
+            "name": "Kada odabrati DryZen maramice za ruke?",
+            "description": "<p>Ako ti znojenje dlanova stvara nelagodu tijekom svakodnevnih aktivnosti, ovaj proizvod može biti pravi izbor.</p><p>Prikladne su za:</p><ul><li>posao i poslovne sastanke</li><li>rukovanje i kontakt s ljudima</li><li>vožnju</li><li>svakodnevne aktivnosti</li><li>putovanja</li></ul>"
+        },
+        {
+            "tab_id": "16",
+            "language_id": "1",
+            "name": "Zašto odabrati DryZen?",
+            "description": "<ul><li>Pomaže u kontroli znojenja dlanova.</li><li>Jednostavna večernja rutina koja se lako uklapa u svakodnevni život.</li><li>Pojedinačno pakirane maramice jednostavne za korištenje.</li><li>Pakiranje sadrži 3 jednokratne maramice za početnu rutinu.</li></ul>"
+        },
+        {
+            "tab_id": "16",
+            "language_id": "3",
+            "name": "Zašto odabrati DryZen?",
+            "description": "<ul><li>Pomaže u kontroli znojenja dlanova.</li><li>Jednostavna večernja rutina koja se lako uklapa u svakodnevni život.</li><li>Pojedinačno pakirane maramice jednostavne za korištenje.</li><li>Pakiranje sadrži 3 jednokratne maramice za početnu rutinu.</li></ul>"
+        },
+        {
+            "tab_id": "17",
+            "language_id": "1",
+            "name": "Kako koristiti?",
+            "description": "<p>Za najbolje rezultate proizvod koristi navečer prije spavanja.</p><ol><li>Operi i potpuno osuši ruke.</li><li>Otvori pakiranje i izvadi jednu maramicu.</li><li>Temeljito prebriši čiste i potpuno suhe dlanove, uključujući područje između prstiju.</li><li>Ostavi da se koža prirodno osuši.</li><li>Nakon primjene ne peri ruke i nemoj ispirati proizvod.</li></ol><h3>Početna rutina</h3><ul><li>Koristi jednu maramicu svake večeri.</li><li>Primjenjuj tri večeri zaredom.</li><li>Nakon toga ponovi rutinu prema potrebi i u skladu s uputama za korištenje.</li></ul>"
+        },
+        {
+            "tab_id": "17",
+            "language_id": "3",
+            "name": "Kako koristiti?",
+            "description": "<p>Za najbolje rezultate proizvod koristi navečer prije spavanja.</p><ol><li>Operi i potpuno osuši ruke.</li><li>Otvori pakiranje i izvadi jednu maramicu.</li><li>Temeljito prebriši čiste i potpuno suhe dlanove, uključujući područje između prstiju.</li><li>Ostavi da se koža prirodno osuši.</li><li>Nakon primjene ne peri ruke i nemoj ispirati proizvod.</li></ol><h3>Početna rutina</h3><ul><li>Koristi jednu maramicu svake večeri.</li><li>Primjenjuj tri večeri zaredom.</li><li>Nakon toga ponovi rutinu prema potrebi i u skladu s uputama za korištenje.</li></ul>"
+        },
+        {
+            "tab_id": "18",
+            "language_id": "1",
+            "name": "Što se nalazi u pakiranju?",
+            "description": "<ul><li>3 jednokratne antiperspirant maramice za ruke</li><li>pojedinačno pakirane</li><li>namijenjene za jednokratnu uporabu</li></ul>"
+        },
+        {
+            "tab_id": "18",
+            "language_id": "3",
+            "name": "Što se nalazi u pakiranju?",
+            "description": "<ul><li>3 jednokratne antiperspirant maramice za ruke</li><li>pojedinačno pakirane</li><li>namijenjene za jednokratnu uporabu</li></ul>"
+        },
+        {
+            "tab_id": "19",
+            "language_id": "1",
+            "name": "Sastojci (INCI)",
+            "description": "<p>Aqua, Aluminium Chloride, Parfum, Phenoxyethanol, Cocamidopropyl Betaine</p>"
+        },
+        {
+            "tab_id": "19",
+            "language_id": "3",
+            "name": "Sastojci (INCI)",
+            "description": "<p>Aqua, Aluminium Chloride, Parfum, Phenoxyethanol, Cocamidopropyl Betaine</p>"
+        },
+        {
+            "tab_id": "20",
+            "language_id": "1",
+            "name": "Upozorenja",
+            "description": "<ul><li>Samo za vanjsku uporabu na rukama.</li><li>Koristiti isključivo na čistoj i potpuno suhoj koži.</li><li>Izbjegavati kontakt s očima, sluznicama i otvorenim ranama.</li><li>Ne koristiti na nadraženoj ili oštećenoj koži.</li><li>Ne koristiti na drugim dijelovima tijela.</li><li>U slučaju crvenila, svrbeža ili iritacije prekinuti uporabu.</li><li>Nakon uporabe maramicu odložiti u otpad. Ne odlagati u WC školjku.</li><li>Čuvati na suhom mjestu i izvan dohvata djece.</li><li>Izbjegavati nanošenje na oštećenu ili svježe obrijanu kožu.</li></ul>"
+        },
+        {
+            "tab_id": "20",
+            "language_id": "3",
+            "name": "Upozorenja",
+            "description": "<ul><li>Samo za vanjsku uporabu na rukama.</li><li>Koristiti isključivo na čistoj i potpuno suhoj koži.</li><li>Izbjegavati kontakt s očima, sluznicama i otvorenim ranama.</li><li>Ne koristiti na nadraženoj ili oštećenoj koži.</li><li>Ne koristiti na drugim dijelovima tijela.</li><li>U slučaju crvenila, svrbeža ili iritacije prekinuti uporabu.</li><li>Nakon uporabe maramicu odložiti u otpad. Ne odlagati u WC školjku.</li><li>Čuvati na suhom mjestu i izvan dohvata djece.</li><li>Izbjegavati nanošenje na oštećenu ili svježe obrijanu kožu.</li></ul>"
+        },
+        {
+            "tab_id": "21",
+            "language_id": "1",
+            "name": "Dodatne informacije",
+            "description": "<ul><li>Jednokratna uporaba.</li><li>Rok trajanja otisnut je na pakiranju.</li></ul><h3>Odgovorna osoba</h3><p>Gordom usluge d.o.o.<br>\nZagreb, Hrvatska<br>\n<a href=\"mailto:dryzen@dryzen.eu\">dryzen@dryzen.eu</a><br>\n<a href=\"https://www.dryzen.eu\">www.dryzen.eu</a></p>"
+        },
+        {
+            "tab_id": "21",
+            "language_id": "3",
+            "name": "Dodatne informacije",
+            "description": "<ul><li>Jednokratna uporaba.</li><li>Rok trajanja otisnut je na pakiranju.</li></ul><h3>Odgovorna osoba</h3><p>Gordom usluge d.o.o.<br>\nZagreb, Hrvatska<br>\n<a href=\"mailto:dryzen@dryzen.eu\">dryzen@dryzen.eu</a><br>\n<a href=\"https://www.dryzen.eu\">www.dryzen.eu</a></p>"
+        },
+        {
+            "tab_id": "22",
+            "language_id": "1",
+            "name": "Kada odabrati DryZen Sport maramice?",
+            "description": "<p>Ako ti znojenje dlanova stvara nelagodu tijekom fizičke aktivnosti ili aktivnog načina života, ovaj proizvod može biti pravi izbor.</p><p>Prikladne su za:</p><ul><li>treninge i rekreaciju</li><li>teretanu</li><li>sport i natjecanja</li><li>aktivnosti na otvorenom</li><li>aktivan svakodnevni život</li></ul>"
+        },
+        {
+            "tab_id": "22",
+            "language_id": "3",
+            "name": "Kada odabrati DryZen Sport maramice?",
+            "description": "<p>Ako ti znojenje dlanova stvara nelagodu tijekom fizičke aktivnosti ili aktivnog načina života, ovaj proizvod može biti pravi izbor.</p><p>Prikladne su za:</p><ul><li>treninge i rekreaciju</li><li>teretanu</li><li>sport i natjecanja</li><li>aktivnosti na otvorenom</li><li>aktivan svakodnevni život</li></ul>"
+        },
+        {
+            "tab_id": "23",
+            "language_id": "1",
+            "name": "Zašto odabrati DryZen Sport?",
+            "description": "<ul><li>Pomaže u kontroli znojenja dlanova.</li><li>Razvijeno za aktivan način života.</li><li>Jednostavna večernja rutina koja se lako uklapa u raspored.</li><li>Pojedinačno pakirane maramice jednostavne za korištenje.</li><li>Pakiranje sadrži 3 jednokratne maramice za početnu rutinu.</li></ul>"
+        },
+        {
+            "tab_id": "23",
+            "language_id": "3",
+            "name": "Zašto odabrati DryZen Sport?",
+            "description": "<ul><li>Pomaže u kontroli znojenja dlanova.</li><li>Razvijeno za aktivan način života.</li><li>Jednostavna večernja rutina koja se lako uklapa u raspored.</li><li>Pojedinačno pakirane maramice jednostavne za korištenje.</li><li>Pakiranje sadrži 3 jednokratne maramice za početnu rutinu.</li></ul>"
+        },
+        {
+            "tab_id": "24",
+            "language_id": "1",
+            "name": "Kako koristiti?",
+            "description": "<p>Za najbolje rezultate proizvod koristi navečer prije spavanja.</p><ol><li>Operi i potpuno osuši ruke.</li><li>Otvori pakiranje i izvadi jednu maramicu.</li><li>Temeljito prebriši čiste i potpuno suhe dlanove, uključujući područje između prstiju.</li><li>Ostavite da se koža prirodno osuši.</li><li>Nakon primjene ne peri ruke i nemoj ispirati proizvod.</li></ol><h3>Početna rutina</h3><ul><li>Koristi jednu maramicu svake večeri.</li><li>Primjenjuj tri večeri zaredom.</li><li>Nakon toga ponovi rutinu prema potrebi i u skladu s uputama za korištenje.</li></ul>"
+        },
+        {
+            "tab_id": "24",
+            "language_id": "3",
+            "name": "Kako koristiti?",
+            "description": "<p>Za najbolje rezultate proizvod koristi navečer prije spavanja.</p><ol><li>Operi i potpuno osuši ruke.</li><li>Otvori pakiranje i izvadi jednu maramicu.</li><li>Temeljito prebriši čiste i potpuno suhe dlanove, uključujući područje između prstiju.</li><li>Ostavite da se koža prirodno osuši.</li><li>Nakon primjene ne peri ruke i nemoj ispirati proizvod.</li></ol><h3>Početna rutina</h3><ul><li>Koristi jednu maramicu svake večeri.</li><li>Primjenjuj tri večeri zaredom.</li><li>Nakon toga ponovi rutinu prema potrebi i u skladu s uputama za korištenje.</li></ul>"
+        },
+        {
+            "tab_id": "25",
+            "language_id": "1",
+            "name": "Što se nalazi u pakiranju?",
+            "description": "<ul><li>3 jednokratne antiperspirant maramice za ruke</li><li>pojedinačno pakirane</li><li>namijenjene za jednokratnu uporabu</li></ul>"
+        },
+        {
+            "tab_id": "25",
+            "language_id": "3",
+            "name": "Što se nalazi u pakiranju?",
+            "description": "<ul><li>3 jednokratne antiperspirant maramice za ruke</li><li>pojedinačno pakirane</li><li>namijenjene za jednokratnu uporabu</li></ul>"
+        },
+        {
+            "tab_id": "26",
+            "language_id": "1",
+            "name": "Sastojci (INCI)",
+            "description": "<p>Aqua, Aluminium Chloride, Parfum, Phenoxyethanol, Cocamidopropyl Betaine</p>"
+        },
+        {
+            "tab_id": "26",
+            "language_id": "3",
+            "name": "Sastojci (INCI)",
+            "description": "<p>Aqua, Aluminium Chloride, Parfum, Phenoxyethanol, Cocamidopropyl Betaine</p>"
+        },
+        {
+            "tab_id": "27",
+            "language_id": "1",
+            "name": "Upozorenja",
+            "description": "<ul><li>Samo za vanjsku uporabu na rukama.</li><li>Koristiti isključivo na čistoj i potpuno suhoj koži.</li><li>Izbjegavati kontakt s očima, sluznicama i otvorenim ranama.</li><li>Ne koristiti na nadraženoj ili oštećenoj koži.</li><li>Ne koristiti na drugim dijelovima tijela.</li><li>U slučaju crvenila, svrbeža ili iritacije prekinuti uporabu.</li><li>Nakon uporabe maramicu odložiti u otpad. Ne odlagati u WC školjku.</li><li>Čuvati na suhom mjestu i izvan dohvata djece.</li><li>Izbjegavati nanošenje na oštećenu ili svježe obrijanu kožu.</li></ul>"
+        },
+        {
+            "tab_id": "27",
+            "language_id": "3",
+            "name": "Upozorenja",
+            "description": "<ul><li>Samo za vanjsku uporabu na rukama.</li><li>Koristiti isključivo na čistoj i potpuno suhoj koži.</li><li>Izbjegavati kontakt s očima, sluznicama i otvorenim ranama.</li><li>Ne koristiti na nadraženoj ili oštećenoj koži.</li><li>Ne koristiti na drugim dijelovima tijela.</li><li>U slučaju crvenila, svrbeža ili iritacije prekinuti uporabu.</li><li>Nakon uporabe maramicu odložiti u otpad. Ne odlagati u WC školjku.</li><li>Čuvati na suhom mjestu i izvan dohvata djece.</li><li>Izbjegavati nanošenje na oštećenu ili svježe obrijanu kožu.</li></ul>"
+        },
+        {
+            "tab_id": "28",
+            "language_id": "1",
+            "name": "Dodatne informacije",
+            "description": "<ul><li>Jednokratna uporaba.</li><li>Rok trajanja otisnut je na pakiranju.</li></ul><h3>Odgovorna osoba</h3><p>Gordom usluge d.o.o.<br>\nZagreb, Hrvatska<br>\n<a href=\"mailto:dryzen@dryzen.eu\">dryzen@dryzen.eu</a><br>\n<a href=\"https://www.dryzen.eu\">www.dryzen.eu</a></p>"
+        },
+        {
+            "tab_id": "28",
+            "language_id": "3",
+            "name": "Dodatne informacije",
+            "description": "<ul><li>Jednokratna uporaba.</li><li>Rok trajanja otisnut je na pakiranju.</li></ul><h3>Odgovorna osoba</h3><p>Gordom usluge d.o.o.<br>\nZagreb, Hrvatska<br>\n<a href=\"mailto:dryzen@dryzen.eu\">dryzen@dryzen.eu</a><br>\n<a href=\"https://www.dryzen.eu\">www.dryzen.eu</a></p>"
+        },
+        {
+            "tab_id": "29",
+            "language_id": "1",
+            "name": "Kada odabrati DryZen maramice za ruke?",
+            "description": "<p>Ako ti znojenje dlanova stvara nelagodu u svakodnevnim situacijama, ovaj proizvod može biti pravi izbor.</p><p>Prikladne su za:</p><ul><li>posao i poslovne sastanke</li><li>rukovanje i kontakt s ljudima</li><li>fakultet ili školu</li><li>izlaske i druženja</li><li>svakodnevne aktivnosti</li></ul>"
+        },
+        {
+            "tab_id": "29",
+            "language_id": "3",
+            "name": "Kada odabrati DryZen maramice za ruke?",
+            "description": "<p>Ako ti znojenje dlanova stvara nelagodu u svakodnevnim situacijama, ovaj proizvod može biti pravi izbor.</p><p>Prikladne su za:</p><ul><li>posao i poslovne sastanke</li><li>rukovanje i kontakt s ljudima</li><li>fakultet ili školu</li><li>izlaske i druženja</li><li>svakodnevne aktivnosti</li></ul>"
+        },
+        {
+            "tab_id": "30",
+            "language_id": "1",
+            "name": "Zašto odabrati DryZen?",
+            "description": "<ul><li>Pomaže u kontroli znojenja dlanova.</li><li>Jednostavna večernja rutina koja se lako uklapa u svakodnevni život.</li><li>Pojedinačno pakirane maramice jednostavne za korištenje.</li><li>Pakiranje sadrži 3 jednokratne maramice za početnu rutinu.</li></ul>"
+        },
+        {
+            "tab_id": "30",
+            "language_id": "3",
+            "name": "Zašto odabrati DryZen?",
+            "description": "<ul><li>Pomaže u kontroli znojenja dlanova.</li><li>Jednostavna večernja rutina koja se lako uklapa u svakodnevni život.</li><li>Pojedinačno pakirane maramice jednostavne za korištenje.</li><li>Pakiranje sadrži 3 jednokratne maramice za početnu rutinu.</li></ul>"
+        },
+        {
+            "tab_id": "31",
+            "language_id": "1",
+            "name": "Kako koristiti?",
+            "description": "<p>Za najbolje rezultate proizvod koristi navečer prije spavanja.</p><ol><li>Operi i potpuno osuši ruke.</li><li>Otvori pakiranje i izvadi jednu maramicu.</li><li>Temeljito prebriši čiste i potpuno suhe dlanove, uključujući područje između prstiju.</li><li>Ostavi da se koža prirodno osuši.</li><li>Nakon primjene ne peri ruke i nemoj ispirati proizvod.</li></ol><h3>Početna rutina</h3><ul><li>Koristi jednu maramicu svake večeri.</li><li>Primjenjuj tri večeri zaredom.</li><li>Nakon toga ponovi rutinu prema potrebi i u skladu s uputama za korištenje.</li></ul>"
+        },
+        {
+            "tab_id": "31",
+            "language_id": "3",
+            "name": "Kako koristiti?",
+            "description": "<p>Za najbolje rezultate proizvod koristi navečer prije spavanja.</p><ol><li>Operi i potpuno osuši ruke.</li><li>Otvori pakiranje i izvadi jednu maramicu.</li><li>Temeljito prebriši čiste i potpuno suhe dlanove, uključujući područje između prstiju.</li><li>Ostavi da se koža prirodno osuši.</li><li>Nakon primjene ne peri ruke i nemoj ispirati proizvod.</li></ol><h3>Početna rutina</h3><ul><li>Koristi jednu maramicu svake večeri.</li><li>Primjenjuj tri večeri zaredom.</li><li>Nakon toga ponovi rutinu prema potrebi i u skladu s uputama za korištenje.</li></ul>"
+        },
+        {
+            "tab_id": "32",
+            "language_id": "1",
+            "name": "Što se nalazi u pakiranju?",
+            "description": "<ul><li>3 jednokratne antiperspirant maramice za ruke</li><li>pojedinačno pakirane</li><li>namijenjene za jednokratnu uporabu</li></ul>"
+        },
+        {
+            "tab_id": "32",
+            "language_id": "3",
+            "name": "Što se nalazi u pakiranju?",
+            "description": "<ul><li>3 jednokratne antiperspirant maramice za ruke</li><li>pojedinačno pakirane</li><li>namijenjene za jednokratnu uporabu</li></ul>"
+        },
+        {
+            "tab_id": "33",
+            "language_id": "1",
+            "name": "Sastojci (INCI)",
+            "description": "<p>Aqua, Aluminium Chloride, Parfum, Phenoxyethanol, Cocamidopropyl Betaine</p>"
+        },
+        {
+            "tab_id": "33",
+            "language_id": "3",
+            "name": "Sastojci (INCI)",
+            "description": "<p>Aqua, Aluminium Chloride, Parfum, Phenoxyethanol, Cocamidopropyl Betaine</p>"
+        },
+        {
+            "tab_id": "34",
+            "language_id": "1",
+            "name": "Upozorenja",
+            "description": "<ul><li>Samo za vanjsku uporabu na rukama.</li><li>Koristiti isključivo na čistoj i potpuno suhoj koži.</li><li>Izbjegavati kontakt s očima, sluznicama i otvorenim ranama.</li><li>Ne koristiti na nadraženoj ili oštećenoj koži.</li><li>Ne koristiti na drugim dijelovima tijela.</li><li>U slučaju crvenila, svrbeža ili iritacije prekinuti uporabu.</li><li>Nakon uporabe maramicu odložiti u otpad. Ne odlagati u WC školjku.</li><li>Čuvati na suhom mjestu i izvan dohvata djece.</li><li>Izbjegavati nanošenje na oštećenu ili svježe obrijanu kožu.</li></ul>"
+        },
+        {
+            "tab_id": "34",
+            "language_id": "3",
+            "name": "Upozorenja",
+            "description": "<ul><li>Samo za vanjsku uporabu na rukama.</li><li>Koristiti isključivo na čistoj i potpuno suhoj koži.</li><li>Izbjegavati kontakt s očima, sluznicama i otvorenim ranama.</li><li>Ne koristiti na nadraženoj ili oštećenoj koži.</li><li>Ne koristiti na drugim dijelovima tijela.</li><li>U slučaju crvenila, svrbeža ili iritacije prekinuti uporabu.</li><li>Nakon uporabe maramicu odložiti u otpad. Ne odlagati u WC školjku.</li><li>Čuvati na suhom mjestu i izvan dohvata djece.</li><li>Izbjegavati nanošenje na oštećenu ili svježe obrijanu kožu.</li></ul>"
+        },
+        {
+            "tab_id": "35",
+            "language_id": "1",
+            "name": "Dodatne informacije",
+            "description": "<ul><li>Jednokratna uporaba.</li><li>Rok trajanja otisnut je na pakiranju.</li></ul><h3>Odgovorna osoba</h3><p>Gordom usluge d.o.o.<br>\nZagreb, Hrvatska<br>\n<a href=\"mailto:dryzen@dryzen.eu\">dryzen@dryzen.eu</a><br>\n<a href=\"https://www.dryzen.eu\">www.dryzen.eu</a></p>"
+        },
+        {
+            "tab_id": "35",
+            "language_id": "3",
+            "name": "Dodatne informacije",
+            "description": "<ul><li>Jednokratna uporaba.</li><li>Rok trajanja otisnut je na pakiranju.</li></ul><h3>Odgovorna osoba</h3><p>Gordom usluge d.o.o.<br>\nZagreb, Hrvatska<br>\n<a href=\"mailto:dryzen@dryzen.eu\">dryzen@dryzen.eu</a><br>\n<a href=\"https://www.dryzen.eu\">www.dryzen.eu</a></p>"
+        },
+        {
+            "tab_id": "36",
+            "language_id": "1",
+            "name": "Kada odabrati DryZen Kids maramice za stopala?",
+            "description": "<p>Ako znojenje stopala ili neugodni mirisi stvaraju nelagodu tijekom dana, ovaj proizvod može biti pravi izbor.</p><p>Prikladne su za:</p><ul><li>školu i vrtić</li><li>sport i izvannastavne aktivnosti</li><li>svakodnevno nošenje zatvorene obuće</li><li>igru i boravak u pokretu</li><li>svakodnevne aktivnosti</li></ul>"
+        },
+        {
+            "tab_id": "36",
+            "language_id": "3",
+            "name": "Kada odabrati DryZen Kids maramice za stopala?",
+            "description": "<p>Ako znojenje stopala ili neugodni mirisi stvaraju nelagodu tijekom dana, ovaj proizvod može biti pravi izbor.</p><p>Prikladne su za:</p><ul><li>školu i vrtić</li><li>sport i izvannastavne aktivnosti</li><li>svakodnevno nošenje zatvorene obuće</li><li>igru i boravak u pokretu</li><li>svakodnevne aktivnosti</li></ul>"
+        },
+        {
+            "tab_id": "37",
+            "language_id": "1",
+            "name": "Zašto odabrati DryZen Kids?",
+            "description": "<ul><li>Pomaže u kontroli znojenja stopala.</li><li>Doprinosi smanjenju neugodnih mirisa povezanih sa znojenjem.</li><li>Jednostavna večernja rutina koja se lako uklapa u svakodnevni život.</li><li>Pojedinačno pakirane maramice jednostavne za korištenje.</li><li>Pakiranje sadrži 3 jednokratne maramice za početnu rutinu.</li></ul>"
+        },
+        {
+            "tab_id": "37",
+            "language_id": "3",
+            "name": "Zašto odabrati DryZen Kids?",
+            "description": "<ul><li>Pomaže u kontroli znojenja stopala.</li><li>Doprinosi smanjenju neugodnih mirisa povezanih sa znojenjem.</li><li>Jednostavna večernja rutina koja se lako uklapa u svakodnevni život.</li><li>Pojedinačno pakirane maramice jednostavne za korištenje.</li><li>Pakiranje sadrži 3 jednokratne maramice za početnu rutinu.</li></ul>"
+        },
+        {
+            "tab_id": "38",
+            "language_id": "1",
+            "name": "Kako koristiti?",
+            "description": "<p>Za najbolje rezultate proizvod koristi navečer prije spavanja.</p><ol><li>Operi i potpuno osuši stopala.</li><li>Otvori pakiranje i izvadi jednu maramicu.</li><li>Temeljito prebriši čista i potpuno suha stopala, uključujući područje između prstiju.</li><li>Ostavite da se koža prirodno osuši.</li><li>Nakon primjene ne peri ruke i nemoj ispirati proizvod.</li></ol><h3>Početna rutina</h3><ul><li>Koristi jednu maramicu svake večeri.</li><li>Primjenjuj tri večeri zaredom.</li><li>Nakon toga ponovi rutinu prema potrebi i u skladu s uputama za korištenje.</li></ul>"
+        },
+        {
+            "tab_id": "38",
+            "language_id": "3",
+            "name": "Kako koristiti?",
+            "description": "<p>Za najbolje rezultate proizvod koristi navečer prije spavanja.</p><ol><li>Operi i potpuno osuši stopala.</li><li>Otvori pakiranje i izvadi jednu maramicu.</li><li>Temeljito prebriši čista i potpuno suha stopala, uključujući područje između prstiju.</li><li>Ostavite da se koža prirodno osuši.</li><li>Nakon primjene ne peri ruke i nemoj ispirati proizvod.</li></ol><h3>Početna rutina</h3><ul><li>Koristi jednu maramicu svake večeri.</li><li>Primjenjuj tri večeri zaredom.</li><li>Nakon toga ponovi rutinu prema potrebi i u skladu s uputama za korištenje.</li></ul>"
+        },
+        {
+            "tab_id": "39",
+            "language_id": "1",
+            "name": "Što se nalazi u pakiranju?",
+            "description": "<ul><li>3 jednokratne antiperspirant maramice za stopala</li><li>pojedinačno pakirane</li><li>namijenjene za jednokratnu uporabu</li></ul>"
+        },
+        {
+            "tab_id": "39",
+            "language_id": "3",
+            "name": "Što se nalazi u pakiranju?",
+            "description": "<ul><li>3 jednokratne antiperspirant maramice za stopala</li><li>pojedinačno pakirane</li><li>namijenjene za jednokratnu uporabu</li></ul>"
+        },
+        {
+            "tab_id": "40",
+            "language_id": "1",
+            "name": "Sastojci (INCI)",
+            "description": "<p>Aqua, Aluminium Chloride, Phenoxyethanol, Cocamidopropyl Betaine</p>"
+        },
+        {
+            "tab_id": "40",
+            "language_id": "3",
+            "name": "Sastojci (INCI)",
+            "description": "<p>Aqua, Aluminium Chloride, Phenoxyethanol, Cocamidopropyl Betaine</p>"
+        },
+        {
+            "tab_id": "41",
+            "language_id": "1",
+            "name": "Upozorenja",
+            "description": "<ul><li>Samo za vanjsku uporabu na stopalima.</li><li>Koristiti isključivo na čistoj i potpuno suhoj koži.</li><li>Izbjegavati kontakt s očima, sluznicama i otvorenim ranama.</li><li>Ne koristiti na nadraženoj ili oštećenoj koži.</li><li>Ne koristiti na drugim dijelovima tijela.</li><li>U slučaju crvenila, svrbeža ili iritacije prekinuti uporabu.</li><li>Nakon uporabe maramicu odložiti u otpad. Ne odlagati u WC školjku.</li><li>Čuvati na suhom mjestu i izvan dohvata male djece.</li><li>Namijenjeno za korištenje djeci od 10 do 16 godina.</li><li>Izbjegavati nanošenje na oštećenu ili svježe obrijanu kožu.</li></ul>"
+        },
+        {
+            "tab_id": "41",
+            "language_id": "3",
+            "name": "Upozorenja",
+            "description": "<ul><li>Samo za vanjsku uporabu na stopalima.</li><li>Koristiti isključivo na čistoj i potpuno suhoj koži.</li><li>Izbjegavati kontakt s očima, sluznicama i otvorenim ranama.</li><li>Ne koristiti na nadraženoj ili oštećenoj koži.</li><li>Ne koristiti na drugim dijelovima tijela.</li><li>U slučaju crvenila, svrbeža ili iritacije prekinuti uporabu.</li><li>Nakon uporabe maramicu odložiti u otpad. Ne odlagati u WC školjku.</li><li>Čuvati na suhom mjestu i izvan dohvata male djece.</li><li>Namijenjeno za korištenje djeci od 10 do 16 godina.</li><li>Izbjegavati nanošenje na oštećenu ili svježe obrijanu kožu.</li></ul>"
+        },
+        {
+            "tab_id": "42",
+            "language_id": "1",
+            "name": "Dodatne informacije",
+            "description": "<ul><li>Jednokratna uporaba.</li><li>Rok trajanja otisnut je na pakiranju.</li></ul><h3>Odgovorna osoba</h3><p>Gordom usluge d.o.o.<br>\nZagreb, Hrvatska<br>\n<a href=\"mailto:dryzen@dryzen.eu\">dryzen@dryzen.eu</a><br>\n<a href=\"https://www.dryzen.eu\">www.dryzen.eu</a></p>"
+        },
+        {
+            "tab_id": "42",
+            "language_id": "3",
+            "name": "Dodatne informacije",
+            "description": "<ul><li>Jednokratna uporaba.</li><li>Rok trajanja otisnut je na pakiranju.</li></ul><h3>Odgovorna osoba</h3><p>Gordom usluge d.o.o.<br>\nZagreb, Hrvatska<br>\n<a href=\"mailto:dryzen@dryzen.eu\">dryzen@dryzen.eu</a><br>\n<a href=\"https://www.dryzen.eu\">www.dryzen.eu</a></p>"
+        },
+        {
+            "tab_id": "43",
+            "language_id": "1",
+            "name": "Kada odabrati DryZen maramice za stopala?",
+            "description": "<p>Ako ti znojenje stopala ili neugodni mirisi stvaraju nelagodu tijekom dana, ovaj proizvod može biti pravi izbor.</p><p>Prikladne su za:</p><ul><li>posao i duži boravak u zatvorenoj obući</li><li>svakodnevne aktivnosti</li><li>putovanja</li><li>sport i rekreaciju</li><li>osobe koje veći dio dana provode na nogama</li></ul>"
+        },
+        {
+            "tab_id": "43",
+            "language_id": "3",
+            "name": "Kada odabrati DryZen maramice za stopala?",
+            "description": "<p>Ako ti znojenje stopala ili neugodni mirisi stvaraju nelagodu tijekom dana, ovaj proizvod može biti pravi izbor.</p><p>Prikladne su za:</p><ul><li>posao i duži boravak u zatvorenoj obući</li><li>svakodnevne aktivnosti</li><li>putovanja</li><li>sport i rekreaciju</li><li>osobe koje veći dio dana provode na nogama</li></ul>"
+        },
+        {
+            "tab_id": "44",
+            "language_id": "1",
+            "name": "Zašto odabrati DryZen?",
+            "description": "<ul><li>Pomaže u kontroli znojenja stopala.</li><li>Doprinosi smanjenju neugodnih mirisa povezanih sa znojenjem.</li><li>Jednostavna večernja rutina koja se lako uklapa u svakodnevni život.</li><li>Pojedinačno pakirane maramice jednostavne za korištenje.</li><li>Pakiranje sadrži 3 jednokratne maramice za početnu rutinu.</li></ul>"
+        },
+        {
+            "tab_id": "44",
+            "language_id": "3",
+            "name": "Zašto odabrati DryZen?",
+            "description": "<ul><li>Pomaže u kontroli znojenja stopala.</li><li>Doprinosi smanjenju neugodnih mirisa povezanih sa znojenjem.</li><li>Jednostavna večernja rutina koja se lako uklapa u svakodnevni život.</li><li>Pojedinačno pakirane maramice jednostavne za korištenje.</li><li>Pakiranje sadrži 3 jednokratne maramice za početnu rutinu.</li></ul>"
+        },
+        {
+            "tab_id": "45",
+            "language_id": "1",
+            "name": "Kako koristiti?",
+            "description": "<p>Za najbolje rezultate proizvod koristi navečer prije spavanja.</p><ol><li>Operi i potpuno osuši stopala.</li><li>Otvori pakiranje i izvadi jednu maramicu.</li><li>Temeljito prebriši čista i potpuno suha stopala, uključujući područje između prstiju.</li><li>Ostavite da se koža prirodno osuši.</li><li>Nakon primjene ne peri ruke i nemoj ispirati proizvod.</li></ol><h3>Početna rutina</h3><ul><li>Koristi jednu maramicu svake večeri.</li><li>Primjenjuj tri večeri zaredom.</li><li>Nakon toga ponovi rutinu prema potrebi i u skladu s uputama za korištenje.</li></ul>"
+        },
+        {
+            "tab_id": "45",
+            "language_id": "3",
+            "name": "Kako koristiti?",
+            "description": "<p>Za najbolje rezultate proizvod koristi navečer prije spavanja.</p><ol><li>Operi i potpuno osuši stopala.</li><li>Otvori pakiranje i izvadi jednu maramicu.</li><li>Temeljito prebriši čista i potpuno suha stopala, uključujući područje između prstiju.</li><li>Ostavite da se koža prirodno osuši.</li><li>Nakon primjene ne peri ruke i nemoj ispirati proizvod.</li></ol><h3>Početna rutina</h3><ul><li>Koristi jednu maramicu svake večeri.</li><li>Primjenjuj tri večeri zaredom.</li><li>Nakon toga ponovi rutinu prema potrebi i u skladu s uputama za korištenje.</li></ul>"
+        },
+        {
+            "tab_id": "46",
+            "language_id": "1",
+            "name": "Što se nalazi u pakiranju?",
+            "description": "<ul><li>3 jednokratne antiperspirant maramice za stopala</li><li>pojedinačno pakirane</li><li>namijenjene za jednokratnu uporabu</li></ul>"
+        },
+        {
+            "tab_id": "46",
+            "language_id": "3",
+            "name": "Što se nalazi u pakiranju?",
+            "description": "<ul><li>3 jednokratne antiperspirant maramice za stopala</li><li>pojedinačno pakirane</li><li>namijenjene za jednokratnu uporabu</li></ul>"
+        },
+        {
+            "tab_id": "47",
+            "language_id": "1",
+            "name": "Sastojci (INCI)",
+            "description": "<p>Aqua, Aluminium Chloride, Phenoxyethanol, Cocamidopropyl Betaine</p>"
+        },
+        {
+            "tab_id": "47",
+            "language_id": "3",
+            "name": "Sastojci (INCI)",
+            "description": "<p>Aqua, Aluminium Chloride, Phenoxyethanol, Cocamidopropyl Betaine</p>"
+        },
+        {
+            "tab_id": "48",
+            "language_id": "1",
+            "name": "Upozorenja",
+            "description": "<ul><li>Samo za vanjsku uporabu na stopalima.</li><li>Koristiti isključivo na čistoj i potpuno suhoj koži.</li><li>Izbjegavati kontakt s očima, sluznicama i otvorenim ranama.</li><li>Ne koristiti na nadraženoj ili oštećenoj koži.</li><li>Ne koristiti na drugim dijelovima tijela.</li><li>U slučaju crvenila, svrbeža ili iritacije prekinuti uporabu.</li><li>Nakon uporabe maramicu odložiti u otpad. Ne odlagati u WC školjku.</li><li>Čuvati na suhom mjestu i izvan dohvata djece.</li><li>Izbjegavati nanošenje na oštećenu ili svježe obrijanu kožu.</li></ul>"
+        },
+        {
+            "tab_id": "48",
+            "language_id": "3",
+            "name": "Upozorenja",
+            "description": "<ul><li>Samo za vanjsku uporabu na stopalima.</li><li>Koristiti isključivo na čistoj i potpuno suhoj koži.</li><li>Izbjegavati kontakt s očima, sluznicama i otvorenim ranama.</li><li>Ne koristiti na nadraženoj ili oštećenoj koži.</li><li>Ne koristiti na drugim dijelovima tijela.</li><li>U slučaju crvenila, svrbeža ili iritacije prekinuti uporabu.</li><li>Nakon uporabe maramicu odložiti u otpad. Ne odlagati u WC školjku.</li><li>Čuvati na suhom mjestu i izvan dohvata djece.</li><li>Izbjegavati nanošenje na oštećenu ili svježe obrijanu kožu.</li></ul>"
+        },
+        {
+            "tab_id": "49",
+            "language_id": "1",
+            "name": "Dodatne informacije",
+            "description": "<ul><li>Jednokratna uporaba.</li><li>Rok trajanja otisnut je na pakiranju.</li></ul><h3>Odgovorna osoba</h3><p>Gordom usluge d.o.o.<br>\nZagreb, Hrvatska<br>\n<a href=\"mailto:dryzen@dryzen.eu\">dryzen@dryzen.eu</a><br>\n<a href=\"https://www.dryzen.eu\">www.dryzen.eu</a></p>"
+        },
+        {
+            "tab_id": "49",
+            "language_id": "3",
+            "name": "Dodatne informacije",
+            "description": "<ul><li>Jednokratna uporaba.</li><li>Rok trajanja otisnut je na pakiranju.</li></ul><h3>Odgovorna osoba</h3><p>Gordom usluge d.o.o.<br>\nZagreb, Hrvatska<br>\n<a href=\"mailto:dryzen@dryzen.eu\">dryzen@dryzen.eu</a><br>\n<a href=\"https://www.dryzen.eu\">www.dryzen.eu</a></p>"
+        },
+        {
+            "tab_id": "50",
+            "language_id": "1",
+            "name": "Kada odabrati DryZen Sport maramice za stopala?",
+            "description": "<p>Ako ti znojenje stopala ili neugodni mirisi stvaraju nelagodu tijekom fizičke aktivnosti ili aktivnog načina života, ovaj proizvod može biti pravi izbor.</p><p>Prikladne su za:</p><ul><li>treninge i rekreaciju</li><li>teretanu</li><li>sport i natjecanja</li><li>aktivnosti na otvorenom</li><li>aktivan svakodnevni život</li></ul>"
+        },
+        {
+            "tab_id": "50",
+            "language_id": "3",
+            "name": "Kada odabrati DryZen Sport maramice za stopala?",
+            "description": "<p>Ako ti znojenje stopala ili neugodni mirisi stvaraju nelagodu tijekom fizičke aktivnosti ili aktivnog načina života, ovaj proizvod može biti pravi izbor.</p><p>Prikladne su za:</p><ul><li>treninge i rekreaciju</li><li>teretanu</li><li>sport i natjecanja</li><li>aktivnosti na otvorenom</li><li>aktivan svakodnevni život</li></ul>"
+        },
+        {
+            "tab_id": "51",
+            "language_id": "1",
+            "name": "Zašto odabrati DryZen Sport?",
+            "description": "<ul><li>Pomaže u kontroli znojenja stopala.</li><li>Doprinosi smanjenju neugodnih mirisa povezanih sa znojenjem.</li><li>Razvijeno za aktivan način života.</li><li>Jednostavna večernja rutina koja se lako uklapa u raspored.</li><li>Pojedinačno pakirane maramice jednostavne za korištenje.</li><li>Pakiranje sadrži 3 jednokratne maramice za početnu rutinu.</li></ul>"
+        },
+        {
+            "tab_id": "51",
+            "language_id": "3",
+            "name": "Zašto odabrati DryZen Sport?",
+            "description": "<ul><li>Pomaže u kontroli znojenja stopala.</li><li>Doprinosi smanjenju neugodnih mirisa povezanih sa znojenjem.</li><li>Razvijeno za aktivan način života.</li><li>Jednostavna večernja rutina koja se lako uklapa u raspored.</li><li>Pojedinačno pakirane maramice jednostavne za korištenje.</li><li>Pakiranje sadrži 3 jednokratne maramice za početnu rutinu.</li></ul>"
+        },
+        {
+            "tab_id": "52",
+            "language_id": "1",
+            "name": "Kako koristiti?",
+            "description": "<p>Za najbolje rezultate proizvod koristi navečer prije spavanja.</p><ol><li>Operi i potpuno osuši stopala.</li><li>Otvori pakiranje i izvadi jednu maramicu.</li><li>Temeljito prebriši čista i potpuno suha stopala, uključujući područje između prstiju.</li><li>Ostavi da se koža prirodno osuši.</li><li>Nakon primjene ne peri ruke i nemoj ispirati proizvod.</li></ol><h3>Početna rutina</h3><ul><li>Koristi jednu maramicu svake večeri.</li><li>Primjenjuj tri večeri zaredom.</li><li>Nakon toga ponovi rutinu prema potrebi i u skladu s uputama za korištenje.</li></ul>"
+        },
+        {
+            "tab_id": "52",
+            "language_id": "3",
+            "name": "Kako koristiti?",
+            "description": "<p>Za najbolje rezultate proizvod koristi navečer prije spavanja.</p><ol><li>Operi i potpuno osuši stopala.</li><li>Otvori pakiranje i izvadi jednu maramicu.</li><li>Temeljito prebriši čista i potpuno suha stopala, uključujući područje između prstiju.</li><li>Ostavi da se koža prirodno osuši.</li><li>Nakon primjene ne peri ruke i nemoj ispirati proizvod.</li></ol><h3>Početna rutina</h3><ul><li>Koristi jednu maramicu svake večeri.</li><li>Primjenjuj tri večeri zaredom.</li><li>Nakon toga ponovi rutinu prema potrebi i u skladu s uputama za korištenje.</li></ul>"
+        },
+        {
+            "tab_id": "53",
+            "language_id": "1",
+            "name": "Što se nalazi u pakiranju?",
+            "description": "<ul><li>3 jednokratne antiperspirant maramice za stopala</li><li>pojedinačno pakirane</li><li>namijenjene za jednokratnu uporabu</li></ul>"
+        },
+        {
+            "tab_id": "53",
+            "language_id": "3",
+            "name": "Što se nalazi u pakiranju?",
+            "description": "<ul><li>3 jednokratne antiperspirant maramice za stopala</li><li>pojedinačno pakirane</li><li>namijenjene za jednokratnu uporabu</li></ul>"
+        },
+        {
+            "tab_id": "54",
+            "language_id": "1",
+            "name": "Sastojci (INCI)",
+            "description": "<p>Aqua, Aluminium Chloride, Phenoxyethanol, Cocamidopropyl Betaine</p>"
+        },
+        {
+            "tab_id": "54",
+            "language_id": "3",
+            "name": "Sastojci (INCI)",
+            "description": "<p>Aqua, Aluminium Chloride, Phenoxyethanol, Cocamidopropyl Betaine</p>"
+        },
+        {
+            "tab_id": "55",
+            "language_id": "1",
+            "name": "Upozorenja",
+            "description": "<ul><li>Samo za vanjsku uporabu na stopalima.</li><li>Koristiti isključivo na čistoj i potpuno suhoj koži.</li><li>Izbjegavati kontakt s očima, sluznicama i otvorenim ranama.</li><li>Ne koristiti na nadraženoj ili oštećenoj koži.</li><li>Ne koristiti na drugim dijelovima tijela.</li><li>U slučaju crvenila, svrbeža ili iritacije prekinuti uporabu.</li><li>Nakon uporabe maramicu odložiti u otpad. Ne odlagati u WC školjku.</li><li>Čuvati na suhom mjestu i izvan dohvata djece.</li><li>Izbjegavati nanošenje na oštećenu ili svježe obrijanu kožu.</li></ul>"
+        },
+        {
+            "tab_id": "55",
+            "language_id": "3",
+            "name": "Upozorenja",
+            "description": "<ul><li>Samo za vanjsku uporabu na stopalima.</li><li>Koristiti isključivo na čistoj i potpuno suhoj koži.</li><li>Izbjegavati kontakt s očima, sluznicama i otvorenim ranama.</li><li>Ne koristiti na nadraženoj ili oštećenoj koži.</li><li>Ne koristiti na drugim dijelovima tijela.</li><li>U slučaju crvenila, svrbeža ili iritacije prekinuti uporabu.</li><li>Nakon uporabe maramicu odložiti u otpad. Ne odlagati u WC školjku.</li><li>Čuvati na suhom mjestu i izvan dohvata djece.</li><li>Izbjegavati nanošenje na oštećenu ili svježe obrijanu kožu.</li></ul>"
+        },
+        {
+            "tab_id": "56",
+            "language_id": "1",
+            "name": "Dodatne informacije",
+            "description": "<ul><li>Jednokratna uporaba.</li><li>Rok trajanja otisnut je na pakiranju.</li></ul><h3>Odgovorna osoba</h3><p>Gordom usluge d.o.o.<br>\nZagreb, Hrvatska<br>\n<a href=\"mailto:dryzen@dryzen.eu\">dryzen@dryzen.eu</a><br>\n<a href=\"https://www.dryzen.eu\">www.dryzen.eu</a></p>"
+        },
+        {
+            "tab_id": "56",
+            "language_id": "3",
+            "name": "Dodatne informacije",
+            "description": "<ul><li>Jednokratna uporaba.</li><li>Rok trajanja otisnut je na pakiranju.</li></ul><h3>Odgovorna osoba</h3><p>Gordom usluge d.o.o.<br>\nZagreb, Hrvatska<br>\n<a href=\"mailto:dryzen@dryzen.eu\">dryzen@dryzen.eu</a><br>\n<a href=\"https://www.dryzen.eu\">www.dryzen.eu</a></p>"
+        },
+        {
+            "tab_id": "57",
+            "language_id": "1",
+            "name": "Kada odabrati DryZen maramice za stopala?",
+            "description": "<p>Ako ti znojenje stopala ili neugodni mirisi stvaraju nelagodu tijekom dana, ovaj proizvod može biti pravi izbor.</p><p>Prikladne su za:</p><ul><li>svakodnevno nošenje zatvorene obuće</li><li>posao i duže izbivanje iz kuće</li><li>putovanja</li><li>fakultet ili školu</li><li>svakodnevne aktivnosti</li></ul>"
+        },
+        {
+            "tab_id": "57",
+            "language_id": "3",
+            "name": "Kada odabrati DryZen maramice za stopala?",
+            "description": "<p>Ako ti znojenje stopala ili neugodni mirisi stvaraju nelagodu tijekom dana, ovaj proizvod može biti pravi izbor.</p><p>Prikladne su za:</p><ul><li>svakodnevno nošenje zatvorene obuće</li><li>posao i duže izbivanje iz kuće</li><li>putovanja</li><li>fakultet ili školu</li><li>svakodnevne aktivnosti</li></ul>"
+        },
+        {
+            "tab_id": "58",
+            "language_id": "1",
+            "name": "Zašto odabrati DryZen?",
+            "description": "<ul><li>Pomaže u kontroli znojenja stopala.</li><li>Doprinosi smanjenju neugodnih mirisa povezanih sa znojenjem.</li><li>Jednostavna večernja rutina koja se lako uklapa u svakodnevni život.</li><li>Pojedinačno pakirane maramice jednostavne za korištenje.</li><li>Pakiranje sadrži 3 jednokratne maramice za početnu rutinu.</li></ul>"
+        },
+        {
+            "tab_id": "58",
+            "language_id": "3",
+            "name": "Zašto odabrati DryZen?",
+            "description": "<ul><li>Pomaže u kontroli znojenja stopala.</li><li>Doprinosi smanjenju neugodnih mirisa povezanih sa znojenjem.</li><li>Jednostavna večernja rutina koja se lako uklapa u svakodnevni život.</li><li>Pojedinačno pakirane maramice jednostavne za korištenje.</li><li>Pakiranje sadrži 3 jednokratne maramice za početnu rutinu.</li></ul>"
+        },
+        {
+            "tab_id": "59",
+            "language_id": "1",
+            "name": "Kako koristiti?",
+            "description": "<p>Za najbolje rezultate proizvod koristi navečer prije spavanja.</p><ol><li>Operi i potpuno osuši stopala.</li><li>Otvori pakiranje i izvadi jednu maramicu.</li><li>Temeljito prebriši čista i potpuno suha stopala, uključujući područje između prstiju.</li><li>Ostavi da se koža prirodno osuši.</li><li>Nakon primjene ne peri ruke i nemoj ispirati proizvod.</li></ol><h3>Početna rutina</h3><ul><li>Koristi jednu maramicu svake večeri.</li><li>Primjenjuj tri večeri zaredom.</li><li>Nakon toga ponovi rutinu prema potrebi i u skladu s uputama za korištenje.</li></ul>"
+        },
+        {
+            "tab_id": "59",
+            "language_id": "3",
+            "name": "Kako koristiti?",
+            "description": "<p>Za najbolje rezultate proizvod koristi navečer prije spavanja.</p><ol><li>Operi i potpuno osuši stopala.</li><li>Otvori pakiranje i izvadi jednu maramicu.</li><li>Temeljito prebriši čista i potpuno suha stopala, uključujući područje između prstiju.</li><li>Ostavi da se koža prirodno osuši.</li><li>Nakon primjene ne peri ruke i nemoj ispirati proizvod.</li></ol><h3>Početna rutina</h3><ul><li>Koristi jednu maramicu svake večeri.</li><li>Primjenjuj tri večeri zaredom.</li><li>Nakon toga ponovi rutinu prema potrebi i u skladu s uputama za korištenje.</li></ul>"
+        },
+        {
+            "tab_id": "60",
+            "language_id": "1",
+            "name": "Što se nalazi u pakiranju?",
+            "description": "<ul><li>3 jednokratne antiperspirant maramice za stopala</li><li>pojedinačno pakirane</li><li>namijenjene za jednokratnu uporabu</li></ul>"
+        },
+        {
+            "tab_id": "60",
+            "language_id": "3",
+            "name": "Što se nalazi u pakiranju?",
+            "description": "<ul><li>3 jednokratne antiperspirant maramice za stopala</li><li>pojedinačno pakirane</li><li>namijenjene za jednokratnu uporabu</li></ul>"
+        },
+        {
+            "tab_id": "61",
+            "language_id": "1",
+            "name": "Sastojci (INCI)",
+            "description": "<p>Aqua, Aluminium Chloride, Phenoxyethanol, Cocamidopropyl Betaine</p>"
+        },
+        {
+            "tab_id": "61",
+            "language_id": "3",
+            "name": "Sastojci (INCI)",
+            "description": "<p>Aqua, Aluminium Chloride, Phenoxyethanol, Cocamidopropyl Betaine</p>"
+        },
+        {
+            "tab_id": "62",
+            "language_id": "1",
+            "name": "Upozorenja",
+            "description": "<ul><li>Samo za vanjsku uporabu na stopalima.</li><li>Koristiti isključivo na čistoj i potpuno suhoj koži.</li><li>Izbjegavati kontakt s očima, sluznicama i otvorenim ranama.</li><li>Ne koristiti na nadraženoj ili oštećenoj koži.</li><li>Ne koristiti na drugim dijelovima tijela.</li><li>U slučaju crvenila, svrbeža ili iritacije prekinuti uporabu.</li><li>Nakon uporabe maramicu odložiti u otpad. Ne odlagati u WC školjku.</li><li>Čuvati na suhom mjestu i izvan dohvata djece.</li><li>Izbjegavati nanošenje na oštećenu ili svježe obrijanu kožu.</li></ul>"
+        },
+        {
+            "tab_id": "62",
+            "language_id": "3",
+            "name": "Upozorenja",
+            "description": "<ul><li>Samo za vanjsku uporabu na stopalima.</li><li>Koristiti isključivo na čistoj i potpuno suhoj koži.</li><li>Izbjegavati kontakt s očima, sluznicama i otvorenim ranama.</li><li>Ne koristiti na nadraženoj ili oštećenoj koži.</li><li>Ne koristiti na drugim dijelovima tijela.</li><li>U slučaju crvenila, svrbeža ili iritacije prekinuti uporabu.</li><li>Nakon uporabe maramicu odložiti u otpad. Ne odlagati u WC školjku.</li><li>Čuvati na suhom mjestu i izvan dohvata djece.</li><li>Izbjegavati nanošenje na oštećenu ili svježe obrijanu kožu.</li></ul>"
+        },
+        {
+            "tab_id": "63",
+            "language_id": "1",
+            "name": "Dodatne informacije",
+            "description": "<ul><li>Jednokratna uporaba.</li><li>Rok trajanja otisnut je na pakiranju.</li></ul><h3>Odgovorna osoba</h3><p>Gordom usluge d.o.o.<br>\nZagreb, Hrvatska<br>\n<a href=\"mailto:dryzen@dryzen.eu\">dryzen@dryzen.eu</a><br>\n<a href=\"https://www.dryzen.eu\">www.dryzen.eu</a></p>"
+        },
+        {
+            "tab_id": "63",
+            "language_id": "3",
+            "name": "Dodatne informacije",
+            "description": "<ul><li>Jednokratna uporaba.</li><li>Rok trajanja otisnut je na pakiranju.</li></ul><h3>Odgovorna osoba</h3><p>Gordom usluge d.o.o.<br>\nZagreb, Hrvatska<br>\n<a href=\"mailto:dryzen@dryzen.eu\">dryzen@dryzen.eu</a><br>\n<a href=\"https://www.dryzen.eu\">www.dryzen.eu</a></p>"
+        },
+        {
+            "tab_id": "64",
+            "language_id": "1",
+            "name": "Kada odabrati DryZen Kids roll-on?",
+            "description": "<p>Ako znojenje pazuha ili neugodni mirisi stvaraju nelagodu tijekom dana, ovaj proizvod može biti pravi izbor.</p><p>Prikladan je za:</p><ul><li>školu i vrtić</li><li>sport i izvannastavne aktivnosti</li><li>svakodnevne aktivnosti</li><li>boravak u zatvorenim prostorima</li><li>aktivan način života</li></ul>"
+        },
+        {
+            "tab_id": "64",
+            "language_id": "3",
+            "name": "Kada odabrati DryZen Kids roll-on?",
+            "description": "<p>Ako znojenje pazuha ili neugodni mirisi stvaraju nelagodu tijekom dana, ovaj proizvod može biti pravi izbor.</p><p>Prikladan je za:</p><ul><li>školu i vrtić</li><li>sport i izvannastavne aktivnosti</li><li>svakodnevne aktivnosti</li><li>boravak u zatvorenim prostorima</li><li>aktivan način života</li></ul>"
+        },
+        {
+            "tab_id": "65",
+            "language_id": "1",
+            "name": "Zašto odabrati DryZen Kids?",
+            "description": "<ul><li>Pomaže u kontroli znojenja pazuha.</li><li>Doprinosi smanjenju neugodnih mirisa povezanih sa znojenjem.</li><li>Jednostavna večernja rutina koja se lako uklapa u svakodnevni život.</li><li>Roll-on aplikator omogućuje jednostavno i precizno nanošenje.</li><li>Pakiranje sadrži 10 ml proizvoda.</li></ul>"
+        },
+        {
+            "tab_id": "65",
+            "language_id": "3",
+            "name": "Zašto odabrati DryZen Kids?",
+            "description": "<ul><li>Pomaže u kontroli znojenja pazuha.</li><li>Doprinosi smanjenju neugodnih mirisa povezanih sa znojenjem.</li><li>Jednostavna večernja rutina koja se lako uklapa u svakodnevni život.</li><li>Roll-on aplikator omogućuje jednostavno i precizno nanošenje.</li><li>Pakiranje sadrži 10 ml proizvoda.</li></ul>"
+        },
+        {
+            "tab_id": "66",
+            "language_id": "1",
+            "name": "Kako koristiti?",
+            "description": "<p>Za najbolje rezultate proizvod koristi navečer prije spavanja.</p><ol><li>Protresi bočicu prije uporabe.</li><li>Operi i potpuno osuši područje pazuha.</li><li>Nanesi tanak sloj proizvoda na čistu i potpuno suhu kožu pazuha.</li><li>Ostavite da se proizvod potpuno osuši prije odijevanja.</li><li>Tijekom početne rutine proizvod koristi tri večeri zaredom.</li></ol><h3>Važno za najbolji učinak</h3><ul><li>Proizvod uvijek nanesi na čistu i potpuno suhu kožu pazuha.</li><li>Ne nanosi na nadraženu, oštećenu ili neposredno obrijanu kožu.</li><li>Nakon nanošenja pričekaj da se proizvod potpuno osuši prije odijevanja.</li></ul><h3>Početna rutina</h3><ul><li>Nanesi roll-on jednom dnevno, navečer prije spavanja.</li><li>Koristi tri uzastopne večeri.</li><li>Nakon toga proizvod koristi prema potrebi i u skladu s uputama za korištenje.</li></ul><h3>Nakon početne rutine</h3><p>Nakon završene početne rutine možeš tijekom dana nastaviti koristiti svoj uobičajeni dezodorans ako to želiš.</p><p>Roll-on ostaje dio tvoje večernje rutine, a početni ciklus ponavljaš prema potrebi.</p>"
+        },
+        {
+            "tab_id": "66",
+            "language_id": "3",
+            "name": "Kako koristiti?",
+            "description": "<p>Za najbolje rezultate proizvod koristi navečer prije spavanja.</p><ol><li>Protresi bočicu prije uporabe.</li><li>Operi i potpuno osuši područje pazuha.</li><li>Nanesi tanak sloj proizvoda na čistu i potpuno suhu kožu pazuha.</li><li>Ostavite da se proizvod potpuno osuši prije odijevanja.</li><li>Tijekom početne rutine proizvod koristi tri večeri zaredom.</li></ol><h3>Važno za najbolji učinak</h3><ul><li>Proizvod uvijek nanesi na čistu i potpuno suhu kožu pazuha.</li><li>Ne nanosi na nadraženu, oštećenu ili neposredno obrijanu kožu.</li><li>Nakon nanošenja pričekaj da se proizvod potpuno osuši prije odijevanja.</li></ul><h3>Početna rutina</h3><ul><li>Nanesi roll-on jednom dnevno, navečer prije spavanja.</li><li>Koristi tri uzastopne večeri.</li><li>Nakon toga proizvod koristi prema potrebi i u skladu s uputama za korištenje.</li></ul><h3>Nakon početne rutine</h3><p>Nakon završene početne rutine možeš tijekom dana nastaviti koristiti svoj uobičajeni dezodorans ako to želiš.</p><p>Roll-on ostaje dio tvoje večernje rutine, a početni ciklus ponavljaš prema potrebi.</p>"
+        },
+        {
+            "tab_id": "67",
+            "language_id": "1",
+            "name": "Što se nalazi u pakiranju?",
+            "description": "<ul><li>antiperspirant roll-on</li><li>neto količina: 10 ml</li></ul>"
+        },
+        {
+            "tab_id": "67",
+            "language_id": "3",
+            "name": "Što se nalazi u pakiranju?",
+            "description": "<ul><li>antiperspirant roll-on</li><li>neto količina: 10 ml</li></ul>"
+        },
+        {
+            "tab_id": "68",
+            "language_id": "1",
+            "name": "Sastojci (INCI)",
+            "description": "<p>Aqua, Aluminium Chloride, Phenoxyethanol, Hydroxypropyl Guar</p>"
+        },
+        {
+            "tab_id": "68",
+            "language_id": "3",
+            "name": "Sastojci (INCI)",
+            "description": "<p>Aqua, Aluminium Chloride, Phenoxyethanol, Hydroxypropyl Guar</p>"
+        },
+        {
+            "tab_id": "69",
+            "language_id": "1",
+            "name": "Upozorenja",
+            "description": "<ul><li>Samo za vanjsku uporabu na području pazuha.</li><li>Koristiti isključivo na čistoj i potpuno suhoj koži.</li><li>Izbjegavati kontakt s očima, sluznicama i otvorenim ranama.</li><li>Ne koristiti na nadraženoj, oštećenoj ili neposredno obrijanoj koži.</li><li>U slučaju crvenila, svrbeža ili iritacije prekinuti uporabu.</li><li>Proizvod nije testiran na trudnicama.</li><li>Čuvati na suhom mjestu i izvan dohvata male djece i kućnih ljubimaca.</li><li>Namijenjeno za korištenje djeci od 10 do 16 godina.</li><li>Izbjegavati nanošenje na oštećenu ili svježe obrijanu kožu.</li></ul>"
+        },
+        {
+            "tab_id": "69",
+            "language_id": "3",
+            "name": "Upozorenja",
+            "description": "<ul><li>Samo za vanjsku uporabu na području pazuha.</li><li>Koristiti isključivo na čistoj i potpuno suhoj koži.</li><li>Izbjegavati kontakt s očima, sluznicama i otvorenim ranama.</li><li>Ne koristiti na nadraženoj, oštećenoj ili neposredno obrijanoj koži.</li><li>U slučaju crvenila, svrbeža ili iritacije prekinuti uporabu.</li><li>Proizvod nije testiran na trudnicama.</li><li>Čuvati na suhom mjestu i izvan dohvata male djece i kućnih ljubimaca.</li><li>Namijenjeno za korištenje djeci od 10 do 16 godina.</li><li>Izbjegavati nanošenje na oštećenu ili svježe obrijanu kožu.</li></ul>"
+        },
+        {
+            "tab_id": "70",
+            "language_id": "1",
+            "name": "Dodatne informacije",
+            "description": "<ul><li>Rok trajanja otisnut je na pakiranju.</li></ul><h3>Odgovorna osoba</h3><p>Gordom usluge d.o.o.<br>\nZagreb, Hrvatska<br>\n<a href=\"mailto:dryzen@dryzen.eu\">dryzen@dryzen.eu</a><br>\n<a href=\"https://www.dryzen.eu\">www.dryzen.eu</a></p>"
+        },
+        {
+            "tab_id": "70",
+            "language_id": "3",
+            "name": "Dodatne informacije",
+            "description": "<ul><li>Rok trajanja otisnut je na pakiranju.</li></ul><h3>Odgovorna osoba</h3><p>Gordom usluge d.o.o.<br>\nZagreb, Hrvatska<br>\n<a href=\"mailto:dryzen@dryzen.eu\">dryzen@dryzen.eu</a><br>\n<a href=\"https://www.dryzen.eu\">www.dryzen.eu</a></p>"
+        },
+        {
+            "tab_id": "71",
+            "language_id": "1",
+            "name": "Kada odabrati DryZen roll-on?",
+            "description": "<p>Ako ti znojenje pazuha ili neugodni mirisi stvaraju nelagodu tijekom dana, ovaj proizvod može biti pravi izbor.</p><p>Prikladan je za:</p><ul><li>posao i poslovne sastanke</li><li>svakodnevne aktivnosti</li><li>putovanja</li><li>boravak u zatvorenim prostorima</li><li>aktivan način života</li></ul>"
+        },
+        {
+            "tab_id": "71",
+            "language_id": "3",
+            "name": "Kada odabrati DryZen roll-on?",
+            "description": "<p>Ako ti znojenje pazuha ili neugodni mirisi stvaraju nelagodu tijekom dana, ovaj proizvod može biti pravi izbor.</p><p>Prikladan je za:</p><ul><li>posao i poslovne sastanke</li><li>svakodnevne aktivnosti</li><li>putovanja</li><li>boravak u zatvorenim prostorima</li><li>aktivan način života</li></ul>"
+        },
+        {
+            "tab_id": "72",
+            "language_id": "1",
+            "name": "Zašto odabrati DryZen?",
+            "description": "<ul><li>Pomaže u kontroli znojenja pazuha.</li><li>Doprinosi smanjenju neugodnih mirisa povezanih sa znojenjem.</li><li>Jednostavna večernja rutina koja se lako uklapa u svakodnevni život.</li><li>Roll-on aplikator omogućuje jednostavno i precizno nanošenje.</li><li>Pakiranje sadrži 10 ml proizvoda.</li></ul>"
+        },
+        {
+            "tab_id": "72",
+            "language_id": "3",
+            "name": "Zašto odabrati DryZen?",
+            "description": "<ul><li>Pomaže u kontroli znojenja pazuha.</li><li>Doprinosi smanjenju neugodnih mirisa povezanih sa znojenjem.</li><li>Jednostavna večernja rutina koja se lako uklapa u svakodnevni život.</li><li>Roll-on aplikator omogućuje jednostavno i precizno nanošenje.</li><li>Pakiranje sadrži 10 ml proizvoda.</li></ul>"
+        },
+        {
+            "tab_id": "73",
+            "language_id": "1",
+            "name": "Kako koristiti?",
+            "description": "<p>Za najbolje rezultate proizvod koristi navečer prije spavanja.</p><ol><li>Protresi bočicu prije uporabe.</li><li>Operi i potpuno osuši područje pazuha.</li><li>Nanesi tanak sloj proizvoda na čistu i potpuno suhu kožu pazuha.</li><li>Ostavite da se proizvod potpuno osuši prije odijevanja.</li><li>Tijekom početne rutine proizvod koristi tri večeri zaredom.</li></ol><h3>Važno za najbolji učinak</h3><ul><li>Proizvod uvijek nanesi na čistu i potpuno suhu kožu pazuha.</li><li>Ne nanosi na nadraženu, oštećenu ili neposredno obrijanu kožu.</li><li>Nakon nanošenja pričekaj da se proizvod potpuno osuši prije odijevanja.</li></ul><h3>Početna rutina</h3><ul><li>Nanesi roll-on jednom dnevno, navečer prije spavanja.</li><li>Koristi tri uzastopne večeri.</li><li>Nakon toga proizvod koristi prema potrebi i u skladu s uputama za korištenje.</li></ul><h3>Nakon početne rutine</h3><p>Nakon završene početne rutine možeš tijekom dana nastaviti koristiti svoj uobičajeni dezodorans ako to želiš.</p><p>Roll-on ostaje dio tvoje večernje rutine, a početni ciklus ponavljaš prema potrebi.</p>"
+        },
+        {
+            "tab_id": "73",
+            "language_id": "3",
+            "name": "Kako koristiti?",
+            "description": "<p>Za najbolje rezultate proizvod koristi navečer prije spavanja.</p><ol><li>Protresi bočicu prije uporabe.</li><li>Operi i potpuno osuši područje pazuha.</li><li>Nanesi tanak sloj proizvoda na čistu i potpuno suhu kožu pazuha.</li><li>Ostavite da se proizvod potpuno osuši prije odijevanja.</li><li>Tijekom početne rutine proizvod koristi tri večeri zaredom.</li></ol><h3>Važno za najbolji učinak</h3><ul><li>Proizvod uvijek nanesi na čistu i potpuno suhu kožu pazuha.</li><li>Ne nanosi na nadraženu, oštećenu ili neposredno obrijanu kožu.</li><li>Nakon nanošenja pričekaj da se proizvod potpuno osuši prije odijevanja.</li></ul><h3>Početna rutina</h3><ul><li>Nanesi roll-on jednom dnevno, navečer prije spavanja.</li><li>Koristi tri uzastopne večeri.</li><li>Nakon toga proizvod koristi prema potrebi i u skladu s uputama za korištenje.</li></ul><h3>Nakon početne rutine</h3><p>Nakon završene početne rutine možeš tijekom dana nastaviti koristiti svoj uobičajeni dezodorans ako to želiš.</p><p>Roll-on ostaje dio tvoje večernje rutine, a početni ciklus ponavljaš prema potrebi.</p>"
+        },
+        {
+            "tab_id": "74",
+            "language_id": "1",
+            "name": "Što se nalazi u pakiranju?",
+            "description": "<ul><li>antiperspirant roll-on</li><li>neto količina: 10 ml</li></ul>"
+        },
+        {
+            "tab_id": "74",
+            "language_id": "3",
+            "name": "Što se nalazi u pakiranju?",
+            "description": "<ul><li>antiperspirant roll-on</li><li>neto količina: 10 ml</li></ul>"
+        },
+        {
+            "tab_id": "75",
+            "language_id": "1",
+            "name": "Sastojci (INCI)",
+            "description": "<p>Aqua, Aluminium Chloride, Phenoxyethanol, Hydroxypropyl Guar</p>"
+        },
+        {
+            "tab_id": "75",
+            "language_id": "3",
+            "name": "Sastojci (INCI)",
+            "description": "<p>Aqua, Aluminium Chloride, Phenoxyethanol, Hydroxypropyl Guar</p>"
+        },
+        {
+            "tab_id": "76",
+            "language_id": "1",
+            "name": "Upozorenja",
+            "description": "<ul><li>Samo za vanjsku uporabu na području pazuha.</li><li>Koristiti isključivo na čistoj i potpuno suhoj koži.</li><li>Izbjegavati kontakt s očima, sluznicama i otvorenim ranama.</li><li>Ne koristiti na nadraženoj, oštećenoj ili neposredno obrijanoj koži.</li><li>U slučaju crvenila, svrbeža ili iritacije prekinuti uporabu.</li><li>Čuvati na suhom mjestu i izvan dohvata djece i kućnih ljubimaca.</li><li>Izbjegavati nanošenje na oštećenu ili svježe obrijanu kožu.</li></ul>"
+        },
+        {
+            "tab_id": "76",
+            "language_id": "3",
+            "name": "Upozorenja",
+            "description": "<ul><li>Samo za vanjsku uporabu na području pazuha.</li><li>Koristiti isključivo na čistoj i potpuno suhoj koži.</li><li>Izbjegavati kontakt s očima, sluznicama i otvorenim ranama.</li><li>Ne koristiti na nadraženoj, oštećenoj ili neposredno obrijanoj koži.</li><li>U slučaju crvenila, svrbeža ili iritacije prekinuti uporabu.</li><li>Čuvati na suhom mjestu i izvan dohvata djece i kućnih ljubimaca.</li><li>Izbjegavati nanošenje na oštećenu ili svježe obrijanu kožu.</li></ul>"
+        },
+        {
+            "tab_id": "77",
+            "language_id": "1",
+            "name": "Dodatne informacije",
+            "description": "<ul><li>Rok trajanja otisnut je na pakiranju.</li></ul><h3>Odgovorna osoba</h3><p>Gordom usluge d.o.o.<br>\nZagreb, Hrvatska<br>\n<a href=\"mailto:dryzen@dryzen.eu\">dryzen@dryzen.eu</a><br>\n<a href=\"https://www.dryzen.eu\">www.dryzen.eu</a></p>"
+        },
+        {
+            "tab_id": "77",
+            "language_id": "3",
+            "name": "Dodatne informacije",
+            "description": "<ul><li>Rok trajanja otisnut je na pakiranju.</li></ul><h3>Odgovorna osoba</h3><p>Gordom usluge d.o.o.<br>\nZagreb, Hrvatska<br>\n<a href=\"mailto:dryzen@dryzen.eu\">dryzen@dryzen.eu</a><br>\n<a href=\"https://www.dryzen.eu\">www.dryzen.eu</a></p>"
+        },
+        {
+            "tab_id": "78",
+            "language_id": "1",
+            "name": "Kada odabrati DryZen Sport roll-on?",
+            "description": "<p>Ako ti znojenje pazuha ili neugodni mirisi stvaraju nelagodu tijekom fizičke aktivnosti ili aktivnog načina života, ovaj proizvod može biti pravi izbor.</p><p>Prikladan je za:</p><ul><li>treninge i rekreaciju</li><li>teretanu</li><li>sport i natjecanja</li><li>aktivnosti na otvorenom</li><li>aktivan svakodnevni život</li></ul>"
+        },
+        {
+            "tab_id": "78",
+            "language_id": "3",
+            "name": "Kada odabrati DryZen Sport roll-on?",
+            "description": "<p>Ako ti znojenje pazuha ili neugodni mirisi stvaraju nelagodu tijekom fizičke aktivnosti ili aktivnog načina života, ovaj proizvod može biti pravi izbor.</p><p>Prikladan je za:</p><ul><li>treninge i rekreaciju</li><li>teretanu</li><li>sport i natjecanja</li><li>aktivnosti na otvorenom</li><li>aktivan svakodnevni život</li></ul>"
+        },
+        {
+            "tab_id": "79",
+            "language_id": "1",
+            "name": "Zašto odabrati DryZen Sport?",
+            "description": "<ul><li>Pomaže u kontroli znojenja pazuha.</li><li>Doprinosi smanjenju neugodnih mirisa povezanih sa znojenjem.</li><li>Razvijen za aktivan način života.</li><li>Jednostavna večernja rutina koja se lako uklapa u raspored.</li><li>Roll-on aplikator omogućuje jednostavno i precizno nanošenje.</li><li>Pakiranje sadrži 10 ml proizvoda.</li></ul>"
+        },
+        {
+            "tab_id": "79",
+            "language_id": "3",
+            "name": "Zašto odabrati DryZen Sport?",
+            "description": "<ul><li>Pomaže u kontroli znojenja pazuha.</li><li>Doprinosi smanjenju neugodnih mirisa povezanih sa znojenjem.</li><li>Razvijen za aktivan način života.</li><li>Jednostavna večernja rutina koja se lako uklapa u raspored.</li><li>Roll-on aplikator omogućuje jednostavno i precizno nanošenje.</li><li>Pakiranje sadrži 10 ml proizvoda.</li></ul>"
+        },
+        {
+            "tab_id": "80",
+            "language_id": "1",
+            "name": "Kako koristiti?",
+            "description": "<p>Za najbolje rezultate proizvod koristi navečer prije spavanja.</p><ol><li>Protresi bočicu prije uporabe.</li><li>Operi i potpuno osuši područje pazuha.</li><li>Nanesi tanak sloj proizvoda na čistu i potpuno suhu kožu pazuha.</li><li>Ostavi da se proizvod potpuno osuši prije odijevanja.</li><li>Tijekom početne rutine proizvod koristi tri večeri zaredom.</li></ol><h3>Važno za najbolji učinak</h3><ul><li>Proizvod uvijek nanesi na čistu i potpuno suhu kožu pazuha.</li><li>Ne nanosi na nadraženu, oštećenu ili neposredno obrijanu kožu.</li><li>Nakon nanošenja pričekaj da se proizvod potpuno osuši prije odijevanja.</li></ul><h3>Početna rutina</h3><ul><li>Nanesi roll-on jednom dnevno, navečer prije spavanja.</li><li>Koristi tri uzastopne večeri.</li><li>Nakon toga proizvod koristi prema potrebi i u skladu s uputama za korištenje.</li></ul><h3>Nakon početne rutine</h3><p>Nakon završene početne rutine možeš tijekom dana nastaviti koristiti svoj uobičajeni dezodorans ako to želiš.</p><p>Roll-on ostaje dio tvoje večernje rutine, a početni ciklus ponavljaš prema potrebi.</p>"
+        },
+        {
+            "tab_id": "80",
+            "language_id": "3",
+            "name": "Kako koristiti?",
+            "description": "<p>Za najbolje rezultate proizvod koristi navečer prije spavanja.</p><ol><li>Protresi bočicu prije uporabe.</li><li>Operi i potpuno osuši područje pazuha.</li><li>Nanesi tanak sloj proizvoda na čistu i potpuno suhu kožu pazuha.</li><li>Ostavi da se proizvod potpuno osuši prije odijevanja.</li><li>Tijekom početne rutine proizvod koristi tri večeri zaredom.</li></ol><h3>Važno za najbolji učinak</h3><ul><li>Proizvod uvijek nanesi na čistu i potpuno suhu kožu pazuha.</li><li>Ne nanosi na nadraženu, oštećenu ili neposredno obrijanu kožu.</li><li>Nakon nanošenja pričekaj da se proizvod potpuno osuši prije odijevanja.</li></ul><h3>Početna rutina</h3><ul><li>Nanesi roll-on jednom dnevno, navečer prije spavanja.</li><li>Koristi tri uzastopne večeri.</li><li>Nakon toga proizvod koristi prema potrebi i u skladu s uputama za korištenje.</li></ul><h3>Nakon početne rutine</h3><p>Nakon završene početne rutine možeš tijekom dana nastaviti koristiti svoj uobičajeni dezodorans ako to želiš.</p><p>Roll-on ostaje dio tvoje večernje rutine, a početni ciklus ponavljaš prema potrebi.</p>"
+        },
+        {
+            "tab_id": "81",
+            "language_id": "1",
+            "name": "Što se nalazi u pakiranju?",
+            "description": "<ul><li>antiperspirant roll-on</li><li>neto količina: 10 ml</li></ul>"
+        },
+        {
+            "tab_id": "81",
+            "language_id": "3",
+            "name": "Što se nalazi u pakiranju?",
+            "description": "<ul><li>antiperspirant roll-on</li><li>neto količina: 10 ml</li></ul>"
+        },
+        {
+            "tab_id": "82",
+            "language_id": "1",
+            "name": "Sastojci (INCI)",
+            "description": "<p>Aqua, Aluminium Chloride, Phenoxyethanol, Hydroxypropyl Guar</p>"
+        },
+        {
+            "tab_id": "82",
+            "language_id": "3",
+            "name": "Sastojci (INCI)",
+            "description": "<p>Aqua, Aluminium Chloride, Phenoxyethanol, Hydroxypropyl Guar</p>"
+        },
+        {
+            "tab_id": "83",
+            "language_id": "1",
+            "name": "Upozorenja",
+            "description": "<ul><li>Samo za vanjsku uporabu na području pazuha.</li><li>Koristiti isključivo na čistoj i potpuno suhoj koži.</li><li>Izbjegavati kontakt s očima, sluznicama i otvorenim ranama.</li><li>Ne koristiti na nadraženoj, oštećenoj ili neposredno obrijanoj koži.</li><li>U slučaju crvenila, svrbeža ili iritacije prekinuti uporabu.</li><li>Čuvati na suhom mjestu i izvan dohvata djece i kućnih ljubimaca.</li><li>Izbjegavati nanošenje na oštećenu ili svježe obrijanu kožu.</li></ul>"
+        },
+        {
+            "tab_id": "83",
+            "language_id": "3",
+            "name": "Upozorenja",
+            "description": "<ul><li>Samo za vanjsku uporabu na području pazuha.</li><li>Koristiti isključivo na čistoj i potpuno suhoj koži.</li><li>Izbjegavati kontakt s očima, sluznicama i otvorenim ranama.</li><li>Ne koristiti na nadraženoj, oštećenoj ili neposredno obrijanoj koži.</li><li>U slučaju crvenila, svrbeža ili iritacije prekinuti uporabu.</li><li>Čuvati na suhom mjestu i izvan dohvata djece i kućnih ljubimaca.</li><li>Izbjegavati nanošenje na oštećenu ili svježe obrijanu kožu.</li></ul>"
+        },
+        {
+            "tab_id": "84",
+            "language_id": "1",
+            "name": "Dodatne informacije",
+            "description": "<ul><li>Rok trajanja otisnut je na pakiranju.</li></ul><h3>Odgovorna osoba</h3><p>Gordom usluge d.o.o.<br>\nZagreb, Hrvatska<br>\n<a href=\"mailto:dryzen@dryzen.eu\">dryzen@dryzen.eu</a> | <a href=\"https://www.dryzen.eu\">www.dryzen.eu</a></p>"
+        },
+        {
+            "tab_id": "84",
+            "language_id": "3",
+            "name": "Dodatne informacije",
+            "description": "<ul><li>Rok trajanja otisnut je na pakiranju.</li></ul><h3>Odgovorna osoba</h3><p>Gordom usluge d.o.o.<br>\nZagreb, Hrvatska<br>\n<a href=\"mailto:dryzen@dryzen.eu\">dryzen@dryzen.eu</a> | <a href=\"https://www.dryzen.eu\">www.dryzen.eu</a></p>"
+        },
+        {
+            "tab_id": "85",
+            "language_id": "1",
+            "name": "Kada odabrati DryZen roll-on?",
+            "description": "<p>Ako ti znojenje pazuha ili neugodni mirisi stvaraju nelagodu tijekom dana, ovaj proizvod može biti pravi izbor.</p><p>Prikladan je za:</p><ul><li>posao i poslovne sastanke</li><li>fakultet ili školu</li><li>svakodnevne aktivnosti</li><li>izlaske i druženja</li><li>aktivan način života</li></ul>"
+        },
+        {
+            "tab_id": "85",
+            "language_id": "3",
+            "name": "Kada odabrati DryZen roll-on?",
+            "description": "<p>Ako ti znojenje pazuha ili neugodni mirisi stvaraju nelagodu tijekom dana, ovaj proizvod može biti pravi izbor.</p><p>Prikladan je za:</p><ul><li>posao i poslovne sastanke</li><li>fakultet ili školu</li><li>svakodnevne aktivnosti</li><li>izlaske i druženja</li><li>aktivan način života</li></ul>"
+        },
+        {
+            "tab_id": "86",
+            "language_id": "1",
+            "name": "Zašto odabrati DryZen?",
+            "description": "<ul><li>Pomaže u kontroli znojenja pazuha.</li><li>Doprinosi smanjenju neugodnih mirisa povezanih sa znojenjem.</li><li>Jednostavna večernja rutina koja se lako uklapa u svakodnevni život.</li><li>Roll-on aplikator omogućuje jednostavno i precizno nanošenje.</li><li>Pakiranje sadrži 10 ml proizvoda.</li></ul>"
+        },
+        {
+            "tab_id": "86",
+            "language_id": "3",
+            "name": "Zašto odabrati DryZen?",
+            "description": "<ul><li>Pomaže u kontroli znojenja pazuha.</li><li>Doprinosi smanjenju neugodnih mirisa povezanih sa znojenjem.</li><li>Jednostavna večernja rutina koja se lako uklapa u svakodnevni život.</li><li>Roll-on aplikator omogućuje jednostavno i precizno nanošenje.</li><li>Pakiranje sadrži 10 ml proizvoda.</li></ul>"
+        },
+        {
+            "tab_id": "87",
+            "language_id": "1",
+            "name": "Kako koristiti?",
+            "description": "<p>Za najbolje rezultate proizvod koristi navečer prije spavanja.</p><ol><li>Protresi bočicu prije uporabe.</li><li>Operi i potpuno osuši područje pazuha.</li><li>Nanesi tanak sloj proizvoda na čistu i potpuno suhu kožu pazuha.</li><li>Ostavite da se proizvod potpuno osuši prije odijevanja.</li><li>Tijekom početne rutine proizvod koristi tri večeri zaredom.</li></ol><h3>Važno za najbolji učinak</h3><ul><li>Proizvod uvijek nanesi na čistu i potpuno suhu kožu pazuha.</li><li>Ne nanosi na nadraženu, oštećenu ili neposredno obrijanu kožu.</li><li>Nakon nanošenja pričekaj da se proizvod potpuno osuši prije odijevanja.</li></ul><h3>Početna rutina</h3><ul><li>Nanesi roll-on jednom dnevno, navečer prije spavanja.</li><li>Koristi tri uzastopne večeri.</li><li>Nakon toga proizvod koristi prema potrebi i u skladu s uputama za korištenje.</li></ul><h3>Nakon početne rutine</h3><p>Nakon završene početne rutine možeš tijekom dana nastaviti koristiti svoj uobičajeni dezodorans ako to želiš.</p><p>Roll-on ostaje dio tvoje večernje rutine, a početni ciklus ponavljaš prema potrebi.</p>"
+        },
+        {
+            "tab_id": "87",
+            "language_id": "3",
+            "name": "Kako koristiti?",
+            "description": "<p>Za najbolje rezultate proizvod koristi navečer prije spavanja.</p><ol><li>Protresi bočicu prije uporabe.</li><li>Operi i potpuno osuši područje pazuha.</li><li>Nanesi tanak sloj proizvoda na čistu i potpuno suhu kožu pazuha.</li><li>Ostavite da se proizvod potpuno osuši prije odijevanja.</li><li>Tijekom početne rutine proizvod koristi tri večeri zaredom.</li></ol><h3>Važno za najbolji učinak</h3><ul><li>Proizvod uvijek nanesi na čistu i potpuno suhu kožu pazuha.</li><li>Ne nanosi na nadraženu, oštećenu ili neposredno obrijanu kožu.</li><li>Nakon nanošenja pričekaj da se proizvod potpuno osuši prije odijevanja.</li></ul><h3>Početna rutina</h3><ul><li>Nanesi roll-on jednom dnevno, navečer prije spavanja.</li><li>Koristi tri uzastopne večeri.</li><li>Nakon toga proizvod koristi prema potrebi i u skladu s uputama za korištenje.</li></ul><h3>Nakon početne rutine</h3><p>Nakon završene početne rutine možeš tijekom dana nastaviti koristiti svoj uobičajeni dezodorans ako to želiš.</p><p>Roll-on ostaje dio tvoje večernje rutine, a početni ciklus ponavljaš prema potrebi.</p>"
+        },
+        {
+            "tab_id": "88",
+            "language_id": "1",
+            "name": "Što se nalazi u pakiranju?",
+            "description": "<ul><li>antiperspirant roll-on</li><li>neto količina: 10 ml</li></ul>"
+        },
+        {
+            "tab_id": "88",
+            "language_id": "3",
+            "name": "Što se nalazi u pakiranju?",
+            "description": "<ul><li>antiperspirant roll-on</li><li>neto količina: 10 ml</li></ul>"
+        },
+        {
+            "tab_id": "89",
+            "language_id": "1",
+            "name": "Sastojci (INCI)",
+            "description": "<p>Aqua, Aluminium Chloride, Phenoxyethanol, Hydroxypropyl Guar</p>"
+        },
+        {
+            "tab_id": "89",
+            "language_id": "3",
+            "name": "Sastojci (INCI)",
+            "description": "<p>Aqua, Aluminium Chloride, Phenoxyethanol, Hydroxypropyl Guar</p>"
+        },
+        {
+            "tab_id": "90",
+            "language_id": "1",
+            "name": "Upozorenja",
+            "description": "<ul><li>Samo za vanjsku uporabu na području pazuha.</li><li>Koristiti isključivo na čistoj i potpuno suhoj koži.</li><li>Izbjegavati kontakt s očima, sluznicama i otvorenim ranama.</li><li>Ne koristiti na nadraženoj, oštećenoj ili neposredno obrijanoj koži.</li><li>U slučaju crvenila, svrbeža ili iritacije prekinuti uporabu.</li><li>Čuvati na suhom mjestu i izvan dohvata djece i kućnih ljubimaca.</li><li>Izbjegavati nanošenje na oštećenu ili svježe obrijanu kožu.</li></ul>"
+        },
+        {
+            "tab_id": "90",
+            "language_id": "3",
+            "name": "Upozorenja",
+            "description": "<ul><li>Samo za vanjsku uporabu na području pazuha.</li><li>Koristiti isključivo na čistoj i potpuno suhoj koži.</li><li>Izbjegavati kontakt s očima, sluznicama i otvorenim ranama.</li><li>Ne koristiti na nadraženoj, oštećenoj ili neposredno obrijanoj koži.</li><li>U slučaju crvenila, svrbeža ili iritacije prekinuti uporabu.</li><li>Čuvati na suhom mjestu i izvan dohvata djece i kućnih ljubimaca.</li><li>Izbjegavati nanošenje na oštećenu ili svježe obrijanu kožu.</li></ul>"
+        },
+        {
+            "tab_id": "91",
+            "language_id": "1",
+            "name": "Dodatne informacije",
+            "description": "<ul><li>Rok trajanja otisnut je na pakiranju.</li></ul><h3>Odgovorna osoba</h3><p>Gordom usluge d.o.o.<br>\nZagreb, Hrvatska<br>\n<a href=\"mailto:dryzen@dryzen.eu\">dryzen@dryzen.eu</a><br>\n<a href=\"https://www.dryzen.eu\">www.dryzen.eu</a></p>"
+        },
+        {
+            "tab_id": "91",
+            "language_id": "3",
+            "name": "Dodatne informacije",
+            "description": "<ul><li>Rok trajanja otisnut je na pakiranju.</li></ul><h3>Odgovorna osoba</h3><p>Gordom usluge d.o.o.<br>\nZagreb, Hrvatska<br>\n<a href=\"mailto:dryzen@dryzen.eu\">dryzen@dryzen.eu</a><br>\n<a href=\"https://www.dryzen.eu\">www.dryzen.eu</a></p>"
+        },
+        {
+            "tab_id": "92",
+            "language_id": "1",
+            "name": "Kada odabrati DryZen sprej za obuću?",
+            "description": "<p>Ako želiš održavati svježinu obuće ili se neugodni mirisi pojavljuju nakon nošenja zatvorene obuće, ovaj proizvod može biti pravi izbor.</p><p>Prikladan je za:</p><ul><li>tenisice</li><li>sportsku obuću</li><li>radnu obuću</li><li>svakodnevnu obuću</li><li>obuću koja se često nosi</li></ul>"
+        },
+        {
+            "tab_id": "92",
+            "language_id": "3",
+            "name": "Kada odabrati DryZen sprej za obuću?",
+            "description": "<p>Ako želiš održavati svježinu obuće ili se neugodni mirisi pojavljuju nakon nošenja zatvorene obuće, ovaj proizvod može biti pravi izbor.</p><p>Prikladan je za:</p><ul><li>tenisice</li><li>sportsku obuću</li><li>radnu obuću</li><li>svakodnevnu obuću</li><li>obuću koja se često nosi</li></ul>"
+        },
+        {
+            "tab_id": "93",
+            "language_id": "1",
+            "name": "Zašto odabrati DryZen sprej?",
+            "description": "<ul><li>Doprinosi održavanju svježine unutrašnjosti obuće.</li><li>Pomaže smanjiti neugodne mirise povezane s nošenjem obuće.</li><li>Jednostavna primjena raspršivanjem.</li><li>Brzo se suši nakon nanošenja.</li><li>Pakiranje sadrži 100 ml proizvoda.</li></ul>"
+        },
+        {
+            "tab_id": "93",
+            "language_id": "3",
+            "name": "Zašto odabrati DryZen sprej?",
+            "description": "<ul><li>Doprinosi održavanju svježine unutrašnjosti obuće.</li><li>Pomaže smanjiti neugodne mirise povezane s nošenjem obuće.</li><li>Jednostavna primjena raspršivanjem.</li><li>Brzo se suši nakon nanošenja.</li><li>Pakiranje sadrži 100 ml proizvoda.</li></ul>"
+        },
+        {
+            "tab_id": "94",
+            "language_id": "1",
+            "name": "Kako koristiti?",
+            "description": "<p>Za najbolje rezultate proizvod koristi navečer.</p><ol><li>Protresi bočicu prije uporabe.</li><li>Rasprši 3 do 5 potisaka u unutrašnjost svake cipele.</li><li>Ravnomjerno poprskaj uložak, bočne strane i unutrašnjost obuće.</li><li>Ostavite obuću da se potpuno osuši 6 do 8 sati prije nošenja.</li><li>Tijekom početne rutine koristi proizvod tri večeri zaredom.</li></ol><h3>Početna rutina</h3><ul><li>Koristi sprej tri uzastopne večeri.</li><li>Nakon toga primjenjuj prema potrebi.</li></ul><h3>Za najbolji učinak</h3><p>Za potpunu rutinu njege stopala i obuće preporučujemo korištenje spreja u kombinaciji s DryZen maramicama za stopala.</p>"
+        },
+        {
+            "tab_id": "94",
+            "language_id": "3",
+            "name": "Kako koristiti?",
+            "description": "<p>Za najbolje rezultate proizvod koristi navečer.</p><ol><li>Protresi bočicu prije uporabe.</li><li>Rasprši 3 do 5 potisaka u unutrašnjost svake cipele.</li><li>Ravnomjerno poprskaj uložak, bočne strane i unutrašnjost obuće.</li><li>Ostavite obuću da se potpuno osuši 6 do 8 sati prije nošenja.</li><li>Tijekom početne rutine koristi proizvod tri večeri zaredom.</li></ol><h3>Početna rutina</h3><ul><li>Koristi sprej tri uzastopne večeri.</li><li>Nakon toga primjenjuj prema potrebi.</li></ul><h3>Za najbolji učinak</h3><p>Za potpunu rutinu njege stopala i obuće preporučujemo korištenje spreja u kombinaciji s DryZen maramicama za stopala.</p>"
+        },
+        {
+            "tab_id": "95",
+            "language_id": "1",
+            "name": "Što se nalazi u pakiranju?",
+            "description": "<ul><li>sprej za obuću</li><li>neto količina: 100 ml</li></ul>"
+        },
+        {
+            "tab_id": "95",
+            "language_id": "3",
+            "name": "Što se nalazi u pakiranju?",
+            "description": "<ul><li>sprej za obuću</li><li>neto količina: 100 ml</li></ul>"
+        },
+        {
+            "tab_id": "96",
+            "language_id": "1",
+            "name": "Sastojci (INCI)",
+            "description": "<p>Aqua, Aluminium Chloride, Glycerin, Cocamidopropyl Betaine, Phenoxyethanol, Alcohol Denat., Melaleuca Alternifolia Leaf Oil</p>"
+        },
+        {
+            "tab_id": "96",
+            "language_id": "3",
+            "name": "Sastojci (INCI)",
+            "description": "<p>Aqua, Aluminium Chloride, Glycerin, Cocamidopropyl Betaine, Phenoxyethanol, Alcohol Denat., Melaleuca Alternifolia Leaf Oil</p>"
+        },
+        {
+            "tab_id": "97",
+            "language_id": "1",
+            "name": "Upozorenja",
+            "description": "<ul><li>Samo za vanjsku uporabu na obući.</li><li>Ne koristiti na koži tijela.</li><li>Izbjegavati kontakt s očima i sluznicama.</li><li>Ne raspršivati u blizini otvorenog plamena ili izvora topline.</li><li>Prije prve uporabe isprobati proizvod na manje vidljivom dijelu obuće.</li><li>Ne koristiti na osjetljivim materijalima ako proizvođač ne preporučuje kontakt s tekućinama.</li><li>Čuvati izvan dohvata djece.</li></ul>"
+        },
+        {
+            "tab_id": "97",
+            "language_id": "3",
+            "name": "Upozorenja",
+            "description": "<ul><li>Samo za vanjsku uporabu na obući.</li><li>Ne koristiti na koži tijela.</li><li>Izbjegavati kontakt s očima i sluznicama.</li><li>Ne raspršivati u blizini otvorenog plamena ili izvora topline.</li><li>Prije prve uporabe isprobati proizvod na manje vidljivom dijelu obuće.</li><li>Ne koristiti na osjetljivim materijalima ako proizvođač ne preporučuje kontakt s tekućinama.</li><li>Čuvati izvan dohvata djece.</li></ul>"
+        },
+        {
+            "tab_id": "98",
+            "language_id": "1",
+            "name": "Dodatne informacije",
+            "description": "<ul><li>Rok trajanja otisnut je na pakiranju.</li></ul><h3>Odgovorna osoba</h3><p>Gordom usluge d.o.o.<br>\nZagreb, Hrvatska<br>\n<a href=\"mailto:dryzen@dryzen.eu\">dryzen@dryzen.eu</a><br>\n<a href=\"https://www.dryzen.eu\">www.dryzen.eu</a></p>"
+        },
+        {
+            "tab_id": "98",
+            "language_id": "3",
+            "name": "Dodatne informacije",
+            "description": "<ul><li>Rok trajanja otisnut je na pakiranju.</li></ul><h3>Odgovorna osoba</h3><p>Gordom usluge d.o.o.<br>\nZagreb, Hrvatska<br>\n<a href=\"mailto:dryzen@dryzen.eu\">dryzen@dryzen.eu</a><br>\n<a href=\"https://www.dryzen.eu\">www.dryzen.eu</a></p>"
+        }
+    ],
+    "product_tabs_to_category": []
+}

@@ -26,6 +26,7 @@
         <form action="{{ action }}" method="post" enctype="multipart/form-data" id="form-product" class="form-horizontal">
           <ul class="nav nav-tabs">
             <li class="active"><a href="#tab-general" data-toggle="tab">{{ tab_general }}</a></li>
+            <li><a href="#tab-dryzen-content" data-toggle="tab"><i class="fa fa-list-alt"></i> {{ text_dryzen_product_tabs }}</a></li>
             <li><a href="#tab-data" data-toggle="tab">{{ tab_data }}</a></li>
             <li><a href="#tab-links" data-toggle="tab">{{ tab_links }}</a></li>
          <!--   <li><a href="#tab-attribute" data-toggle="tab">{{ tab_attribute }}</a></li>-->
@@ -91,6 +92,95 @@
                     </div>
                   </div>
                 {% endfor %}</div>
+            </div>
+            <div class="tab-pane" id="tab-dryzen-content">
+              <input type="hidden" name="dryzen_product_tabs_present" value="1"/>
+              <div class="alert alert-info"><i class="fa fa-info-circle"></i> {{ text_dryzen_product_tabs_help }}</div>
+              <div id="dryzen-product-tabs" data-next-row="{{ dryzen_product_tabs|length }}">
+                {% for product_tab in dryzen_product_tabs %}
+                {% set tab_row = loop.index0 %}
+                <div class="panel panel-default dryzen-product-tab-row" data-tab-row="{{ tab_row }}">
+                  <div class="panel-heading">
+                    <strong class="dryzen-product-tab-label">{{ product_tab.tab_description[languages[0].language_id] ? product_tab.tab_description[languages[0].language_id].name : text_dryzen_product_tabs }}</strong>
+                    <button type="button" class="btn btn-danger btn-xs pull-right" data-remove-dryzen-tab title="Ukloni dropdown"><i class="fa fa-trash"></i></button>
+                  </div>
+                  <div class="panel-body">
+                    <input type="hidden" name="dryzen_product_tabs[{{ tab_row }}][tab_id]" value="{{ product_tab.tab_id }}"/>
+                    <ul class="nav nav-tabs">
+                      {% for language in languages %}
+                      <li{% if loop.first %} class="active"{% endif %}><a href="#dryzen-tab-{{ tab_row }}-language-{{ language.language_id }}" data-toggle="tab"><img src="language/{{ language.code }}/{{ language.code }}.png" title="{{ language.name }}"/> {{ language.name }}</a></li>
+                      {% endfor %}
+                    </ul>
+                    <div class="tab-content">
+                      {% for language in languages %}
+                      <div class="tab-pane{% if loop.first %} active{% endif %}" id="dryzen-tab-{{ tab_row }}-language-{{ language.language_id }}">
+                        <div class="form-group">
+                          <label class="col-sm-2 control-label">Naslov dropdowna</label>
+                          <div class="col-sm-10">
+                            <input type="text" name="dryzen_product_tabs[{{ tab_row }}][tab_description][{{ language.language_id }}][name]" value="{{ product_tab.tab_description[language.language_id] ? product_tab.tab_description[language.language_id].name : '' }}" class="form-control" data-dryzen-tab-name/>
+                          </div>
+                        </div>
+                        <div class="form-group">
+                          <label class="col-sm-2 control-label">Sadržaj</label>
+                          <div class="col-sm-10">
+                            <textarea name="dryzen_product_tabs[{{ tab_row }}][tab_description][{{ language.language_id }}][description]" rows="8" data-dryzen-editor data-lang="{{ language.locale }}" class="form-control">{{ product_tab.tab_description[language.language_id] ? product_tab.tab_description[language.language_id].description : '' }}</textarea>
+                          </div>
+                        </div>
+                      </div>
+                      {% endfor %}
+                    </div>
+                    <div class="row">
+                      <div class="col-sm-3">
+                        <label>Redoslijed</label>
+                        <input type="number" name="dryzen_product_tabs[{{ tab_row }}][sort_order]" value="{{ product_tab.sort_order }}" class="form-control"/>
+                      </div>
+                      <div class="col-sm-3">
+                        <label>Status</label>
+                        <select name="dryzen_product_tabs[{{ tab_row }}][status]" class="form-control">
+                          <option value="1"{% if product_tab.status %} selected{% endif %}>Omogućeno</option>
+                          <option value="0"{% if not product_tab.status %} selected{% endif %}>Onemogućeno</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                {% endfor %}
+              </div>
+              <button type="button" id="button-add-dryzen-tab" class="btn btn-primary"><i class="fa fa-plus"></i> {{ text_dryzen_add_product_tab }}</button>
+              <template id="dryzen-product-tab-template">
+                <div class="panel panel-default dryzen-product-tab-row" data-tab-row="__ROW__">
+                  <div class="panel-heading">
+                    <strong class="dryzen-product-tab-label">Novi dropdown</strong>
+                    <button type="button" class="btn btn-danger btn-xs pull-right" data-remove-dryzen-tab title="Ukloni dropdown"><i class="fa fa-trash"></i></button>
+                  </div>
+                  <div class="panel-body">
+                    <input type="hidden" name="dryzen_product_tabs[__ROW__][tab_id]" value="0"/>
+                    <ul class="nav nav-tabs">
+                      {% for language in languages %}
+                      <li{% if loop.first %} class="active"{% endif %}><a href="#dryzen-tab-__ROW__-language-{{ language.language_id }}" data-toggle="tab"><img src="language/{{ language.code }}/{{ language.code }}.png" title="{{ language.name }}"/> {{ language.name }}</a></li>
+                      {% endfor %}
+                    </ul>
+                    <div class="tab-content">
+                      {% for language in languages %}
+                      <div class="tab-pane{% if loop.first %} active{% endif %}" id="dryzen-tab-__ROW__-language-{{ language.language_id }}">
+                        <div class="form-group">
+                          <label class="col-sm-2 control-label">Naslov dropdowna</label>
+                          <div class="col-sm-10"><input type="text" name="dryzen_product_tabs[__ROW__][tab_description][{{ language.language_id }}][name]" value="" class="form-control" data-dryzen-tab-name/></div>
+                        </div>
+                        <div class="form-group">
+                          <label class="col-sm-2 control-label">Sadržaj</label>
+                          <div class="col-sm-10"><textarea name="dryzen_product_tabs[__ROW__][tab_description][{{ language.language_id }}][description]" rows="8" data-dryzen-editor data-lang="{{ language.locale }}" class="form-control"></textarea></div>
+                        </div>
+                      </div>
+                      {% endfor %}
+                    </div>
+                    <div class="row">
+                      <div class="col-sm-3"><label>Redoslijed</label><input type="number" name="dryzen_product_tabs[__ROW__][sort_order]" value="__ROW__" class="form-control"/></div>
+                      <div class="col-sm-3"><label>Status</label><select name="dryzen_product_tabs[__ROW__][status]" class="form-control"><option value="1" selected>Omogućeno</option><option value="0">Onemogućeno</option></select></div>
+                    </div>
+                  </div>
+                </div>
+              </template>
             </div>
             <div class="tab-pane" id="tab-data">
               <div class="form-group required">

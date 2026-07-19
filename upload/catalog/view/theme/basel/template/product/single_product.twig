@@ -1,10 +1,15 @@
-<div class="item single-product">
+<div class="item single-product{% if dryzen_shop_card %} dryzen-shop-card{% endif %}">
     <div class="edge">
-<div class="image" {% if columns == 'list' %}style="width:{{ img_width }}px"{% endif %}>
-    <a href="{{ product.href }}">
-    <img src="{{ product.thumb }}" alt="{{ product.name }}" title="{{ product.name }}" />
+<div class="image">
+    <a href="{{ product.href }}" aria-label="{{ product.name }}">
+    {% set dryzen_placeholder = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==' %}
+    {% set dryzen_thumb_src = product.thumb_small ?: product.thumb %}
+    {% set dryzen_thumb_srcset = dryzen_thumb_src ~ ' 480w' ~ (product.thumb_medium ? ', ' ~ product.thumb_medium ~ ' 720w' : '') ~ ', ' ~ product.thumb ~ ' 900w' %}
+    <img src="{{ dryzen_related_card ? dryzen_placeholder : dryzen_thumb_src }}" {% if dryzen_related_card %}data-src="{{ dryzen_thumb_src }}" data-srcset="{{ dryzen_thumb_srcset }}"{% else %}srcset="{{ dryzen_thumb_srcset }}"{% endif %} sizes="(max-width: 767px) calc(100vw - 40px), 25vw" width="900" height="900" alt="{{ product.name }}" title="{{ product.name }}" loading="lazy" decoding="async" />
     {% if product.thumb2 %}
-    <img class="thumb2" src="{{ product.thumb2 }}" alt="{{ product.name }}" title="{{ product.name }}" />
+    {% set dryzen_thumb2_src = product.thumb2_small ?: product.thumb2 %}
+    {% set dryzen_thumb2_srcset = dryzen_thumb2_src ~ ' 480w' ~ (product.thumb2_medium ? ', ' ~ product.thumb2_medium ~ ' 720w' : '') ~ ', ' ~ product.thumb2 ~ ' 900w' %}
+    <img class="thumb2" src="{{ dryzen_related_card ? dryzen_placeholder : dryzen_thumb2_src }}" {% if dryzen_related_card %}data-src="{{ dryzen_thumb2_src }}" data-srcset="{{ dryzen_thumb2_srcset }}"{% else %}srcset="{{ dryzen_thumb2_srcset }}"{% endif %} sizes="(max-width: 767px) calc(100vw - 40px), 25vw" width="900" height="900" alt="{{ product.name }}" title="{{ product.name }}" loading="lazy" decoding="async" />
     {% endif %}
     </a>
 {% if product.price and product.special and salebadge_status %}
@@ -21,18 +26,18 @@
 {% else %}
 	{% set button_cart = default_button_cart %}
 {% endif %}
-<a class="img-overlay" href="{{ product.href }}"></a>
+<a class="img-overlay" href="{{ product.href }}" aria-label="{{ product.name }}"></a>
 
 <div class="icons-wrapper">
-<a class="icon is_wishlist" data-toggle="tooltip" data-placement="{{ tooltip_align }}"  data-title="{{ button_wishlist }}" onclick="wishlist.add('{{ product.product_id }}');"><span class="icon-heart"></span></a>
-<a class="icon is_compare" onclick="compare.add('{{ product.product_id }}');" data-toggle="tooltip" data-placement="{{ tooltip_align }}" data-title="{{ button_compare }}"><span class="icon-refresh"></span></a>
-<a class="icon is_quickview hidden-xs" onclick="quickview('{{ product.product_id }}');" data-toggle="tooltip" data-placement="{{ tooltip_align }}" data-title="{{ basel_button_quickview }}"><span class="icon-magnifier-add"></span></a>
+<button type="button" class="icon is_wishlist" aria-label="{{ button_wishlist }}" data-toggle="tooltip" data-placement="{{ tooltip_align }}" data-title="{{ button_wishlist }}" onclick="wishlist.add('{{ product.product_id }}');"><span class="icon-heart" aria-hidden="true"></span></button>
+<button type="button" class="icon is_compare" aria-label="{{ button_compare }}" onclick="compare.add('{{ product.product_id }}');" data-toggle="tooltip" data-placement="{{ tooltip_align }}" data-title="{{ button_compare }}"><span class="icon-refresh" aria-hidden="true"></span></button>
+<button type="button" class="icon is_quickview hidden-xs" aria-label="{{ basel_button_quickview }}" onclick="quickview('{{ product.product_id }}');" data-toggle="tooltip" data-placement="{{ tooltip_align }}" data-title="{{ basel_button_quickview }}"><span class="icon-magnifier-add" aria-hidden="true"></span></button>
 </div> <!-- .icons-wrapper -->
 </div><!-- .image ends -->
 <div class="caption">
 <a class="product-name" href="{{ product.href }}">{{ product.name }}</a>
 
-            <span style="display:block;font-size:14px">{{ product.subtitle }}</span>
+<span class="product-subtitle">{{ product.subtitle }}</span>
 {% if product.rating %}      
     <div class="rating">
     <span class="rating_stars rating r{{ product.rating }}">
@@ -40,6 +45,32 @@
     </span>
     </div>
 {% endif %}
+{% if dryzen_shop_card %}
+<div class="dryzen-shop-card-footer">
+  {% if product.price %}
+  <div class="dryzen-shop-card-price">
+    {% if product.special %}
+    <span class="price-old">{{ product.price }}</span><span>{{ product.special }}</span>
+    {% else %}
+    <span>{{ product.price }}</span>
+    {% endif %}
+  </div>
+  {% endif %}
+
+  <div class="dryzen-card-purchase">
+    <div class="dryzen-card-qty" aria-label="Količina">
+      <button type="button" data-quantity-direction="down" aria-label="Smanji količinu" disabled>-</button>
+      <input class="dryzen-card-quantity" type="number" min="{{ product.minimum }}" step="1" value="{{ product.minimum }}" inputmode="numeric" aria-label="Količina proizvoda" />
+      <button type="button" data-quantity-direction="up" aria-label="Povećaj količinu">+</button>
+    </div>
+    {% if ((product.quantity < 1) and (stock_badge_status)) %}
+    <button class="dryzen-card-cart" type="button" disabled aria-label="{{ button_cart }}" title="{{ button_cart }}"><span class="global-cart" aria-hidden="true"></span></button>
+    {% else %}
+    <button class="dryzen-card-cart" type="button" data-product-id="{{ product.product_id }}" aria-label="{{ button_cart }}" title="{{ button_cart }}"><span class="global-cart" aria-hidden="true"></span></button>
+    {% endif %}
+  </div>
+</div>
+{% else %}
 <div class="price-wrapper">
 {% if product.price %}
 <div class="pwrap">
@@ -76,6 +107,7 @@
 
 
 </div>
+{% endif %}
 
 </div><!-- .caption-->
 {% if product.sale_end_date and countdown_status %}

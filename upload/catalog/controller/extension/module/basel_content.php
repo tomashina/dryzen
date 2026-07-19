@@ -2,6 +2,7 @@
 class ControllerExtensionModuleBaselContent extends Controller {
 	public function index($setting) {
 		static $module = 1;
+		$moduleId = $module;
 		$is_newsletter_signup = (!empty($setting['module_id']) && (int)$setting['module_id'] === 48) || (!empty($setting['name']) && $setting['name'] === 'Newsletter Signup');
 		
 		$data['module'] = $module;
@@ -251,8 +252,49 @@ class ControllerExtensionModuleBaselContent extends Controller {
 		}
 		
 		$data['module'] = $module++;
+		$this->addExternalModuleStyles(
+			$moduleId,
+			$data['module_margins'],
+			$data['block_style'],
+			$data['content_style']
+		);
 		
 		if ($this->config->get('theme_default_directory') == 'basel')
 		return $this->load->view('extension/module/basel_content', $data);
+	}
+
+	private function addExternalModuleStyles($moduleId, $moduleMargins, $blockStyle, $contentStyle) {
+		$css = '';
+		$selector = '#mod' . (int) $moduleId;
+
+		if (trim($moduleMargins) !== '') {
+			$css .= $selector . '{' . trim($moduleMargins) . "}\n";
+		}
+
+		if (trim($blockStyle) !== '') {
+			$css .= $selector . ' > .cm_block_wrapper > .cm_block{' . trim($blockStyle) . "}\n";
+		}
+
+		if (trim($contentStyle) !== '') {
+			$css .= $selector . ' .cm_content{' . trim($contentStyle) . "}\n";
+		}
+
+		if ($css === '') {
+			return;
+		}
+
+		$relativeDirectory = 'catalog/view/theme/basel/stylesheet/generated/';
+		$directory = DIR_APPLICATION . 'view/theme/basel/stylesheet/generated/';
+		$filename = 'dryzen-content-' . substr(hash('sha256', $css), 0, 16) . '.css';
+
+		if (!is_dir($directory)) {
+			mkdir($directory, 0755, true);
+		}
+
+		if (!is_file($directory . $filename)) {
+			file_put_contents($directory . $filename, $css, LOCK_EX);
+		}
+
+		$this->document->addStyle($relativeDirectory . $filename);
 	}
 }

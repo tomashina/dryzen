@@ -15,7 +15,9 @@
     {% endif %}
     <div id="content" class="{{ class }} info">
     {{ content_top }}
+      {% if not dryzen_about_page %}
       <h1 id="page-title">{{ heading_title }}</h1>
+      {% endif %}
       {{ description }}
       {{ content_bottom }}
      </div>

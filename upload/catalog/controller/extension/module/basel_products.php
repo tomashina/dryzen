@@ -1,6 +1,8 @@
 <?php  
 class ControllerExtensionModuleBaselProducts extends Controller {
 	public function index($setting) {
+		$this->document->addStyle('catalog/view/theme/basel/stylesheet/dryzen-shop.css?v=20260719k');
+		$this->document->addScript('catalog/view/theme/basel/js/dryzen-shop.js?v=20260719p');
 
     	$this->load->model('catalog/product');
 		$this->load->model('extension/basel/basel');
@@ -65,6 +67,7 @@ class ControllerExtensionModuleBaselProducts extends Controller {
 		$data['salebadge_status'] = $this->config->get('salebadge_status');
 		
 		static $module = 0;
+		$moduleId = $module;
 		
 		$data['tabs'] = array();
 
@@ -102,9 +105,13 @@ class ControllerExtensionModuleBaselProducts extends Controller {
 				if (isset($results)) {
 				foreach ($results as $result) {
 					if ($result['image']) {
-					$image = $this->model_tool_image->resize($result['image'], $setting['image_width'], $setting['image_height']);
+					$image = $this->model_tool_image->resizeCrop($result['image'], 900, 900);
+					$image_small = $this->model_tool_image->resizeCrop($result['image'], 480, 480);
+					$image_medium = $this->model_tool_image->resizeCrop($result['image'], 720, 720);
 					} else {
-					$image = $this->model_tool_image->resize('placeholder.png', $setting['image_width'], $setting['image_height']);
+					$image = $this->model_tool_image->resize('placeholder.png', 900, 900);
+					$image_small = $this->model_tool_image->resize('placeholder.png', 480, 480);
+					$image_medium = $this->model_tool_image->resize('placeholder.png', 720, 720);
 					}
 					
 					$images = $this->model_catalog_product->getProductImages($result['product_id']);
@@ -183,9 +190,14 @@ class ControllerExtensionModuleBaselProducts extends Controller {
 						'product_id' => $result['product_id'],
 						'quantity'  => $result['quantity'],
 						'thumb'   	 => $image,
-						'thumb2' 	 => $this->model_tool_image->resize($image2, $setting['image_width'], $setting['image_height']),
+						'thumb_small' => $image_small,
+						'thumb_medium' => $image_medium,
+						'thumb2' 	 => $image2 ? $this->model_tool_image->resizeCrop($image2, 900, 900) : false,
+						'thumb2_small' => $image2 ? $this->model_tool_image->resizeCrop($image2, 480, 480) : false,
+						'thumb2_medium' => $image2 ? $this->model_tool_image->resizeCrop($image2, 720, 720) : false,
 						'sale_end_date' => $date_end['date_end'] ?? '',
 						'name'    	 => $result['name'],
+						'subtitle'    => html_entity_decode($result['subtitle'], ENT_QUOTES, 'UTF-8'),
 						'price'   	 => $price,
 
 						  'priceeur'       => $priceeur,
@@ -216,10 +228,31 @@ class ControllerExtensionModuleBaselProducts extends Controller {
 		
 		$data['module'] = $module++;
 
+		if ($data['use_margin']) {
+			$this->addExternalModuleMargin($moduleId, $data['margin']);
+		}
+
 		if ($this->config->get('theme_default_directory') == 'basel')
 		return $this->load->view('extension/module/basel_products', $data);
 		
   	}
+
+	private function addExternalModuleMargin($moduleId, $margin) {
+		$css = '.module' . (int) $moduleId . '{margin-bottom:' . (float) $margin . "px}\n";
+		$relativeDirectory = 'catalog/view/theme/basel/stylesheet/generated/';
+		$directory = DIR_APPLICATION . 'view/theme/basel/stylesheet/generated/';
+		$filename = 'dryzen-products-' . substr(hash('sha256', $css), 0, 16) . '.css';
+
+		if (!is_dir($directory)) {
+			mkdir($directory, 0755, true);
+		}
+
+		if (!is_file($directory . $filename)) {
+			file_put_contents($directory . $filename, $css, LOCK_EX);
+		}
+
+		$this->document->addStyle($relativeDirectory . $filename);
+	}
 
   	private function getProductGroups( $tabInfo , $limit ){
   		$results = array();

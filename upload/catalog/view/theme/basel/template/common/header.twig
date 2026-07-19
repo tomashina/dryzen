@@ -12,30 +12,41 @@
 <meta name="google-site-verification" content="JZYE6lTXt0bMjmAkTQWZTl0tdU8HpxuXJcM74NUmpg4" />
 <title>{{ title }}</title>
 <base href="{{ base }}" />
+{% for alternate in seo_alternates %}
+<link rel="alternate" hreflang="{{ alternate.hreflang }}" href="{{ alternate.href }}" />
+{% endfor %}
 <meta name="google-site-verification" content="eZXFBfY_q6xpP_ZT043YaAnDL4H8BkCPtxx3Atwko3o" />
 {% if description %}<meta name="description" content="{{ description }}" />{% endif %}
+{% if dryzen_robots %}<meta name="robots" content="{{ dryzen_robots }}" />{% endif %}
 {% if keywords %}<meta name="keywords" content= "{{ keywords }}" />{% endif %}
 <!-- Load essential resources -->
 <script src="catalog/view/javascript/jquery/jquery-2.1.1.min.js"></script>
 <link href="catalog/view/javascript/bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen" />
-<script src="catalog/view/javascript/bootstrap/js/bootstrap.min.js"></script>
-<script src="catalog/view/theme/basel/js/slick.min.js"></script>
-<script src="catalog/view/theme/basel/js/basel_common.js"></script>
+<script src="catalog/view/javascript/bootstrap/js/bootstrap.min.js" defer></script>
+<script src="catalog/view/theme/basel/js/slick.min.js" defer></script>
+<script src="catalog/view/theme/basel/js/basel_common.js" defer></script>
 <!-- Main stylesheet -->
+<link href="catalog/view/theme/basel/stylesheet/dryzen-fonts.css?v=20260719a" rel="stylesheet">
+<link href="catalog/view/theme/basel/stylesheet/dryzen-privacy.css?v=20260719a" rel="stylesheet">
 <link href="catalog/view/theme/basel/stylesheet/stylesheet.css?v=otp-20260718-2" rel="stylesheet">
 
-<!-- Mandatory Theme Settings CSS -->
-<style id="basel-mandatory-css">{{ basel_mandatory_css }}</style>
+{% if dryzen_mandatory_stylesheet %}
+<link href="{{ dryzen_mandatory_stylesheet }}" rel="stylesheet" />
+{% endif %}
 <!-- Plugin Stylesheet(s) -->
 {% for style in styles %}
 <link href="{{ style.href }}" rel="{{ style.rel }}" media="{{ style.media }}" />
 {% endfor %}
+{% if dryzen_dynamic_stylesheet %}
+<link href="{{ dryzen_dynamic_stylesheet }}" rel="stylesheet" />
+{% endif %}
+<link href="catalog/view/theme/basel/stylesheet/dryzen-accessibility.css?v=20260719a" rel="stylesheet">
 {% if direction == 'rtl' %}
 <link href="catalog/view/theme/basel/stylesheet/rtl.css" rel="stylesheet">
 {% endif %}
 <!-- Pluing scripts(s) -->
 {% for script in scripts %}
-<script src="{{ script }}"></script>
+<script src="{{ script }}" defer></script>
 {% endfor %}
 <!-- Page specific meta information -->
 {% for link in links %}
@@ -49,20 +60,6 @@
 {% for analytic in analytics %}
 {{ analytic }}
 {% endfor %}
-{% if basel_styles_status %}
-<!-- Custom Color Scheme -->
-<style id="basel-color-scheme">{{ basel_styles_cache }};</style>
-{% endif %}
-{% if basel_typo_status %}
-<!-- Custom Fonts -->
-<style id="basel-fonts">{{ basel_fonts_cache }}</style>
-{% endif %}
-{% if basel_custom_css_status %}
-<!-- Custom CSS -->
-<style id="basel-custom-css">
-{{ basel_custom_css }}
-</style>
-{% endif %}
 {% if basel_custom_js_status %}
 <!-- Custom Javascript -->
 <script>
@@ -70,7 +67,7 @@
 </script>
 {% endif %}
 </head>
-<body class="{{ class }}{{ basel_body_class }}">
+<body id="top" class="{{ class }}{{ basel_body_class }}">
 
 {% include 'basel/template/common/mobile-nav.twig' %}
 <div class="outer-container main-wrapper">
@@ -94,7 +91,7 @@
 <div class="container">
 <span id="title-holder">&nbsp;</span>
 <div class="links-holder">
-<a class="basel-back-btn" onClick="history.go(-1); return false;"><i></i></a><span>&nbsp;</span>
+<button type="button" class="basel-back-btn" aria-label="Povratak na prethodnu stranicu" onClick="history.go(-1);"><i aria-hidden="true"></i></button><span>&nbsp;</span>
 </div>
 </div>
 </div>

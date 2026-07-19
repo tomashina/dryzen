@@ -2,6 +2,49 @@
 class ControllerCatalogProduct extends Controller {
 	private $error = array();
 
+	private function cleanDryzenEditorHtml($html) {
+		$html = preg_replace('~<div\b[^>]*>~i', '', (string)$html);
+		$html = preg_replace('~</div>~i', '', $html);
+
+		return trim($html);
+	}
+
+	private function prepareDryzenEditorContent() {
+		if (isset($this->request->post['product_description']) && is_array($this->request->post['product_description'])) {
+			foreach ($this->request->post['product_description'] as $language_id => $product_description) {
+				if (isset($product_description['description'])) {
+					$this->request->post['product_description'][$language_id]['description'] = $this->cleanDryzenEditorHtml($product_description['description']);
+				}
+			}
+		}
+
+		if (isset($this->request->post['dryzen_product_tabs']) && is_array($this->request->post['dryzen_product_tabs'])) {
+			foreach ($this->request->post['dryzen_product_tabs'] as $row => $product_tab) {
+				if (!isset($product_tab['tab_description']) || !is_array($product_tab['tab_description'])) {
+					continue;
+				}
+
+				foreach ($product_tab['tab_description'] as $language_id => $tab_description) {
+					if (isset($tab_description['description'])) {
+						$this->request->post['dryzen_product_tabs'][$row]['tab_description'][$language_id]['description'] = $this->cleanDryzenEditorHtml($tab_description['description']);
+					}
+				}
+			}
+		}
+	}
+
+	private function saveDryzenProductTabs($product_id) {
+		if (!isset($this->request->post['dryzen_product_tabs_present'])) {
+			return;
+		}
+
+		$this->load->model('extension/basel/product_tabs');
+		$product_tabs = isset($this->request->post['dryzen_product_tabs']) && is_array($this->request->post['dryzen_product_tabs'])
+			? $this->request->post['dryzen_product_tabs']
+			: array();
+		$this->model_extension_basel_product_tabs->saveProductTabsForProduct($product_id, $product_tabs);
+	}
+
 	public function index() {
 		$this->load->language('catalog/product');
 
@@ -20,7 +63,9 @@ class ControllerCatalogProduct extends Controller {
 		$this->load->model('catalog/product');
 
 		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-			$this->model_catalog_product->addProduct($this->request->post);
+			$this->prepareDryzenEditorContent();
+			$product_id = $this->model_catalog_product->addProduct($this->request->post);
+			$this->saveDryzenProductTabs($product_id);
 
 			$this->session->data['success'] = $this->language->get('text_success');
 
@@ -72,7 +117,9 @@ class ControllerCatalogProduct extends Controller {
 		$this->load->model('catalog/product');
 
 		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+			$this->prepareDryzenEditorContent();
 			$this->model_catalog_product->editProduct($this->request->get['product_id'], $this->request->post);
+			$this->saveDryzenProductTabs($this->request->get['product_id']);
 
 			$this->session->data['success'] = $this->language->get('text_success');
 
@@ -584,6 +631,20 @@ class ControllerCatalogProduct extends Controller {
 		$this->load->model('localisation/language');
 
 		$data['languages'] = $this->model_localisation_language->getLanguages();
+		$this->document->addStyle('view/stylesheet/dryzen-product-tabs.css?v=20260719b');
+		$this->document->addScript('view/javascript/dryzen-product-tabs.js?v=20260719b');
+		$this->load->model('extension/basel/product_tabs');
+		$data['text_dryzen_product_tabs'] = 'DryZen dropdown sadržaj';
+		$data['text_dryzen_product_tabs_help'] = 'Uredite naslove i sadržaj dropdown sekcija ovog artikla. Editor automatski uklanja tehničke DIV omotače.';
+		$data['text_dryzen_add_product_tab'] = 'Dodaj dropdown';
+
+		if (isset($this->request->post['dryzen_product_tabs'])) {
+			$data['dryzen_product_tabs'] = $this->request->post['dryzen_product_tabs'];
+		} elseif (isset($this->request->get['product_id'])) {
+			$data['dryzen_product_tabs'] = $this->model_extension_basel_product_tabs->getProductTabsByProductId($this->request->get['product_id']);
+		} else {
+			$data['dryzen_product_tabs'] = array();
+		}
 
 		if (isset($this->request->post['product_description'])) {
 			$data['product_description'] = $this->request->post['product_description'];

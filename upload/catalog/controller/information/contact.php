@@ -6,6 +6,46 @@ class ControllerInformationContact extends Controller {
 		$this->load->language('information/contact');
 
 		$this->document->setTitle($this->language->get('heading_title'));
+		$this->document->addStyle('catalog/view/theme/basel/stylesheet/dryzen-contact.css?v=20260719b');
+		$this->document->addScript('catalog/view/theme/basel/js/dryzen-contact.js?v=20260719b');
+		$contactDescription = $this->language->get('text_contact_intro');
+		$contactUrl = $this->url->link('information/contact');
+		$contactImage = $this->config->get('config_url') . 'image/catalog/seo/dryzen-social-1200x630.webp';
+		$this->document->setDescription($contactDescription);
+		$this->document->addLink($contactUrl, 'canonical');
+
+		if (method_exists($this->document, 'setOpengraph')) {
+			$this->document->setOpengraph('og:title', 'Kontakt | DryZen');
+			$this->document->setOpengraph('og:type', 'website');
+			$this->document->setOpengraph('og:site_name', $this->config->get('config_name'));
+			$this->document->setOpengraph('og:url', $contactUrl);
+			$this->document->setOpengraph('og:description', $contactDescription);
+			$this->document->setOpengraph('og:image', $contactImage);
+			$this->document->setOpengraph('og:image:width', '1200');
+			$this->document->setOpengraph('og:image:height', '630');
+		}
+
+		if (method_exists($this->document, 'setStructureddata')) {
+			$contactPageSchema = array(
+				'@context' => 'https://schema.org',
+				'@type' => 'ContactPage',
+				'name' => $this->language->get('heading_title'),
+				'description' => $contactDescription,
+				'url' => $contactUrl,
+				'about' => array(
+					'@type' => 'Organization',
+					'name' => $this->config->get('config_name'),
+					'url' => $this->config->get('config_url'),
+					'email' => $this->config->get('config_email'),
+					'telephone' => $this->config->get('config_telephone'),
+				),
+			);
+			$this->document->setStructureddata(
+				'<script type="application/ld+json">'
+				. json_encode($contactPageSchema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE)
+				. '</script>'
+			);
+		}
 
 		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
 			$mail = new Mail($this->config->get('config_mail_engine'));
@@ -63,7 +103,26 @@ class ControllerInformationContact extends Controller {
 			$data['error_enquiry'] = '';
 		}
 
+		if (isset($this->error['telefon'])) {
+			$data['error_telefon'] = $this->error['telefon'];
+		} else {
+			$data['error_telefon'] = '';
+		}
+
 		$data['button_submit'] = $this->language->get('button_submit');
+		$data['text_contact'] = $this->language->get('text_contact');
+		$data['text_contact_eyebrow'] = $this->language->get('text_contact_eyebrow');
+		$data['text_contact_intro'] = $this->language->get('text_contact_intro');
+		$data['text_contact_direct_title'] = $this->language->get('text_contact_direct_title');
+		$data['text_contact_direct_copy'] = $this->language->get('text_contact_direct_copy');
+		$data['text_address'] = $this->language->get('text_address');
+		$data['text_telephone'] = $this->language->get('text_telephone');
+		$data['text_email'] = $this->language->get('text_email');
+		$data['text_open'] = $this->language->get('text_open');
+		$data['entry_name'] = $this->language->get('entry_name');
+		$data['entry_email'] = $this->language->get('entry_email');
+		$data['entry_telephone'] = $this->language->get('entry_telephone');
+		$data['entry_enquiry'] = $this->language->get('entry_enquiry');
 
 		$data['action'] = $this->url->link('information/contact', '', true);
 
@@ -80,6 +139,8 @@ class ControllerInformationContact extends Controller {
 		$data['geocode'] = $this->config->get('config_geocode');
 		$data['geocode_hl'] = $this->config->get('config_language');
 		$data['telephone'] = $this->config->get('config_telephone');
+		$data['telephone_href'] = preg_replace('/[^0-9+]/', '', $this->config->get('config_telephone'));
+		$data['email'] = $this->config->get('config_email');
 		$data['fax'] = $this->config->get('config_fax');
 		$data['open'] = nl2br($this->config->get('config_open'));
 		$data['comment'] = $this->config->get('config_comment');
@@ -119,9 +180,15 @@ class ControllerInformationContact extends Controller {
 		}
 
 		if (isset($this->request->post['email'])) {
-			$data['email'] = $this->request->post['email'];
+			$data['form_email'] = $this->request->post['email'];
 		} else {
-			$data['email'] = $this->customer->getEmail();
+			$data['form_email'] = $this->customer->getEmail();
+		}
+
+		if (isset($this->request->post['telefon'])) {
+			$data['telefon'] = $this->request->post['telefon'];
+		} else {
+			$data['telefon'] = '';
 		}
 
 		if (isset($this->request->post['enquiry'])) {
@@ -154,6 +221,12 @@ class ControllerInformationContact extends Controller {
 
 		if (!filter_var($this->request->post['email'], FILTER_VALIDATE_EMAIL)) {
 			$this->error['email'] = $this->language->get('error_email');
+		}
+
+		$telefon = isset($this->request->post['telefon']) ? trim($this->request->post['telefon']) : '';
+
+		if ((utf8_strlen($telefon) < 6) || (utf8_strlen($telefon) > 32)) {
+			$this->error['telefon'] = $this->language->get('error_telephone');
 		}
 
 		if ((utf8_strlen($this->request->post['enquiry']) < 10) || (utf8_strlen($this->request->post['enquiry']) > 3000)) {

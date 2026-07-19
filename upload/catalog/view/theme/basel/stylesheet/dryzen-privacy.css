@@ -1,0 +1,105 @@
+.mpgdpr-wrap {
+  position: fixed;
+  inset: 50px 0 auto;
+  z-index: 9999;
+  display: none;
+  width: 100%;
+}
+
+.mpgdpr-cookie {
+  position: fixed;
+  bottom: 32px;
+  left: 32px;
+  width: min(496px, calc(100vw - 64px));
+  max-height: calc(100vh - 96px);
+  margin: auto;
+  padding: 24px;
+  overflow-y: auto;
+  color: #192735;
+  background: #fff;
+  border: 1px solid #d8e6ee;
+  border-radius: 20px;
+  box-shadow: 0 18px 54px rgb(25 39 53 / 14%);
+}
+
+.mpgdpr-cookie .mpgdpr-container,
+.mpgdpr-cookie .mpgdpr-text {
+  display: block;
+  margin: auto;
+}
+
+.mpgdpr-cookie .set-btns {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 24px 0 0;
+}
+
+.mpgdpr-cookie .mcookie-btn {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 18px;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  background: #187fc0;
+  border: 0;
+  border-radius: 999px;
+}
+
+.mpgdpr-cookie .mcookie-btn:hover,
+.mpgdpr-cookie .mcookie-btn:focus-visible {
+  color: #fff;
+  background: #f66a3d;
+}
+
+.mpgdpr-cookie h3 {
+  margin: 0 0 16px;
+  color: #192735;
+  font-size: 20px;
+  line-height: 1.25;
+}
+
+.theiaStickySidebar::after {
+  display: table;
+  clear: both;
+  content: "";
+}
+
+.promo-message .dryzen-promo-email {
+  margin-left: 5px;
+  border-bottom: 1px solid rgb(35 31 32 / 18%);
+}
+
+.footer-custom-wrapper .dryzen-footer-support-intro {
+  margin-bottom: 10px;
+}
+
+#form-upload {
+  display: none;
+}
+
+@media (max-width: 767px) {
+  .mpgdpr-cookie {
+    right: 16px;
+    bottom: 16px;
+    left: 16px;
+    width: auto;
+    max-height: calc(100vh - 32px);
+    padding: 20px;
+    border-radius: 16px;
+  }
+
+  .mpgdpr-cookie .set-btns {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .mpgdpr-cookie .mcookie-btn {
+    width: 100%;
+    font-size: 14px;
+  }
+}

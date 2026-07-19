@@ -41,7 +41,7 @@ class ModelExtensionModuleHbSeoSnippets extends Model {
 			$price 			= $price * $currency_value;
 			$actual_price 	= $actual_price * $currency_value;
 			
-			if ($this->config->get('hb_snippets_incl_tax')) {
+			if ($this->config->get('hb_snippets_incl_tax') || $this->config->get('config_tax')) {
 				$price 			= $this->tax->calculate($price, $product_info['tax_class_id'], $this->config->get('config_tax'));
 				$actual_price 	= $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $this->config->get('config_tax'));
 			}			
@@ -107,8 +107,11 @@ class ModelExtensionModuleHbSeoSnippets extends Model {
 					}
 				}				
 
-				$brand_name = ($product_info['manufacturer'])? $product_info['manufacturer'] : $this->config->get('hb_snippets_brand');
-				$brand = array('@type' => 'Brand', '@id' => $this->url->link('product/manufacturer/info', 'manufacturer_id=' . $product_info['manufacturer_id']), 'name' => $brand_name );
+				$brand_name = $product_info['manufacturer'] ?: ($this->config->get('hb_snippets_brand') ?: 'DryZen');
+				$brand_id = $product_info['manufacturer_id']
+					? $this->url->link('product/manufacturer/info', 'manufacturer_id=' . $product_info['manufacturer_id'])
+					: rtrim($this->config->get('config_url'), '/') . '/#brand';
+				$brand = array('@type' => 'Brand', '@id' => $brand_id, 'name' => $brand_name);
 
 				$review_data = array();
 				$review_query = $this->db->query("SELECT * FROM `".DB_PREFIX."review` WHERE product_id = '".(int)$product_id."' AND status = 1");
@@ -163,12 +166,21 @@ class ModelExtensionModuleHbSeoSnippets extends Model {
 					'url'             => $url,
 					'availability'    => $availability,
 					'itemCondition'    => 'https://schema.org/NewCondition',
-					'price'           => $actual_price,
+					'price'           => $price,
 					'priceCurrency'   => $currencycode,
+					'seller'          => array(
+						'@type' => 'Organization',
+						'name' => $this->config->get('config_name'),
+						'url' => rtrim($this->config->get('config_url'), '/')
+					),
 				);
 
 				if ($price < $actual_price){
-					$offers['salePrice'] = $price;
+					$offers['priceSpecification'] = array(
+						'@type' => 'UnitPriceSpecification',
+						'price' => $price,
+						'priceCurrency' => $currencycode
+					);
 				}
 				
 				if ($this->config->get('hb_snippets_pricevalid')) {
@@ -336,9 +348,6 @@ class ModelExtensionModuleHbSeoSnippets extends Model {
 					}
 				}
 
-				//seller
-				$offer['sellers'] = ['@type' => 'Organization', 'name' => $this->config->get('config_name')];
-
 				$product_snippet = array(
 					'@context' 			=> 	'https://schema.org/',
 					'@type'				=> 	'Product',
@@ -350,10 +359,16 @@ class ModelExtensionModuleHbSeoSnippets extends Model {
 					'description'		=> 	$description,
 					'productID'			=> 	$product_id,
 					'brand'				=>	$brand,
-					'review'			=> 	$review_data,
-					'aggregateRating'	=> 	$aggregateRating,
 					'offers'			=> 	$offers,
 				);
+
+				if ($review_data) {
+					$product_snippet['review'] = $review_data;
+				}
+
+				if ($aggregateRating) {
+					$product_snippet['aggregateRating'] = $aggregateRating;
+				}
 				
 				$ldjson .= '<script type="application/ld+json">';
 				$ldjson .= json_encode($product_snippet);
@@ -678,7 +693,6 @@ class ModelExtensionModuleHbSeoSnippets extends Model {
 			}			
 			
 			if (!empty($breadcrumbs)) {
-				array_shift($breadcrumbs); //removing the first array element which is usually the home
 				foreach ($breadcrumbs as $breadcrumb) {	
 					$itemlist[] = array(
 						'@type'			=> 	'ListItem',

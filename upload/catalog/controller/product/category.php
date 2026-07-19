@@ -2,6 +2,8 @@
 class ControllerProductCategory extends Controller {
 	public function index() {
 		$this->load->language('product/category');
+		$this->document->addStyle('catalog/view/theme/basel/stylesheet/dryzen-shop.css?v=20260719k');
+		$this->document->addScript('catalog/view/theme/basel/js/dryzen-shop.js?v=20260719p');
 
 		$this->load->model('catalog/category');
 
@@ -164,9 +166,13 @@ class ControllerProductCategory extends Controller {
 
 			foreach ($results as $result) {
 				if ($result['image']) {
-					$image = $this->model_tool_image->resize($result['image'], $this->config->get('theme_' . $this->config->get('config_theme') . '_image_product_width'), $this->config->get('theme_' . $this->config->get('config_theme') . '_image_product_height'));
+					$image = $this->model_tool_image->resizeCrop($result['image'], 900, 900);
+					$image_small = $this->model_tool_image->resizeCrop($result['image'], 480, 480);
+					$image_medium = $this->model_tool_image->resizeCrop($result['image'], 720, 720);
 				} else {
-					$image = $this->model_tool_image->resize('placeholder.png', $this->config->get('theme_' . $this->config->get('config_theme') . '_image_product_width'), $this->config->get('theme_' . $this->config->get('config_theme') . '_image_product_height'));
+					$image = $this->model_tool_image->resize('placeholder.png', 900, 900);
+					$image_small = $this->model_tool_image->resize('placeholder.png', 480, 480);
+					$image_medium = $this->model_tool_image->resize('placeholder.png', 720, 720);
 				}
 
 				if ($this->customer->isLogged() || !$this->config->get('config_customer_price')) {
@@ -215,6 +221,8 @@ class ControllerProductCategory extends Controller {
 				$data['products'][] = array(
 					'product_id'  => $result['product_id'],
 					'thumb'       => $image,
+					'thumb_small' => $image_small,
+					'thumb_medium' => $image_medium,
 					'name'        => $result['name'],
 					'description' => utf8_substr(trim(strip_tags(html_entity_decode($result['description'], ENT_QUOTES, 'UTF-8'))), 0, $this->config->get('theme_' . $this->config->get('config_theme') . '_product_description_length')) . '..',
 					'price'       => $price,

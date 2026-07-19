@@ -1,0 +1,410 @@
+.dryzen-shop-shell {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 1520px;
+  padding-right: clamp(28px, 3vw, 48px);
+  padding-left: clamp(28px, 3vw, 48px);
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.dryzen-shop-shell > .row {
+  margin-right: 0;
+  margin-left: 0;
+}
+
+.dryzen-shop-shell .dryzen-shop-content {
+  padding-right: 0;
+  padding-left: 0;
+  min-height: 0;
+}
+
+.dryzen-shop-results .dryzen-product-grid {
+  display: grid !important;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(20px, 2vw, 30px);
+  padding-top: clamp(28px, 3vw, 44px);
+}
+
+.dryzen-product-grid .dryzen-shop-card {
+  display: block !important;
+  width: auto !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+html body .dryzen-shop-card,
+html body .dryzen-shop-card:hover {
+  transform: none !important;
+  transition: none !important;
+}
+
+.dryzen-shop-widget .slick-track,
+.widget-related .slick-track {
+  display: flex;
+}
+
+.dryzen-shop-widget .slick-slide,
+.widget-related .slick-slide {
+  height: auto;
+}
+
+.dryzen-shop-widget .dryzen-shop-card,
+.widget-related .dryzen-shop-card {
+  height: 100%;
+}
+
+.dryzen-shop-widget .dryzen-shop-card > .edge,
+.widget-related .dryzen-shop-card > .edge {
+  height: 100%;
+  box-shadow: none;
+}
+
+.dryzen-shop-widget .grid-holder.carousel,
+.dryzen-shop-widget .slick-list,
+.widget-related .grid-holder.related,
+.widget-related .slick-list {
+  background: transparent;
+}
+
+.dryzen-shop-widget .slick-slide,
+.widget-related .slick-slide {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.dryzen-shop-widget .slick-arrow,
+.widget-related .slick-arrow {
+  z-index: 7;
+  top: 25% !important;
+  display: grid !important;
+  width: 46px !important;
+  height: 46px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 1px solid rgba(23, 36, 49, 0.1) !important;
+  border-radius: 50% !important;
+  background: rgba(255, 255, 255, 0.96) !important;
+  box-shadow: 0 10px 26px rgba(23, 36, 49, 0.14);
+  color: #172431 !important;
+  font-size: 19px !important;
+  cursor: pointer;
+  transform: translateY(-50%);
+  transition: border-color 0.2s ease, background-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+  place-items: center;
+}
+
+.dryzen-shop-widget .slick-arrow:hover,
+.dryzen-shop-widget .slick-arrow:focus,
+.widget-related .slick-arrow:hover,
+.widget-related .slick-arrow:focus {
+  border-color: #2387bf !important;
+  background: #2387bf !important;
+  color: #fff !important;
+  transform: translateY(-50%) scale(1.04);
+}
+
+.dryzen-shop-widget .arrow-left,
+.widget-related .arrow-left {
+  left: 14px !important;
+}
+
+.dryzen-shop-widget .arrow-right,
+.widget-related .arrow-right {
+  right: 14px !important;
+  left: auto !important;
+}
+
+.widget-related .slick-dots {
+  margin-top: 20px;
+}
+
+html body .dryzen-shop-card > .edge {
+  display: flex;
+  height: 100%;
+  padding: 0 !important;
+  overflow: hidden;
+  border: 1px solid #dce7ec;
+  border-radius: 24px;
+  background: #fff;
+  box-shadow: 0 14px 34px rgba(24, 47, 63, 0.07);
+  flex-direction: column;
+  transform: none !important;
+  transition: none !important;
+}
+
+html body .dryzen-shop-card:hover > .edge {
+  border-color: #dce7ec;
+  box-shadow: 0 14px 34px rgba(24, 47, 63, 0.07);
+  transform: none !important;
+}
+
+html body .dryzen-shop-card > .edge > .image {
+  position: relative;
+  box-sizing: border-box;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: hidden;
+  border: 0 !important;
+  border-radius: 0;
+  background: #eef5f8;
+  contain: paint;
+  isolation: isolate;
+}
+
+.dryzen-shop-card .image > a:first-child {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.dryzen-shop-card .image img {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover;
+  backface-visibility: hidden;
+  transform: translateZ(0) scale(1);
+  transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .dryzen-shop-card:hover .image img {
+    transform: translateZ(0) scale(1.035);
+  }
+}
+
+.dryzen-shop-card .image .icons-wrapper {
+  top: 16px;
+  right: 16px;
+  z-index: 4;
+}
+
+.dryzen-shop-card .image .icons-wrapper .icon {
+  display: none;
+}
+
+.dryzen-shop-card .image .icons-wrapper .is_wishlist {
+  display: grid;
+  width: 42px;
+  height: 42px;
+  padding: 0;
+  border: 1px solid rgba(23, 36, 49, 0.08);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.94);
+  color: #172431;
+  box-shadow: 0 8px 20px rgba(23, 36, 49, 0.08);
+  cursor: pointer;
+  transform: none;
+  place-items: center;
+}
+
+.dryzen-shop-card .caption {
+  position: relative;
+  z-index: 2;
+  display: flex !important;
+  min-height: 0 !important;
+  padding: 24px 24px 26px;
+  background: #fff;
+  text-align: left;
+  contain: paint;
+  flex: 1 1 auto;
+  flex-direction: column;
+  transform: none !important;
+  transition: none !important;
+}
+
+html body .dryzen-shop-card .caption > .product-name,
+html body .dryzen-shop-card .caption > .product-name:hover {
+  display: block;
+  min-height: 0;
+  margin: 0 0 10px;
+  padding: 0;
+  overflow: visible;
+  color: #172431;
+  font-size: clamp(18px, 1.35vw, 21px) !important;
+  font-weight: 700;
+  line-height: 1.28;
+  letter-spacing: -0.02em;
+  text-align: left;
+  text-decoration: none;
+  text-overflow: initial;
+  border: 0;
+  outline: 0;
+  align-self: stretch;
+  backface-visibility: hidden;
+  transform: none !important;
+  transition: none !important;
+  -webkit-box-orient: initial;
+  -webkit-line-clamp: initial;
+}
+
+html body .dryzen-shop-card .caption > .product-subtitle {
+  display: block;
+  min-height: 72px;
+  margin: 0 0 20px;
+  color: #5b6a77;
+  font-size: 15px;
+  line-height: 1.6;
+  text-align: left;
+  align-self: stretch;
+}
+
+.dryzen-shop-card .dryzen-shop-card-footer {
+  margin-top: auto;
+  padding-top: 18px;
+  border-top: 1px solid #e3ebef;
+}
+
+.dryzen-shop-card .dryzen-shop-card-price {
+  margin-bottom: 16px;
+  color: #172431;
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.dryzen-shop-card .price-old {
+  margin-right: 8px;
+  color: #8b969f;
+  font-size: 14px;
+  font-weight: 400;
+  text-decoration: line-through;
+}
+
+.dryzen-shop-card .dryzen-card-purchase {
+  display: grid;
+  grid-template-columns: 106px 48px;
+  gap: 10px;
+  width: 100%;
+  justify-content: space-between;
+}
+
+.dryzen-shop-card .dryzen-card-qty {
+  display: grid;
+  grid-template-columns: 34px 38px 34px;
+  height: 46px;
+  overflow: hidden;
+  border: 1px solid #d6e1e6;
+  border-radius: 13px;
+  background: #fff;
+}
+
+.dryzen-shop-card .dryzen-card-qty button,
+.dryzen-shop-card .dryzen-card-qty input {
+  width: 100%;
+  height: 44px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: #172431;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1;
+  text-align: center;
+}
+
+.dryzen-shop-card .dryzen-card-qty button {
+  cursor: pointer;
+}
+
+.dryzen-shop-card .dryzen-card-qty button:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.dryzen-shop-card .dryzen-card-qty input {
+  box-shadow: none;
+  -moz-appearance: textfield;
+}
+
+.dryzen-shop-card .dryzen-card-qty input::-webkit-outer-spin-button,
+.dryzen-shop-card .dryzen-card-qty input::-webkit-inner-spin-button {
+  margin: 0;
+  -webkit-appearance: none;
+}
+
+.dryzen-shop-card .dryzen-card-cart {
+  display: inline-flex;
+  width: 48px;
+  min-width: 48px;
+  min-height: 46px;
+  padding: 0;
+  border: 1px solid #00bfa5;
+  border-radius: 13px;
+  background: #00bfa5;
+  color: #fff;
+  font-size: 19px;
+  font-weight: 700;
+  line-height: 1.2;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.dryzen-shop-card .dryzen-card-cart:hover,
+.dryzen-shop-card .dryzen-card-cart:focus {
+  border-color: #ff6b43;
+  background: #ff6b43;
+  color: #fff;
+}
+
+.dryzen-shop-card .dryzen-card-cart:disabled {
+  border-color: #d6e1e6;
+  background: #f4f7f8;
+  color: #89959e;
+  cursor: not-allowed;
+}
+
+@media (max-width: 1199px) {
+  .dryzen-shop-results .dryzen-product-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 899px) {
+  .dryzen-shop-results .dryzen-product-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 599px) {
+  .dryzen-shop-shell {
+    padding-right: 20px;
+    padding-left: 20px;
+  }
+
+  .dryzen-shop-results .dryzen-product-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 22px;
+  }
+
+  .dryzen-shop-card .edge {
+    border-radius: 22px;
+  }
+
+  .dryzen-shop-card .caption {
+    padding: 22px 22px 24px;
+  }
+
+  html body .dryzen-shop-card .caption > .product-name,
+  html body .dryzen-shop-card .caption > .product-name:hover {
+    font-size: 20px !important;
+  }
+
+  .dryzen-shop-card .product-subtitle {
+    min-height: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dryzen-shop-card .image img {
+    transition: none;
+  }
+}

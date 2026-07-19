@@ -1,0 +1,249 @@
+{
+    "created_at": "2026-07-19T08:16:29+00:00",
+    "product": [
+        {
+            "product_id": "11",
+            "model": "004",
+            "sku": "",
+            "upc": "",
+            "ean": "",
+            "jan": "",
+            "isbn": "",
+            "mpn": "",
+            "location": "",
+            "quantity": "100",
+            "stock_status_id": "9",
+            "image": "catalog/product-kids-hands-2026/dryzen-kids-hand-wipes-pack.jpg",
+            "manufacturer_id": "0",
+            "shipping": "1",
+            "price": "15.0000",
+            "points": "0",
+            "tax_class_id": "11",
+            "date_available": "2026-04-24",
+            "weight": "0.00000000",
+            "weight_class_id": "1",
+            "length": "0.00000000",
+            "width": "0.00000000",
+            "height": "0.00000000",
+            "length_class_id": "1",
+            "subtract": "1",
+            "minimum": "1",
+            "sort_order": "1",
+            "status": "1",
+            "viewed": "93",
+            "date_added": "2026-05-26 09:51:51",
+            "date_modified": "2026-07-19 09:24:04"
+        }
+    ],
+    "product_description": [
+        {
+            "product_id": "11",
+            "language_id": "1",
+            "name": "DryZen Hand Wipes",
+            "subtitle": "Antiperspirant hand wipes",
+            "description": "&lt;p&gt;DryZen single-use antiperspirant wipes help with excessive palm sweating. The lightweight formulation absorbs quickly.&lt;/p&gt;\r\n\r\n&lt;h3&gt;Key benefits&lt;/h3&gt;\r\n\r\n&lt;ul&gt;\r\n\t&lt;li&gt;Helps control palm sweating&lt;/li&gt;\r\n\t&lt;li&gt;Practical for everyday use&lt;/li&gt;\r\n\t&lt;li&gt;Simple evening application&lt;/li&gt;\r\n&lt;/ul&gt;\r\n\r\n&lt;h3&gt;How to use&lt;/h3&gt;\r\n\r\n&lt;ul&gt;\r\n\t&lt;li&gt;Apply in the evening on clean, dry palms. Use one wipe per application. Repeat as needed.&lt;/li&gt;\r\n&lt;/ul&gt;\r\n\r\n&lt;h3&gt;Ingredients (INCI)&lt;/h3&gt;\r\n\r\n&lt;ul&gt;\r\n\t&lt;li&gt;Aqua, Aluminium Chloride, Sodium Benzoate, Parfum, Potassium Sorbate, Cocamidopropyl Betaine&lt;/li&gt;\r\n&lt;/ul&gt;\r\n\r\n&lt;h3&gt;Additional information&lt;/h3&gt;\r\n\r\n&lt;ul&gt;\r\n\t&lt;li&gt;Single-use&lt;/li&gt;\r\n\t&lt;li&gt;Best before: printed on packaging&lt;/li&gt;\r\n&lt;/ul&gt;\r\n\r\n&lt;h3&gt;Warnings&lt;/h3&gt;\r\n\r\n&lt;p&gt;For use on hands only. Avoid contact with eyes, mucous membranes, and damaged skin. Do not use on other parts of the body. Discontinue use in case of irritation. Do not flush.&lt;/p&gt;\r\n\r\n&lt;p&gt;&lt;strong&gt;Responsible person:&amp;nbsp;&lt;/strong&gt; Gordom usluge d.o.o., Zagreb | dryzen@dryzen.eu | www.dryzen.eu&lt;/p&gt;\r\n",
+            "tag": "",
+            "meta_title": "DryZen Hand Wipes -  Antiperspirant hand wipes",
+            "meta_description": "DryZen single-use antiperspirant wipes help with excessive palm sweating. The lightweight formulation absorbs quickly.",
+            "meta_keyword": "",
+            "h1": "",
+            "h2": "",
+            "image_alt": "",
+            "image_title": ""
+        },
+        {
+            "product_id": "11",
+            "language_id": "3",
+            "name": "DryZen Kids maramice za ruke",
+            "subtitle": "3 jednokratne antiperspirant maramice za kontrolu znojenja dlanova",
+            "description": "<p>Pomažu kod prekomjernog znojenja dlanova kroz jednostavnu večernju rutinu, kako bi se dijete tijekom dana moglo usredotočiti na školu, igru, sport i druge svakodnevne aktivnosti.</p><p>Razvijene su za primjenu na čistoj i potpuno suhoj koži dlanova, koriste se jednom dnevno tijekom tri večeri zaredom, a zatim prema potrebi i u skladu s uputama za korištenje.</p><h2>Kontrola znojenja dlanova za najmlađe, uz jednostavnu večernju rutinu.</h2><p>DryZen Kids jednokratne antiperspirant maramice za ruke razvijene su za djecu od 10 do 16 godina kojoj znojenje dlanova može stvarati nelagodu tijekom svakodnevnih aktivnosti poput škole, igre, sporta ili drugih situacija u kojima su ruke stalno u pokretu.</p><p>Jednostavnom primjenom navečer pomažu u kontroli znojenja dlanova, kako bi se dijete tijekom dana moglo usredotočiti na ono što je zaista važno.</p>",
+            "tag": "",
+            "meta_title": "DryZen Kids maramice za ruke | DryZen",
+            "meta_description": "Pomažu kod prekomjernog znojenja dlanova kroz jednostavnu večernju rutinu, kako bi se dijete tijekom dana moglo usredotočiti na školu, igru, sport i druge svakodnevne aktivnosti.",
+            "meta_keyword": "",
+            "h1": "",
+            "h2": "",
+            "image_alt": "",
+            "image_title": ""
+        }
+    ],
+    "product_image": [
+        {
+            "product_image_id": "12",
+            "product_id": "11",
+            "image": "catalog/product-kids-hands-2026/dryzen-kids-school.jpg",
+            "sort_order": "0"
+        },
+        {
+            "product_image_id": "13",
+            "product_id": "11",
+            "image": "catalog/product-kids-hands-2026/dryzen-kids-pack.jpg",
+            "sort_order": "1"
+        },
+        {
+            "product_image_id": "14",
+            "product_id": "11",
+            "image": "catalog/product-kids-hands-2026/dryzen-kids-family.jpg",
+            "sort_order": "2"
+        },
+        {
+            "product_image_id": "15",
+            "product_id": "11",
+            "image": "catalog/product-kids-hands-2026/dryzen-kids-routine.jpg",
+            "sort_order": "3"
+        }
+    ],
+    "product_tabs_to_product": [
+        {
+            "tab_id": "8"
+        },
+        {
+            "tab_id": "9"
+        },
+        {
+            "tab_id": "10"
+        },
+        {
+            "tab_id": "11"
+        },
+        {
+            "tab_id": "12"
+        },
+        {
+            "tab_id": "13"
+        },
+        {
+            "tab_id": "14"
+        }
+    ],
+    "product_tabs": [
+        {
+            "tab_id": "8",
+            "sort_order": "1",
+            "status": "1",
+            "global": "0"
+        },
+        {
+            "tab_id": "9",
+            "sort_order": "2",
+            "status": "1",
+            "global": "0"
+        },
+        {
+            "tab_id": "10",
+            "sort_order": "3",
+            "status": "1",
+            "global": "0"
+        },
+        {
+            "tab_id": "11",
+            "sort_order": "4",
+            "status": "1",
+            "global": "0"
+        },
+        {
+            "tab_id": "12",
+            "sort_order": "5",
+            "status": "1",
+            "global": "0"
+        },
+        {
+            "tab_id": "13",
+            "sort_order": "6",
+            "status": "1",
+            "global": "0"
+        },
+        {
+            "tab_id": "14",
+            "sort_order": "7",
+            "status": "1",
+            "global": "0"
+        }
+    ],
+    "product_tabs_description": [
+        {
+            "tab_id": "8",
+            "language_id": "1",
+            "name": "Kada odabrati DryZen Kids maramice?",
+            "description": "<p>Ovaj proizvod namijenjen je djeci od 10 do 16 godina koja imaju pojačano znojenje dlanova i žele jednostavnu rutinu koja se lako uklapa u svakodnevni život.</p><p>Idealne su za:</p><ul><li>školu i nastavu</li><li>sport i izvannastavne aktivnosti</li><li>igru i druženje</li><li>svakodnevne situacije u kojima znojenje dlanova može stvarati nelagodu</li></ul>"
+        },
+        {
+            "tab_id": "8",
+            "language_id": "3",
+            "name": "Kada odabrati DryZen Kids maramice?",
+            "description": "<p>Ovaj proizvod namijenjen je djeci od 10 do 16 godina koja imaju pojačano znojenje dlanova i žele jednostavnu rutinu koja se lako uklapa u svakodnevni život.</p><p>Idealne su za:</p><ul><li>školu i nastavu</li><li>sport i izvannastavne aktivnosti</li><li>igru i druženje</li><li>svakodnevne situacije u kojima znojenje dlanova može stvarati nelagodu</li></ul>"
+        },
+        {
+            "tab_id": "9",
+            "language_id": "1",
+            "name": "Zašto odabrati DryZen Kids?",
+            "description": "<ul><li>Pomaže u kontroli znojenja dlanova.</li><li>Prilagođeno dječjoj svakodnevici.</li><li>Jednostavna večernja rutina.</li><li>Jednokratne maramice jednostavne za korištenje.</li><li>Praktično pakiranje za početnu rutinu.</li></ul>"
+        },
+        {
+            "tab_id": "9",
+            "language_id": "3",
+            "name": "Zašto odabrati DryZen Kids?",
+            "description": "<ul><li>Pomaže u kontroli znojenja dlanova.</li><li>Prilagođeno dječjoj svakodnevici.</li><li>Jednostavna večernja rutina.</li><li>Jednokratne maramice jednostavne za korištenje.</li><li>Praktično pakiranje za početnu rutinu.</li></ul>"
+        },
+        {
+            "tab_id": "10",
+            "language_id": "1",
+            "name": "Kako koristiti?",
+            "description": "<p>Za najbolje rezultate proizvod koristite navečer prije spavanja.</p><ol><li>Operite i dobro osušite ruke.</li><li>Otvorite pakiranje i izvadite jednu maramicu.</li><li>Temeljito prebrišite čiste i potpuno suhe dlanove, uključujući područje između prstiju.</li><li>Ostavite da se koža prirodno osuši.</li><li>Ne ispirite ruke nakon primjene.</li></ol><h3>Početna rutina</h3><ul><li>koristite jednu maramicu svake večeri</li><li>tri večeri zaredom</li><li>nakon toga ponovite rutinu prema potrebi i u skladu s uputama</li></ul>"
+        },
+        {
+            "tab_id": "10",
+            "language_id": "3",
+            "name": "Kako koristiti?",
+            "description": "<p>Za najbolje rezultate proizvod koristite navečer prije spavanja.</p><ol><li>Operite i dobro osušite ruke.</li><li>Otvorite pakiranje i izvadite jednu maramicu.</li><li>Temeljito prebrišite čiste i potpuno suhe dlanove, uključujući područje između prstiju.</li><li>Ostavite da se koža prirodno osuši.</li><li>Ne ispirite ruke nakon primjene.</li></ol><h3>Početna rutina</h3><ul><li>koristite jednu maramicu svake večeri</li><li>tri večeri zaredom</li><li>nakon toga ponovite rutinu prema potrebi i u skladu s uputama</li></ul>"
+        },
+        {
+            "tab_id": "11",
+            "language_id": "1",
+            "name": "Što se nalazi u pakiranju?",
+            "description": "<ul><li>3 jednokratne antiperspirant maramice za ruke</li><li>pojedinačno pakirane</li><li>namijenjene za jednokratnu uporabu</li></ul>"
+        },
+        {
+            "tab_id": "11",
+            "language_id": "3",
+            "name": "Što se nalazi u pakiranju?",
+            "description": "<ul><li>3 jednokratne antiperspirant maramice za ruke</li><li>pojedinačno pakirane</li><li>namijenjene za jednokratnu uporabu</li></ul>"
+        },
+        {
+            "tab_id": "12",
+            "language_id": "1",
+            "name": "Sastojci (INCI)",
+            "description": "<p>Aqua, Aluminium Chloride, Parfum, Phenoxyethanol, Cocamidopropyl Betaine</p>"
+        },
+        {
+            "tab_id": "12",
+            "language_id": "3",
+            "name": "Sastojci (INCI)",
+            "description": "<p>Aqua, Aluminium Chloride, Parfum, Phenoxyethanol, Cocamidopropyl Betaine</p>"
+        },
+        {
+            "tab_id": "13",
+            "language_id": "1",
+            "name": "Upozorenja",
+            "description": "<ul><li>Samo za vanjsku uporabu na rukama.</li><li>Koristiti isključivo na čistoj i potpuno suhoj koži.</li><li>Izbjegavati kontakt s očima, sluznicama i otvorenim ranama.</li><li>Ne koristiti na nadraženoj ili oštećenoj koži.</li><li>Ne koristiti na drugim dijelovima tijela.</li><li>U slučaju crvenila, svrbeža ili iritacije prekinuti uporabu.</li><li>Nakon uporabe maramicu odložiti u otpad. Ne odlagati u WC školjku.</li><li>Čuvati na suhom mjestu, izvan dohvata male djece.</li><li>Namijenjeno za korištenje djeci od 10 do 16 godina.</li><li>Izbjegavati nanošenje na oštećenu ili svježe obrijanu kožu.</li></ul>"
+        },
+        {
+            "tab_id": "13",
+            "language_id": "3",
+            "name": "Upozorenja",
+            "description": "<ul><li>Samo za vanjsku uporabu na rukama.</li><li>Koristiti isključivo na čistoj i potpuno suhoj koži.</li><li>Izbjegavati kontakt s očima, sluznicama i otvorenim ranama.</li><li>Ne koristiti na nadraženoj ili oštećenoj koži.</li><li>Ne koristiti na drugim dijelovima tijela.</li><li>U slučaju crvenila, svrbeža ili iritacije prekinuti uporabu.</li><li>Nakon uporabe maramicu odložiti u otpad. Ne odlagati u WC školjku.</li><li>Čuvati na suhom mjestu, izvan dohvata male djece.</li><li>Namijenjeno za korištenje djeci od 10 do 16 godina.</li><li>Izbjegavati nanošenje na oštećenu ili svježe obrijanu kožu.</li></ul>"
+        },
+        {
+            "tab_id": "14",
+            "language_id": "1",
+            "name": "Dodatne informacije",
+            "description": "<ul><li>Jednokratna uporaba.</li><li>Rok trajanja otisnut je na pakiranju.</li></ul><h3>Odgovorna osoba</h3><p>Gordom usluge d.o.o.<br>\nZagreb, Hrvatska<br>\n<a href=\"mailto:dryzen@dryzen.eu\">dryzen@dryzen.eu</a><br>\n<a href=\"https://www.dryzen.eu\">www.dryzen.eu</a></p>"
+        },
+        {
+            "tab_id": "14",
+            "language_id": "3",
+            "name": "Dodatne informacije",
+            "description": "<ul><li>Jednokratna uporaba.</li><li>Rok trajanja otisnut je na pakiranju.</li></ul><h3>Odgovorna osoba</h3><p>Gordom usluge d.o.o.<br>\nZagreb, Hrvatska<br>\n<a href=\"mailto:dryzen@dryzen.eu\">dryzen@dryzen.eu</a><br>\n<a href=\"https://www.dryzen.eu\">www.dryzen.eu</a></p>"
+        }
+    ]
+}

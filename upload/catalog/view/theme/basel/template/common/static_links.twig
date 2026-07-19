@@ -1,6 +1,10 @@
 {% if use_custom_links %}
 {% for basel_link in basel_links %}
-<li class="static-link"><a class="anim-underline" href="{{ basel_link.target }}">{{ basel_link.text }}</a></li>
+{% if basel_link.target and basel_link.target != '#' %}
+<li class="static-link"><a class="anim-underline" href="{{ basel_link.target }}" aria-label="{{ basel_link.text|striptags|trim }}">{{ basel_link.text }}</a></li>
+{% else %}
+<li class="static-link"><span class="anim-underline" role="img" aria-label="{{ basel_link.text|striptags|trim }}">{{ basel_link.text }}</span></li>
+{% endif %}
 {% endfor %}
 {% else %}
 <li class="static-link"><a class="anim-underline"  href="{{ account }}" title="{{ text_account }}">{{ text_account }}</a></li>

@@ -1,13 +1,13 @@
 <?php if ($block_full_width) { ?>
 </div>
 <?php } ?>
-<div class="widget cm_module" style="<?php echo $module_margins; ?>">
+<div class="widget cm_module" id="mod<?php echo $module; ?>">
 <?php if ($block_title) { ?>
 <!-- Block Title -->
 <div class="widget-title">
 <?php if ($title_preline) { ?><p class="pre-line"><?php echo $title_preline; ?></p><?php } ?>
 <?php if ($title) { ?>
-<p class="main-title"><span><?php echo $title; ?></span></p>
+<h2 class="main-title"><span><?php echo $title; ?></span></h2>
 <p class="widget-title-separator"><i class="icon-line-cross"></i></p>
 <?php } ?>
 <?php if ($title_subline) { ?>
@@ -17,10 +17,10 @@
 <?php } ?>
 <div class="cm_block_wrapper">
 <?php if ($bg_video) { ?><div class="vid-holder"></div><?php } ?>
-<div class="cm_block <?php echo $module; ?>" style="<?php echo $block_style; ?>;">
+<div class="cm_block <?php echo $module; ?>">
 <div class="<?php if (!$content_full_width && $block_full_width) { echo "container"; } ?>">
 <?php if (isset($columns)) { ?>
-<div class="cm_content" style="<?php echo $content_style; ?>;">
+<div class="cm_content">
 <div class="row <?php if ($content_no_margin) { echo "marginless"; } ?>">
 <?php foreach($columns as $column){ ?>
 <div class="<?php echo $column['column_class']; ?> type-<?php echo $column['type']; ?> cm_column <?php if ($equal_height) { echo "eq_height"; } ?>">    

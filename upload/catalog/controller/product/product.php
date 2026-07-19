@@ -234,12 +234,27 @@ class ControllerProductProduct extends Controller {
 			$this->document->setDescription($product_info['meta_description']);
 			$this->document->setKeywords($product_info['meta_keyword']);
 			$this->document->addLink($this->url->link('product/product', 'product_id=' . $this->request->get['product_id']), 'canonical');
-			$this->document->addScript('catalog/view/javascript/jquery/magnific/jquery.magnific-popup.min.js');
-			$this->document->addStyle('catalog/view/javascript/jquery/magnific/magnific-popup.css');
-			$this->document->addScript('catalog/view/javascript/jquery/datetimepicker/moment/moment.min.js');
-			$this->document->addScript('catalog/view/javascript/jquery/datetimepicker/moment/moment-with-locales.min.js');
-			$this->document->addScript('catalog/view/javascript/jquery/datetimepicker/bootstrap-datetimepicker.min.js');
-			$this->document->addStyle('catalog/view/javascript/jquery/datetimepicker/bootstrap-datetimepicker.min.css');
+			$this->load->model('extension/basel/product_tabs');
+			$has_editorial_tabs = !empty($this->model_extension_basel_product_tabs->getExtraTabsProduct($this->request->get['product_id']));
+
+			if (!$has_editorial_tabs) {
+				$this->document->addScript('catalog/view/javascript/jquery/magnific/jquery.magnific-popup.min.js');
+				$this->document->addStyle('catalog/view/javascript/jquery/magnific/magnific-popup.css');
+			}
+
+			$requires_datetimepicker = false;
+			foreach ($this->model_catalog_product->getProductOptions($this->request->get['product_id']) as $product_option) {
+				if (in_array($product_option['type'], array('date', 'datetime', 'time'), true)) {
+					$requires_datetimepicker = true;
+					break;
+				}
+			}
+
+			if ($requires_datetimepicker) {
+				$this->document->addScript('catalog/view/javascript/jquery/datetimepicker/moment/moment-with-locales.min.js');
+				$this->document->addScript('catalog/view/javascript/jquery/datetimepicker/bootstrap-datetimepicker.min.js');
+				$this->document->addStyle('catalog/view/javascript/jquery/datetimepicker/bootstrap-datetimepicker.min.css');
+			}
 
 			$data['heading_title'] = $product_info['name'];
 
@@ -270,11 +285,30 @@ class ControllerProductProduct extends Controller {
 			}
 
 			$this->load->model('tool/image');
+			$imageBaseUrl = !empty($this->request->server['HTTPS'])
+				? $this->config->get('config_ssl')
+				: $this->config->get('config_url');
+			$imageBaseUrl = rtrim($imageBaseUrl, '/') . '/image/';
 
 			if ($product_info['image']) {
-				$data['popup'] = $this->model_tool_image->resize($product_info['image'], $this->config->get('theme_' . $this->config->get('config_theme') . '_image_popup_width'), $this->config->get('theme_' . $this->config->get('config_theme') . '_image_popup_height'));
+				$imageSize = getimagesize(DIR_IMAGE . $product_info['image']);
+				$imageVersion = is_file(DIR_IMAGE . $product_info['image']) ? filemtime(DIR_IMAGE . $product_info['image']) : time();
+				$imageUrl = $imageBaseUrl . str_replace(' ', '%20', $product_info['image']) . '?v=' . $imageVersion;
+				$imageDisplay = $this->model_tool_image->resizeProportional($product_info['image'], 1200, 1200);
+				$imageDisplayLarge = $this->model_tool_image->resizeProportional($product_info['image'], 1800, 1800);
+				$data['popup'] = $imageUrl;
+				$data['image_src'] = $imageDisplay ?: $imageUrl;
+				$data['image_srcset'] = ($imageDisplay ?: $imageUrl) . ' 1200w, ' . ($imageDisplayLarge ?: $imageUrl) . ' 1800w';
+				$data['image_path'] = $product_info['image'];
+				$data['image_width'] = $imageSize ? $imageSize[0] : 1600;
+				$data['image_height'] = $imageSize ? $imageSize[1] : 1200;
 			} else {
 				$data['popup'] = '';
+				$data['image_src'] = '';
+				$data['image_srcset'] = '';
+				$data['image_path'] = '';
+				$data['image_width'] = 1600;
+				$data['image_height'] = 1200;
 			}
 
 			if ($product_info['image']) {
@@ -288,8 +322,18 @@ class ControllerProductProduct extends Controller {
 			$results = $this->model_catalog_product->getProductImages($this->request->get['product_id']);
 
 			foreach ($results as $result) {
+				$imageSize = getimagesize(DIR_IMAGE . $result['image']);
+				$imageVersion = is_file(DIR_IMAGE . $result['image']) ? filemtime(DIR_IMAGE . $result['image']) : time();
+				$imageUrl = $imageBaseUrl . str_replace(' ', '%20', $result['image']) . '?v=' . $imageVersion;
+				$imageDisplay = $this->model_tool_image->resizeProportional($result['image'], 1200, 1200);
+				$imageDisplayLarge = $this->model_tool_image->resizeProportional($result['image'], 1800, 1800);
 				$data['images'][] = array(
-					'popup' => $this->model_tool_image->resize($result['image'], $this->config->get('theme_' . $this->config->get('config_theme') . '_image_popup_width'), $this->config->get('theme_' . $this->config->get('config_theme') . '_image_popup_height')),
+					'path'  => $result['image'],
+					'src'   => $imageDisplay ?: $imageUrl,
+					'srcset' => ($imageDisplay ?: $imageUrl) . ' 1200w, ' . ($imageDisplayLarge ?: $imageUrl) . ' 1800w',
+					'popup' => $imageUrl,
+					'width' => $imageSize ? $imageSize[0] : 1600,
+					'height' => $imageSize ? $imageSize[1] : 1200,
 					'thumb' => $this->model_tool_image->resize($result['image'], $this->config->get('theme_' . $this->config->get('config_theme') . '_image_additional_width'), $this->config->get('theme_' . $this->config->get('config_theme') . '_image_additional_height'))
 				);
 			}
@@ -477,9 +521,13 @@ $data['weight'] = $weight;
 
 			foreach ($results as $result) {
 				if ($result['image']) {
-					$image = $this->model_tool_image->resize($result['image'], $this->config->get('theme_' . $this->config->get('config_theme') . '_image_related_width'), $this->config->get('theme_' . $this->config->get('config_theme') . '_image_related_height'));
+					$image = $this->model_tool_image->resizeCrop($result['image'], 900, 900);
+					$image_small = $this->model_tool_image->resizeCrop($result['image'], 480, 480);
+					$image_medium = $this->model_tool_image->resizeCrop($result['image'], 720, 720);
 				} else {
-					$image = $this->model_tool_image->resize('placeholder.png', $this->config->get('theme_' . $this->config->get('config_theme') . '_image_related_width'), $this->config->get('theme_' . $this->config->get('config_theme') . '_image_related_height'));
+					$image = $this->model_tool_image->resize('placeholder.png', 900, 900);
+					$image_small = $this->model_tool_image->resize('placeholder.png', 480, 480);
+					$image_medium = $this->model_tool_image->resize('placeholder.png', 720, 720);
 				}
 
 				if ($this->customer->isLogged() || !$this->config->get('config_customer_price')) {
@@ -531,8 +579,12 @@ $data['weight'] = $weight;
 				$data['products'][] = array(
 					'product_id'  => $result['product_id'],
 					'thumb'       => $image,
+					'thumb_small' => $image_small,
+					'thumb_medium' => $image_medium,
 					'name'        => $result['name'],
+					'subtitle'    => $result['subtitle'],
 					'description' => utf8_substr(trim(strip_tags(html_entity_decode($result['description'], ENT_QUOTES, 'UTF-8'))), 0, $this->config->get('theme_' . $this->config->get('config_theme') . '_product_description_length')) . '..',
+					'quantity'    => $result['quantity'],
 					'price'       => $price,
 					'special'     => $special,
 					     'priceeur'       => $priceeur,

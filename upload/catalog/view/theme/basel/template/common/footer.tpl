@@ -139,6 +139,6 @@ Please donate via PayPal to donate@opencart.com
 BASEL VERSION <?php echo $basel_version; ?> - OPENCART VERSION 2.3 (<?php echo VERSION; ?>)
 //-->
 </div><!-- .outer-container ends -->
-<a class="scroll-to-top primary-bg-color hidden-sm hidden-xs" onclick="$('html, body').animate({scrollTop:0});"><i class="icon-arrow-right"></i></a>
+<a href="#top" class="scroll-to-top primary-bg-color hidden-sm hidden-xs" aria-label="Na vrh" onclick="$('html, body').animate({scrollTop:0});"><i class="icon-arrow-right" aria-hidden="true"></i></a>
 <div id="featherlight-holder"></div>
 </body></html>

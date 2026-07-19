@@ -1,6 +1,10 @@
 <?php if ($use_custom_links) { ?>
 <?php foreach ($basel_links as $basel_link) { ?>
-<li class="static-link"><a class="anim-underline" href="<?php echo $basel_link['target']; ?>"><?php echo $basel_link['text']; ?></a></li>
+<?php if (!empty($basel_link['target']) && $basel_link['target'] !== '#') { ?>
+<li class="static-link"><a class="anim-underline" href="<?php echo $basel_link['target']; ?>" aria-label="<?php echo strip_tags($basel_link['text']); ?>"><?php echo $basel_link['text']; ?></a></li>
+<?php } else { ?>
+<li class="static-link"><span class="anim-underline" role="img" aria-label="<?php echo strip_tags($basel_link['text']); ?>"><?php echo $basel_link['text']; ?></span></li>
+<?php } ?>
 <?php } ?>
 <?php } else { ?>
 <li class="static-link"><a class="anim-underline"  href="<?php echo $account; ?>" title="<?php echo $text_account; ?>"><?php echo $text_account; ?></a></li>

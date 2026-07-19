@@ -61,6 +61,12 @@
 	// Product Tabs
 	$this->load->model('extension/basel/product_tabs');
 	$data['product_tabs'] = $this->model_extension_basel_product_tabs->getExtraTabsProduct($this->request->get['product_id']);
+	$data['dryzen_editorial_product'] = !empty($data['product_tabs']);
+	$this->document->addStyle('catalog/view/theme/basel/js/photoswipe/photoswipe.css?v=5.4.4');
+	$this->document->addStyle('catalog/view/theme/basel/stylesheet/dryzen-editorial-product.css?v=20260719m');
+	$this->document->addScript('catalog/view/theme/basel/js/dryzen-editorial-product.js?v=20260719m');
+	$this->document->addStyle('catalog/view/theme/basel/stylesheet/dryzen-shop.css?v=20260719k');
+	$this->document->addScript('catalog/view/theme/basel/js/dryzen-shop.js?v=20260719p');
 	
 	// SEO Reviews
 	$data['text_no_reviews'] = $this->language->get('text_no_reviews');

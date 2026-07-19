@@ -18,7 +18,7 @@
     {% set class = 'col-sm-12' %}
     {% endif %}
     
-    <div id="content" class="dryzen-shop-content {{ class }}" style="min-height:unset">
+    <div id="content" class="dryzen-shop-content {{ class }}">
     {{ content_top }}
       <div class="dryzen-category-intro{% if thumb and category_thumb_status %} has-thumb{% endif %}">
         <div class="dryzen-category-copy">
@@ -107,6 +107,7 @@
       
       <div class="grid-holder product-holder grid{{ basel_prod_grid }} dryzen-product-grid">
         {% for product in products %}
+        {% set dryzen_shop_card = true %}
         {% include 'basel/template/product/single_product.twig' %}
         {% endfor %}
       </div>

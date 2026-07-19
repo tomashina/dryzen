@@ -1,13 +1,13 @@
 {% if block_full_width %}
 </div>
 {% endif %}
-<div class="widget cm_module" style="{{ module_margins }}" id="mod{{ module }}">
+<div class="widget cm_module" id="mod{{ module }}">
 {% if block_title %}
 <!-- Block Title -->
 <div class="widget-title">
 {% if title_preline %}<p class="pre-line">{{ title_preline }}</p>{% endif %}
 {% if title %}
-<p class="main-title"><span>{{ title }}</span></p>
+<h2 class="main-title"><span>{{ title }}</span></h2>
 <p class="widget-title-separator"><i class="icon-line-cross"></i></p>
 {% endif %}
 {% if title_subline %}
@@ -17,10 +17,10 @@
 {% endif %}
 <div class="cm_block_wrapper">
 {% if bg_video %}<div class="vid-holder"></div>{% endif %}
-<div class="cm_block {{ module }}" style="{{ block_style }};">
+<div class="cm_block {{ module }}">
 <div class="{% if not content_full_width and block_full_width %}container{% endif %}">
 {% if columns %}
-<div class="cm_content" style="{{ content_style }};">
+<div class="cm_content">
 <div class="row {% if content_no_margin %}marginless{% endif %}">
 {% for column in columns %}
 
@@ -30,7 +30,15 @@
     <!-- Banner type -->
    <a href="{{ column.data5 }}" >
     <div class="banner_wrap">
-    <div class="zoom_image_wrap"> <img class="zoom_image" src="{{ column.data2 }}" alt=" {{ column.data1|striptags }}" /></div>
+    <div class="zoom_image_wrap">
+      {% if 'landing-2026/hero.webp' in column.data2 %}
+      <img class="zoom_image" src="{{ column.data2|replace({'.webp': '-480.webp'}) }}" srcset="{{ column.data2|replace({'.webp': '-480.webp'}) }} 480w, {{ column.data2|replace({'.webp': '-800.webp'}) }} 800w, {{ column.data2|replace({'.webp': '-1400.webp'}) }} 1400w, {{ column.data2 }} 2200w" sizes="(max-width: 767px) calc(100vw - 30px), 50vw" width="2200" height="1467" alt="{{ column.data1|striptags|trim }}" fetchpriority="high" decoding="sync" />
+      {% elseif 'landing-2026/product-finder.webp' in column.data2 %}
+      <img class="zoom_image" src="{{ column.data2|replace({'.webp': '-480.webp'}) }}" srcset="{{ column.data2|replace({'.webp': '-480.webp'}) }} 480w, {{ column.data2|replace({'.webp': '-800.webp'}) }} 800w, {{ column.data2|replace({'.webp': '-1400.webp'}) }} 1400w, {{ column.data2 }} 1800w" sizes="(max-width: 767px) calc(100vw - 30px), 50vw" width="1800" height="1200" alt="{{ column.data1|striptags|trim }}" loading="lazy" decoding="async" />
+      {% else %}
+      <img class="zoom_image" src="{{ column.data2 }}" alt="{{ column.data1|striptags|trim }}" loading="lazy" decoding="async" />
+      {% endif %}
+    </div>
     <div class="effect-holder"></div>
     <div class="banner_overlay">
         <div class="cm_item_wrapper">

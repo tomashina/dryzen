@@ -31,6 +31,7 @@ class ControllerInformationInformation extends Controller {
 			);
 
 			$data['heading_title'] = $information_info['title'];
+			$data['dryzen_about_page'] = $information_id === 13;
 
 			$data['description'] = html_entity_decode($information_info['description'], ENT_QUOTES, 'UTF-8');
 

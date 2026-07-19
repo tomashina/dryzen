@@ -1,5 +1,115 @@
 <?php
 class ModelExtensionBaselProductTabs extends Model {
+	public function getProductTabsByProductId($product_id) {
+		$product_tabs = array();
+		$query = $this->db->query(
+			"SELECT pt.tab_id, pt.sort_order, pt.status
+			 FROM " . DB_PREFIX . "product_tabs pt
+			 INNER JOIN " . DB_PREFIX . "product_tabs_to_product pt2p ON (pt.tab_id = pt2p.tab_id)
+			 WHERE pt2p.product_id = '" . (int)$product_id . "'
+			 ORDER BY pt.sort_order, pt.tab_id"
+		);
+
+		foreach ($query->rows as $tab) {
+			$product_tabs[] = array(
+				'tab_id' => (int)$tab['tab_id'],
+				'sort_order' => (int)$tab['sort_order'],
+				'status' => (int)$tab['status'],
+				'tab_description' => $this->getProductTabsDescriptions($tab['tab_id'])
+			);
+		}
+
+		return $product_tabs;
+	}
+
+	public function saveProductTabsForProduct($product_id, array $product_tabs) {
+		$existing_query = $this->db->query(
+			"SELECT tab_id FROM " . DB_PREFIX . "product_tabs_to_product
+			 WHERE product_id = '" . (int)$product_id . "'"
+		);
+		$existing_ids = array();
+
+		foreach ($existing_query->rows as $row) {
+			$existing_ids[(int)$row['tab_id']] = true;
+		}
+
+		$submitted_ids = array();
+
+		foreach ($product_tabs as $row_index => $product_tab) {
+			$tab_descriptions = isset($product_tab['tab_description']) && is_array($product_tab['tab_description'])
+				? $product_tab['tab_description']
+				: array();
+			$has_content = false;
+
+			foreach ($tab_descriptions as $tab_description) {
+				if (!empty(trim($tab_description['name'] ?? '')) || !empty(trim(strip_tags($tab_description['description'] ?? '')))) {
+					$has_content = true;
+					break;
+				}
+			}
+
+			if (!$has_content) {
+				continue;
+			}
+
+			$tab_id = isset($product_tab['tab_id']) ? (int)$product_tab['tab_id'] : 0;
+			$sort_order = isset($product_tab['sort_order']) ? (int)$product_tab['sort_order'] : (int)$row_index;
+			$status = isset($product_tab['status']) ? (int)$product_tab['status'] : 1;
+
+			if ($tab_id && isset($existing_ids[$tab_id])) {
+				$this->db->query(
+					"UPDATE " . DB_PREFIX . "product_tabs
+					 SET sort_order = '" . $sort_order . "', status = '" . $status . "', global = '0'
+					 WHERE tab_id = '" . $tab_id . "'"
+				);
+			} else {
+				$this->db->query(
+					"INSERT INTO " . DB_PREFIX . "product_tabs
+					 SET sort_order = '" . $sort_order . "', status = '" . $status . "', global = '0'"
+				);
+				$tab_id = $this->db->getLastId();
+				$this->db->query(
+					"INSERT INTO " . DB_PREFIX . "product_tabs_to_product
+					 SET tab_id = '" . (int)$tab_id . "', product_id = '" . (int)$product_id . "'"
+				);
+			}
+
+			$submitted_ids[(int)$tab_id] = true;
+			$this->db->query("DELETE FROM " . DB_PREFIX . "product_tabs_description WHERE tab_id = '" . (int)$tab_id . "'");
+
+			foreach ($tab_descriptions as $language_id => $tab_description) {
+				$this->db->query(
+					"INSERT INTO " . DB_PREFIX . "product_tabs_description
+					 SET tab_id = '" . (int)$tab_id . "',
+					     language_id = '" . (int)$language_id . "',
+					     name = '" . $this->db->escape(trim($tab_description['name'] ?? '')) . "',
+					     description = '" . $this->db->escape(trim($tab_description['description'] ?? '')) . "'"
+				);
+			}
+		}
+
+		foreach (array_keys($existing_ids) as $existing_id) {
+			if (isset($submitted_ids[$existing_id])) {
+				continue;
+			}
+
+			$this->db->query(
+				"DELETE FROM " . DB_PREFIX . "product_tabs_to_product
+				 WHERE tab_id = '" . (int)$existing_id . "' AND product_id = '" . (int)$product_id . "'"
+			);
+			$usage = $this->db->query(
+				"SELECT COUNT(*) AS total FROM " . DB_PREFIX . "product_tabs_to_product
+				 WHERE tab_id = '" . (int)$existing_id . "'"
+			);
+
+			if (!(int)$usage->row['total']) {
+				$this->db->query("DELETE FROM " . DB_PREFIX . "product_tabs WHERE tab_id = '" . (int)$existing_id . "'");
+				$this->db->query("DELETE FROM " . DB_PREFIX . "product_tabs_description WHERE tab_id = '" . (int)$existing_id . "'");
+				$this->db->query("DELETE FROM " . DB_PREFIX . "product_tabs_to_category WHERE tab_id = '" . (int)$existing_id . "'");
+			}
+		}
+	}
+
 	public function addTab($data) {
 		
 		$this->db->query("INSERT INTO " . DB_PREFIX . "product_tabs SET 

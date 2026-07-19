@@ -1,4 +1,4 @@
-<script src="//www.google.com/recaptcha/api.js"></script>
+<script src="catalog/view/theme/basel/js/dryzen-recaptcha.js?v=20260719a" defer></script>
 
 <?php if (substr($route, 0, 9) == 'checkout/') { ?>
 

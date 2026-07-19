@@ -4,7 +4,7 @@
 <div class="widget-title">
 <?php if ($title_preline) { ?><p class="pre-line"><?php echo $title_preline; ?></p><?php } ?>
 <?php if ($title) { ?> 
-<p class="main-title"><span><?php echo $title; ?></span></p>
+<h2 class="main-title"><span><?php echo $title; ?></span></h2>
 <p class="widget-title-separator"><i class="icon-line-cross"></i></p>
 <?php } ?>
 <?php if ($title_subline) { ?>
@@ -123,8 +123,8 @@
 <script><!--
 $('.grid-holder.prod_module<?php echo $module; ?>').slick({
 <?php if ($carousel_a) { ?>
-prevArrow: "<a class=\"arrow-left icon-arrow-left\"></a>",
-nextArrow: "<a class=\"arrow-right icon-arrow-right\"></a>",
+prevArrow: "<button type=\"button\" class=\"arrow-left icon-arrow-left\" aria-label=\"Prethodni proizvodi\"></button>",
+nextArrow: "<button type=\"button\" class=\"arrow-right icon-arrow-right\" aria-label=\"Sljedeći proizvodi\"></button>",
 <?php } else { ?>
 arrows: false,
 <?php } ?>

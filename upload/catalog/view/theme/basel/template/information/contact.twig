@@ -2,30 +2,44 @@
 
 {% if basel_map_lat and basel_map_lon and basel_map_style == "full_width" %}
 <div id="gmap" class="map-full-width">
-    <div class="address-holder col-sm-5 col-md-4 col-lg-3">
+  <div class="address-holder col-sm-5 col-md-4 col-lg-3">
     <h3 class="contrast-heading">{{ store }}</h3>
     <p>{{ address }}</p>
     <a class="uline_link to_form">{{ heading_title }}</a>
-    </div>
+  </div>
 </div>
 {% endif %}
-    
-    <div class="container">
-    
-        <ul class="breadcrumb">
-        {% for breadcrumb in breadcrumbs %}
-        <li><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
-        {% endfor %}
-        </ul>
-  
-  <div class="row">
-  
+
+<main class="dryzen-contact-page">
+  <header class="dryzen-contact-hero">
+    <div class="dryzen-contact-shell">
+      <p class="dryzen-contact-eyebrow">{{ text_contact_eyebrow }}</p>
+      <h1 class="dryzen-contact-title">{{ heading_title }}</h1>
+      <p class="dryzen-contact-lead">{{ text_contact_intro }}</p>
+
+      <nav class="dryzen-contact-breadcrumbs" aria-label="Putanja stranice">
+        <ol>
+          {% for breadcrumb in breadcrumbs %}
+          <li>
+            {% if loop.last %}
+            <span aria-current="page">{{ breadcrumb.text }}</span>
+            {% else %}
+            <a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a>
+            {% endif %}
+          </li>
+          {% endfor %}
+        </ol>
+      </nav>
+    </div>
+  </header>
+
+  <div class="dryzen-contact-shell dryzen-contact-layout">
     {% if basel_map_lat and basel_map_lon and basel_map_style == "inline" %}
-    <div id="gmap" class="col-sm-12 map-inline"></div>
+    <div id="gmap" class="dryzen-contact-map map-inline"></div>
     {% endif %}
-  
-  {{ column_left }}
-    
+
+    {{ column_left }}
+
     {% if column_left and column_right %}
     {% set class = 'col-sm-6' %}
     {% elseif column_left or column_right %}
@@ -33,219 +47,163 @@
     {% else %}
     {% set class = 'col-sm-12' %}
     {% endif %}
-    
-    <div id="content" class="{{ class }}">
-    {{ content_top }}
-      <h1 id="page-title">{{ heading_title }}</h1>
-      
-      <div class="row">
-        
-      <div class="col-sm-6 left-side">
-      	<h3 class="lined-title lg margin-b35"><span>{{ text_contact }}</span></h3>
-        <form action="{{ action }}" method="post" enctype="multipart/form-data" class="form-vertical">
 
-        <div class="row">
-        
-        <div class="form-group col-sm-12 required">
-        <label for="input-name">{{ entry_name }}</label>
-        <input type="text" name="name" value="{{ name }}" id="input-name" class="form-control" />
-        {% if error_name %}
-        <div class="text-danger">{{ error_name }}</div>
-        {% endif %}
-        </div>
-        
-        <div class="form-group col-sm-12 required">
-        <label for="input-email">{{ entry_email }}</label>
-        <input type="text" name="email" value="{{ email }}" id="input-email" class="form-control" />
-        {% if error_email %}
-        <div class="text-danger">{{ error_email }}</div>
-        {% endif %}
+    <div id="content" class="dryzen-contact-content {{ class }}">
+      {{ content_top }}
+
+      <section class="dryzen-contact-form-card" aria-labelledby="dryzen-contact-form-title">
+        <div class="dryzen-contact-section-heading">
+          <p class="dryzen-contact-kicker">PIŠI NAM</p>
+          <h2 id="dryzen-contact-form-title">{{ text_contact }}</h2>
         </div>
 
+        <form action="{{ action }}" method="post" enctype="multipart/form-data" class="dryzen-contact-form form-vertical">
+          <div class="dryzen-contact-form-grid">
+            <div class="dryzen-contact-field required">
+              <label for="input-name">{{ entry_name }}</label>
+              <input type="text" name="name" value="{{ name }}" id="input-name" class="form-control" autocomplete="name" required />
+              {% if error_name %}
+              <div class="text-danger">{{ error_name }}</div>
+              {% endif %}
+            </div>
 
-        <div class="form-group col-sm-12 required">
-                <label for="input-email">Telefon za kontakt</label>
-                <input type="text" name="telefon" value="{{ telefon }}" id="input-telefon" class="form-control" />
-                {% if error_telefon %}
-                    <div class="text-danger">{{ error_telefon }}</div>
-                {% endif %}
-        </div>
-        
-        </div>
+            <div class="dryzen-contact-field required">
+              <label for="input-email">{{ entry_email }}</label>
+              <input type="email" name="email" value="{{ form_email }}" id="input-email" class="form-control" autocomplete="email" required />
+              {% if error_email %}
+              <div class="text-danger">{{ error_email }}</div>
+              {% endif %}
+            </div>
 
-        
-        <div class="form-group required">
-        <label for="input-enquiry">{{ entry_enquiry }}</label>
-        <textarea name="enquiry" rows="10" id="input-enquiry" class="form-control">{{ enquiry }}</textarea>
-        {% if error_enquiry %}
-        <div class="text-danger">{{ error_enquiry }}</div>
-        {% endif %}
-        </div>
-		
-        {{ captcha }}
-        
-        <div class="form-group margin-b50">
-        <input class="btn btn-contrast" type="submit" value="{{ button_submit }}" />
-        </div>
-        
+            <div class="dryzen-contact-field dryzen-contact-field-wide required">
+              <label for="input-telefon">{{ entry_telephone }}</label>
+              <input type="tel" name="telefon" value="{{ telefon }}" id="input-telefon" class="form-control" autocomplete="tel" inputmode="tel" required />
+              {% if error_telefon %}
+              <div class="text-danger">{{ error_telefon }}</div>
+              {% endif %}
+            </div>
 
-
-        </form>
-      </div>
-      
-      <div class="col-sm-6 right-side">
-       <h3 class="lined-title lg margin-b30"><span>{{ heading_title }}</span></h3>
-       
-   
-           <div class="grid-holder margin-b20">
-           
-           <div class="item">
-           <p class="contact-detail">
-   
-           {{ address }}
-        
-           </p>
-           </div>
-
-               {% if open %}
-                   <div class="item">
-
-                       
-                
-                       <p class="contact-detail" >
-                    
-                           {{ open }}
-                       </p>
-
-                   </div>
-               {% endif %}
-
-           
-           </div>
-           
-        {% if comment %}
-        <div class="margin-b45">
-        <h3 class="lined-title lg margin-b20"><span>{{ text_comment }}</span></h3>
-        {{ comment }}
-        </div>
-        {% endif %}        
-        
-        {% if locations %}
-      <h3 class="lined-title lg margin-b15"><span><b>{{ text_store }}</b></span></h3>
-      <div class="panel-group" id="accordion">
-        {% for locations in location %}
-        <div class="panel panel-default">
-          <div class="panel-heading">
-            <h4 class="panel-title"><a href="#collapse-location{{ location.location_id }}" class="accordion-toggle" data-toggle="collapse" data-parent="#accordion">{{ location.name }} <i class="fa fa-caret-down"></i></a></h4>
-          </div>
-          <div class="panel-collapse collapse" id="collapse-location{{ location.location_id }}">
-            <div class="panel-body">
-              
-              
-             
-                
-                {% if location.image %}
-                <div class="contact-image margin-b25">
-                <img src="{{ location.image }}" alt="{{ location.name }}" title="{{ location.name }}" />
-                </div>
-                {% endif %}
-                
-                {% if location.comment %}
-                <b>{{ text_comment }}</b><br />
-                {{ location.comment }}<br /><br /><br />
-                {% endif %}
-                
-                <div class="grid-holder margin-b20">
-
-                <div class="item">
-                <p class="contact-detail">
-                <i class="icon-cursor icon"></i>
-                {{ location.name }}<br />
-                {{ location.address }}
-                {% if location.geocode %}
-                <br /><a href="https://maps.google.com/maps?q={{ location.geocode|url_encode }}&hl={{ geocode_hl }}&t=m&z=15" target="_blank" class="btn btn-info"><i class="fa fa-map-marker"></i> {{ button_map }}</a>
-                {% endif %}
-                </p>
-                </div>
-                
-                <div class="item">
-                <p class="contact-detail">
-                <i class="icon-phone icon"></i>
-                {{ location.telephone }}
-                {% if location.fax %}
-                <br />{{ text_fax }}: {{ location.fax }}
-                {% endif %}
-                </p>
-                </div>
-                
-                {% if location.open %}
-                <div class="item">
-                <p class="contact-detail">
-                <i class="icon-clock icon"></i>
-                  {{ location.open }}
-                </p>
-                </div>
-                {% endif %}
-                
-                
-              </div>
-
+            <div class="dryzen-contact-field dryzen-contact-field-wide required">
+              <label for="input-enquiry">{{ entry_enquiry }}</label>
+              <textarea name="enquiry" rows="7" id="input-enquiry" class="form-control" required>{{ enquiry }}</textarea>
+              {% if error_enquiry %}
+              <div class="text-danger">{{ error_enquiry }}</div>
+              {% endif %}
             </div>
           </div>
+
+          {% if captcha %}
+          <div class="dryzen-contact-captcha">
+            {{ captcha }}
+          </div>
+          {% endif %}
+
+          <button class="dryzen-contact-submit" type="submit">
+            <span>{{ button_submit }}</span>
+            <span class="icon-arrow-right" aria-hidden="true"></span>
+          </button>
+        </form>
+      </section>
+
+      <aside class="dryzen-contact-info-card" aria-labelledby="dryzen-contact-info-title">
+        <div>
+          <p class="dryzen-contact-kicker">PODRŠKA</p>
+          <h2 id="dryzen-contact-info-title">{{ text_contact_direct_title }}</h2>
+          <p class="dryzen-contact-info-copy">{{ text_contact_direct_copy }}</p>
         </div>
-        {% endfor %}
-      </div>
-      {% endif %}
-      
-      
-       
-       
-      </div> <!-- .col-sm-6 ends -->
-      
-      </div> <!-- .row ends -->
-      
-      
-      
-      
-      
-      {{ content_bottom }}</div>
-    {{ column_right }}</div>
-</div>
+
+        <dl class="dryzen-contact-details">
+          <div class="dryzen-contact-detail">
+            <dt><span class="icon-envelope" aria-hidden="true"></span>{{ text_email }}</dt>
+            <dd><a href="mailto:{{ email }}">{{ email }}</a></dd>
+          </div>
+
+          {% if telephone %}
+          <div class="dryzen-contact-detail">
+            <dt><span class="icon-phone" aria-hidden="true"></span>{{ text_telephone }}</dt>
+            <dd><a href="tel:{{ telephone_href }}">{{ telephone }}</a></dd>
+          </div>
+          {% endif %}
+
+          <div class="dryzen-contact-detail">
+            <dt><span class="icon-cursor" aria-hidden="true"></span>{{ text_address }}</dt>
+            <dd>{{ address }}</dd>
+          </div>
+
+          {% if open %}
+          <div class="dryzen-contact-detail">
+            <dt><span class="icon-clock" aria-hidden="true"></span>{{ text_open }}</dt>
+            <dd>{{ open }}</dd>
+          </div>
+          {% endif %}
+        </dl>
+
+        {% if comment %}
+        <div class="dryzen-contact-note">
+          <strong>{{ text_comment }}</strong>
+          <div>{{ comment }}</div>
+        </div>
+        {% endif %}
+
+        {% if locations %}
+        <div class="dryzen-contact-locations">
+          <h3>{{ text_store }}</h3>
+          <div class="panel-group" id="accordion">
+            {% for location in locations %}
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <h4 class="panel-title">
+                  <a href="#collapse-location{{ location.location_id }}" class="accordion-toggle" data-toggle="collapse" data-parent="#accordion">
+                    {{ location.name }} <i class="fa fa-caret-down" aria-hidden="true"></i>
+                  </a>
+                </h4>
+              </div>
+              <div class="panel-collapse collapse" id="collapse-location{{ location.location_id }}">
+                <div class="panel-body">
+                  {% if location.image %}
+                  <img src="{{ location.image }}" alt="{{ location.name }}" title="{{ location.name }}" loading="lazy" />
+                  {% endif %}
+                  <p>{{ location.address }}</p>
+                  {% if location.telephone %}<p><a href="tel:{{ location.telephone }}">{{ location.telephone }}</a></p>{% endif %}
+                  {% if location.open %}<p>{{ location.open }}</p>{% endif %}
+                  {% if location.comment %}<div>{{ location.comment }}</div>{% endif %}
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+        {% endif %}
+      </aside>
+
+      {{ content_bottom }}
+    </div>
+
+    {{ column_right }}
+  </div>
+</main>
 
 {% if basel_map_style %}
 <script>
-	$(document).ready(function() {
-		new Maplace({
-			locations: [
-				{
-					lat: {{ basel_map_lat }},
-					lon: {{ basel_map_lon }},
-				}
-			],
-			controls_on_map: true,
-			start: 1,
-			map_options: {
-				zoom: 15,
-				scrollwheel: false}
-		}).Load();
-		
-		{% if basel_map_lat and basel_map_lon and basel_map_style == "full_width" %}
-		$('body').addClass('full-width-map');
-		{% endif %}
-		 
-	});
+  $(document).ready(function() {
+    new Maplace({
+      locations: [{
+        lat: {{ basel_map_lat }},
+        lon: {{ basel_map_lon }}
+      }],
+      controls_on_map: true,
+      start: 1,
+      map_options: {
+        zoom: 15,
+        scrollwheel: false
+      }
+    }).Load();
+
+    {% if basel_map_lat and basel_map_lon and basel_map_style == "full_width" %}
+    $('body').addClass('full-width-map');
+    {% endif %}
+  });
 </script>
 {% endif %}
-
-
-<script>
-	$(document).ready(function() {
-$(".to_form").click(function() {
-    $('html, body').animate({
-        scrollTop: ($(".form-vertical").offset().top - 200)
-    }, 1000);
-});
-});
-</script>
 
 {{ footer }}

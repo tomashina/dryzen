@@ -50,7 +50,7 @@
 
 <ul class="breadcrumb">
     <?php foreach ($breadcrumbs as $breadcrumb) { ?>
-    <li><a href="<?php echo $breadcrumb['href']; ?>"><?php echo $breadcrumb['text']; ?></a></li>
+    <li><a href="<?php echo $breadcrumb['href']; ?>" aria-label="<?php echo trim(strip_tags($breadcrumb['text'])) ?: 'Naslovna'; ?>"><?php echo $breadcrumb['text']; ?></a></li>
     <?php } ?>
   </ul>
 
@@ -132,9 +132,9 @@
     <?php if ($price) { ?>
       <ul class="list-unstyled price">
         <?php if (!$special) { ?>
-        <li><span class="live-price"><?php echo $price; ?><span></li>
+        <li><span class="live-price"><?php echo $price; ?></span></li>
         <?php } else { ?>
-        <li><span class="price-old"><?php echo $price; ?></span><span class="live-price-new"><?php echo $special; ?><span></li>
+        <li><span class="price-old"><?php echo $price; ?></span><span class="live-price-new"><?php echo $special; ?></span></li>
         <span id="special_countdown"></span>
         <?php } ?>
       </ul>
@@ -339,7 +339,7 @@
             
             <div class="form-group buy catalog_hide">
 
-            <input type="number" step="1" min="<?php echo $minimum; ?>" name="quantity" value="<?php echo $minimum; ?>" id="input-quantity" class="form-control input-quantity" />
+            <input type="number" step="1" min="<?php echo $minimum; ?>" name="quantity" value="<?php echo $minimum; ?>" id="input-quantity" class="form-control input-quantity" aria-label="Količina" />
               <input type="hidden" name="product_id" value="<?php echo $product_id; ?>" />
               <button type="button" id="button-cart" data-loading-text="<?php echo $text_loading; ?>" class="btn btn-primary"><?php if (($qty < 1) && ($stock_badge_status)) { ?><?php echo $basel_text_out_of_stock; ?><?php } else { ?><?php echo $button_cart; ?><?php } ?></button>
             </div>
@@ -608,7 +608,7 @@
         <div class="widget widget-related">
         
         <div class="widget-title">
-        <p class="main-title"><span><?php echo $text_related; ?></span></p>
+        <h2 class="main-title"><span><?php echo $text_related; ?></span></h2>
         <p class="widget-title-separator"><i class="icon-line-cross"></i></p>
         </div>
         
@@ -645,8 +645,8 @@
 <?php if ($products) { ?>
 <script><!--
 $('.grid-holder.related').slick({
-prevArrow: "<a class=\"arrow-left icon-arrow-left\"></a>",
-nextArrow: "<a class=\"arrow-right icon-arrow-right\"></a>",
+prevArrow: "<button type=\"button\" class=\"arrow-left icon-arrow-left\" aria-label=\"Prethodni proizvodi\"></button>",
+nextArrow: "<button type=\"button\" class=\"arrow-right icon-arrow-right\" aria-label=\"Sljedeći proizvodi\"></button>",
 dots:true,
 <?php if ($direction == 'rtl') { ?>
 rtl: true,
@@ -780,18 +780,20 @@ $('#button-cart').on('click', function() {
 });
 //--></script>
 <script><!--
-$('.date').datetimepicker({
-	pickTime: false
-});
+if ($.fn.datetimepicker) {
+	$('.date').datetimepicker({
+		pickTime: false
+	});
 
-$('.datetime').datetimepicker({
-	pickDate: true,
-	pickTime: true
-});
+	$('.datetime').datetimepicker({
+		pickDate: true,
+		pickTime: true
+	});
 
-$('.time').datetimepicker({
-	pickDate: false
-});
+	$('.time').datetimepicker({
+		pickDate: false
+	});
+}
 
 $('button[id^=\'button-upload\']').on('click', function() {
 	var node = this;

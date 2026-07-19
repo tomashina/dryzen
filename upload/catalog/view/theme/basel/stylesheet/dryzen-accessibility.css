@@ -1,0 +1,129 @@
+/*
+ * Final interaction, contrast and accessibility layer.
+ * Kept separate and loaded last so CMS-generated theme rules remain editable.
+ */
+
+@font-face {
+  font-family: "FontAwesome";
+  src:
+    url("../../../javascript/font-awesome/fonts/fontawesome-webfont.woff2?v=4.7.0") format("woff2"),
+    url("../../../javascript/font-awesome/fonts/fontawesome-webfont.woff?v=4.7.0") format("woff");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+button.shortcut-wrapper,
+button.icon,
+button.slick-arrow,
+button.basel-back-btn,
+.product-info .info button {
+  padding: 0;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  appearance: none;
+}
+
+.dryzen-product-actions .info button {
+  padding: 0;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  background: transparent;
+  border: 0;
+  appearance: none;
+}
+
+button.shortcut-wrapper {
+  text-align: inherit;
+}
+
+.widget-title h2.main-title {
+  margin-top: 0;
+}
+
+.dryzen-shop-widget .slick-arrow,
+.widget-related .slick-arrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dryzen-shop-widget .slick-dots button,
+.widget-related .slick-dots button {
+  cursor: pointer;
+}
+
+body.common-home .dryzen-hero-panel {
+  background: #176b9f;
+}
+
+body.common-home .dryzen-hero-copy {
+  color: #fff;
+}
+
+body.common-home a.btn.dryzen-hero-btn {
+  color: #fff;
+  border-color: #fff;
+}
+
+body.common-home a.btn.dryzen-finder-btn {
+  color: #192735 !important;
+  background: #f36f45 !important;
+  border-color: #f36f45 !important;
+}
+
+body.common-home a.btn.dryzen-finder-btn:hover,
+body.common-home a.btn.dryzen-finder-btn:focus-visible {
+  color: #fff !important;
+  background: #176b9f !important;
+  border-color: #176b9f !important;
+}
+
+.newsletter-submit-wrap .btn-neutral {
+  color: #192735;
+  background: #00c19f;
+  border-color: #00c19f;
+}
+
+.newsletter-submit-wrap .btn-neutral:hover,
+.newsletter-submit-wrap .btn-neutral:focus-visible {
+  color: #fff;
+  background: #176b9f;
+  border-color: #176b9f;
+}
+
+.cc-window {
+  color: #192735;
+  background: #fff;
+}
+
+.cc-window .cc-btn {
+  color: #192735;
+  background: #00c19f;
+  border-color: #00c19f;
+}
+
+.cc-window .cc-btn:hover,
+.cc-window .cc-btn:focus-visible {
+  color: #fff;
+  background: #176b9f;
+  border-color: #176b9f;
+}
+
+.cc-window .cc-link {
+  color: #176b9f;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dryzen-shop-card .image img,
+  .dryzen-shop-card .image .thumb2,
+  .dryzen-editorial-gallery img {
+    transition: none !important;
+  }
+}
