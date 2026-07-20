@@ -86,6 +86,7 @@ class ControllerExtensionModuleBaselProducts extends Controller {
 				}	
 	
 				$products = array();
+				$results = array();
 	
 				switch ($tab['data_source']) {
 					case 'SP': //Select Products
@@ -103,6 +104,16 @@ class ControllerExtensionModuleBaselProducts extends Controller {
 				}
 				
 				if (isset($results)) {
+				$product_ids = array();
+
+				foreach ($results as $result) {
+					$product_ids[] = (int)$result['product_id'];
+				}
+
+				$first_product_images = $this->config->get('basel_thumb_swap')
+					? $this->model_catalog_product->getFirstProductImages($product_ids)
+					: array();
+
 				foreach ($results as $result) {
 					if ($result['image']) {
 					$image = $this->model_tool_image->resizeCrop($result['image'], 900, 900);
@@ -112,13 +123,6 @@ class ControllerExtensionModuleBaselProducts extends Controller {
 					$image = $this->model_tool_image->resize('placeholder.png', 900, 900);
 					$image_small = $this->model_tool_image->resize('placeholder.png', 480, 480);
 					$image_medium = $this->model_tool_image->resize('placeholder.png', 720, 720);
-					}
-					
-					$images = $this->model_catalog_product->getProductImages($result['product_id']);
-					if(isset($images[0]['image']) && !empty($images[0]['image'])){
-					$images =$images[0]['image'];
-				   	} else {
-					$images = false;
 					}
 					
 					if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
@@ -163,12 +167,9 @@ class ControllerExtensionModuleBaselProducts extends Controller {
 						$sale_badge = false;
 					}
 
-					$image2 = $this->model_catalog_product->getProductImages($result['product_id']);
-					if(isset($image2[0]['image']) && !empty($image2[0]['image']) && $this->config->get('basel_thumb_swap')){
-						$image2 = $image2[0]['image'];
-					} else {
-						$image2 = false;
-					}
+					$image2 = isset($first_product_images[(int)$result['product_id']])
+						? $first_product_images[(int)$result['product_id']]
+						: false;
 
 					if (strtotime($result['date_available']) > strtotime('-' . $this->config->get('newlabel_status') . ' day')) {
 						$is_new = true;
@@ -283,7 +284,7 @@ class ControllerExtensionModuleBaselProducts extends Controller {
 				if ($limit_count++ == $limit) break;
 				$product_info = $this->model_catalog_product->getProduct($product['product_id']);
 				if ($product_info) {
-					$results[$product['product_id']] = $this->model_catalog_product->getProduct($product['product_id']);
+					$results[$product['product_id']] = $product_info;
 				}
 			}
 		}

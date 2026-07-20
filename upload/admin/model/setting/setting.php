@@ -28,10 +28,13 @@ class ModelSettingSetting extends Model {
 				}
 			}
 		}
+
+		$this->invalidateStorefrontCache();
 	}
 
 	public function deleteSetting($code, $store_id = 0) {
 		$this->db->query("DELETE FROM " . DB_PREFIX . "setting WHERE store_id = '" . (int)$store_id . "' AND `code` = '" . $this->db->escape($code) . "'");
+		$this->invalidateStorefrontCache();
 	}
 	
 	public function getSettingValue($key, $store_id = 0) {
@@ -50,5 +53,11 @@ class ModelSettingSetting extends Model {
 		} else {
 			$this->db->query("UPDATE " . DB_PREFIX . "setting SET `value` = '" . $this->db->escape(json_encode($value)) . "', serialized = '1' WHERE `code` = '" . $this->db->escape($code) . "' AND `key` = '" . $this->db->escape($key) . "' AND store_id = '" . (int)$store_id . "'");
 		}
+
+		$this->invalidateStorefrontCache();
+	}
+
+	private function invalidateStorefrontCache() {
+		$this->cache->set('dryzen.page.version', sprintf('%.6F', microtime(true)));
 	}
 }

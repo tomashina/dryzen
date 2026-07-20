@@ -69,7 +69,8 @@ class Session {
 			exit('Error: Invalid session ID!');
 		}
 		
-		$this->data = $this->adaptor->read($session_id);
+		$data = $this->adaptor->read($session_id);
+		$this->data = is_array($data) ? $data : array();
 		
 		return $session_id;
 	}

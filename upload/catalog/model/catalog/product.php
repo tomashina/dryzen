@@ -385,6 +385,35 @@ class ModelCatalogProduct extends Model {
 		return $query->rows;
 	}
 
+	public function getFirstProductImages($product_ids) {
+		$product_id_data = array();
+
+		foreach ((array)$product_ids as $product_id) {
+			$product_id = (int)$product_id;
+
+			if ($product_id > 0) {
+				$product_id_data[$product_id] = $product_id;
+			}
+		}
+
+		if (!$product_id_data) {
+			return array();
+		}
+
+		$query = $this->db->query("SELECT product_id, image FROM " . DB_PREFIX . "product_image WHERE product_id IN (" . implode(',', $product_id_data) . ") ORDER BY product_id ASC, sort_order ASC, product_image_id ASC");
+		$image_data = array();
+
+		foreach ($query->rows as $result) {
+			$product_id = (int)$result['product_id'];
+
+			if (!isset($image_data[$product_id]) && $result['image']) {
+				$image_data[$product_id] = $result['image'];
+			}
+		}
+
+		return $image_data;
+	}
+
 	public function getProductRelated($product_id) {
 		$product_data = array();
 

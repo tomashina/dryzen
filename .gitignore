@@ -3,6 +3,8 @@
 **/.DS_Store
 .idea/
 **/__MACOSX/
+**/__pycache__/
+*.py[cod]
 /tmp/
 
 # Local backups and database exports

@@ -17,6 +17,8 @@ class ModelDesignLayout extends Model {
 			}
 		}
 
+		$this->invalidateStorefrontCache();
+
 		return $layout_id;
 	}
 
@@ -38,6 +40,8 @@ class ModelDesignLayout extends Model {
 				$this->db->query("INSERT INTO " . DB_PREFIX . "layout_module SET layout_id = '" . (int)$layout_id . "', code = '" . $this->db->escape($layout_module['code']) . "', position = '" . $this->db->escape($layout_module['position']) . "', sort_order = '" . (int)$layout_module['sort_order'] . "'");
 			}
 		}
+
+		$this->invalidateStorefrontCache();
 	}
 
 	public function deleteLayout($layout_id) {
@@ -47,6 +51,7 @@ class ModelDesignLayout extends Model {
 		$this->db->query("DELETE FROM " . DB_PREFIX . "category_to_layout WHERE layout_id = '" . (int)$layout_id . "'");
 		$this->db->query("DELETE FROM " . DB_PREFIX . "product_to_layout WHERE layout_id = '" . (int)$layout_id . "'");
 		$this->db->query("DELETE FROM " . DB_PREFIX . "information_to_layout WHERE layout_id = '" . (int)$layout_id . "'");
+		$this->invalidateStorefrontCache();
 	}
 
 	public function getLayout($layout_id) {
@@ -105,5 +110,10 @@ class ModelDesignLayout extends Model {
 		$query = $this->db->query("SELECT COUNT(*) AS total FROM " . DB_PREFIX . "layout");
 
 		return $query->row['total'];
+	}
+
+	private function invalidateStorefrontCache() {
+		$this->cache->delete('layout');
+		$this->cache->set('dryzen.page.version', sprintf('%.6F', microtime(true)));
 	}
 }

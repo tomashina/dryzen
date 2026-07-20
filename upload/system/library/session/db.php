@@ -2,6 +2,7 @@
 namespace Session;
 
 final class DB {
+	private $db;
 	public $maxlifetime;
 
 	public function __construct($registry) {

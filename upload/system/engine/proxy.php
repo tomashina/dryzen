@@ -11,13 +11,15 @@
 * Proxy class
 */
 class Proxy {
+	private $callbacks = array();
+
     /**
      * 
      *
      * @param	string	$key
      */	
 	public function __get($key) {
-		return $this->{$key};
+		return isset($this->callbacks[$key]) ? $this->callbacks[$key] : null;
 	}	
 
     /**
@@ -27,7 +29,11 @@ class Proxy {
 	 * @param	string	$value
      */	
 	public function __set($key, $value) {
-		 $this->{$key} = $value;
+		$this->callbacks[$key] = $value;
+	}
+
+	public function __isset($key) {
+		return isset($this->callbacks[$key]);
 	}
 	
 	public function __call($key, $args) {
@@ -43,8 +49,8 @@ class Proxy {
 			}
 		}
 		
-		if (isset($this->{$key})) {		
-			return call_user_func_array($this->{$key}, $arg_data);	
+		if (isset($this->callbacks[$key])) {		
+			return call_user_func_array($this->callbacks[$key], $arg_data);	
 		} else {
 			$trace = debug_backtrace();
 			

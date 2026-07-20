@@ -17,12 +17,16 @@ class ModelSettingExtension extends Model {
 
 		if (!in_array($code, $extensions)) {
 			$this->db->query("INSERT INTO `" . DB_PREFIX . "extension` SET `type` = '" . $this->db->escape($type) . "', `code` = '" . $this->db->escape($code) . "'");
+			$this->cache->delete('extension.catalog.' . md5($type));
+			$this->cache->set('dryzen.page.version', sprintf('%.6F', microtime(true)));
 		}
 	}
 
 	public function uninstall($type, $code) {
 		$this->db->query("DELETE FROM `" . DB_PREFIX . "extension` WHERE `type` = '" . $this->db->escape($type) . "' AND `code` = '" . $this->db->escape($code) . "'");
 		$this->db->query("DELETE FROM `" . DB_PREFIX . "setting` WHERE `code` = '" . $this->db->escape($type . '_' . $code) . "'");
+		$this->cache->delete('extension.catalog.' . md5($type));
+		$this->cache->set('dryzen.page.version', sprintf('%.6F', microtime(true)));
 	}	
 
 	public function addExtensionInstall($filename, $extension_download_id = 0) {

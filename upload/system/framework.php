@@ -15,8 +15,8 @@ $registry->set('log', $log);
 date_default_timezone_set($config->get('date_timezone'));
 
 set_error_handler(function($code, $message, $file, $line) use($log, $config) {
-	// error suppressed with @
-	if (error_reporting() === 0) {
+	// Ignore errors suppressed with @ or excluded from the active PHP error level.
+	if (!(error_reporting() & $code)) {
 		return false;
 	}
 
@@ -28,6 +28,10 @@ set_error_handler(function($code, $message, $file, $line) use($log, $config) {
 		case E_WARNING:
 		case E_USER_WARNING:
 			$error = 'Warning';
+			break;
+		case E_DEPRECATED:
+		case E_USER_DEPRECATED:
+			$error = 'Deprecated';
 			break;
 		case E_ERROR:
 		case E_USER_ERROR:

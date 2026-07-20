@@ -1,6 +1,8 @@
 <?php
 namespace Cart;
 class Length {
+	private $config;
+	private $db;
 	private $lengths = array();
 
 	public function __construct($registry) {

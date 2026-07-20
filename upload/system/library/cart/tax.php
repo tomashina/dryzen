@@ -1,6 +1,8 @@
 <?php
 namespace Cart;
 final class Tax {
+	private $config;
+	private $db;
 	private $tax_rates = array();
 
 	public function __construct($registry) {

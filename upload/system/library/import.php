@@ -4,6 +4,11 @@
 
 class Import {
 
+	private $config;
+	private $db;
+	private $language;
+	private $request;
+	private $session;
 	private $json_array = array();
 	private $product_links = array();
 	private $settings;

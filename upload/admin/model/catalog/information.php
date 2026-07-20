@@ -33,6 +33,7 @@ class ModelCatalogInformation extends Model {
 		}
 
 		$this->cache->delete('information');
+		$this->cache->set('dryzen.page.version', sprintf('%.6F', microtime(true)));
 
 		return $information_id;
 	}
@@ -75,6 +76,7 @@ class ModelCatalogInformation extends Model {
 		}
 
 		$this->cache->delete('information');
+		$this->cache->set('dryzen.page.version', sprintf('%.6F', microtime(true)));
 	}
 
 	public function deleteInformation($information_id) {
@@ -85,6 +87,7 @@ class ModelCatalogInformation extends Model {
 		$this->db->query("DELETE FROM `" . DB_PREFIX . "seo_url` WHERE query = 'information_id=" . (int)$information_id . "'");
 
 		$this->cache->delete('information');
+		$this->cache->set('dryzen.page.version', sprintf('%.6F', microtime(true)));
 	}
 
 	public function getInformation($information_id) {

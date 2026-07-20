@@ -24,6 +24,10 @@ class Response {
 	public function addHeader($header) {
 		$this->headers[] = $header;
 	}
+
+	public function getHeaders() {
+		return $this->headers;
+	}
 	
 	/**
 	 * 
