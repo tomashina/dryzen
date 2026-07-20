@@ -32,44 +32,45 @@ class ModelToolImage extends Model {
 
 			$supported_types = array(IMAGETYPE_PNG, IMAGETYPE_JPEG, IMAGETYPE_GIF);
 
-			if (defined('IMAGETYPE_WEBP')) {
+			if (defined('IMAGETYPE_WEBP') && function_exists('imagecreatefromwebp') && function_exists('imagewebp')) {
 				$supported_types[] = IMAGETYPE_WEBP;
 			}
 
-			if (!in_array($image_type, $supported_types)) {
-				return DIR_IMAGE . $image_old;
-			}
+			if (!in_array($image_type, $supported_types, true)) {
+				// Serve the original through its public URL when GD cannot resize it.
+				$image_new = $image_old;
+			} else {
+				$path = '';
+				$directories = explode('/', dirname($image_new));
 
-			$path = '';
-			$directories = explode('/', dirname($image_new));
+				foreach ($directories as $directory) {
+					$path = $path . '/' . $directory;
 
-			foreach ($directories as $directory) {
-				$path = $path . '/' . $directory;
-
-				if (!is_dir(DIR_IMAGE . $path)) {
-					@mkdir(DIR_IMAGE . $path, 0777);
+					if (!is_dir(DIR_IMAGE . $path)) {
+						@mkdir(DIR_IMAGE . $path, 0777);
+					}
 				}
+
+				$target_ratio = $width / $height;
+				$source_ratio = $width_orig / $height_orig;
+				$crop_x = 0;
+				$crop_y = 0;
+				$crop_width = $width_orig;
+				$crop_height = $height_orig;
+
+				if ($source_ratio > $target_ratio) {
+					$crop_width = (int)round($height_orig * $target_ratio);
+					$crop_x = (int)round(($width_orig - $crop_width) / 2);
+				} elseif ($source_ratio < $target_ratio) {
+					$crop_height = (int)round($width_orig / $target_ratio);
+					$crop_y = (int)round(($height_orig - $crop_height) / 2);
+				}
+
+				$image = new Image(DIR_IMAGE . $image_old);
+				$image->crop($crop_x, $crop_y, $crop_x + $crop_width, $crop_y + $crop_height);
+				$image->resize((int)$width, (int)$height);
+				$image->save(DIR_IMAGE . $image_new, 92);
 			}
-
-			$target_ratio = $width / $height;
-			$source_ratio = $width_orig / $height_orig;
-			$crop_x = 0;
-			$crop_y = 0;
-			$crop_width = $width_orig;
-			$crop_height = $height_orig;
-
-			if ($source_ratio > $target_ratio) {
-				$crop_width = (int)round($height_orig * $target_ratio);
-				$crop_x = (int)round(($width_orig - $crop_width) / 2);
-			} elseif ($source_ratio < $target_ratio) {
-				$crop_height = (int)round($width_orig / $target_ratio);
-				$crop_y = (int)round(($height_orig - $crop_height) / 2);
-			}
-
-			$image = new Image(DIR_IMAGE . $image_old);
-			$image->crop($crop_x, $crop_y, $crop_x + $crop_width, $crop_y + $crop_height);
-			$image->resize((int)$width, (int)$height);
-			$image->save(DIR_IMAGE . $image_new, 92);
 		}
 
 		$image_new = str_replace(' ', '%20', $image_new);
@@ -96,32 +97,33 @@ class ModelToolImage extends Model {
 				 
 			$supported_types = array(IMAGETYPE_PNG, IMAGETYPE_JPEG, IMAGETYPE_GIF);
 
-			if (defined('IMAGETYPE_WEBP')) {
+			if (defined('IMAGETYPE_WEBP') && function_exists('imagecreatefromwebp') && function_exists('imagewebp')) {
 				$supported_types[] = IMAGETYPE_WEBP;
 			}
 
-			if (!in_array($image_type, $supported_types)) {
-				return DIR_IMAGE . $image_old;
-			}
-						
-			$path = '';
-
-			$directories = explode('/', dirname($image_new));
-
-			foreach ($directories as $directory) {
-				$path = $path . '/' . $directory;
-
-				if (!is_dir(DIR_IMAGE . $path)) {
-					@mkdir(DIR_IMAGE . $path, 0777);
-				}
-			}
-
-			if ($width_orig != $width || $height_orig != $height) {
-				$image = new Image(DIR_IMAGE . $image_old);
-				$image->resize($width, $height);
-				$image->save(DIR_IMAGE . $image_new);
+			if (!in_array($image_type, $supported_types, true)) {
+				// Serve the original through its public URL when GD cannot resize it.
+				$image_new = $image_old;
 			} else {
-				copy(DIR_IMAGE . $image_old, DIR_IMAGE . $image_new);
+				$path = '';
+
+				$directories = explode('/', dirname($image_new));
+
+				foreach ($directories as $directory) {
+					$path = $path . '/' . $directory;
+
+					if (!is_dir(DIR_IMAGE . $path)) {
+						@mkdir(DIR_IMAGE . $path, 0777);
+					}
+				}
+
+				if ($width_orig != $width || $height_orig != $height) {
+					$image = new Image(DIR_IMAGE . $image_old);
+					$image->resize($width, $height);
+					$image->save(DIR_IMAGE . $image_new);
+				} else {
+					copy(DIR_IMAGE . $image_old, DIR_IMAGE . $image_new);
+				}
 			}
 		}
 		

@@ -15,34 +15,38 @@ class ModelToolImage extends Model {
 				 
 			$supported_types = array(IMAGETYPE_PNG, IMAGETYPE_JPEG, IMAGETYPE_GIF);
 
-			if (defined('IMAGETYPE_WEBP')) {
+			if (defined('IMAGETYPE_WEBP') && function_exists('imagecreatefromwebp') && function_exists('imagewebp')) {
 				$supported_types[] = IMAGETYPE_WEBP;
 			}
 
-			if (!in_array($image_type, $supported_types)) {
-				return DIR_IMAGE . $image_old;
-			}
- 
-			$path = '';
+			if (!in_array($image_type, $supported_types, true)) {
+				// The browser can still display formats that GD cannot resize. Use the
+				// public original-image URL instead of exposing the server filesystem.
+				$image_new = $image_old;
+			} else {
+				$path = '';
 
-			$directories = explode('/', dirname($image_new));
+				$directories = explode('/', dirname($image_new));
 
-			foreach ($directories as $directory) {
-				$path = $path . '/' . $directory;
+				foreach ($directories as $directory) {
+					$path = $path . '/' . $directory;
 
-				if (!is_dir(DIR_IMAGE . $path)) {
-					@mkdir(DIR_IMAGE . $path, 0777);
+					if (!is_dir(DIR_IMAGE . $path)) {
+						@mkdir(DIR_IMAGE . $path, 0777);
+					}
+				}
+
+				if ($width_orig != $width || $height_orig != $height) {
+					$image = new Image(DIR_IMAGE . $image_old);
+					$image->resize($width, $height);
+					$image->save(DIR_IMAGE . $image_new);
+				} else {
+					copy(DIR_IMAGE . $image_old, DIR_IMAGE . $image_new);
 				}
 			}
-
-			if ($width_orig != $width || $height_orig != $height) {
-				$image = new Image(DIR_IMAGE . $image_old);
-				$image->resize($width, $height);
-				$image->save(DIR_IMAGE . $image_new);
-			} else {
-				copy(DIR_IMAGE . $image_old, DIR_IMAGE . $image_new);
-			}
 		}
+
+		$image_new = str_replace(' ', '%20', $image_new);
 
 		if ($this->request->server['HTTPS']) {
 			return HTTPS_CATALOG . 'image/' . $image_new;
