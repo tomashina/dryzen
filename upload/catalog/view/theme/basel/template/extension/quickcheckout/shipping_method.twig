@@ -157,28 +157,32 @@ $(document).ready(function() {
 
 {% if delivery and delivery_delivery_time == '1' %} 
 $(document).ready(function() {
-	$('input[name=\'delivery_date\']').datetimepicker({
-		format: 'YYYY-MM-DD HH:mm',
-		minDate: '{{ delivery_min }}',
-		maxDate: '{{ delivery_max }}',
-		disabledDates: [{{ delivery_unavailable }}],
-		enabledHours: [{{ hours }}],
-		ignoreReadonly: true,
-		{% if delivery_days_of_week != '' %} 
-		daysOfWeekDisabled: [{{ delivery_days_of_week }}]
-		{% endif %} 
-	});
+	if ($.fn.datetimepicker) {
+		$('input[name=\'delivery_date\']').datetimepicker({
+			format: 'YYYY-MM-DD HH:mm',
+			minDate: '{{ delivery_min }}',
+			maxDate: '{{ delivery_max }}',
+			disabledDates: [{{ delivery_unavailable }}],
+			enabledHours: [{{ hours }}],
+			ignoreReadonly: true,
+			{% if delivery_days_of_week != '' %}
+			daysOfWeekDisabled: [{{ delivery_days_of_week }}]
+			{% endif %}
+		});
+	}
 });
 {% elseif delivery and (delivery_delivery_time == '3' or delivery_delivery_time == '0') %} 
-	$('input[name=\'delivery_date\']').datetimepicker({
-		format: 'YYYY-MM-DD',
-		minDate: '{{ delivery_min }}',
-		maxDate: '{{ delivery_max }}',
-		disabledDates: [{{ delivery_unavailable }}],
-		ignoreReadonly: true,
-		{% if delivery_days_of_week != '' %} 
-		daysOfWeekDisabled: [{{ delivery_days_of_week }}]
-		{% endif %} 
-	});
+	if ($.fn.datetimepicker) {
+		$('input[name=\'delivery_date\']').datetimepicker({
+			format: 'YYYY-MM-DD',
+			minDate: '{{ delivery_min }}',
+			maxDate: '{{ delivery_max }}',
+			disabledDates: [{{ delivery_unavailable }}],
+			ignoreReadonly: true,
+			{% if delivery_days_of_week != '' %}
+			daysOfWeekDisabled: [{{ delivery_days_of_week }}]
+			{% endif %}
+		});
+	}
 {% endif %}
 //--></script>

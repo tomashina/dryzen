@@ -195,9 +195,16 @@ class ControllerCheckoutSuccess extends Controller {
 	                    list(, $scimg)      = explode(',', $scimg);
 	                    $scimg = base64_decode($scimg);
 
-	                    file_put_contents(DIR_IMAGE.'tmp/'.$order_id.'.png', $scimg);
+	                    $image_tmp_dir = DIR_IMAGE . 'tmp/';
+	                    $scan_path = $image_tmp_dir . $order_id . '.png';
 
-	                    $data['scan'] = HTTPS_SERVER.'image/tmp/'.$order_id.'.png';
+	                    if (!is_dir($image_tmp_dir) && !@mkdir($image_tmp_dir, 0755, true) && !is_dir($image_tmp_dir)) {
+	                        $this->log->write('Unable to create payment barcode directory: ' . $image_tmp_dir);
+	                    } elseif (@file_put_contents($scan_path, $scimg) === false) {
+	                        $this->log->write('Unable to write payment barcode for order ' . (int)$order_id);
+	                    } else {
+	                        $data['scan'] = HTTPS_SERVER . 'image/tmp/' . $order_id . '.png';
+	                    }
 
 	                }
 

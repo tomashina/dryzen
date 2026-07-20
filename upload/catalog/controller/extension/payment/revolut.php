@@ -698,6 +698,11 @@ class ControllerExtensionPaymentRevolut extends Controller
 
         $this->load->model('extension/payment/revolut');
         $order_record = $this->model_extension_payment_revolut->getOrderByOcOrderId($oc_order_id);
+
+        if (!$order_record || empty($order_record['revolut_public_id'])) {
+            return $this->sendJsonResponse(['enabled' => false]);
+        }
+
         $response['public_id'] = $order_record['revolut_public_id'];
         $response['token'] = $this->config->get('payment_revolut_api_public_key');
         $response['enabled'] = $this->config->get('payment_revolut_upsell_banner_enabled');

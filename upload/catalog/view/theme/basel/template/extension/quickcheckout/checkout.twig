@@ -171,11 +171,11 @@ $(window).load(function() {
 {% if not logged %}
 	{% if save_data %}
 	// Save form data
-	$(document).on('change', '#payment-address input[type=\'text\'], #payment-address select', function() {
+	$(document).on('change', '#payment-address input[type=\'text\'], #payment-address input[type=\'checkbox\'], #payment-address input[type=\'radio\'], #payment-address select, #payment-address textarea', function() {
 		$.ajax({
 			url: 'index.php?route=extension/quickcheckout/checkout/save&type=payment',
 			type: 'post',
-			data: $('#payment-address input[type=\'text\'], #payment-address input[type=\'password\'], #payment-address input[type=\'checkbox\']:checked, #payment-address input[type=\'radio\']:checked, #payment-address input[type=\'hidden\'], #payment-address select, #payment-address textarea'),
+			data: $('#payment-address input[type=\'text\'], #payment-address input[type=\'checkbox\']:checked, #payment-address input[type=\'radio\']:checked, #payment-address input[type=\'hidden\'], #payment-address select, #payment-address textarea'),
 			dataType: 'json',
 			cache: false,
 			success: function(json) {
@@ -189,7 +189,7 @@ $(window).load(function() {
 		});
 	});
 
-	$(document).on('change', '#shipping-address input[type=\'text\'], #shipping-address select', function() {
+	$(document).on('change', '#shipping-address input[type=\'text\'], #shipping-address input[type=\'checkbox\'], #shipping-address input[type=\'radio\'], #shipping-address select, #shipping-address textarea', function() {
 		$.ajax({
 			url: 'index.php?route=extension/quickcheckout/checkout/save&type=shipping',
 			type: 'post',
@@ -1336,26 +1336,39 @@ $(document).on('click', '.button-remove', function() {
 {% endif %}
 
 
-$(document).on('change', 'select[name=\'country_id\']', function() {
+// Never leave checkout controls blocked if an AJAX request fails. The server-side
+// error is logged separately; the customer keeps the entered form data and can retry.
+$(document).ajaxError(function(event, xhr, settings) {
+	if (!settings.url || settings.url.indexOf('route=extension/quickcheckout/') === -1) {
+		return;
+	}
 
-		reloadShippingMethod('payment');
+	$('#button-payment-method').prop('disabled', false).button('reset');
+	$('.fa-spinner').remove();
+	moduleLoaded($('#payment-method'), false);
+	moduleLoaded($('#shipping-method'), false);
+	moduleLoaded($('#cart1'), false);
 
-		reloadShippingMethod('shipping');
-	
-	
+	{% if load_screen %}
+	$.unblockUI();
+	{% endif %}
+
+	if (!$('#warning-messages .checkout-request-error').length) {
+		$('#warning-messages').prepend('<div class="alert alert-danger checkout-request-error"><i class="fa fa-exclamation-circle"></i> Došlo je do privremene greške. Vaši podaci su ostali u obrascu; pokušajte ponovno.</div>');
+	}
 });
 
+if ($.fn.datetimepicker) {
+	$('.date').datetimepicker({
+		format: 'YYYY-MM-DD'
+	});
 
+	$('.time').datetimepicker({
+		format: 'HH:mm'
+	});
 
-$('.date').datetimepicker({
-	format: 'YYYY-MM-DD'
-});
-
-$('.time').datetimepicker({
-	format: 'HH:mm'
-});
-
-$('.datetime').datetimepicker();
+	$('.datetime').datetimepicker();
+}
 //--></script>
 {{ content_bottom }}
 {{ footer }}

@@ -230,13 +230,15 @@ $('#shipping-address select[name=\'zone_id\']').on('change', function() {
 	reloadShippingMethod('shipping');
 });
 
-$('.date').datetimepicker({
-	format: 'YYYY-MM-DD'
-});
+if ($.fn.datetimepicker) {
+	$('.date').datetimepicker({
+		format: 'YYYY-MM-DD'
+	});
 
-$('.time').datetimepicker({
-	format: 'HH:mm'
-});
+	$('.time').datetimepicker({
+		format: 'HH:mm'
+	});
 
-$('.datetime').datetimepicker();
+	$('.datetime').datetimepicker();
+}
 //--></script>
