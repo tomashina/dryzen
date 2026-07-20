@@ -1,6 +1,22 @@
 <?php
 namespace Mail;
 class Mail {
+	public $to;
+	public $from;
+	public $sender;
+	public $reply_to;
+	public $subject;
+	public $text;
+	public $html;
+	public $attachments = array();
+	public $protocol;
+	public $parameter;
+	public $smtp_hostname;
+	public $smtp_username;
+	public $smtp_password;
+	public $smtp_port = 25;
+	public $smtp_timeout = 5;
+
 	public function send() {
 		if (is_array($this->to)) {
 			$to = implode(',', $this->to);

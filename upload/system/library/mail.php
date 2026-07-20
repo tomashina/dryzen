@@ -11,6 +11,7 @@
 * Mail class
 */
 class Mail {
+	protected $adaptor;
 	protected $to;
 	protected $from;
 	protected $sender;
@@ -19,7 +20,13 @@ class Mail {
 	protected $text;
 	protected $html;
 	protected $attachments = array();
+	public $protocol;
 	public $parameter;
+	public $smtp_hostname;
+	public $smtp_username;
+	public $smtp_password;
+	public $smtp_port = 25;
+	public $smtp_timeout = 5;
 
 	/**
 	 * Constructor
@@ -147,7 +154,9 @@ class Mail {
 		}
 		
 		foreach (get_object_vars($this) as $key => $value) {
-			$this->adaptor->$key = $value;
+			if ($key != 'adaptor') {
+				$this->adaptor->$key = $value;
+			}
 		}
 		
 		$this->adaptor->send();

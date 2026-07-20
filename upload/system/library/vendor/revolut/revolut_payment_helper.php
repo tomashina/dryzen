@@ -2,7 +2,9 @@
 
 class RevolutHelper
 {
-    public function setAvailablePaymentMethods($setCardLogos = false, $revolutConfig, $session)
+    private $api_client;
+
+    public function setAvailablePaymentMethods($setCardLogos, $revolutConfig, $session)
     {
         require_once(DIR_SYSTEM . 'library/vendor/revolut/api_request.php');
         $this->api_client = new ApiRequest($revolutConfig->get('payment_revolut_api_key'), $revolutConfig->get('payment_revolut_test'));

@@ -1,6 +1,16 @@
 <?php
 namespace Mail;
 class Smtp {
+	public $to;
+	public $from;
+	public $sender;
+	public $reply_to;
+	public $subject;
+	public $text;
+	public $html;
+	public $attachments = array();
+	public $protocol;
+	public $parameter;
 	public $smtp_hostname;
 	public $smtp_username;
 	public $smtp_password;
