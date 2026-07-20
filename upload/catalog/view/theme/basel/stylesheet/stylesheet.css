@@ -2661,10 +2661,7 @@ div.required .control-label:after {
 		transition:left 500ms;
 	}
 }
-#content {
-	min-height: 600px;
-	margin-bottom:50px;
-}
+
 
 
 #content.no-min-height, .common-home #content {
