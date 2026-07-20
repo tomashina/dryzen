@@ -14,12 +14,10 @@ $_['text_next_choice']         = 'Odaberite ako imate kod za popust ili nagradne
 $_['text_empty']               = '<div class="empty-cart wrapper">
 				<p><strong>Vaša košarica je prazna. </strong></p>
 
-<p>Dodajte proizvode i mi ćemo ih zapamtiti.</p>
 
-<p>Iskoristite prednosti registriranog korisnika, dodajte u košaricu na mobitelu,<br>
-tabletu ili računalu na poslu, a kupovinu dovršite na osobnom računalu.</p>
+<p>Kupujte jednostavno s bilo kojeg uređaja – mobitela, tableta ili računala. Dodajte proizvode u košaricu gdje god se nalazili i dovršite kupnju kada vam najviše odgovara.</p>
 
-<p>I u bilo kojoj drugoj kombinaciji.</p>
+
 			</div>';
 $_['text_day']                 = 'dan';
 $_['text_week']                = 'tjedan';
