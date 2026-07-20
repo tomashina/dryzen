@@ -1,7 +1,7 @@
 <?php  
 class ControllerExtensionModuleBaselProducts extends Controller {
 	public function index($setting) {
-		$this->document->addStyle('catalog/view/theme/basel/stylesheet/dryzen-shop.css?v=20260719k');
+		$this->document->addStyle('catalog/view/theme/basel/stylesheet/dryzen-shop.css?v=20260720c');
 		$this->document->addScript('catalog/view/theme/basel/js/dryzen-shop.js?v=20260719p');
 
     	$this->load->model('catalog/product');

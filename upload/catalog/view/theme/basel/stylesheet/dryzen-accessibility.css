@@ -73,9 +73,9 @@ body.common-home a.btn.dryzen-hero-btn {
 }
 
 body.common-home a.btn.dryzen-finder-btn {
-  color: #192735 !important;
-  background: #f36f45 !important;
-  border-color: #f36f45 !important;
+  color: #fff !important;
+  background: #ff6b43 !important;
+  border-color: #ff6b43 !important;
 }
 
 body.common-home a.btn.dryzen-finder-btn:hover,
@@ -86,16 +86,18 @@ body.common-home a.btn.dryzen-finder-btn:focus-visible {
 }
 
 .newsletter-submit-wrap .btn-neutral {
-  color: #192735;
-  background: #00c19f;
-  border-color: #00c19f;
+  color: #fff !important;
+  background: #00bfa5;
+  border-color: #00bfa5;
+  box-shadow: none !important;
 }
 
 .newsletter-submit-wrap .btn-neutral:hover,
 .newsletter-submit-wrap .btn-neutral:focus-visible {
-  color: #fff;
+  color: #fff !important;
   background: #176b9f;
   border-color: #176b9f;
+  box-shadow: none !important;
 }
 
 .cc-window {

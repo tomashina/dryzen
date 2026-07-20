@@ -50,8 +50,8 @@
 $(function() {
 $('.grid-holder.prod_module{{ module }}').slick({
 {% if carousel_a %}
-prevArrow: "<button type=\"button\" class=\"arrow-left icon-arrow-left\" aria-label=\"Prethodni proizvodi\"></button>",
-nextArrow: "<button type=\"button\" class=\"arrow-right icon-arrow-right\" aria-label=\"Sljedeći proizvodi\"></button>",
+prevArrow: "<button type=\"button\" class=\"arrow-left\" aria-label=\"Prethodni proizvodi\"><span class=\"dryzen-carousel-chevron\" aria-hidden=\"true\"></span></button>",
+nextArrow: "<button type=\"button\" class=\"arrow-right\" aria-label=\"Sljedeći proizvodi\"><span class=\"dryzen-carousel-chevron\" aria-hidden=\"true\"></span></button>",
 {% else %}
 arrows: false,
 {% endif %}

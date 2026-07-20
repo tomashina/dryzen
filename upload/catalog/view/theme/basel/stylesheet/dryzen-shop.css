@@ -104,6 +104,31 @@ html body .dryzen-shop-card:hover {
   transform: translateY(-50%) scale(1.04);
 }
 
+.dryzen-shop-widget .slick-arrow::before,
+.widget-related .slick-arrow::before {
+  content: none !important;
+  display: none !important;
+}
+
+.dryzen-shop-widget .dryzen-carousel-chevron,
+.widget-related .dryzen-carousel-chevron {
+  width: 10px;
+  height: 10px;
+  display: block;
+  border-top: 2px solid currentColor;
+  border-right: 2px solid currentColor;
+}
+
+.dryzen-shop-widget .arrow-left .dryzen-carousel-chevron,
+.widget-related .arrow-left .dryzen-carousel-chevron {
+  transform: translateX(2px) rotate(-135deg);
+}
+
+.dryzen-shop-widget .arrow-right .dryzen-carousel-chevron,
+.widget-related .arrow-right .dryzen-carousel-chevron {
+  transform: translateX(-2px) rotate(45deg);
+}
+
 .dryzen-shop-widget .arrow-left,
 .widget-related .arrow-left {
   left: 14px !important;
@@ -127,7 +152,7 @@ html body .dryzen-shop-card > .edge {
   border: 1px solid #dce7ec;
   border-radius: 24px;
   background: #fff;
-  box-shadow: 0 14px 34px rgba(24, 47, 63, 0.07);
+  box-shadow: none !important;
   flex-direction: column;
   transform: none !important;
   transition: none !important;
@@ -135,7 +160,7 @@ html body .dryzen-shop-card > .edge {
 
 html body .dryzen-shop-card:hover > .edge {
   border-color: #dce7ec;
-  box-shadow: 0 14px 34px rgba(24, 47, 63, 0.07);
+  box-shadow: none !important;
   transform: none !important;
 }
 

@@ -22,19 +22,35 @@ HTML,
 <nav class="dryzen-need-grid" aria-label="Odaberi područje za koje tražiš rješenje">
   <a class="dryzen-need-card" href="znoje-mi-se-pazusi">
     <span class="dryzen-need-media"><img src="/image/catalog/landing-2026/need-armpits-480.webp" srcset="/image/catalog/landing-2026/need-armpits-480.webp 480w, /image/catalog/landing-2026/need-armpits-800.webp 800w, /image/catalog/landing-2026/need-armpits-1400.webp 1400w" sizes="(max-width: 767px) calc((100vw - 54px) / 2), 25vw" alt="DryZen rješenje za znojenje pazuha" width="1400" height="933" loading="lazy" decoding="async"></span>
-    <span class="dryzen-need-title">Znoje mi se pazusi</span>
+    <span class="dryzen-need-content">
+      <span class="dryzen-need-eyebrow">Za pazuhe</span>
+      <span class="dryzen-need-title">Znoje mi se pazusi</span>
+      <span class="dryzen-need-arrow" aria-hidden="true"></span>
+    </span>
   </a>
   <a class="dryzen-need-card" href="znoje-mi-se-dlanovi">
     <span class="dryzen-need-media"><img src="/image/catalog/landing-2026/need-hands-480.webp" srcset="/image/catalog/landing-2026/need-hands-480.webp 480w, /image/catalog/landing-2026/need-hands-800.webp 800w, /image/catalog/landing-2026/need-hands-1400.webp 1400w" sizes="(max-width: 767px) calc((100vw - 54px) / 2), 25vw" alt="DryZen rješenje za znojenje dlanova" width="1400" height="933" loading="lazy" decoding="async"></span>
-    <span class="dryzen-need-title">Znoje mi se dlanovi</span>
+    <span class="dryzen-need-content">
+      <span class="dryzen-need-eyebrow">Za dlanove</span>
+      <span class="dryzen-need-title">Znoje mi se dlanovi</span>
+      <span class="dryzen-need-arrow" aria-hidden="true"></span>
+    </span>
   </a>
   <a class="dryzen-need-card" href="znoje-mi-se-stopala">
     <span class="dryzen-need-media"><img src="/image/catalog/landing-2026/need-feet-480.webp" srcset="/image/catalog/landing-2026/need-feet-480.webp 480w, /image/catalog/landing-2026/need-feet-800.webp 800w, /image/catalog/landing-2026/need-feet-1400.webp 1400w" sizes="(max-width: 767px) calc((100vw - 54px) / 2), 25vw" alt="DryZen rješenje za znojenje stopala" width="1400" height="933" loading="lazy" decoding="async"></span>
-    <span class="dryzen-need-title">Znoje mi se stopala</span>
+    <span class="dryzen-need-content">
+      <span class="dryzen-need-eyebrow">Za stopala</span>
+      <span class="dryzen-need-title">Znoje mi se stopala</span>
+      <span class="dryzen-need-arrow" aria-hidden="true"></span>
+    </span>
   </a>
   <a class="dryzen-need-card" href="obuca-mi-ima-neugodan-miris">
     <span class="dryzen-need-media"><img src="/image/catalog/landing-2026/need-shoes-480.webp" srcset="/image/catalog/landing-2026/need-shoes-480.webp 480w, /image/catalog/landing-2026/need-shoes-800.webp 800w, /image/catalog/landing-2026/need-shoes-1400.webp 1400w" sizes="(max-width: 767px) calc((100vw - 54px) / 2), 25vw" alt="DryZen rješenje za neugodne mirise obuće" width="1400" height="933" loading="lazy" decoding="async"></span>
-    <span class="dryzen-need-title">Obuća mi ima neugodan miris</span>
+    <span class="dryzen-need-content">
+      <span class="dryzen-need-eyebrow">Za obuću</span>
+      <span class="dryzen-need-title">Obuća mi ima neugodan miris</span>
+      <span class="dryzen-need-arrow" aria-hidden="true"></span>
+    </span>
   </a>
 </nav>
 HTML,

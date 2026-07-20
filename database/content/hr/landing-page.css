@@ -156,21 +156,67 @@ body.common-home .dryzen-section-anchor {
 body.common-home .dryzen-need-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 28px;
+  gap: clamp(18px, 1.7vw, 26px);
+  align-items: stretch;
 }
 
 body.common-home .dryzen-need-card {
-  display: block;
+  --dryzen-need-accent: #f36f45;
+  position: relative;
+  display: flex;
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid #dce7ec;
+  border-radius: 26px;
+  background: #fff;
   color: #001f38;
+  box-shadow: none;
+  flex-direction: column;
   text-decoration: none;
+  transform: translateY(0);
+  transition: border-color 0.28s ease, box-shadow 0.28s ease, transform 0.28s ease;
+}
+
+body.common-home .dryzen-need-card:nth-child(2) {
+  --dryzen-need-accent: #e87fb0;
+}
+
+body.common-home .dryzen-need-card:nth-child(3) {
+  --dryzen-need-accent: #00a990;
+}
+
+body.common-home .dryzen-need-card:nth-child(4) {
+  --dryzen-need-accent: #1c7fbe;
+}
+
+body.common-home .dryzen-need-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: 3;
+  height: 5px;
+  background: var(--dryzen-need-accent);
 }
 
 body.common-home .dryzen-need-media {
+  position: relative;
   aspect-ratio: 4 / 3;
   display: block;
   overflow: hidden;
-  border-radius: 22px;
   background: #f2f0ee;
+}
+
+body.common-home .dryzen-need-media::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 34%;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.2));
+  pointer-events: none;
 }
 
 body.common-home .dryzen-need-media img {
@@ -181,35 +227,87 @@ body.common-home .dryzen-need-media img {
   transition: transform 0.45s cubic-bezier(0.2, 0.7, 0.2, 1);
 }
 
-body.common-home .dryzen-need-title {
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
-  padding: 17px 2px 0;
-  color: #001f38;
-  font-size: 17px;
-  font-weight: 700;
-  line-height: 1.4;
+body.common-home .dryzen-need-content {
+  position: relative;
+  display: grid;
+  min-height: 112px;
+  padding: 20px 72px 22px 22px;
+  background: #fff;
+  flex: 1 1 auto;
+  align-content: center;
 }
 
-body.common-home .dryzen-need-title::after {
-  content: "→";
-  flex: 0 0 auto;
-  margin-left: auto;
-  color: #1c7fbe;
-  font-size: 21px;
-  font-weight: 400;
-  line-height: 1.1;
+body.common-home .dryzen-need-eyebrow {
+  display: block;
+  margin: 0 0 6px;
+  color: #647583;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+body.common-home .dryzen-need-title {
+  display: block;
+  padding: 0;
+  color: #001f38;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.32;
+  letter-spacing: -0.015em;
+}
+
+body.common-home .dryzen-need-arrow {
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  width: 42px;
+  height: 42px;
+  display: grid;
+  border: 1px solid #cee0ea;
+  border-radius: 50%;
+  background: #edf6fa;
+  color: #176b9f;
+  transform: translateY(-50%);
+  transition: border-color 0.25s ease, background-color 0.25s ease, color 0.25s ease, transform 0.25s ease;
+  place-items: center;
+}
+
+body.common-home .dryzen-need-arrow::before {
+  content: "";
+  width: 9px;
+  height: 9px;
+  display: block;
+  border-top: 2px solid currentColor;
+  border-right: 2px solid currentColor;
+  transform: translateX(-2px) rotate(45deg);
 }
 
 body.common-home .dryzen-need-card:hover .dryzen-need-media img,
 body.common-home .dryzen-need-card:focus .dryzen-need-media img {
-  transform: scale(1.035);
+  transform: scale(1.045);
 }
 
-body.common-home .dryzen-need-card:hover .dryzen-need-title,
-body.common-home .dryzen-need-card:focus .dryzen-need-title {
-  color: #1c7fbe;
+body.common-home .dryzen-need-card:hover,
+body.common-home .dryzen-need-card:focus {
+  border-color: #dce7ec;
+  color: #001f38;
+  box-shadow: none;
+  transform: none;
+}
+
+body.common-home .dryzen-need-card:focus-visible {
+  outline: 3px solid #176b9f;
+  outline-offset: 3px;
+}
+
+body.common-home .dryzen-need-card:hover .dryzen-need-arrow,
+body.common-home .dryzen-need-card:focus .dryzen-need-arrow {
+  border-color: #176b9f;
+  background: #176b9f;
+  color: #fff;
+  transform: translateY(-50%);
 }
 
 body.common-home .dryzen-how-layout {
@@ -479,9 +577,9 @@ body.common-home a.btn.dryzen-finder-btn:hover,
 body.common-home a.btn.dryzen-finder-btn:focus {
   min-height: 50px;
   padding: 0 27px;
-  border: 1px solid #f36f45;
+  border: 1px solid #ff6b43;
   border-radius: 999px !important;
-  background: #f36f45 !important;
+  background: #ff6b43 !important;
   color: #fff !important;
   font-size: 15px;
   font-weight: 700;
@@ -603,18 +701,23 @@ body.common-home a.btn.dryzen-finder-btn:focus {
     gap: 24px 14px;
   }
 
-  body.common-home .dryzen-need-media {
-    border-radius: 17px;
+  body.common-home .dryzen-need-card {
+    border-radius: 20px;
+  }
+
+  body.common-home .dryzen-need-content {
+    min-height: 102px;
+    padding: 17px 58px 18px 17px;
   }
 
   body.common-home .dryzen-need-title {
-    gap: 7px;
-    padding-top: 12px;
-    font-size: 15px;
+    font-size: 16px;
   }
 
-  body.common-home .dryzen-need-title::after {
-    font-size: 18px;
+  body.common-home .dryzen-need-arrow {
+    right: 14px;
+    width: 36px;
+    height: 36px;
   }
 
   body.common-home .dryzen-how-layout {
@@ -704,6 +807,33 @@ body.common-home a.btn.dryzen-finder-btn:focus {
   }
 }
 
+@media (max-width: 575px) {
+  body.common-home .dryzen-need-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  body.common-home .dryzen-need-card {
+    display: grid;
+    min-height: 148px;
+    grid-template-columns: minmax(128px, 42%) minmax(0, 1fr);
+  }
+
+  body.common-home .dryzen-need-media {
+    height: 100%;
+    aspect-ratio: auto;
+  }
+
+  body.common-home .dryzen-need-content {
+    min-height: 148px;
+    padding: 18px 54px 18px 18px;
+  }
+
+  body.common-home .dryzen-need-arrow {
+    right: 14px;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   body.common-home #mod1 .type-img img,
   body.common-home .dryzen-need-media img,
@@ -718,5 +848,20 @@ body.common-home a.btn.dryzen-finder-btn:focus {
   body.common-home .dryzen-routine-visual:hover img,
   body.common-home #mod7 .type-img .banner_wrap:hover .zoom_image_wrap img {
     transform: none;
+  }
+
+  body.common-home .dryzen-need-card,
+  body.common-home .dryzen-need-arrow {
+    transition: none;
+  }
+
+  body.common-home .dryzen-need-card:hover,
+  body.common-home .dryzen-need-card:focus {
+    transform: none;
+  }
+
+  body.common-home .dryzen-need-card:hover .dryzen-need-arrow,
+  body.common-home .dryzen-need-card:focus .dryzen-need-arrow {
+    transform: translateY(-50%);
   }
 }

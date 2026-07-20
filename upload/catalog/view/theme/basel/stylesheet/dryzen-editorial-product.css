@@ -223,17 +223,18 @@
   border-radius: 14px;
   font-weight: 700;
   white-space: nowrap;
-  box-shadow: 0 14px 28px rgba(37, 191, 164, 0.22);
-  background: #007c68;
-  border-color: #007c68;
-  color: #fff;
+  box-shadow: none !important;
+  background: #00bfa5;
+  border-color: #00bfa5;
+  color: #fff !important;
 }
 
 .dryzen-product-editorial .dryzen-buy-box #button-cart:hover,
 .dryzen-product-editorial .dryzen-buy-box #button-cart:focus-visible {
-  background: #b83d1d;
-  border-color: #b83d1d;
-  color: #fff;
+  box-shadow: none !important;
+  background: #ff6b43;
+  border-color: #ff6b43;
+  color: #fff !important;
 }
 
 .dryzen-product-editorial .dryzen-buy-box .dryzen-qty-control {
