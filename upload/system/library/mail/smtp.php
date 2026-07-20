@@ -166,7 +166,7 @@ class Smtp {
 				$reply = $this->handleReply($handle, false, 'RCPT TO [!array]');
 
 				if ((substr($reply, 0, 3) != 250) && (substr($reply, 0, 3) != 251)) {
-					throw new \Exception('Error: RCPT TO not accepted from server!');
+					throw new \Exception('Error: RCPT TO not accepted from server! Server reply: ' . trim(preg_replace('/\\s+/', ' ', $reply)));
 				}
 			} else {
 				foreach ($this->to as $recipient) {
@@ -175,7 +175,7 @@ class Smtp {
 					$reply = $this->handleReply($handle, false, 'RCPT TO [array]');
 
 					if ((substr($reply, 0, 3) != 250) && (substr($reply, 0, 3) != 251)) {
-						throw new \Exception('Error: RCPT TO not accepted from server!');
+						throw new \Exception('Error: RCPT TO not accepted from server! Server reply: ' . trim(preg_replace('/\\s+/', ' ', $reply)));
 					}
 				}
 			}

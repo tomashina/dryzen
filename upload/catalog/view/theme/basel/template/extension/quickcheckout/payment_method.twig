@@ -67,10 +67,14 @@
 <textarea name="comment" class="hide"></textarea>
 {% endif %}
 
-{% include 'basel/template/common/payment-security.twig' %}
+<div class="otp-corvus-payment-security"{% if code != 'corvuspay' %} style="display:none;"{% endif %}>
+  {% include 'basel/template/common/payment-security.twig' %}
+</div>
 
 <script type="text/javascript"><!--
 $('#payment-method input[name=\'payment_method\'], #payment-method select[name=\'payment_method\']').on('change', function() {
+	$('#payment-method .otp-corvus-payment-security').toggle($(this).val() === 'corvuspay');
+
 	{% if not logged %}
 		$.ajax({
 			url: 'index.php?route=extension/quickcheckout/payment_method/set',
@@ -117,6 +121,10 @@ $('#payment-method input[name=\'payment_method\'], #payment-method select[name=\
 		});
 	{% endif %}
 });
+
+$('#payment-method .otp-corvus-payment-security').toggle(
+	$('#payment-method input[name=\'payment_method\']:checked, #payment-method select[name=\'payment_method\']').val() === 'corvuspay'
+);
 
 {% if payment_reload %} 
 $(document).ready(function() {

@@ -22,7 +22,18 @@
 <p>
   <textarea name="comment" rows="8" class="form-control">{{ comment }}</textarea>
 </p>
-{% include 'basel/template/common/payment-security.twig' %}
+<div class="otp-corvus-payment-security"{% if code != 'corvuspay' %} style="display:none;"{% endif %}>
+  {% include 'basel/template/common/payment-security.twig' %}
+</div>
+<script type="text/javascript"><!--
+$('#collapse-payment-method input[name=\'payment_method\']').on('change', function() {
+  $('#collapse-payment-method .otp-corvus-payment-security').toggle($(this).val() === 'corvuspay');
+});
+
+$('#collapse-payment-method .otp-corvus-payment-security').toggle(
+  $('#collapse-payment-method input[name=\'payment_method\']:checked').val() === 'corvuspay'
+);
+//--></script>
 {% if terms_description %}
 <section class="otp-checkout-terms" aria-labelledby="otp-standard-terms-title">
   <div class="otp-terms-heading">

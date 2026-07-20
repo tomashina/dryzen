@@ -21,9 +21,13 @@ class ModelExtensionModuleHbSeourl extends Model {
 
 		switch ($route) {
 			case 'product/product':
-				$product_id = $url_parameters['product_id'];
+				if (empty($url_parameters['product_id'])) {
+					break;
+				}
+
+				$product_id = (int)$url_parameters['product_id'];
 				foreach($languages as $lang) {
-					$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "seo_url` where `query` = CONCAT('product_id=', CAST(".$this->request->get['product_id']." as CHAR)) and language_id = '".(int)$lang['language_id']."' AND store_id = '" . (int)$this->config->get('config_store_id') . "' LIMIT 1");
+					$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "seo_url` WHERE `query` = 'product_id=" . $product_id . "' AND language_id = '" . (int)$lang['language_id'] . "' AND store_id = '" . (int)$this->config->get('config_store_id') . "' LIMIT 1");
 					if (isset($query->row['keyword'])) {
 						if ($lang['code'] != $default_language) {
 							$final_keyword = substr($lang['code'],0,2).'/'.$query->row['keyword'];
@@ -46,11 +50,16 @@ class ModelExtensionModuleHbSeourl extends Model {
 			break;
 			
 			case 'product/category':
-				$split_path = explode('_', $this->request->get['path']); 
+				if (empty($url_parameters['path'])) {
+					break;
+				}
+
+				$split_path = explode('_', $url_parameters['path']);
 				$catrgy_id = end($split_path);
+				$catrgy_id = (int)$catrgy_id;
 
 				foreach($languages as $lang) {
-					$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "seo_url` where `query` = CONCAT('category_id=', CAST(".$catrgy_id." as CHAR)) and language_id = '".(int)$lang['language_id']."'  AND store_id = '" . (int)$this->config->get('config_store_id') . "' LIMIT 1");
+					$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "seo_url` WHERE `query` = 'category_id=" . $catrgy_id . "' AND language_id = '" . (int)$lang['language_id'] . "' AND store_id = '" . (int)$this->config->get('config_store_id') . "' LIMIT 1");
 					if (isset($query->row['keyword'])) {
 						if ($lang['code'] != $default_language) {
 							$final_keyword = substr($lang['code'],0,2).'/'.$query->row['keyword'];
@@ -58,7 +67,7 @@ class ModelExtensionModuleHbSeourl extends Model {
 							$final_keyword = $query->row['keyword'];
 						}
 					}else{
-						$final_keyword = '&path='.$this->request->get['path'];
+						$final_keyword = '&path='.$url_parameters['path'];
 					}
 
 					$href = $this->config->get('config_url').$final_keyword;
@@ -74,9 +83,13 @@ class ModelExtensionModuleHbSeourl extends Model {
 			break;
 
 			case 'product/manufacturer/info':
-				$manufacturer_id = $url_parameters['manufacturer_id'];
+				if (empty($url_parameters['manufacturer_id'])) {
+					break;
+				}
+
+				$manufacturer_id = (int)$url_parameters['manufacturer_id'];
 				foreach($languages as $lang) {
-					$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "seo_url` where `query` = CONCAT('manufacturer_id=', CAST(".$this->request->get['manufacturer_id']." as CHAR)) and language_id = '".(int)$lang['language_id']."' AND store_id = '" . (int)$this->config->get('config_store_id') . "'  LIMIT 1");
+					$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "seo_url` WHERE `query` = 'manufacturer_id=" . $manufacturer_id . "' AND language_id = '" . (int)$lang['language_id'] . "' AND store_id = '" . (int)$this->config->get('config_store_id') . "' LIMIT 1");
 					if (isset($query->row['keyword'])) {
 						if ($lang['code'] != $default_language) {
 							$final_keyword = substr($lang['code'],0,2).'/'.$query->row['keyword'];
@@ -101,9 +114,13 @@ class ModelExtensionModuleHbSeourl extends Model {
 			break;
 			
 			case 'information/information':
-				$information_id = $url_parameters['information_id'];
+				if (empty($url_parameters['information_id'])) {
+					break;
+				}
+
+				$information_id = (int)$url_parameters['information_id'];
 				foreach($languages as $lang) {
-					$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "seo_url` where `query` = CONCAT('information_id=', CAST(".$this->request->get['information_id']." as CHAR)) and language_id = '".(int)$lang['language_id']."' AND store_id = '" . (int)$this->config->get('config_store_id') . "'  LIMIT 1");
+					$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "seo_url` WHERE `query` = 'information_id=" . $information_id . "' AND language_id = '" . (int)$lang['language_id'] . "' AND store_id = '" . (int)$this->config->get('config_store_id') . "' LIMIT 1");
 					if (isset($query->row['keyword'])) {
 						if ($lang['code'] != $default_language) {
 							$final_keyword = substr($lang['code'],0,2).'/'.$query->row['keyword'];

@@ -13,6 +13,20 @@
   font-display: swap;
 }
 
+/* TikTok was added after Font Awesome 4.7, which this theme uses. */
+.fa.fa-tiktok {
+  width: 1em;
+  height: 1em;
+  vertical-align: -0.08em;
+  background-color: currentColor;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 448 512'%3E%3Cpath d='M448 209.9a210.1 210.1 0 0 1-122.8-39.25v178.73A162.55 162.55 0 1 1 185 188.31v89.89a74.62 74.62 0 1 0 52.23 71.18V0h88a121.18 121.18 0 0 0 1.86 22.17A122.18 122.18 0 0 0 381 102.46a121.43 121.43 0 0 0 67 20.14Z'/%3E%3C/svg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 448 512'%3E%3Cpath d='M448 209.9a210.1 210.1 0 0 1-122.8-39.25v178.73A162.55 162.55 0 1 1 185 188.31v89.89a74.62 74.62 0 1 0 52.23 71.18V0h88a121.18 121.18 0 0 0 1.86 22.17A122.18 122.18 0 0 0 381 102.46a121.43 121.43 0 0 0 67 20.14Z'/%3E%3C/svg%3E") center / contain no-repeat;
+}
+
+.fa.fa-tiktok::before {
+  content: "";
+}
+
 button.shortcut-wrapper,
 button.icon,
 button.slick-arrow,

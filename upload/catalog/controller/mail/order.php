@@ -293,10 +293,10 @@ class ControllerMailOrder extends Controller {
 		$mail->setSender(html_entity_decode($order_info['store_name'], ENT_QUOTES, 'UTF-8'));
 		$mail->setSubject(html_entity_decode(sprintf($language->get('text_subject'), $order_info['store_name'], $order_info['order_id']), ENT_QUOTES, 'UTF-8'));
 		$mail->setHtml($this->load->view('mail/order_add', $data));
-		$mail->send();
+		$this->sendSafely($mail, $order_info['order_id'], 'customer confirmation');
 
-        $mail->setTo($this->config->get('config_email'));
-        $mail->send();
+		$mail->setTo($this->config->get('config_email'));
+		$this->sendSafely($mail, $order_info['order_id'], 'store confirmation');
 	}
 	
 	public function edit($order_info, $order_status_id, $comment) {
@@ -351,7 +351,7 @@ class ControllerMailOrder extends Controller {
 		$mail->setSender(html_entity_decode($order_info['store_name'], ENT_QUOTES, 'UTF-8'));
 		$mail->setSubject(html_entity_decode(sprintf($language->get('text_subject'), $order_info['store_name'], $order_info['order_id']), ENT_QUOTES, 'UTF-8'));
 		$mail->setText($this->load->view('mail/order_edit', $data));
-		$mail->send();
+		$this->sendSafely($mail, $order_info['order_id'], 'customer status update');
 	}
 	
 	// Admin Alert Mail
@@ -490,9 +490,17 @@ class ControllerMailOrder extends Controller {
 				$email = trim($email);
 				if ($email && filter_var($email, FILTER_VALIDATE_EMAIL)) {
 					$mail->setTo($email);
-					$mail->send();
+					$this->sendSafely($mail, $order_info['order_id'], 'additional store alert');
 				}
 			}
+		}
+	}
+
+	private function sendSafely($mail, $order_id, $context) {
+		try {
+			$mail->send();
+		} catch (\Throwable $exception) {
+			$this->log->write('Order mail failed (' . $context . ', order ' . (int)$order_id . '): ' . $exception->getMessage());
 		}
 	}
 }

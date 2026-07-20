@@ -96,6 +96,7 @@ class ModelExtensionHbseoHbSeourl extends Model {
 			
 			$file = DIR_APPLICATION . 'view/template/extension/hbseo/ocmod/'.$ocmod_filename;
 			if (file_exists($file)) {
+				$ocmod_code = 'huntbee_seo_multi_language_url_ocmod';
 				$ocmod_xml = file_get_contents($file, FILE_USE_INCLUDE_PATH, null);
 				$ocmod_xml = str_replace('{version}',$ocmod_version,$ocmod_xml);
 				$ocmod_xml = str_replace('{name}',$ocmod_name,$ocmod_xml);

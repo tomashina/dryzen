@@ -467,6 +467,7 @@ class ControllerExtensionQuickCheckoutConfirm extends Controller {
 		// All variables
 		$data['confirmation_page'] = $this->config->get('quickcheckout_confirmation_page');
 		$data['auto_submit'] = $this->config->get('quickcheckout_auto_submit');
+		$data['payment_code'] = isset($this->session->data['payment_method']['code']) ? $this->session->data['payment_method']['code'] : '';
 		$data['button_back'] = $this->language->get('button_back');
 		$data['payment_target'] = html_entity_decode($this->config->get('quickcheckout_payment_target'), ENT_QUOTES);
 		$data['back'] = $this->url->link('extension/quickcheckout/checkout', '', true);

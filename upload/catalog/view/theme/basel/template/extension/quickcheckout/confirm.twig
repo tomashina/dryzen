@@ -51,7 +51,9 @@
 	</div>
 	<p class="otp-order-rights-note">Kupnja ne ograničava zakonska prava kupca u slučaju materijalnog nedostatka. Postupak prijave, povrata i reklamacije opisan je na stranici <a href="index.php?route=information/information&amp;information_id=17" target="_blank" rel="noopener">Povrat robe, zamjena i reklamacije</a>.</p>
   {% endif %}
-  {% include 'basel/template/common/payment-security.twig' %}
+  {% if payment_code == 'corvuspay' %}
+    {% include 'basel/template/common/payment-security.twig' %}
+  {% endif %}
   <div class="payment">{{ payment }}</div>
   <a class="btn btn-default pull-left" href="{{ back }}">{{ button_back }}</a>
   

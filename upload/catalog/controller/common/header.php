@@ -28,7 +28,10 @@ class ControllerCommonHeader extends Controller {
 
 		$data['title'] = $this->document->getTitle();
 
-		$data['base'] = $server;
+		// The storefront has native hreflang output below. Using a distinct
+		// assignment also prevents the obsolete HuntBee header injection from
+		// adding duplicate, parameter-unsafe SQL during an OCMOD refresh.
+		$data['base'] = (string)$server;
 		$data['description'] = $this->document->getDescription();
 		$data['keywords'] = $this->document->getKeywords();
 		$data['links'] = $this->document->getLinks();

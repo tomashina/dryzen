@@ -115,6 +115,17 @@ class Mail {
      *
      */
 	public function send() {
+		// Authenticated SMTP servers commonly require the envelope sender to
+		// match the authenticated mailbox. Keep the public store address as the
+		// reply-to address while sending from the SMTP account.
+		if ($this->adaptor instanceof \Mail\Smtp && isset($this->smtp_username) && filter_var($this->smtp_username, FILTER_VALIDATE_EMAIL) && strcasecmp($this->from, $this->smtp_username) !== 0) {
+			if (!$this->reply_to) {
+				$this->reply_to = $this->from;
+			}
+
+			$this->from = $this->smtp_username;
+		}
+
 		if (!$this->to) {
 			throw new \Exception('Error: E-Mail to required!');
 		}
