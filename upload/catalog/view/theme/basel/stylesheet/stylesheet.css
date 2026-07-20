@@ -9612,6 +9612,41 @@ ul.sitemap > li > ul > li > ul > li > a {margin-left:28px;opacity:0.8;}
 	}
 }
 
+/* Mobile header shortcuts: equal spacing and comfortable touch targets. */
+@media (max-width: 767px) {
+	.header6 .header-main .shortcuts .font-zero {
+		display: flex;
+		align-items: center;
+		justify-content: flex-end;
+		gap: 6px;
+	}
+
+	.header6 .header-main .shortcuts .icon-element {
+		flex: 0 0 44px;
+		width: 44px;
+		height: 44px;
+		margin: 0;
+	}
+
+	.header6 .header-main .shortcuts .icon-element > .shortcut-wrapper,
+	.header6 .header-main .shortcuts .icon-element #cart,
+	.header6 .header-main .shortcuts .icon-element #cart > .shortcut-wrapper {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 44px;
+		height: 44px;
+		margin: 0;
+		padding: 0;
+		line-height: 44px;
+	}
+
+	.header6 .header-main .shortcuts .shortcut-wrapper .icon {
+		height: 44px;
+		line-height: 44px;
+	}
+}
+
 /* Consistent interaction affordance for clickable controls. */
 a[href]:not([aria-disabled="true"]),
 button:not([disabled]),
