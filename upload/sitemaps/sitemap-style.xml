@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Human-readable view; sitemap data remains in the source XML. -->
+<xsl:stylesheet version="1.0"
+	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+	xmlns:sm="http://www.sitemaps.org/schemas/sitemap/0.9"
+	xmlns:xhtml="http://www.w3.org/1999/xhtml"
+	xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"
+	exclude-result-prefixes="sm xhtml image">
+	<xsl:output method="html" encoding="UTF-8" indent="yes"/>
+	<xsl:template match="/">
+		<html lang="en">
+			<head>
+				<meta charset="UTF-8"/>
+				<meta name="viewport" content="width=device-width, initial-scale=1"/>
+				<title>XML Sitemap</title>
+				<style>
+					body{margin:0;background:#f6f8fb;color:#172033;font:14px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+					main{max-width:1180px;margin:0 auto;padding:40px 24px 64px}
+					h1{margin:0 0 8px;font-size:30px;line-height:1.2}
+					p{margin:0 0 24px;color:#596579}
+					.card{overflow:hidden;border:1px solid #dfe5ee;border-radius:12px;background:#fff;box-shadow:0 8px 24px rgba(23,32,51,.06)}
+					table{width:100%;border-collapse:collapse}
+					th,td{padding:13px 16px;border-bottom:1px solid #edf0f5;text-align:left;vertical-align:top}
+					th{background:#f0f5fb;color:#344054;font-size:12px;letter-spacing:.04em;text-transform:uppercase}
+					tr:last-child td{border-bottom:0}
+					a{color:#0866c6;text-decoration:none;overflow-wrap:anywhere}
+					a:hover{text-decoration:underline}
+					.meta{white-space:nowrap;color:#667085}
+					.badge{display:inline-block;margin:2px 6px 2px 0;padding:2px 8px;border-radius:999px;background:#edf5ff;color:#175ca6;font-size:12px}
+					@media(max-width:700px){main{padding:24px 12px}th,td{padding:10px 9px}.optional{display:none}}
+				</style>
+			</head>
+			<body>
+				<main>
+					<h1>XML Sitemap</h1>
+					<xsl:choose>
+						<xsl:when test="sm:sitemapindex">
+							<p>This sitemap index contains <strong><xsl:value-of select="count(sm:sitemapindex/sm:sitemap)"/></strong> sitemap files.</p>
+							<div class="card">
+								<table>
+									<thead><tr><th>Sitemap</th><th>Last modified</th></tr></thead>
+									<tbody>
+										<xsl:for-each select="sm:sitemapindex/sm:sitemap">
+											<tr>
+												<td><a href="{sm:loc}"><xsl:value-of select="sm:loc"/></a></td>
+												<td class="meta"><xsl:value-of select="sm:lastmod"/></td>
+											</tr>
+										</xsl:for-each>
+									</tbody>
+								</table>
+							</div>
+						</xsl:when>
+						<xsl:otherwise>
+							<p>This sitemap contains <strong><xsl:value-of select="count(sm:urlset/sm:url)"/></strong> canonical URLs for search engines and AI crawlers.</p>
+							<div class="card">
+								<table>
+									<thead><tr><th>URL</th><th class="optional">SEO metadata</th><th>Last modified</th></tr></thead>
+									<tbody>
+										<xsl:for-each select="sm:urlset/sm:url">
+											<tr>
+												<td><a href="{sm:loc}"><xsl:value-of select="sm:loc"/></a></td>
+												<td class="optional">
+													<xsl:if test="xhtml:link"><span class="badge"><xsl:value-of select="count(xhtml:link)"/> language variants</span></xsl:if>
+													<xsl:if test="image:image"><span class="badge"><xsl:value-of select="count(image:image)"/> image<xsl:if test="count(image:image) != 1">s</xsl:if></span></xsl:if>
+												</td>
+												<td class="meta"><xsl:value-of select="sm:lastmod"/></td>
+											</tr>
+										</xsl:for-each>
+									</tbody>
+								</table>
+							</div>
+						</xsl:otherwise>
+					</xsl:choose>
+				</main>
+			</body>
+		</html>
+	</xsl:template>
+</xsl:stylesheet>

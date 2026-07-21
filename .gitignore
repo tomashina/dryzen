@@ -27,6 +27,7 @@
 !/upload/image/cache/index.html
 /upload/sitemaps/*
 !/upload/sitemaps/index.html
+!/upload/sitemaps/sitemap-style.xml
 /upload/system/storage/
 /storagedijana/cache/*
 !/storagedijana/cache/index.html

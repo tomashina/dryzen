@@ -456,6 +456,18 @@ class ControllerExtensionFeedBoostSitemap extends Controller {
 	}
 
 	/**
+	 * Attach a human-readable stylesheet without changing sitemap semantics.
+	 * This also avoids Firefox rendering multilingual xhtml:link entries as a
+	 * single unformatted block of text.
+	 *
+	 * @return string
+	 */
+	protected function getXmlHeader() {
+		return '<?xml version="1.0" encoding="UTF-8"?>'
+			. '<?xml-stylesheet type="text/xsl" href="/sitemaps/sitemap-style.xml"?>';
+	}
+
+	/**
 	 * @param bool $with_images
 	 * @return string
 	 */
@@ -771,7 +783,7 @@ class ControllerExtensionFeedBoostSitemap extends Controller {
 				$count = 1;
 				
 				foreach ($results as $key => $result) {
-					$output  = '<?xml version="1.0" encoding="UTF-8"?>';
+					$output  = $this->getXmlHeader();
 					$output .= $this->getUrlsetOpen(true);
 							
 					foreach ($result as $product) {
@@ -851,7 +863,7 @@ class ControllerExtensionFeedBoostSitemap extends Controller {
 					$count = 1;
 					
 					foreach ($results as $result) {
-						$output  = '<?xml version="1.0" encoding="UTF-8"?>';
+						$output  = $this->getXmlHeader();
 						$output .= $this->getUrlsetOpen(true);
 								
 						foreach ($result as $product) {
@@ -910,7 +922,7 @@ class ControllerExtensionFeedBoostSitemap extends Controller {
 					}
 						
 					for ($i = 1; $i <= $total_pages; $i++) {
-						$output  = '<?xml version="1.0" encoding="UTF-8"?>';
+						$output  = $this->getXmlHeader();
 						$output .= $this->getUrlsetOpen(false);
 							
 						$params = [
@@ -980,7 +992,7 @@ class ControllerExtensionFeedBoostSitemap extends Controller {
 					}
 						
 					for ($i = 1; $i <= $total_pages; $i++) {
-						$output  = '<?xml version="1.0" encoding="UTF-8"?>';
+						$output  = $this->getXmlHeader();
 						$output .= $this->getUrlsetOpen(true);
 							
 						$params = [
@@ -1050,7 +1062,7 @@ class ControllerExtensionFeedBoostSitemap extends Controller {
 					}
 						
 					for ($i = 1; $i <= $total_pages; $i++) {
-						$output  = '<?xml version="1.0" encoding="UTF-8"?>';
+						$output  = $this->getXmlHeader();
 						$output .= $this->getUrlsetOpen(true);
 							
 						$params = [
@@ -1132,7 +1144,7 @@ class ControllerExtensionFeedBoostSitemap extends Controller {
 					}
 						
 					for ($i = 1; $i <= $total_pages; $i++) {
-						$output  = '<?xml version="1.0" encoding="UTF-8"?>';
+						$output  = $this->getXmlHeader();
 						$output .= $this->getUrlsetOpen(true);
 							
 						$params = [
@@ -1212,7 +1224,7 @@ class ControllerExtensionFeedBoostSitemap extends Controller {
 					}
 						
 					for ($i = 1; $i <= $total_pages; $i++) {
-						$output  = '<?xml version="1.0" encoding="UTF-8"?>';
+						$output  = $this->getXmlHeader();
 						$output .= $this->getUrlsetOpen(true);
 							
 						$params = [
@@ -1291,7 +1303,7 @@ class ControllerExtensionFeedBoostSitemap extends Controller {
 					}
 						
 					for ($i = 1; $i <= $total_pages; $i++) {
-						$output  = '<?xml version="1.0" encoding="UTF-8"?>';
+						$output  = $this->getXmlHeader();
 						$output .= $this->getUrlsetOpen(true);
 							
 						$params = [
@@ -1356,7 +1368,7 @@ class ControllerExtensionFeedBoostSitemap extends Controller {
 					}
 						
 						for ($i = 1; $i <= $total_pages; $i++) {
-							$output  = '<?xml version="1.0" encoding="UTF-8"?>';
+							$output  = $this->getXmlHeader();
 							$output .= $this->getUrlsetOpen(false);
 							
 						$params = [

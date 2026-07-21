@@ -21,6 +21,7 @@ class ControllerExtensionFeedBoostSitemap extends Controller {
 		$base_url = $this->config->get('config_ssl') ?: $this->config->get('config_url');
 		$base_url = rtrim($base_url, '/') . '/';
 		$output  = '<?xml version="1.0" encoding="UTF-8"?>';
+		$output .= '<?xml-stylesheet type="text/xsl" href="/sitemaps/sitemap-style.xml"?>';
 		$output .= '<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">';
 
 		foreach ($files as $path) {
