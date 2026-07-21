@@ -31,6 +31,18 @@ mysql -u KORISNIK -p NAZIV_BAZE < database/migrations/20260721_boxnow_tracking_e
 Zatim u administraciji otvorite **Extensions > Modifications** i osvježite
 OCMOD cache. Migracija se može sigurno pokrenuti više puta.
 
+## Istaknuta vrijednost proizvoda
+
+Za poruku o trajnosti/vrijednosti iznad cijene proizvoda pokrenite:
+
+```bash
+mysql -u KORISNIK -p NAZIV_BAZE < database/migrations/20260721_product_value_proposition.sql
+```
+
+Migracija dodaje višejezično admin polje te početni hrvatski tekst postavlja na
+roll-on modele `009`–`012`. Nakon prijenosa izmijenjenih datoteka osvježite
+**Extensions > Modifications** u OpenCart administraciji.
+
 ## OTP sadržaj i zahtjevi kartičnog plaćanja
 
 Nakon uvoza postojeće baze pokrenite migraciju sadržaja:

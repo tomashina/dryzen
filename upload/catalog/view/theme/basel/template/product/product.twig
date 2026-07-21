@@ -99,6 +99,13 @@
     <div class="product-h1">
     <h1 id="page-title">{{ heading_title }}{% if subtitle %}<span class="dryzen-product-subtitle">{{ subtitle }}</span>{% endif %}</h1>
     </div>
+
+    {% if value_proposition %}
+    <div class="dryzen-value-proposition" role="note">
+      <span class="dryzen-value-proposition-icon" aria-hidden="true"><i class="fa fa-hourglass-half"></i></span>
+      <p>{{ value_proposition_before }}{% if value_proposition_emphasis %}<strong>{{ value_proposition_emphasis }}</strong>{{ value_proposition_after }}{% endif %}</p>
+    </div>
+    {% endif %}
     
     {% if review_status and (review_qty > 0) %}
     <div class="rating">

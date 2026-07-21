@@ -272,6 +272,21 @@ class ControllerProductProduct extends Controller {
 			$data['reward'] = $product_info['reward'];
 			$data['points'] = $product_info['points'];
 			$data['description'] = html_entity_decode($product_info['description'], ENT_QUOTES, 'UTF-8');
+			$data['value_proposition'] = html_entity_decode($product_info['value_proposition'], ENT_QUOTES, 'UTF-8');
+			$data['value_proposition_before'] = $data['value_proposition'];
+			$data['value_proposition_emphasis'] = '';
+			$data['value_proposition_after'] = '';
+
+			foreach (array('6 mjeseci', '6 months') as $emphasis) {
+				$position = stripos($data['value_proposition'], $emphasis);
+
+				if ($position !== false) {
+					$data['value_proposition_before'] = substr($data['value_proposition'], 0, $position);
+					$data['value_proposition_emphasis'] = substr($data['value_proposition'], $position, strlen($emphasis));
+					$data['value_proposition_after'] = substr($data['value_proposition'], $position + strlen($emphasis));
+					break;
+				}
+			}
 
 
 			$data['isbn'] = $product_info['isbn'];

@@ -29,6 +29,7 @@ $_['column_action']          = 'Action';
 // Entry
 $_['entry_name']             = 'Product Name';
 $_['entry_description']      = 'Description';
+$_['entry_value_proposition'] = 'Value highlight (above price)';
 $_['entry_meta_title']       = 'Meta Tag Title';
 $_['entry_meta_keyword']     = 'Meta Tag Keywords';
 $_['entry_meta_description'] = 'Meta Tag Description';
@@ -82,6 +83,8 @@ $_['entry_tag']              = 'Product Tags';
 $_['entry_reward']           = 'Reward Points';
 $_['entry_layout']           = 'Layout Override';
 $_['entry_recurring']        = 'Recurring Profile';
+
+$_['help_value_proposition']  = 'A short durability or value message shown with an hourglass above the price. Leave empty to hide it.';
 
 // Help
 $_['help_sku']               = 'Stock Keeping Unit';

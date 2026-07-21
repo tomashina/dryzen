@@ -149,9 +149,48 @@
   text-wrap: pretty;
 }
 
-.dryzen-product-editorial .dryzen-product-summary ul.price {
-  margin: 22px 0 0;
-  padding: 0 0 18px;
+.dryzen-product-editorial .dryzen-value-proposition {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  max-width: 610px;
+  margin: 20px 0 0;
+  padding: 16px 18px;
+  border: 1px solid #d8e9e7;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #f2fbf9 0%, #f7fbfd 100%);
+  color: #263b45;
+}
+
+.dryzen-product-editorial .dryzen-value-proposition-icon {
+  display: grid;
+  flex: 0 0 40px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #dff5f0;
+  color: #008f7d;
+  font-size: 18px;
+  place-items: center;
+}
+
+.dryzen-product-editorial .dryzen-value-proposition p {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.5;
+  text-wrap: pretty;
+}
+
+.dryzen-product-editorial .dryzen-value-proposition strong {
+  color: #006f61;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.dryzen-product-editorial .product-info .table-cell.right ul.price {
+  margin: 28px 0 0;
+  padding: 0 0 20px;
   border-bottom: 1px solid #dfe8ed;
 }
 
@@ -301,6 +340,10 @@
 
 .dryzen-product-editorial .dryzen-product-summary .rating {
   margin-right: 6px;
+}
+
+.dryzen-product-editorial .dryzen-value-proposition + .rating {
+  margin-top: 16px;
 }
 
 .dryzen-product-editorial .dryzen-product-summary .review_link {
@@ -750,6 +793,15 @@
   .dryzen-product-subtitle {
     margin-top: 12px;
     font-size: 16px;
+  }
+
+  .dryzen-product-editorial .dryzen-value-proposition {
+    gap: 13px;
+    padding: 15px 16px;
+  }
+
+  .dryzen-product-editorial .product-info .table-cell.right ul.price {
+    margin-top: 24px;
   }
 
   .dryzen-product-editorial .dryzen-product-summary .meta_description {
