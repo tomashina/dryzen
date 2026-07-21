@@ -26,10 +26,47 @@
     return document.getElementById(targetId);
   }
 
+  function currentSectionAnchor() {
+    var targetId;
+    var target;
+
+    try {
+      targetId = decodeURIComponent(window.location.hash.slice(1));
+    } catch (error) {
+      return null;
+    }
+
+    target = targetId ? document.getElementById(targetId) : null;
+
+    return target && target.classList.contains('dryzen-section-anchor') ? target : null;
+  }
+
+  function scrollToSectionAnchor(target, behavior) {
+    var scrollTarget = target.closest('.widget') || target;
+
+    scrollTarget.scrollIntoView({
+      behavior: behavior,
+      block: 'start'
+    });
+  }
+
+  function correctCurrentHashPosition() {
+    var target = currentSectionAnchor();
+
+    if (!target) {
+      return;
+    }
+
+    window.requestAnimationFrame(function () {
+      window.requestAnimationFrame(function () {
+        scrollToSectionAnchor(target, 'auto');
+      });
+    });
+  }
+
   document.addEventListener('click', function (event) {
     var link = event.target.closest('a[href*="#"]');
     var target;
-    var scrollTarget;
     var reduceMotion;
 
     if (
@@ -54,13 +91,9 @@
     }
 
     event.preventDefault();
-    scrollTarget = target.closest('.widget') || target;
     reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    scrollTarget.scrollIntoView({
-      behavior: reduceMotion ? 'auto' : 'smooth',
-      block: 'start'
-    });
+    scrollToSectionAnchor(target, reduceMotion ? 'auto' : 'smooth');
 
     if (window.location.hash !== '#' + target.id) {
       window.history.pushState(
@@ -70,6 +103,14 @@
       );
     }
   });
+
+  if (document.readyState === 'complete') {
+    correctCurrentHashPosition();
+  } else {
+    window.addEventListener('load', correctCurrentHashPosition);
+  }
+
+  window.addEventListener('hashchange', correctCurrentHashPosition);
 
   function clampQuantity(input) {
     var minimum = parseInt(input.getAttribute('min'), 10) || 1;
