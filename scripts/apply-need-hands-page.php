@@ -9,8 +9,9 @@ $projectRoot = dirname(__DIR__);
 $configFile = $projectRoot . '/upload/config.php';
 $contentFile = $projectRoot . '/database/content/hr/need-hands-page.php';
 $styleFile = $projectRoot . '/database/content/hr/need-hands-page.css';
+$seoRoutesFile = $projectRoot . '/database/content/hr/seo-routes.php';
 
-foreach (array($configFile, $contentFile, $styleFile) as $requiredFile) {
+foreach (array($configFile, $contentFile, $styleFile, $seoRoutesFile) as $requiredFile) {
     if (!is_file($requiredFile)) {
         fwrite(STDERR, 'Missing required file: ' . $requiredFile . "\n");
         exit(1);
@@ -19,6 +20,7 @@ foreach (array($configFile, $contentFile, $styleFile) as $requiredFile) {
 
 require_once $configFile;
 $content = require $contentFile;
+$seoRoutes = require $seoRoutesFile;
 $pageCss = file_get_contents($styleFile);
 
 if ($pageCss === false) {
@@ -413,7 +415,7 @@ function handsUpsertInformation(mysqli $db, array $page, $layoutId)
     return $informationId;
 }
 
-function handsLoadProducts(mysqli $db, array $productDefinitions)
+function handsLoadProducts(mysqli $db, array $productDefinitions, array $productSeoRoutes)
 {
     $products = array();
     $select = $db->prepare(
@@ -435,8 +437,12 @@ function handsLoadProducts(mysqli $db, array $productDefinitions)
             throw new RuntimeException('Required active product was not found: ' . $productId);
         }
 
+        if (empty($productSeoRoutes[$productId])) {
+            throw new RuntimeException('Required SEO URL was not found for product: ' . $productId);
+        }
+
         $definition['product_name'] = $product['name'];
-        $definition['href'] = 'index.php?route=product/product&amp;product_id=' . $productId;
+        $definition['href'] = '/' . ltrim($productSeoRoutes[$productId], '/');
         $products[] = $definition;
     }
 
@@ -668,7 +674,7 @@ try {
 
     $layoutId = handsUpsertLayout($db);
     $informationId = handsUpsertInformation($db, $content['page'], $layoutId);
-    $products = handsLoadProducts($db, $content['products']);
+    $products = handsLoadProducts($db, $content['products'], $seoRoutes['products']);
 
     $heroHtml = handsRenderHero($content['hero']);
     $symptomsHtml = handsRenderSymptoms($content['symptoms']);

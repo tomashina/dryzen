@@ -9,8 +9,9 @@ $projectRoot = dirname(__DIR__);
 $configFile = $projectRoot . '/upload/config.php';
 $contentFile = $projectRoot . '/database/content/hr/need-pages-3-5.php';
 $styleFile = $projectRoot . '/database/content/hr/need-pages-3-5.css';
+$seoRoutesFile = $projectRoot . '/database/content/hr/seo-routes.php';
 
-foreach (array($configFile, $contentFile, $styleFile) as $requiredFile) {
+foreach (array($configFile, $contentFile, $styleFile, $seoRoutesFile) as $requiredFile) {
     if (!is_file($requiredFile)) {
         fwrite(STDERR, 'Missing required file: ' . $requiredFile . "\n");
         exit(1);
@@ -19,6 +20,7 @@ foreach (array($configFile, $contentFile, $styleFile) as $requiredFile) {
 
 require_once $configFile;
 $pages = require $contentFile;
+$seoRoutes = require $seoRoutesFile;
 $pageCss = file_get_contents($styleFile);
 
 if ($pageCss === false) {
@@ -425,7 +427,7 @@ function needPagesUpsertInformation(mysqli $db, array $page, $layoutId)
     return $informationId;
 }
 
-function needPagesLoadProduct(mysqli $db, array $definition)
+function needPagesLoadProduct(mysqli $db, array $definition, array $productSeoRoutes)
 {
     $productId = (int) $definition['product_id'];
     $select = $db->prepare(
@@ -445,18 +447,22 @@ function needPagesLoadProduct(mysqli $db, array $definition)
         throw new RuntimeException('Required active product was not found: ' . $productId);
     }
 
+    if (empty($productSeoRoutes[$productId])) {
+        throw new RuntimeException('Required SEO URL was not found for product: ' . $productId);
+    }
+
     $definition['product_name'] = $product['name'];
-    $definition['href'] = 'index.php?route=product/product&amp;product_id=' . $productId;
+    $definition['href'] = '/' . ltrim($productSeoRoutes[$productId], '/');
 
     return $definition;
 }
 
-function needPagesLoadProducts(mysqli $db, array $definitions)
+function needPagesLoadProducts(mysqli $db, array $definitions, array $productSeoRoutes)
 {
     $products = array();
 
     foreach ($definitions as $definition) {
-        $products[] = needPagesLoadProduct($db, $definition);
+        $products[] = needPagesLoadProduct($db, $definition, $productSeoRoutes);
     }
 
     return $products;
@@ -767,14 +773,22 @@ try {
         $symptomsHtml = needPagesRenderSymptoms($page['symptoms']);
 
         if (isset($page['products'])) {
-            $loadedProducts = needPagesLoadProducts($db, $page['products']);
+            $loadedProducts = needPagesLoadProducts(
+                $db,
+                $page['products'],
+                $seoRoutes['products']
+            );
             $productsHtml = needPagesRenderProductGrid(
                 $page['products_intro'],
                 $page['button_text'],
                 $loadedProducts
             );
         } else {
-            $loadedProduct = needPagesLoadProduct($db, $page['single_product']);
+            $loadedProduct = needPagesLoadProduct(
+                $db,
+                $page['single_product'],
+                $seoRoutes['products']
+            );
             $productsHtml = needPagesRenderSingleProduct(
                 $page['products_intro'],
                 $page['button_text'],
