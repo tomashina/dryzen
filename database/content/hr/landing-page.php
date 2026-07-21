@@ -90,7 +90,7 @@ HTML,
     <summary>Kako odabrati pravi DryZen proizvod?</summary>
     <div class="dryzen-faq-answer">
       <p>Najprije odaberi područje za koje tražiš rješenje:</p>
-      <ul><li>Znojenje pazuha → Roll-on</li><li>Znojenje dlanova → Maramice za ruke</li><li>Znojenje stopala → Maramice za stopala</li><li>Neugodni mirisi obuće → Sprej za obuću</li></ul>
+      <ul class="dryzen-faq-links"><li><a href="/znoje-mi-se-pazusi#odaberi-proizvod">Znojenje pazuha → Roll-on</a></li><li><a href="/znoje-mi-se-dlanovi#odaberi-proizvod">Znojenje dlanova → Maramice za ruke</a></li><li><a href="/znoje-mi-se-stopala#odaberi-proizvod">Znojenje stopala → Maramice za stopala</a></li><li><a href="/obuca-mi-ima-neugodan-miris#odaberi-proizvod">Neugodni mirisi obuće → Sprej za obuću</a></li></ul>
       <p>Nakon toga odaberi varijantu (Women, Men, Sport ili Kids) koja najbolje odgovara tvojim potrebama.</p>
     </div>
   </details>

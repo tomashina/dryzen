@@ -184,6 +184,7 @@ body.information-information-__INFORMATION_ID__ .dryzen-hands-symptom-list li::b
 body.information-information-__INFORMATION_ID__ .dryzen-hands-products {
   margin-top: 96px;
   padding: clamp(72px, 7vw, 96px) 0;
+  scroll-margin-top: 120px;
 }
 
 body.information-information-__INFORMATION_ID__ .dryzen-hands-products-header {

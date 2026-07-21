@@ -194,6 +194,7 @@ __PAGE_SCOPE__ .dryzen-need-symptom-list li:nth-child(3) {
 __PAGE_SCOPE__ .dryzen-need-products {
   margin-top: 96px;
   padding: clamp(72px, 7vw, 96px) 0;
+  scroll-margin-top: 120px;
 }
 
 __PAGE_SCOPE__ .dryzen-need-products-header {

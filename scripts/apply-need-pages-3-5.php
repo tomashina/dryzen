@@ -490,7 +490,7 @@ function needPagesRenderSymptoms(array $symptoms)
 
 function needPagesRenderProductGrid($intro, $buttonText, array $products)
 {
-    $html = '<section class="dryzen-need-products">'
+    $html = '<section id="odaberi-proizvod" class="dryzen-need-products">'
         . '<header class="dryzen-need-products-header">'
         . '<h2>' . needPagesEscape($intro) . '</h2>'
         . '</header>'
@@ -518,7 +518,7 @@ function needPagesRenderProductGrid($intro, $buttonText, array $products)
 
 function needPagesRenderSingleProduct($intro, $buttonText, array $product)
 {
-    $html = '<section class="dryzen-need-products dryzen-need-products--single">'
+    $html = '<section id="odaberi-proizvod" class="dryzen-need-products dryzen-need-products--single">'
         . '<header class="dryzen-need-products-header">'
         . '<h2>' . needPagesEscape($intro) . '</h2>'
         . '</header>'

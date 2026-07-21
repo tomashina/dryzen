@@ -505,6 +505,19 @@ body.common-home .dryzen-faq-answer ul {
   padding-left: 20px;
 }
 
+body.common-home .dryzen-faq-links a {
+  color: #1c7fbe;
+  font-weight: 600;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+
+body.common-home .dryzen-faq-links a:hover,
+body.common-home .dryzen-faq-links a:focus {
+  color: #001f38;
+}
+
 body.common-home #mod7 {
   padding: clamp(72px, 7vw, 96px) 0;
   background: #eaf4fa;

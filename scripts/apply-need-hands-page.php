@@ -473,7 +473,7 @@ function handsRenderSymptoms(array $symptoms)
 
 function handsRenderProducts($intro, $buttonText, array $products)
 {
-    $html = '<section class="dryzen-hands-products">'
+    $html = '<section id="odaberi-proizvod" class="dryzen-hands-products">'
         . '<header class="dryzen-hands-products-header">'
         . '<h2>' . handsEscape($intro) . '</h2>'
         . '</header>'
