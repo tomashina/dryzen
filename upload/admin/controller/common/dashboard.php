@@ -6,6 +6,27 @@ class ControllerCommonDashboard extends Controller {
 		$this->document->setTitle($this->language->get('heading_title'));
 
 		$data['user_token'] = $this->session->data['user_token'];
+		$data['cache_clear'] = $this->url->link('common/developer/cache', 'user_token=' . $this->session->data['user_token'], true);
+		$data['can_clear_cache'] = $this->user->hasPermission('access', 'common/developer')
+			&& $this->user->hasPermission('modify', 'common/developer')
+			&& $this->user->hasPermission('access', 'marketplace/modification')
+			&& $this->user->hasPermission('modify', 'marketplace/modification');
+
+		if (isset($this->session->data['success'])) {
+			$data['success'] = $this->session->data['success'];
+
+			unset($this->session->data['success']);
+		} else {
+			$data['success'] = '';
+		}
+
+		if (isset($this->session->data['error_warning'])) {
+			$data['error_warning'] = $this->session->data['error_warning'];
+
+			unset($this->session->data['error_warning']);
+		} else {
+			$data['error_warning'] = '';
+		}
 
 		$data['breadcrumbs'] = array();
 

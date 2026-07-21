@@ -426,7 +426,11 @@ class ControllerMarketplaceModification extends Controller {
 			// Maintance mode back to original settings
 			$this->model_setting_setting->editSettingValue('config', 'config_maintenance', $maintenance);
 
-			// Do not return success message if refresh() was called with $data
+			// Let internal callers finish their own post-refresh work and response.
+			if (!empty($data['return'])) {
+				return;
+			}
+
 			$this->session->data['success'] = $this->language->get('text_success');
 
 			$url = '';

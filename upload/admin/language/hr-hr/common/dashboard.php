@@ -22,3 +22,7 @@ $_['heading_title']                = 'Nadzorna ploča';
 
 // Error
 $_['error_install']                = 'Upozorenje: Install direktorij/folder još uvijek postoji i trebali bi ga obrisati zbog sigurnosnih razloga!';
+
+// Button
+$_['button_clear_cache']            = 'Očisti cache';
+$_['text_clear_cache_help']         = 'Osvježi OCMOD i obriši page, podatkovni i Twig cache';

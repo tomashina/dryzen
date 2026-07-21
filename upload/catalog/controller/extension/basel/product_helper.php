@@ -63,7 +63,10 @@
 	$data['product_tabs'] = $this->model_extension_basel_product_tabs->getExtraTabsProduct($this->request->get['product_id']);
 	$data['dryzen_editorial_product'] = !empty($data['product_tabs']);
 	$this->document->addStyle('catalog/view/theme/basel/js/photoswipe/photoswipe.css?v=5.4.4');
-	$this->document->addStyle('catalog/view/theme/basel/stylesheet/dryzen-editorial-product.css?v=20260720b');
+	$editorial_stylesheet = 'catalog/view/theme/basel/stylesheet/dryzen-editorial-product.css';
+	$editorial_stylesheet_file = DIR_APPLICATION . 'view/theme/basel/stylesheet/dryzen-editorial-product.css';
+	$editorial_stylesheet_version = is_file($editorial_stylesheet_file) ? filemtime($editorial_stylesheet_file) : '20260720b';
+	$this->document->addStyle($editorial_stylesheet . '?v=' . $editorial_stylesheet_version);
 	$this->document->addScript('catalog/view/theme/basel/js/dryzen-editorial-product.js?v=20260719m');
 	$this->document->addStyle('catalog/view/theme/basel/stylesheet/dryzen-shop.css?v=20260720c');
 	$this->document->addScript('catalog/view/theme/basel/js/dryzen-shop.js?v=20260721i');
