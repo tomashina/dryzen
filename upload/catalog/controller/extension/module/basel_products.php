@@ -2,7 +2,7 @@
 class ControllerExtensionModuleBaselProducts extends Controller {
 	public function index($setting) {
 		$this->document->addStyle('catalog/view/theme/basel/stylesheet/dryzen-shop.css?v=20260720c');
-		$this->document->addScript('catalog/view/theme/basel/js/dryzen-shop.js?v=20260721g');
+		$this->document->addScript('catalog/view/theme/basel/js/dryzen-shop.js?v=20260721h');
 
     	$this->load->model('catalog/product');
 		$this->load->model('extension/basel/basel');

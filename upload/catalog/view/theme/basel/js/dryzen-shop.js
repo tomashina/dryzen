@@ -43,10 +43,22 @@
 
   function scrollToSectionAnchor(target, behavior) {
     var scrollTarget = target.closest('.widget') || target;
+    var stickyHeader = document.querySelector('.sticky-header');
+    var headerHeight = 0;
+    var targetTop;
 
-    scrollTarget.scrollIntoView({
-      behavior: behavior,
-      block: 'start'
+    if (stickyHeader) {
+      headerHeight = Math.max(
+        stickyHeader.getBoundingClientRect().height,
+        stickyHeader.offsetHeight || 0
+      );
+    }
+
+    targetTop = window.pageYOffset + scrollTarget.getBoundingClientRect().top - Math.ceil(headerHeight) - 16;
+
+    window.scrollTo({
+      top: Math.max(0, targetTop),
+      behavior: behavior
     });
   }
 

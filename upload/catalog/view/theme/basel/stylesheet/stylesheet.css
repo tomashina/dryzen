@@ -1309,7 +1309,7 @@ div.required .control-label:after {
 }
 @media (min-width: 992px) and (max-width: 1199px) {
 	#logo img {
-		max-width:220px !important;
+		max-width:160px !important;
 	}
 
 	.product-page .image-area {
