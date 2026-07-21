@@ -299,7 +299,7 @@ function aboutRenderStory(array $story)
         . '</header>'
         . '<div class="dryzen-about-story-layout">'
         . '<figure class="dryzen-about-story-media">'
-        . '<img src="/image/' . aboutEscape($story['image']) . '" alt="DryZen proizvodi kao dio svakodnevne rutine" width="1500" height="1000" loading="lazy" decoding="async">'
+        . '<img src="/image/' . aboutEscape($story['image']) . '" alt="DryZen proizvodi kao dio svakodnevne rutine" width="1500" height="1000" loading="eager" decoding="async">'
         . '</figure>'
         . '<div class="dryzen-about-story-copy">'
         . aboutRenderParagraphs($story['paragraphs'])
@@ -568,6 +568,48 @@ function aboutRemoveCustomCssLoader(mysqli $db)
     $insert->close();
 }
 
+function aboutClearFileCache($layoutId, array $moduleIds)
+{
+    if (!defined('DIR_CACHE') || !is_dir(DIR_CACHE)) {
+        return array('removed' => 0, 'failed' => array());
+    }
+
+    $cacheDirectory = rtrim(DIR_CACHE, '/\\') . DIRECTORY_SEPARATOR;
+    $patterns = array(
+        $cacheDirectory . 'cache.layout.modules.' . (int) $layoutId . '.*',
+        $cacheDirectory . 'cache.dryzen.page.*',
+    );
+
+    foreach ($moduleIds as $moduleId) {
+        $patterns[] = $cacheDirectory . 'cache.module.catalog.' . (int) $moduleId . '.*';
+    }
+
+    $removed = 0;
+    $failed = array();
+
+    foreach (array_unique($patterns) as $pattern) {
+        $files = glob($pattern);
+
+        if (!$files) {
+            continue;
+        }
+
+        foreach ($files as $file) {
+            if (!is_file($file)) {
+                continue;
+            }
+
+            if (unlink($file)) {
+                $removed++;
+            } else {
+                $failed[] = $file;
+            }
+        }
+    }
+
+    return array('removed' => $removed, 'failed' => $failed);
+}
+
 function aboutNormalizeText($text)
 {
     $text = html_entity_decode(strip_tags((string) $text), ENT_QUOTES, 'UTF-8');
@@ -683,6 +725,7 @@ try {
     aboutRemoveCustomCssLoader($db);
 
     $db->commit();
+    $cacheResult = aboutClearFileCache($layoutId, $moduleIds);
 
     echo "O nama page applied successfully.\n";
     echo 'URL: /' . $page['slug'] . "\n";
@@ -690,7 +733,12 @@ try {
     echo 'Layout ID: ' . $layoutId . "\n";
     echo 'Module IDs: ' . implode(', ', $moduleIds) . "\n";
     echo 'Audited text entries: ' . $textCount . "\n";
+    echo 'Cache files removed: ' . $cacheResult['removed'] . "\n";
     echo 'Backup: ' . $backupFile . "\n";
+
+    if ($cacheResult['failed']) {
+        fwrite(STDERR, 'Warning: unable to remove cache files: ' . implode(', ', $cacheResult['failed']) . "\n");
+    }
 } catch (Throwable $exception) {
     $db->rollback();
     fwrite(STDERR, $exception->getMessage() . "\n");
