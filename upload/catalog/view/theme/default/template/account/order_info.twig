@@ -40,9 +40,30 @@
               {% endif %}
               {% if shipping_method %} <b>{{ text_shipping_method }}</b> {{ shipping_method }} {% endif %}</td>
           </tr>
-        </tbody>
-      </table>
-      <table class="table table-bordered table-hover">
+		  </tbody>
+		</table>
+		{% if boxnow_tracking %}
+		<table class="table table-bordered table-hover">
+		  <thead>
+			<tr>
+			  <td class="text-left" colspan="2"><i class="fa fa-truck"></i> {{ text_tracking_title }}</td>
+			</tr>
+		  </thead>
+		  <tbody>
+			<tr>
+			  <td class="text-left" style="width: 50%;">
+				<strong>{{ text_tracking_code }}</strong> {{ boxnow_tracking.code }}<br/>
+				<strong>{{ text_tracking_status }}</strong> {{ boxnow_tracking.status }}
+				{% if boxnow_tracking.date_modified %}<br/><strong>{{ text_tracking_updated }}</strong> {{ boxnow_tracking.date_modified }}{% endif %}
+			  </td>
+			  <td class="text-right" style="vertical-align: middle;">
+				{% if boxnow_tracking.url %}<a href="{{ boxnow_tracking.url }}" target="_blank" rel="noopener" class="btn btn-primary"><i class="fa fa-map-marker"></i> {{ button_track_shipment }}</a>{% endif %}
+			  </td>
+			</tr>
+		  </tbody>
+		</table>
+		{% endif %}
+		<table class="table table-bordered table-hover">
         <thead>
           <tr>
             <td class="text-left" style="width: 50%; vertical-align: top;">{{ text_payment_address }}</td>

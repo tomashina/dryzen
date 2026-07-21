@@ -223,8 +223,18 @@ class ControllerSaleOrder extends Controller {
 		$order_total = $this->model_sale_order->getTotalOrders($filter_data);
 
 		$results = $this->model_sale_order->getOrders($filter_data);
+		$this->load->model('extension/shipping/boxnow');
+		$this->model_extension_shipping_boxnow->installSchema();
 
 		foreach ($results as $result) {
+			$boxnow_shipment = array();
+
+			if ($result['shipping_code'] === 'boxnow.boxnow') {
+				$boxnow_shipment = $this->model_extension_shipping_boxnow->getShipmentByOrderId($result['order_id']);
+			}
+
+			$boxnow_tracking_code = !empty($boxnow_shipment['parcel_id']) ? $boxnow_shipment['parcel_id'] : '';
+
 			$data['orders'][] = array(
 				'order_id'      => $result['order_id'],
 				'customer'      => $result['customer'],
@@ -235,6 +245,8 @@ class ControllerSaleOrder extends Controller {
 				'date_added'    => date($this->language->get('date_format_short'), strtotime($result['date_added'])),
 				'date_modified' => date($this->language->get('date_format_short'), strtotime($result['date_modified'])),
 				'shipping_code' => $result['shipping_code'],
+				'boxnow_tracking_code' => $boxnow_tracking_code,
+				'boxnow_tracking_url'  => $this->model_extension_shipping_boxnow->getTrackingUrl($boxnow_tracking_code),
 				'view'          => $this->url->link('sale/order/info', 'user_token=' . $this->session->data['user_token'] . '&order_id=' . $result['order_id'] . $url, true),
 				'edit'          => $this->url->link('sale/order/edit', 'user_token=' . $this->session->data['user_token'] . '&order_id=' . $result['order_id'] . $url, true)
 			);
@@ -859,6 +871,49 @@ class ControllerSaleOrder extends Controller {
 
 			$data['shipping_method'] = $order_info['shipping_method'];
 			$data['payment_method'] = $order_info['payment_method'];
+			// The legacy BOX NOW OCMOD may append its old inline controls here.
+			// Reset those values because tracking is now rendered by the dedicated panel below.
+			$data['shipping_method'] = isset($order_info['shipping_method']) ? (string)$order_info['shipping_method'] : '';
+			$data['boxnow_create'] = '';
+			$data['boxnow_label'] = '';
+			$data['boxnow_shipment'] = array();
+			$data['boxnow_tracking_panel'] = array();
+
+			if ($order_info['shipping_code'] === 'boxnow.boxnow') {
+				$this->load->language('extension/shipping/boxnow', 'boxnow');
+				$boxnow_language = $this->language->get('boxnow');
+				$this->load->model('extension/shipping/boxnow');
+				$this->model_extension_shipping_boxnow->installSchema();
+				$shipment = $this->model_extension_shipping_boxnow->getShipmentByOrderId($order_id);
+				$tracking_code = !empty($shipment['parcel_id']) ? $shipment['parcel_id'] : '';
+				$email_sent_at = !empty($shipment['email_sent_at']) ? date($this->language->get('date_format_short') . ' H:i', strtotime($shipment['email_sent_at'])) : '';
+
+				$data['boxnow_tracking_panel'] = array(
+					'created'          => $tracking_code !== '',
+					'tracking_code'    => $tracking_code,
+					'tracking_url'     => $this->model_extension_shipping_boxnow->getTrackingUrl($tracking_code),
+					'status'           => $tracking_code !== '' ? $this->model_extension_shipping_boxnow->getStatusLabel(isset($shipment['status']) ? $shipment['status'] : '') : '',
+					'date_modified'    => !empty($shipment['date_modified']) ? date($this->language->get('date_format_short') . ' H:i', strtotime($shipment['date_modified'])) : '',
+					'email_sent_at'    => $email_sent_at,
+					'email_failed'     => !empty($shipment['email_error']),
+					'label_url'        => str_replace('&amp;', '&', $this->url->link('extension/shipping/boxnow/label', 'user_token=' . $this->session->data['user_token'] . '&order_id=' . (int)$order_id, true)),
+					'create_url'       => str_replace('&amp;', '&', $this->url->link('extension/shipping/boxnow/createShipment', 'user_token=' . $this->session->data['user_token'] . '&order_id=' . (int)$order_id, true)),
+					'send_email_url'   => str_replace('&amp;', '&', $this->url->link('extension/shipping/boxnow/sendTrackingEmail', 'user_token=' . $this->session->data['user_token'] . '&order_id=' . (int)$order_id, true)),
+					'text_title'       => $boxnow_language->get('text_boxnow_shipment'),
+					'text_code'        => $boxnow_language->get('text_tracking_code'),
+					'text_status'      => $boxnow_language->get('text_tracking_status'),
+					'text_updated'     => $boxnow_language->get('text_tracking_updated'),
+					'text_email'       => $boxnow_language->get('text_tracking_email'),
+					'text_email_state' => $email_sent_at !== '' ? sprintf($boxnow_language->get('text_tracking_email_sent_at'), $email_sent_at) : $boxnow_language->get('text_tracking_email_not_sent'),
+					'text_not_created' => $boxnow_language->get('text_boxnow_not_created'),
+					'text_loading'     => $this->language->get('text_loading'),
+					'button_create'    => $boxnow_language->get('button_create_shipment'),
+					'button_label'     => $boxnow_language->get('button_label'),
+					'button_track'     => $boxnow_language->get('button_track_shipment'),
+					'button_email'     => $boxnow_language->get('button_send_tracking_email'),
+					'error_email'      => $boxnow_language->get('error_tracking_email_failed')
+				);
+			}
 
 			// Payment Address
 			if ($order_info['payment_address_format']) {

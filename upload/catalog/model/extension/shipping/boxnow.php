@@ -1,5 +1,7 @@
 <?php
 class ModelExtensionShippingBoxnow extends Model {
+	private $shipment_table_exists;
+
 	public function getQuote($address) {
 		$this->load->language('extension/shipping/boxnow');
 
@@ -43,5 +45,86 @@ class ModelExtensionShippingBoxnow extends Model {
 		}
 
 		return $method_data;
+	}
+
+	public function getShipmentByOrderId($order_id) {
+		if (!$this->shipmentTableExists()) {
+			return array();
+		}
+
+		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "boxnow_shipment` WHERE order_id = '" . (int)$order_id . "' ORDER BY boxnow_shipment_id DESC LIMIT 1");
+
+		return $query->num_rows ? $query->row : array();
+	}
+
+	public function getTrackingUrl($parcel_id) {
+		$parcel_id = trim((string)$parcel_id);
+
+		if ($parcel_id === '') {
+			return '';
+		}
+
+		$base_url = trim((string)$this->config->get('shipping_boxnow_tracking_url'));
+
+		if ($base_url === '') {
+			$base_url = 'https://track.boxnow.hr/?track={parcel}';
+		}
+
+		if (strpos($base_url, '{parcel}') !== false) {
+			return str_replace('{parcel}', rawurlencode($parcel_id), $base_url);
+		}
+
+		if (strpos($base_url, 'track.boxnow.hr') !== false) {
+			$base_url = preg_replace('#/track/?$#', '', rtrim($base_url, '/'));
+
+			if (preg_match('/([?&]track=)([^&]*)/', $base_url)) {
+				return preg_replace('/([?&]track=)([^&]*)/', '$1' . rawurlencode($parcel_id), $base_url);
+			}
+
+			return $base_url . (strpos($base_url, '?') !== false ? '&' : '?') . 'track=' . rawurlencode($parcel_id);
+		}
+
+		return rtrim($base_url, '/') . '/' . rawurlencode($parcel_id);
+	}
+
+	public function getStatusLabel($status) {
+		$status = strtolower(trim((string)$status));
+		$this->load->language('extension/shipping/boxnow', 'boxnow_tracking');
+		$language = $this->language->get('boxnow_tracking');
+		$keys = array(
+			'created'             => 'status_created',
+			'new'                 => 'status_new',
+			'in-depot'            => 'status_in_transit',
+			'in-transit'          => 'status_in_transit',
+			'final-destination'   => 'status_final_destination',
+			'delivered'           => 'status_delivered',
+			'returned'            => 'status_returned',
+			'expired'             => 'status_expired',
+			'expired-return'      => 'status_expired',
+			'canceled'            => 'status_canceled',
+			'cancelled'           => 'status_canceled',
+			'lost'                => 'status_missing',
+			'missing'             => 'status_missing',
+			'accepted-to-locker'  => 'status_in_progress',
+			'accepted-for-return' => 'status_in_progress',
+			'wait-for-load'       => 'status_wait_for_load'
+		);
+
+		if (isset($keys[$status])) {
+			return $language->get($keys[$status]);
+		}
+
+		return $status !== '' ? sprintf($language->get('status_unknown'), $status) : $language->get('status_unavailable');
+	}
+
+	private function shipmentTableExists() {
+		if ($this->shipment_table_exists !== null) {
+			return $this->shipment_table_exists;
+		}
+
+		$query = $this->db->query("SHOW TABLES LIKE '" . $this->db->escape(DB_PREFIX . "boxnow_shipment") . "'");
+		$this->shipment_table_exists = (bool)$query->num_rows;
+
+		return $this->shipment_table_exists;
 	}
 }

@@ -20,6 +20,17 @@ eventualne integracije te uklonite nastavak `.example` iz imena.
 Nakon uvoza baze u administraciji otvorite **Extensions > Modifications** i
 kliknite gumb za osvježavanje kako bi se ponovno generirao OCMOD cache.
 
+## BOX NOW tracking
+
+Nakon postavljanja BOX NOW tracking izmjena pokrenite idempotentnu migraciju:
+
+```bash
+mysql -u KORISNIK -p NAZIV_BAZE < database/migrations/20260721_boxnow_tracking_email.sql
+```
+
+Zatim u administraciji otvorite **Extensions > Modifications** i osvježite
+OCMOD cache. Migracija se može sigurno pokrenuti više puta.
+
 ## OTP sadržaj i zahtjevi kartičnog plaćanja
 
 Nakon uvoza postojeće baze pokrenite migraciju sadržaja:

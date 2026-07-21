@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="hr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{{ title }}</title>
+</head>
+<body style="margin: 0; padding: 0; background: #f4f5f7; color: #2f3542; font-family: Arial, Helvetica, sans-serif;">
+  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background: #f4f5f7;">
+    <tr>
+      <td align="center" style="padding: 28px 12px;">
+        <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="max-width: 620px; background: #ffffff; border-radius: 12px; overflow: hidden;">
+          <tr>
+            <td align="center" style="padding: 26px 28px 18px; border-bottom: 1px solid #e8eaed;">
+              <a href="{{ store_url }}" style="text-decoration: none;">
+                <img src="{{ logo }}" alt="{{ store_name }}" style="display: block; max-width: 220px; max-height: 72px; border: 0;" />
+              </a>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding: 30px 32px 10px;">
+              <h1 style="margin: 0 0 18px; color: #20242b; font-size: 26px; line-height: 1.3;">{{ mail_heading }}</h1>
+              <p style="margin: 0 0 10px; font-size: 16px; line-height: 1.7;">{{ mail_greeting }}</p>
+              <p style="margin: 0; font-size: 16px; line-height: 1.7;">{{ mail_intro }}</p>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding: 18px 32px;">
+              <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background: #f7f8fa; border: 1px solid #e3e6ea; border-radius: 9px;">
+                <tr>
+                  <td style="padding: 20px; font-size: 15px; line-height: 1.8;">
+                    <p style="margin: 0 0 7px;"><strong>{{ mail_tracking_code }}:</strong> {{ tracking_code }}</p>
+                    <p style="margin: 0 0 7px;"><strong>{{ mail_tracking_status }}:</strong> {{ tracking_status }}</p>
+                    <p style="margin: 0;"><strong>{{ mail_shipping_method }}:</strong> {{ shipping_method }}</p>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding: 4px 32px 20px;">
+              {% if tracking_url %}
+              <a href="{{ tracking_url }}" style="display: inline-block; margin: 0 8px 8px 0; padding: 13px 22px; background: #111827; border-radius: 6px; color: #ffffff; font-size: 15px; font-weight: bold; text-decoration: none;">{{ mail_track_button }}</a>
+              {% endif %}
+			  {% if account_order_url %}<a href="{{ account_order_url }}" style="display: inline-block; margin: 0 0 8px; padding: 12px 21px; background: #ffffff; border: 1px solid #111827; border-radius: 6px; color: #111827; font-size: 15px; font-weight: bold; text-decoration: none;">{{ mail_order_button }}</a>{% endif %}
+            </td>
+          </tr>
+          <tr>
+            <td style="padding: 0 32px 30px;">
+              <p style="margin: 0 0 16px; color: #606875; font-size: 14px; line-height: 1.7;">{{ mail_note }}</p>
+              <p style="margin: 0; color: #606875; font-size: 14px; line-height: 1.7;">{{ mail_footer }}</p>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>

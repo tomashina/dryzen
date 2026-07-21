@@ -16,6 +16,10 @@ $_['text_payment_address']  = 'Adresa na računu';
 $_['text_payment_method']   = 'Način plaćanja:';
 $_['text_comment']          = 'Komentari uz narudžbu';
 $_['text_history']          = 'Povijest narudžbe';
+$_['text_tracking_title']    = 'Praćenje BOX NOW pošiljke';
+$_['text_tracking_code']     = 'Broj pošiljke:';
+$_['text_tracking_status']   = 'Status pošiljke:';
+$_['text_tracking_updated']  = 'Zadnje ažuriranje:';
 $_['text_success']          = '<span class="text-uppercase d-block fw-lighter fsc-4 mb-2">Uspješno:</span> Dodali ste <strong><a class="text-accent" href="%s">%s</a></strong> u Vašu <a class="text-decoration-underline" href="%s">košaricu</a>!';
 $_['text_empty']            = 'Do sad niste napravili niti jednu narudžbu!';
 $_['text_error']            = 'Zatražena narudžba nije pronađena!';
@@ -34,6 +38,8 @@ $_['column_action']         = 'Akcija';
 $_['column_date_added']     = 'Datum dodavanja';
 $_['column_status']         = 'Status';
 $_['column_comment']        = 'Komentar';
+
+$_['button_track_shipment']  = 'Prati pošiljku';
 
 // Error
 $_['error_reorder']         = '%s trenutno nije dostupan za ponovnu narudžbu.';

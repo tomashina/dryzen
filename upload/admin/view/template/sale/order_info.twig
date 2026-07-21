@@ -124,9 +124,55 @@
                   <button onclick="sendOrder('order')" data-toggle="tooltip" title="Pošalji narudžbu kupcu" class="btn btn-success btn-sm btn-block"><i class="fa fa-truck fa-fw"></i> Pošalji Narudžbu</button>
               </div>
           </div>
-      </div>
-    </div>
-    <div class="panel panel-default">
+	  </div>
+	</div>
+	{% if boxnow_tracking_panel %}
+	<div class="panel panel-default" id="boxnow-shipment">
+	  <div class="panel-heading">
+		<h3 class="panel-title"><i class="fa fa-cube"></i> {{ boxnow_tracking_panel.text_title }}</h3>
+	  </div>
+	  <div class="panel-body">
+		{% if boxnow_tracking_panel.email_failed and not boxnow_tracking_panel.email_sent_at %}
+		<div class="alert alert-warning boxnow-alert"><i class="fa fa-exclamation-triangle"></i> {{ boxnow_tracking_panel.error_email }}</div>
+		{% endif %}
+		{% if boxnow_tracking_panel.created %}
+		<div class="table-responsive">
+		  <table class="table table-bordered">
+			<tbody>
+			  <tr>
+				<td style="width: 25%;"><strong>{{ boxnow_tracking_panel.text_code }}</strong></td>
+				<td>{% if boxnow_tracking_panel.tracking_url %}<a href="{{ boxnow_tracking_panel.tracking_url }}" target="_blank" rel="noopener"><strong>{{ boxnow_tracking_panel.tracking_code }}</strong></a>{% else %}<strong>{{ boxnow_tracking_panel.tracking_code }}</strong>{% endif %}</td>
+			  </tr>
+			  <tr>
+				<td><strong>{{ boxnow_tracking_panel.text_status }}</strong></td>
+				<td>{{ boxnow_tracking_panel.status }}</td>
+			  </tr>
+			  {% if boxnow_tracking_panel.date_modified %}
+			  <tr>
+				<td><strong>{{ boxnow_tracking_panel.text_updated }}</strong></td>
+				<td>{{ boxnow_tracking_panel.date_modified }}</td>
+			  </tr>
+			  {% endif %}
+			  <tr>
+				<td><strong>{{ boxnow_tracking_panel.text_email }}</strong></td>
+				<td>{{ boxnow_tracking_panel.text_email_state }}</td>
+			  </tr>
+			</tbody>
+		  </table>
+		</div>
+		<div class="btn-group">
+		  {% if boxnow_tracking_panel.tracking_url %}<a href="{{ boxnow_tracking_panel.tracking_url }}" target="_blank" rel="noopener" class="btn btn-primary"><i class="fa fa-map-marker"></i> {{ boxnow_tracking_panel.button_track }}</a>{% endif %}
+		  <a href="{{ boxnow_tracking_panel.label_url }}" target="_blank" class="btn btn-info"><i class="fa fa-file-pdf-o"></i> {{ boxnow_tracking_panel.button_label }}</a>
+		  {% if not boxnow_tracking_panel.email_sent_at %}<button type="button" id="button-boxnow-email" data-url="{{ boxnow_tracking_panel.send_email_url }}" data-loading-text="{{ boxnow_tracking_panel.text_loading }}" class="btn btn-success"><i class="fa fa-envelope"></i> {{ boxnow_tracking_panel.button_email }}</button>{% endif %}
+		</div>
+		{% else %}
+		<p>{{ boxnow_tracking_panel.text_not_created }}</p>
+		<button type="button" id="button-boxnow-create" data-url="{{ boxnow_tracking_panel.create_url }}" data-loading-text="{{ boxnow_tracking_panel.text_loading }}" class="btn btn-success"><i class="fa fa-cube"></i> {{ boxnow_tracking_panel.button_create }}</button>
+		{% endif %}
+	  </div>
+	</div>
+	{% endif %}
+	<div class="panel panel-default">
       <div class="panel-heading">
         <h3 class="panel-title"><i class="fa fa-info-circle"></i> {{ text_order }}</h3>
       </div>
@@ -370,6 +416,41 @@
     </div>
   </div>
   <script type="text/javascript"><!--
+
+  $(document).delegate('#button-boxnow-create, #button-boxnow-email', 'click', function() {
+	var button = $(this);
+
+	$.ajax({
+	  url: button.data('url'),
+	  dataType: 'json',
+	  beforeSend: function() {
+		button.button('loading');
+	  },
+	  complete: function() {
+		button.button('reset');
+	  },
+	  success: function(json) {
+		$('#boxnow-shipment .boxnow-alert').remove();
+
+		if (json['error']) {
+		  $('#boxnow-shipment .panel-body').prepend('<div class="alert alert-danger boxnow-alert"><i class="fa fa-exclamation-circle"></i> ' + json['error'] + '</div>');
+		  return;
+		}
+
+		if (json['warning']) {
+		  $('#boxnow-shipment .panel-body').prepend('<div class="alert alert-warning boxnow-alert"><i class="fa fa-exclamation-triangle"></i> ' + json['warning'] + '</div>');
+		}
+
+		if (json['success']) {
+		  $('#boxnow-shipment .panel-body').prepend('<div class="alert alert-success boxnow-alert"><i class="fa fa-check-circle"></i> ' + json['success'] + '</div>');
+		  window.setTimeout(function() { window.location.reload(); }, 700);
+		}
+	  },
+	  error: function(xhr, ajaxOptions, thrownError) {
+		alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+	  }
+	});
+  });
 
    function sendOrder(type) {
           $.ajax({

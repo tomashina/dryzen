@@ -12,6 +12,8 @@
 *.sql
 *.sql.gz
 *.zip
+!/database/migrations/
+!/database/migrations/*.sql
 
 # Environment-specific OpenCart configuration
 /upload/config.php

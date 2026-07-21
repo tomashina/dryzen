@@ -43,6 +43,7 @@ class ControllerAccountOrder extends Controller {
 		$data['orders'] = array();
 
 		$this->load->model('account/order');
+		$this->load->model('extension/shipping/boxnow');
 
 		$order_total = $this->model_account_order->getTotalOrders();
 
@@ -51,6 +52,8 @@ class ControllerAccountOrder extends Controller {
 		foreach ($results as $result) {
 			$product_total = $this->model_account_order->getTotalOrderProductsByOrderId($result['order_id']);
 			$voucher_total = $this->model_account_order->getTotalOrderVouchersByOrderId($result['order_id']);
+			$shipment = $this->model_extension_shipping_boxnow->getShipmentByOrderId($result['order_id']);
+			$tracking_code = !empty($shipment['parcel_id']) ? $shipment['parcel_id'] : '';
 
 			$data['orders'][] = array(
 				'order_id'   => $result['order_id'],
@@ -59,6 +62,9 @@ class ControllerAccountOrder extends Controller {
 				'date_added' => date($this->language->get('date_format_short'), strtotime($result['date_added'])),
 				'products'   => ($product_total + $voucher_total),
 				'total'      => $this->currency->format($result['total'], $result['currency_code'], $result['currency_value']),
+				'tracking_code'   => $tracking_code,
+				'tracking_url'    => $this->model_extension_shipping_boxnow->getTrackingUrl($tracking_code),
+				'tracking_status' => $tracking_code !== '' ? $this->model_extension_shipping_boxnow->getStatusLabel(isset($shipment['status']) ? $shipment['status'] : '') : '',
 				'view'       => $this->url->link('account/order/info', 'order_id=' . $result['order_id'], true),
 			);
 		}
@@ -101,6 +107,7 @@ class ControllerAccountOrder extends Controller {
 		}
 
 		$this->load->model('account/order');
+		$this->load->model('extension/shipping/boxnow');
 
 		$order_info = $this->model_account_order->getOrder($order_id);
 
@@ -231,6 +238,18 @@ class ControllerAccountOrder extends Controller {
 			$data['shipping_address'] = str_replace(array("\r\n", "\r", "\n"), '<br />', preg_replace(array("/\s\s+/", "/\r\r+/", "/\n\n+/"), '<br />', trim(str_replace($find, $replace, $format))));
 
 			$data['shipping_method'] = $order_info['shipping_method'];
+			$shipment = $this->model_extension_shipping_boxnow->getShipmentByOrderId($order_id);
+			$tracking_code = !empty($shipment['parcel_id']) ? $shipment['parcel_id'] : '';
+			$data['boxnow_tracking'] = array();
+
+			if ($tracking_code !== '') {
+				$data['boxnow_tracking'] = array(
+					'code'          => $tracking_code,
+					'url'           => $this->model_extension_shipping_boxnow->getTrackingUrl($tracking_code),
+					'status'        => $this->model_extension_shipping_boxnow->getStatusLabel(isset($shipment['status']) ? $shipment['status'] : ''),
+					'date_modified' => !empty($shipment['date_modified']) ? date($this->language->get('date_format_short') . ' H:i', strtotime($shipment['date_modified'])) : ''
+				);
+			}
 
 			$this->load->model('catalog/product');
 			$this->load->model('tool/upload');

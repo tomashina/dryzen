@@ -49,6 +49,7 @@ class ControllerExtensionShippingBoxnow extends Controller {
 			'shipping_boxnow_client_id'        => '',
 			'shipping_boxnow_client_secret'    => '',
 			'shipping_boxnow_webhook_secret'   => '',
+			'shipping_boxnow_tracking_url'      => 'https://track.boxnow.hr/?track={parcel}',
 			'shipping_boxnow_origin_name'      => $this->config->get('config_name'),
 			'shipping_boxnow_origin_email'     => $this->config->get('config_email'),
 			'shipping_boxnow_origin_phone'     => $this->config->get('config_telephone'),
@@ -106,12 +107,50 @@ class ControllerExtensionShippingBoxnow extends Controller {
 				$this->load->model('extension/shipping/boxnow');
 				$shipment = $this->model_extension_shipping_boxnow->createShipment((int)$this->request->get['order_id']);
 
-				$json['success'] = !empty($shipment['existing']) ? 'BOX NOW pošiljka već postoji.' : 'BOX NOW pošiljka je kreirana.';
+				$json['success'] = !empty($shipment['existing']) ? $this->language->get('text_shipment_exists') : $this->language->get('text_shipment_created');
+
+				if (!empty($shipment['email_sent'])) {
+					$json['success'] .= ' ' . $this->language->get('text_tracking_email_sent');
+				} elseif (!empty($shipment['email_error'])) {
+					$json['warning'] = $this->language->get('error_tracking_email_failed');
+				}
+
 				$json['parcel_id'] = isset($shipment['parcel_id']) ? $shipment['parcel_id'] : '';
 				$json['reference_number'] = isset($shipment['reference_number']) ? $shipment['reference_number'] : '';
+				$json['tracking_url'] = $this->model_extension_shipping_boxnow->getTrackingUrl($json['parcel_id']);
 				$json['label'] = str_replace('&amp;', '&', $this->url->link('extension/shipping/boxnow/label', 'user_token=' . $this->session->data['user_token'] . '&order_id=' . (int)$this->request->get['order_id'], true));
 			} catch (Exception $e) {
 				$json['error'] = $e->getMessage();
+			}
+		}
+
+		$this->response->addHeader('Content-Type: application/json');
+		$this->response->setOutput(json_encode($json));
+	}
+
+	public function sendTrackingEmail() {
+		$this->load->language('extension/shipping/boxnow');
+
+		$json = array();
+
+		if (!$this->user->hasPermission('modify', 'extension/shipping/boxnow')) {
+			$json['error'] = $this->language->get('error_permission');
+		} elseif (empty($this->request->get['order_id'])) {
+			$json['error'] = $this->language->get('error_not_boxnow_order');
+		} else {
+			try {
+				$this->load->model('extension/shipping/boxnow');
+				$result = $this->model_extension_shipping_boxnow->sendTrackingEmail((int)$this->request->get['order_id']);
+
+				if (!empty($result['email_sent'])) {
+					$json['success'] = $this->language->get('text_tracking_email_sent');
+				} elseif (!empty($result['email_already_sent'])) {
+					$json['success'] = $this->language->get('text_tracking_email_already_sent');
+				} else {
+					$json['error'] = $this->language->get('error_tracking_email_failed');
+				}
+			} catch (\Throwable $e) {
+				$json['error'] = $this->language->get('error_tracking_email_failed');
 			}
 		}
 
