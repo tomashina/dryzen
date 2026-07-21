@@ -617,6 +617,13 @@ body.information-information-13 #mod1 .cm_column {
     aspect-ratio: 3 / 2;
   }
 
+  .dryzen-about-hero-media img,
+  .dryzen-about-story-media img {
+    height: auto;
+    aspect-ratio: 3 / 2;
+    object-fit: contain;
+  }
+
   .dryzen-about-overview,
   .dryzen-about-focus,
   .dryzen-about-reason-grid,

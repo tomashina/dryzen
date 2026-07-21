@@ -208,7 +208,7 @@ function aboutRenderParagraphs(array $paragraphs)
 
 function aboutRenderHero(array $hero)
 {
-    return '<link rel="stylesheet" href="/catalog/view/theme/basel/stylesheet/dryzen-about.css?v=20260719-13">'
+    return '<link rel="stylesheet" href="/catalog/view/theme/basel/stylesheet/dryzen-about.css?v=20260721-14">'
         . '<section class="dryzen-about-hero">'
         . '<header class="dryzen-about-hero-copy">'
         . '<span class="dryzen-about-eyebrow">' . aboutEscape($hero['eyebrow']) . '</span>'
