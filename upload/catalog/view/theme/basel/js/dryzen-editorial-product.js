@@ -87,8 +87,52 @@
     setActive(0);
   }
 
+  function getStickyHeaderHeight() {
+    var headerHeight = 0;
+
+    document.querySelectorAll('.sticky-header').forEach(function (header) {
+      var headerStyle = window.getComputedStyle(header);
+      var headerRect = header.getBoundingClientRect();
+
+      if (headerStyle.display !== 'none' && headerStyle.visibility !== 'hidden') {
+        headerHeight = Math.max(headerHeight, headerRect.height, header.offsetHeight || 0);
+      }
+    });
+
+    return headerHeight;
+  }
+
+  function scrollToAccordionItem(item) {
+    var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var targetTop = window.pageYOffset + item.getBoundingClientRect().top - Math.ceil(getStickyHeaderHeight()) - 16;
+
+    window.scrollTo({
+      top: Math.max(0, targetTop),
+      behavior: reduceMotion ? 'auto' : 'smooth'
+    });
+  }
+
+  function initAccordion(root) {
+    root.querySelectorAll('.dryzen-product-accordion details').forEach(function (item) {
+      item.addEventListener('toggle', function () {
+        if (!item.open) {
+          return;
+        }
+
+        window.requestAnimationFrame(function () {
+          window.requestAnimationFrame(function () {
+            scrollToAccordionItem(item);
+          });
+        });
+      });
+    });
+  }
+
   function init() {
-    document.querySelectorAll('.dryzen-product-editorial').forEach(initGallery);
+    document.querySelectorAll('.dryzen-product-editorial').forEach(function (root) {
+      initGallery(root);
+      initAccordion(root);
+    });
   }
 
   if (document.readyState === 'loading') {
