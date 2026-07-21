@@ -112,12 +112,9 @@
             </div><!-- .col-md-8 ends -->
 
             <nav class="col-xs-12 text-center otp-footer-compliance-links" aria-label="Informacije za kupce">
-                <a href="index.php?route=information/information&amp;information_id=13">O nama i podaci o trgovcu</a>
-                <a href="index.php?route=information/information&amp;information_id=5">Opći uvjeti kupnje</a>
-                <a href="index.php?route=information/information&amp;information_id=7">Plaćanje i dostava</a>
-                <a href="index.php?route=information/information&amp;information_id=12">Sigurnost plaćanja</a>
-                <a href="index.php?route=information/information&amp;information_id=3">Pravila privatnosti</a>
-                <a href="index.php?route=information/information&amp;information_id=17">Povrati i reklamacije</a>
+                {% for compliance_link in compliance_links %}
+                    <a href="{{ compliance_link.href }}">{{ compliance_link.title }}</a>
+                {% endfor %}
                 <a href="#cookie-settings" data-cookie-consent-trigger>{{ text_cookie_settings }}</a>
             </nav>
 

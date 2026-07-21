@@ -16,6 +16,24 @@ class ControllerCommonFooter extends Controller {
 			}
 		}
 
+		$data['compliance_links'] = array();
+
+		$compliance_information_pages = array(
+			13 => 'O nama i podaci o trgovcu',
+			5  => 'Opći uvjeti kupnje',
+			7  => 'Plaćanje i dostava',
+			12 => 'Sigurnost plaćanja',
+			3  => 'Pravila privatnosti',
+			17 => 'Povrati i reklamacije'
+		);
+
+		foreach ($compliance_information_pages as $information_id => $title) {
+			$data['compliance_links'][] = array(
+				'title' => $title,
+				'href'  => $this->url->link('information/information', 'information_id=' . $information_id)
+			);
+		}
+
 		$data['contact'] = $this->url->link('information/contact');
 		$data['return'] = $this->url->link('account/return/add', '', true);
 		$data['sitemap'] = $this->url->link('information/sitemap');
