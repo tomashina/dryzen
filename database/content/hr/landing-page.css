@@ -145,12 +145,20 @@ body.common-home .dryzen-intro p:last-child {
   margin-bottom: 0;
 }
 
-body.common-home .dryzen-section-anchor {
+body.common-home #mod3 {
   position: relative;
-  top: -110px;
-  height: 0;
+  scroll-margin-top: 94px;
+}
+
+body.common-home .dryzen-section-anchor {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1px;
+  height: 1px;
   overflow: hidden;
-  scroll-margin-top: 90px;
+  pointer-events: none;
+  scroll-margin-top: 94px;
 }
 
 body.common-home .dryzen-need-grid {
@@ -608,6 +616,11 @@ body.common-home a.btn.dryzen-finder-btn:focus {
 }
 
 @media (max-width: 991px) {
+  body.common-home #mod3,
+  body.common-home .dryzen-section-anchor {
+    scroll-margin-top: 104px;
+  }
+
   body.common-home .dryzen-need-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 28px 22px;

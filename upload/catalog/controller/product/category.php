@@ -3,7 +3,7 @@ class ControllerProductCategory extends Controller {
 	public function index() {
 		$this->load->language('product/category');
 		$this->document->addStyle('catalog/view/theme/basel/stylesheet/dryzen-shop.css?v=20260720c');
-		$this->document->addScript('catalog/view/theme/basel/js/dryzen-shop.js?v=20260719p');
+		$this->document->addScript('catalog/view/theme/basel/js/dryzen-shop.js?v=20260721f');
 
 		$this->load->model('catalog/category');
 

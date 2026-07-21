@@ -66,7 +66,7 @@
 	$this->document->addStyle('catalog/view/theme/basel/stylesheet/dryzen-editorial-product.css?v=20260720b');
 	$this->document->addScript('catalog/view/theme/basel/js/dryzen-editorial-product.js?v=20260719m');
 	$this->document->addStyle('catalog/view/theme/basel/stylesheet/dryzen-shop.css?v=20260720c');
-	$this->document->addScript('catalog/view/theme/basel/js/dryzen-shop.js?v=20260719p');
+	$this->document->addScript('catalog/view/theme/basel/js/dryzen-shop.js?v=20260721f');
 	
 	// SEO Reviews
 	$data['text_no_reviews'] = $this->language->get('text_no_reviews');
