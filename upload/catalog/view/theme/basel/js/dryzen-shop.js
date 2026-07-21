@@ -84,7 +84,6 @@
     if (
       !document.body.classList.contains('common-home') ||
       !link ||
-      event.defaultPrevented ||
       event.button !== 0 ||
       event.metaKey ||
       event.ctrlKey ||
@@ -103,6 +102,7 @@
     }
 
     event.preventDefault();
+    event.stopImmediatePropagation();
     reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     scrollToSectionAnchor(target, reduceMotion ? 'auto' : 'smooth');
@@ -114,7 +114,7 @@
         window.location.pathname + window.location.search + '#' + encodeURIComponent(target.id)
       );
     }
-  });
+  }, true);
 
   if (document.readyState === 'complete') {
     correctCurrentHashPosition();
