@@ -272,15 +272,40 @@
 			beforeSend: function() {
 				$btn.button('loading');
 			},
-			complete: function() {
-				$btn.button('reset');
-			},
-			success: function() {
-				location.reload(true);
-			}
-		});
-	}
-	
+				complete: function() {
+					$btn.button('reset');
+				},
+				success: function(json) {
+					if (json.error) {
+						showSitemapMessage('danger', json.error);
+						return;
+					}
+
+					showSitemapMessage('success', json.success || 'Sitemap files generated.');
+					setTimeout(function() { location.reload(true); }, 1200);
+				},
+				error: function(xhr) {
+					var message = 'Sitemap generation failed.';
+
+					if (xhr.responseJSON && xhr.responseJSON.error) {
+						message = xhr.responseJSON.error;
+					} else if (xhr.responseText) {
+						message += ' ' + xhr.responseText;
+					}
+
+					showSitemapMessage('danger', message);
+				}
+			});
+		}
+
+		function showSitemapMessage(type, message) {
+			var $alert = $('<div class="alert alert-' + type + ' alert-dismissible"><i class="fa"></i> <span></span><button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+			$alert.find('.fa').addClass(type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle');
+			$alert.find('span').text(message);
+			$('#message').html($alert);
+			$('html, body').animate({ scrollTop: 0 }, 200);
+		}
+
 	function getCustomLinks() {
 		$.ajax({
 			url: "{{ custom_link }}",
@@ -295,7 +320,12 @@
 		var $btn = $(elem);
 		$.ajax({
 			url: action,
-			data: 'custom_link_url=' + $('input[name=\'custom_link_url\']').val() + '&custom_link_frequency=' + $('select[name=\'custom_link_frequency\']').val() + '&custom_link_priority=' + $('select[name=\'custom_link_priority\']').val() + '&custom_link_store_id=' + $('select[name=\'custom_link_store_id\']').val(),
+				data: {
+					custom_link_url: $('input[name=\'custom_link_url\']').val(),
+					custom_link_frequency: $('select[name=\'custom_link_frequency\']').val(),
+					custom_link_priority: $('select[name=\'custom_link_priority\']').val(),
+					custom_link_store_id: $('select[name=\'custom_link_store_id\']').val()
+				},
 			dataType: 'json',
 			type: 'post',
 			beforeSend: function() {
@@ -304,14 +334,21 @@
 			complete: function() {
 				$btn.button('reset');
 			},
-			success: function() {
-				location.reload(true);
-			}
-		});
-		
-		$('input[name=\'custom_link_url\']').val('');
-		getCustomLinks();
-	}
+				success: function(json) {
+					if (json.error) {
+						showSitemapMessage('danger', json.error);
+						return;
+					}
+
+					$('input[name=\'custom_link_url\']').val('');
+					getCustomLinks();
+				},
+				error: function(xhr) {
+					var message = xhr.responseJSON && xhr.responseJSON.error ? xhr.responseJSON.error : 'Unable to add the custom link.';
+					showSitemapMessage('danger', message);
+				}
+			});
+		}
 	
 	function deleteCustomLink(elem, action) {
 		var $btn = $(elem);

@@ -78,7 +78,7 @@ class ModelExtensionFeedBoostSitemap extends Model {
 	public function alterTableBlogCategory() {
 		$query = $this->db->query("SHOW COLUMNS FROM `" . DB_PREFIX . "journal3_blog_category` LIKE 'date_created'");
 		
-		if (!$query) {
+		if (!$query->num_rows) {
 			$this->db->query("ALTER TABLE `" . DB_PREFIX . "journal3_blog_category` ADD `date_created` datetime DEFAULT NULL, ADD `date_updated` datetime DEFAULT NULL");
 		}
 	}
@@ -99,7 +99,7 @@ class ModelExtensionFeedBoostSitemap extends Model {
 			$sql .= " LEFT JOIN " . DB_PREFIX . "product p ON (p2s.product_id = p.product_id)";
 		}
 		
-		$sql .= " LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id) WHERE p2s.store_id = '" . (int)$data['store_id'] . "' AND pd.language_id = '" . (int)$data['language_id'] . "' AND p.status = '1'";
+		$sql .= " LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id) WHERE p2s.store_id = '" . (int)$data['store_id'] . "' AND pd.language_id = '" . (int)$data['language_id'] . "' AND p.status = '1' AND p.date_available <= NOW()";
 		
 		if (!empty($data['filter_category_id'])) {
 			$sql .= " AND p2c.category_id = '" . (int)$data['filter_category_id'] . "'";
@@ -144,7 +144,7 @@ class ModelExtensionFeedBoostSitemap extends Model {
 			$sql .= " LEFT JOIN " . DB_PREFIX . "product p ON (p2s.product_id = p.product_id)";
 		}
 		
-		$sql .= " LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id) WHERE p2s.store_id = '" . (int)$data['store_id'] . "' AND pd.language_id = '" . (int)$data['language_id'] . "' AND p.status = '1'";
+		$sql .= " LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id) WHERE p2s.store_id = '" . (int)$data['store_id'] . "' AND pd.language_id = '" . (int)$data['language_id'] . "' AND p.status = '1' AND p.date_available <= NOW()";
 		
 		if (!empty($data['filter_category_id'])) {
 			$sql .= " AND p2c.category_id = '" . (int)$data['filter_category_id'] . "'";
@@ -299,21 +299,15 @@ class ModelExtensionFeedBoostSitemap extends Model {
 	 * @return string
 	 */
 	protected function validateKeyword($keyword = '', $store_id = 0, $counter = null) {
-		$keyword = $keyword.($counter ? '-'.$counter : '');
-		$query = $this->db->query("SELECT COUNT(*) AS total FROM " . DB_PREFIX . "seo_url WHERE keyword = '" . $this->db->escape($keyword) . "' AND 'store_id' = '" .(int)$store_id. "'");
+		$candidate = $keyword . ($counter ? '-' . $counter : '');
+		$query = $this->db->query("SELECT COUNT(*) AS total FROM " . DB_PREFIX . "seo_url WHERE keyword = '" . $this->db->escape($candidate) . "' AND store_id = '" . (int)$store_id . "'");
 		$count = (int)$query->row['total'];
 		
 		if ($count > 0) {
-			if( ! $counter) {
-				$counter = 1;
-			} else {
-				$counter++;
-			}
-		
-			return $this->validateKeyword($keyword, $store_id, $counter);
-		} else {
-			return $keyword.($counter ? '-'.$counter : '');
+			return $this->validateKeyword($keyword, $store_id, $counter ? $counter + 1 : 1);
 		}
+
+		return $candidate;
 	}
 	
 	/**
@@ -678,68 +672,69 @@ class ModelExtensionFeedBoostSitemap extends Model {
 		return $query->row['total'];
 	}
 
-	//SEO UTIL
-    //model journal3
-	public function rewriteCategory($category_id) {
-		$cat = $this->getCategory($category_id);
-		//return Arr::get($this->getCategory($category_id), 'keyword');
-		return (isset($cat['keyword'])?$cat['keyword']:'');
-    }
+	// Journal3 SEO utilities.
+	public function rewriteCategory($category_id, $language_id = 0) {
+		$cat = $this->getCategory($category_id, $language_id);
 
-    public function rewritePost($post_id) {
-        //return Arr::get($this->getPost($post_id), 'keyword');
-		$post = $this->getPost($post_id);
-        return (isset($post['keyword'])?$post['keyword']:'');
-    }
-        
-        public function getCategory($category_id) {
-            $query = $this->db->query("
-                SELECT
-                    c.category_id,
-                    cd.name,
-                    cd.description,
-                    cd.meta_title,
-                    cd.meta_keywords,
-                    cd.meta_description,
-                    cd.keyword
-                FROM
-                    `" . DB_PREFIX.  "journal3_blog_category` c
-                LEFT JOIN
-                    `" . DB_PREFIX.  "journal3_blog_category_description` cd ON c.category_id = cd.category_id
-                WHERE
-                    c.status = 1
-                    AND c.category_id = '".(int)$category_id."'
-                    AND cd.language_id = '".(int) $this->config->get('config_language_id')."' 
-            ");
+		return isset($cat['keyword']) ? $cat['keyword'] : '';
+	}
 
-            return $query->row;
-        }
-	
-        public function getPost($post_id) {
-            $query = $this->db->query("
-                SELECT
-                    p.post_id,
-                    p.image,
-                    p.date_created,
-                    pd.name,
-                    pd.description,
-                    pd.meta_title,
-                    pd.meta_keywords,
-                    pd.meta_description,
-                    pd.keyword
-                FROM
-                    `" . DB_PREFIX.  "journal3_blog_post` p
-                LEFT JOIN
-                    `" . DB_PREFIX.  "journal3_blog_post_description` pd ON p.post_id = pd.post_id
-                WHERE
-                    p.status = 1
-                    AND p.post_id = '".(int)$post_id."'
-                    AND pd.language_id = '".(int) $this->config->get('config_language_id')."' 
-                    AND p.date_created <= NOW()
-            ");
+	public function rewritePost($post_id, $language_id = 0) {
+		$post = $this->getPost($post_id, $language_id);
 
-            return $query->row;
-        }
+		return isset($post['keyword']) ? $post['keyword'] : '';
+	}
+
+	public function getCategory($category_id, $language_id = 0) {
+		$language_id = $language_id ?: (int)$this->config->get('config_language_id');
+		$query = $this->db->query("
+			SELECT
+				c.category_id,
+				cd.name,
+				cd.description,
+				cd.meta_title,
+				cd.meta_keywords,
+				cd.meta_description,
+				cd.keyword
+			FROM
+				`" . DB_PREFIX . "journal3_blog_category` c
+			LEFT JOIN
+				`" . DB_PREFIX . "journal3_blog_category_description` cd ON c.category_id = cd.category_id
+			WHERE
+				c.status = 1
+				AND c.category_id = '" . (int)$category_id . "'
+				AND cd.language_id = '" . (int)$language_id . "'
+		");
+
+		return $query->row;
+	}
+
+	public function getPost($post_id, $language_id = 0) {
+		$language_id = $language_id ?: (int)$this->config->get('config_language_id');
+		$query = $this->db->query("
+			SELECT
+				p.post_id,
+				p.image,
+				p.date_created,
+				pd.name,
+				pd.description,
+				pd.meta_title,
+				pd.meta_keywords,
+				pd.meta_description,
+				pd.keyword
+			FROM
+				`" . DB_PREFIX . "journal3_blog_post` p
+			LEFT JOIN
+				`" . DB_PREFIX . "journal3_blog_post_description` pd ON p.post_id = pd.post_id
+			WHERE
+				p.status = 1
+				AND p.post_id = '" . (int)$post_id . "'
+				AND pd.language_id = '" . (int)$language_id . "'
+				AND p.date_created <= NOW()
+		");
+
+		return $query->row;
+	}
         
         public function getBlogKeyword() {
 		if (self::$BLOG_KEYWORD === null) {

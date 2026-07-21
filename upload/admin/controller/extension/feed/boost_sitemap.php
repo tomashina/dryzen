@@ -22,7 +22,7 @@ class ControllerExtensionFeedBoostSitemap extends Controller {
 	 */
 	public function __construct($registry) {
 		$this->registry = $registry;
-		$this->directory = str_replace('system', 'sitemaps', DIR_SYSTEM);
+		$this->directory = dirname(rtrim(DIR_CATALOG, '/\\')) . DIRECTORY_SEPARATOR . 'sitemaps' . DIRECTORY_SEPARATOR;
 		
 		$this->load->language('extension/feed/boost_sitemap');
 		
@@ -34,7 +34,7 @@ class ControllerExtensionFeedBoostSitemap extends Controller {
 		$this->stores[] = [
 			'store_id' => 0,
 			'name' => 'Default',
-			'url' => ($this->config->get('config_secure') ? HTTPS_CATALOG : HTTPS_CATALOG)
+			'url' => HTTPS_CATALOG
 		];
 		
 		foreach ($stores as $store) {
@@ -63,8 +63,7 @@ class ControllerExtensionFeedBoostSitemap extends Controller {
 	 * @return void
 	 */
 	public function install() {
-		umask(0);
-		mkdir($this->directory, 0777);
+		$this->ensureSitemapDirectory();
 		
 		$this->load->model('extension/feed/boost_sitemap');
 		
@@ -78,27 +77,28 @@ class ControllerExtensionFeedBoostSitemap extends Controller {
 	 * @return void
 	 */
 	public function uninstall() {
-		umask(0);
-		
 		$dir = $this->directory;
-		$it = new RecursiveDirectoryIterator($dir, RecursiveDirectoryIterator::SKIP_DOTS);
-		$files = new RecursiveIteratorIterator($it, RecursiveIteratorIterator::CHILD_FIRST);
-					
-		foreach($files as $file) {
-			if ($file->isDir()){
-				rmdir($file->getRealPath());
-			} else {
-				unlink($file->getRealPath());
+
+		if (is_dir($dir)) {
+			$it = new RecursiveDirectoryIterator($dir, RecursiveDirectoryIterator::SKIP_DOTS);
+			$files = new RecursiveIteratorIterator($it, RecursiveIteratorIterator::CHILD_FIRST);
+
+			foreach ($files as $file) {
+				if ($file->isDir()) {
+					@rmdir($file->getRealPath());
+				} else {
+					@unlink($file->getRealPath());
+				}
 			}
+
+			@rmdir($dir);
 		}
-					
-		rmdir($dir);
-		
+
 		$this->load->model('extension/feed/boost_sitemap');
-		
+
 		$this->model_extension_feed_boost_sitemap->uninstall();
 	}
-	
+
 	/**
 	 * Index
 	 * 
@@ -197,9 +197,7 @@ class ControllerExtensionFeedBoostSitemap extends Controller {
 		$data['items'] = [
 			'product' => 'Product Sitemaps',
 			'category' => 'Category Sitemaps',
-			'category_product' => 'Category To Product Sitemaps',
 			'manufacturer' => 'Manufacturer Sitemaps',
-			'manufacturer_product' => 'Manufacturer To Product Sitemaps',
 			'information' => 'Information Sitemaps',
 			'custom_link' => 'Custom Link Sitemaps'
 		];
@@ -255,6 +253,14 @@ class ControllerExtensionFeedBoostSitemap extends Controller {
 			$this->error['warning'] = $this->language->get('error_permission');
 		}
 
+		if (isset($this->request->post['feed_boost_sitemap_item_limit'])) {
+			$limit = (int)$this->request->post['feed_boost_sitemap_item_limit'];
+
+			if ($limit < 1 || $limit > 50000) {
+				$this->error['warning'] = $this->language->get('error_item_limit');
+			}
+		}
+
 		return !$this->error;
 	}
 	
@@ -267,8 +273,16 @@ class ControllerExtensionFeedBoostSitemap extends Controller {
 	 * @return array
 	 */
 	protected function getRecursiveFiles($dir, &$results = []) {
+		if (!is_dir($dir) || !is_readable($dir)) {
+			return $results;
+		}
+
 		$files = scandir($dir);
 		
+		if ($files === false) {
+			return $results;
+		}
+
 		foreach ($files as $key => $value) {
 			$path = realpath($dir . DIRECTORY_SEPARATOR . $value);
 			if (!is_dir($path)) {
@@ -282,6 +296,259 @@ class ControllerExtensionFeedBoostSitemap extends Controller {
 		return $results;
 	}
 	
+	/**
+	 * Ensure that the public sitemap directory exists and is writable.
+	 *
+	 * @throws RuntimeException
+	 */
+	protected function ensureSitemapDirectory() {
+		if (!is_dir($this->directory) && !@mkdir($this->directory, 0775, true) && !is_dir($this->directory)) {
+			throw new RuntimeException(sprintf($this->language->get('error_directory_create'), $this->directory));
+		}
+
+		if (!is_writable($this->directory)) {
+			@chmod($this->directory, 0775);
+			clearstatcache(true, $this->directory);
+		}
+
+		if (!is_writable($this->directory)) {
+			throw new RuntimeException(sprintf($this->language->get('error_directory_write'), $this->directory));
+		}
+	}
+
+	/**
+	 * Write through a temporary file so existing read-only files can be replaced
+	 * safely and crawlers never receive a partially-written sitemap.
+	 *
+	 * @param string $file_name
+	 * @param string $output
+	 * @throws RuntimeException
+	 */
+	protected function writeSitemap($file_name, $output) {
+		$this->ensureSitemapDirectory();
+
+		$file_name = basename($file_name);
+		$target = $this->directory . $file_name;
+
+		if (strlen($output) > 50 * 1024 * 1024) {
+			throw new RuntimeException(sprintf($this->language->get('error_file_size'), $target));
+		}
+
+		$temporary = tempnam($this->directory, '.boost-sitemap-');
+
+		if ($temporary === false) {
+			throw new RuntimeException(sprintf($this->language->get('error_file_write'), $target));
+		}
+
+		$bytes = @file_put_contents($temporary, $output, LOCK_EX);
+
+		if ($bytes === false || $bytes !== strlen($output)) {
+			@unlink($temporary);
+			throw new RuntimeException(sprintf($this->language->get('error_file_write'), $target));
+		}
+
+		@chmod($temporary, 0644);
+
+		if (!@rename($temporary, $target)) {
+			// Windows cannot rename over an existing target. Keep this fallback
+			// after the complete temporary file has already been written.
+			if (is_file($target)) {
+				@unlink($target);
+			}
+
+			if (!@rename($temporary, $target)) {
+				@unlink($temporary);
+				throw new RuntimeException(sprintf($this->language->get('error_file_replace'), $target));
+			}
+		}
+
+		$this->files[] = 'sitemaps/' . $file_name;
+	}
+
+	/**
+	 * Remove old split files only after their replacements were generated.
+	 *
+	 * @param array $items
+	 * @return void
+	 */
+	protected function removeStaleSitemapFiles($items) {
+		$type_map = [
+			'product' => 'product',
+			'category' => 'category',
+			'category_product' => 'category_product',
+			'manufacturer' => 'manufacturer',
+			'manufacturer_product' => 'manufacturer_product',
+			'information' => 'information',
+			'custom_link' => 'custom_link',
+			'journal3blogpost' => 'blog_post',
+			'journal3blogcategory' => 'blog_category'
+		];
+		$generated = array_map('basename', $this->files);
+
+		foreach (glob($this->directory . 'sitemap_*.xml') ?: [] as $file) {
+			$name = basename($file);
+
+			if (in_array($name, $generated, true)) {
+				continue;
+			}
+
+			foreach ($items as $item) {
+				if (!isset($type_map[$item])) {
+					continue;
+				}
+
+				$type = preg_quote($type_map[$item], '/');
+				$language_pattern = $item === 'custom_link' ? '' : '_\d+';
+
+				if (preg_match('/^sitemap_\d+' . $language_pattern . '_' . $type . '(?:_\d+)?\.xml$/', $name)) {
+					@unlink($file);
+					break;
+				}
+			}
+		}
+	}
+
+	/**
+	 * Category/manufacturer product paths duplicate the canonical product URL and
+	 * dilute sitemap quality. Keep only the canonical product sitemap.
+	 *
+	 * @return void
+	 */
+	protected function removeLegacyDuplicateSitemaps() {
+		$patterns = [
+			$this->directory . 'sitemap_*_*_category_product*.xml',
+			$this->directory . 'sitemap_*_*_manufacturer_product*.xml'
+		];
+
+		foreach ($patterns as $pattern) {
+			foreach (glob($pattern) ?: [] as $file) {
+				@unlink($file);
+			}
+		}
+	}
+
+	/**
+	 * XML-escape dynamic content while normalising already escaped OpenCart URLs.
+	 *
+	 * @param string $value
+	 * @return string
+	 */
+	protected function escapeXml($value) {
+		$value = html_entity_decode((string)$value, ENT_QUOTES, 'UTF-8');
+
+		return htmlspecialchars($value, ENT_QUOTES | ENT_XML1, 'UTF-8');
+	}
+
+	/**
+	 * Return a trustworthy W3C timestamp or an empty string for invalid dates.
+	 *
+	 * @param string $value
+	 * @return string
+	 */
+	protected function formatLastmod($value) {
+		if (!$value || substr((string)$value, 0, 10) === '0000-00-00') {
+			return '';
+		}
+
+		$timestamp = strtotime($value);
+
+		return $timestamp === false ? '' : date('c', $timestamp);
+	}
+
+	/**
+	 * @param bool $with_images
+	 * @return string
+	 */
+	protected function getUrlsetOpen($with_images = false) {
+		$output = '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml"';
+
+		if ($with_images) {
+			$output .= ' xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"';
+		}
+
+		return $output . '>';
+	}
+
+	/**
+	 * @param string $value
+	 * @return string
+	 */
+	protected function getLastmodXml($value) {
+		$lastmod = $this->formatLastmod($value);
+
+		return $lastmod ? '<lastmod>' . $this->escapeXml($lastmod) . '</lastmod>' : '';
+	}
+
+	/**
+	 * Google currently supports only image:loc in image sitemap metadata.
+	 *
+	 * @param string $url
+	 * @return string
+	 */
+	protected function getImageXml($url) {
+		return $url ? '<image:image><image:loc>' . $this->escapeXml($url) . '</image:loc></image:image>' : '';
+	}
+
+	/**
+	 * Sitemaps may only contain canonical URLs from the current store host.
+	 *
+	 * @param string $url
+	 * @param string $store_url
+	 * @return bool
+	 */
+	protected function isStoreUrl($url, $store_url) {
+		$url_parts = parse_url($url);
+		$store_parts = parse_url($store_url);
+
+		return isset($url_parts['scheme'], $url_parts['host'], $store_parts['host'])
+			&& in_array(strtolower($url_parts['scheme']), ['http', 'https'], true)
+			&& strtolower($url_parts['host']) === strtolower($store_parts['host']);
+	}
+
+	/**
+	 * Add all reciprocal language variants for multilingual search and AI discovery.
+	 *
+	 * @param array $store
+	 * @param string $route
+	 * @param string $args
+	 * @return string
+	 */
+	protected function getAlternateLinks($store, $route, $args = '') {
+		if (count($this->languages) < 2) {
+			return '';
+		}
+
+		$links = [];
+		$default_url = '';
+		$default_code = strtolower(str_replace('_', '-', (string)$this->config->get('config_language')));
+
+		foreach ($this->languages as $language) {
+			$code = strtolower(str_replace('_', '-', $language['code']));
+			$href = $this->link($store['url'], $route, $args, $store['store_id'], $language['language_id']);
+			$links[] = ['code' => $code, 'href' => $href];
+
+			if ($code === $default_code || strpos($code, $default_code . '-') === 0) {
+				$default_url = $href;
+			}
+		}
+
+		if (count(array_unique(array_column($links, 'href'))) !== count($links)) {
+			return '';
+		}
+
+		$output = '';
+
+		foreach ($links as $link) {
+			$output .= '<xhtml:link rel="alternate" hreflang="' . $this->escapeXml($link['code']) . '" href="' . $this->escapeXml($link['href']) . '"/>';
+		}
+
+		if ($default_url) {
+			$output .= '<xhtml:link rel="alternate" hreflang="x-default" href="' . $this->escapeXml($default_url) . '"/>';
+		}
+
+		return $output;
+	}
+
 	/**
 	 * Get file size
 	 * 
@@ -320,17 +587,22 @@ class ControllerExtensionFeedBoostSitemap extends Controller {
 	 */
 	public function delete() {
 		$json = [];
+		$this->response->addHeader('Content-Type: application/json; charset=UTF-8');
 		
 		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
 			if (isset($this->request->post['selected'])) {
 				$selected = $this->request->post['selected'];
 				
 				foreach ($selected as $path) {
-					if (file_exists($this->directory . $path)) {
-						unlink($this->directory . $path);
+					$path = basename($path);
+
+					if (preg_match('/^sitemap_\d+(?:_\d+)?_[a-z0-9_]+(?:_\d+)?\.xml$/', $path) && is_file($this->directory . $path)) {
+						@unlink($this->directory . $path);
 					}
 				}
 			}
+		} elseif (isset($this->error['warning'])) {
+			$json['error'] = $this->error['warning'];
 		}
 		
 		$this->response->setOutput(json_encode($json));
@@ -344,65 +616,80 @@ class ControllerExtensionFeedBoostSitemap extends Controller {
 	 */
 	public function generate() {
 		$json = [];
-		
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
-			$this->load->model('setting/setting');
-			
-			if (isset($this->request->post['selected'])) {
-				unset($this->request->post['selected']);
-			}
-			
-			$this->model_setting_setting->editSetting('feed_boost_sitemap', $this->request->post);
-			
-			$items = isset($this->request->post['feed_boost_sitemap_item']) ? $this->request->post['feed_boost_sitemap_item'] : [];
-			
-			/* Journal3 Blog */
-			if(defined('JOURNAL3_INSTALLED')){
-				$this->load->model('extension/feed/boost_sitemap');
-					
-                if (in_array('journal3blogpost', $items)) {
-					$this->generateJournal3BlogPostSitemap((int)$this->request->post['feed_boost_sitemap_item_limit']);
-                }			
 
-                if (in_array('journal3blogcategory', $items)) {
-                    $this->model_extension_feed_boost_sitemap->alterTableBlogCategory();
-					
-					$this->generateJournal3BlogCategorySitemap((int)$this->request->post['feed_boost_sitemap_item_limit']);
-                }				
+		$this->response->addHeader('Content-Type: application/json; charset=UTF-8');
+
+		if ($this->request->server['REQUEST_METHOD'] != 'POST') {
+			$json['error'] = $this->language->get('error_permission');
+		} elseif (!$this->validate()) {
+			$json['error'] = $this->error['warning'];
+		} else {
+			$limit = isset($this->request->post['feed_boost_sitemap_item_limit']) ? (int)$this->request->post['feed_boost_sitemap_item_limit'] : 0;
+
+			if ($limit < 1 || $limit > 50000) {
+				$json['error'] = $this->language->get('error_item_limit');
+				$this->response->setOutput(json_encode($json));
+				return;
 			}
-			
-			if (in_array('product', $items)) {
-				$this->generateProductSitemap((int)$this->request->post['feed_boost_sitemap_item_limit']);
-			}
-			
-			if (in_array('category', $items)) {
-				$this->generateCategorySitemap((int)$this->request->post['feed_boost_sitemap_item_limit']);
-			}
-			
-			if (in_array('category_product', $items)) {
-				$this->generateCategoryToProductSitemap((int)$this->request->post['feed_boost_sitemap_item_limit']);
-			}
-			
-			if (in_array('information', $items)) {
-				$this->generateInformationSitemap((int)$this->request->post['feed_boost_sitemap_item_limit']);
-			}
-			
-			if (in_array('manufacturer', $items)) {
-				$this->generateManufacturerSitemap((int)$this->request->post['feed_boost_sitemap_item_limit']);
-			}
-			
-			if (in_array('manufacturer_product', $items)) {
-				$this->generateManufacturerToProductSitemap((int)$this->request->post['feed_boost_sitemap_item_limit']);
-			}
-			
-			if (in_array('custom_link', $items)) {
-				$this->generateCustomLinkSitemap((int)$this->request->post['feed_boost_sitemap_item_limit']);
+
+			try {
+				$this->ensureSitemapDirectory();
+				$this->load->model('setting/setting');
+
+				if (isset($this->request->post['selected'])) {
+					unset($this->request->post['selected']);
+				}
+
+				$this->request->post['feed_boost_sitemap_item_limit'] = $limit;
+				$this->model_setting_setting->editSetting('feed_boost_sitemap', $this->request->post);
+
+				$items = isset($this->request->post['feed_boost_sitemap_item']) ? $this->request->post['feed_boost_sitemap_item'] : [];
+
+				if (defined('JOURNAL3_INSTALLED')) {
+					$this->load->model('extension/feed/boost_sitemap');
+
+					if (in_array('journal3blogpost', $items)) {
+						$this->generateJournal3BlogPostSitemap($limit);
+					}
+
+					if (in_array('journal3blogcategory', $items)) {
+						$this->model_extension_feed_boost_sitemap->alterTableBlogCategory();
+						$this->generateJournal3BlogCategorySitemap($limit);
+					}
+				}
+
+				if (in_array('product', $items)) {
+					$this->generateProductSitemap($limit);
+				}
+
+				if (in_array('category', $items)) {
+					$this->generateCategorySitemap($limit);
+				}
+
+				if (in_array('information', $items)) {
+					$this->generateInformationSitemap($limit);
+				}
+
+				if (in_array('manufacturer', $items)) {
+					$this->generateManufacturerSitemap($limit);
+				}
+
+				if (in_array('custom_link', $items)) {
+					$this->generateCustomLinkSitemap($limit);
+				}
+
+				$this->removeStaleSitemapFiles($items);
+				$this->removeLegacyDuplicateSitemaps();
+				$json['success'] = sprintf($this->language->get('text_generate_success'), count($this->files));
+			} catch (Throwable $e) {
+				$this->log->write('Boost Sitemap: ' . $e->getMessage());
+				$json['error'] = sprintf($this->language->get('error_generate'), $e->getMessage());
 			}
 		}
-		
+
 		$this->response->setOutput(json_encode($json));
 	}
-	
+
 	/**
 	 * Get products of category recursively
 	 * 
@@ -413,7 +700,7 @@ class ControllerExtensionFeedBoostSitemap extends Controller {
 	 * @param int $store_id
 	 * @return array
 	 */
-	public function getCategories($parent_id, $current_path = '', $language_id, $store_id) {
+	public function getCategories($parent_id, $current_path, $language_id, $store_id) {
 		$this->load->model('extension/feed/boost_sitemap');
 		
 		$output = [];
@@ -436,11 +723,12 @@ class ControllerExtensionFeedBoostSitemap extends Controller {
 				'language_id' => $language_id
 			]);
 
-			foreach ($products as $product) {
+						foreach ($products as $product) {
 				$output[] = [
 					'product_id' => $product['product_id'],
 					'name' => $product['name'],
 					'image' => $product['image'],
+					'date_modified' => $product['date_modified'],
 					'path' => $new_path
 				];
 			}
@@ -473,7 +761,7 @@ class ControllerExtensionFeedBoostSitemap extends Controller {
 		}
 		
         if ($conf_height) { 
-			$width = $conf_height;
+			$height = $conf_height;
 		}
 				
 		foreach ($this->stores as $store) {
@@ -484,20 +772,17 @@ class ControllerExtensionFeedBoostSitemap extends Controller {
 				
 				foreach ($results as $key => $result) {
 					$output  = '<?xml version="1.0" encoding="UTF-8"?>';
-					$output .= '<urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">';
+					$output .= $this->getUrlsetOpen(true);
 							
 					foreach ($result as $product) {
 						$output .= '<url>';
-						$output .= '  <loc>' . $this->link($store['url'], 'product/product', 'path=' . $product['path'] . '&product_id=' . $product['product_id'], $store['store_id'], $language['language_id']) . '</loc>';
-						$output .= '  <changefreq>weekly</changefreq>';
-						$output .= '  <priority>1.0</priority>';
+						$args = 'path=' . $product['path'] . '&product_id=' . $product['product_id'];
+						$output .= '<loc>' . $this->escapeXml($this->link($store['url'], 'product/product', $args, $store['store_id'], $language['language_id'])) . '</loc>';
+						$output .= $this->getAlternateLinks($store, 'product/product', $args);
+						$output .= $this->getLastmodXml($product['date_modified']);
 						
 						if ($product['image']) {
-							$output .= '  <image:image>';
-							$output .= '  <image:loc>' . $this->model_extension_feed_boost_sitemap->resizeImage($product['image'], $width, $height, $store['url']) . '</image:loc>';
-							$output .= '  <image:caption>' . $product['name'] . '</image:caption>';
-							$output .= '  <image:title>' . $product['name'] . '</image:title>';
-							$output .= '  </image:image>';
+							$output .= $this->getImageXml($this->model_extension_feed_boost_sitemap->resizeImage($product['image'], $width, $height, $store['url']));
 						}
 						
 						$output .= '</url>';
@@ -513,12 +798,7 @@ class ControllerExtensionFeedBoostSitemap extends Controller {
 					
 					$count++;
 								
-					$xml_file = fopen($this->directory . $file_name, 'w') or die('Unable to open file!');
-								
-					fwrite($xml_file, $output);
-					fclose($xml_file);
-						
-					$this->files[] = 'sitemaps/' . $file_name;
+					$this->writeSitemap($file_name, $output);
 				}
 			}
 		}
@@ -544,7 +824,7 @@ class ControllerExtensionFeedBoostSitemap extends Controller {
 		}
 		
         if ($conf_height) { 
-			$width = $conf_height;
+			$height = $conf_height;
 		}
 		
 		foreach ($this->stores as $store) {
@@ -572,20 +852,17 @@ class ControllerExtensionFeedBoostSitemap extends Controller {
 					
 					foreach ($results as $result) {
 						$output  = '<?xml version="1.0" encoding="UTF-8"?>';
-						$output .= '<urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">';
+						$output .= $this->getUrlsetOpen(true);
 								
 						foreach ($result as $product) {
 							$output .= '<url>';
-							$output .= '  <loc>' . $this->link($store['url'], 'product/product', 'manufacturer_id=' . $product['manufacturer_id'] . '&product_id=' . $product['product_id'], $store['store_id'], $language['language_id']) . '</loc>';
-							$output .= '  <changefreq>weekly</changefreq>';
-							$output .= '  <priority>1.0</priority>';
+								$args = 'product_id=' . $product['product_id'];
+								$output .= '<loc>' . $this->escapeXml($this->link($store['url'], 'product/product', $args, $store['store_id'], $language['language_id'])) . '</loc>';
+								$output .= $this->getAlternateLinks($store, 'product/product', $args);
+								$output .= $this->getLastmodXml($product['date_modified']);
 							
 							if ($product['image']) {
-								$output .= '  <image:image>';
-								$output .= '  <image:loc>' . $this->model_extension_feed_boost_sitemap->resizeImage($product['image'], $width, $height, $store['url']) . '</image:loc>';
-								$output .= '  <image:caption>' . $product['name'] . '</image:caption>';
-								$output .= '  <image:title>' . $product['name'] . '</image:title>';
-								$output .= '  </image:image>';
+									$output .= $this->getImageXml($this->model_extension_feed_boost_sitemap->resizeImage($product['image'], $width, $height, $store['url']));
 							}
 							
 							$output .= '</url>';
@@ -601,12 +878,7 @@ class ControllerExtensionFeedBoostSitemap extends Controller {
 						
 						$count++;
 									
-						$xml_file = fopen($this->directory . $file_name, 'w') or die('Unable to open file!');
-									
-						fwrite($xml_file, $output);
-						fclose($xml_file);
-							
-						$this->files[] = 'sitemaps/' . $file_name;
+						$this->writeSitemap($file_name, $output);
 					}
 				}
 			}
@@ -639,7 +911,7 @@ class ControllerExtensionFeedBoostSitemap extends Controller {
 						
 					for ($i = 1; $i <= $total_pages; $i++) {
 						$output  = '<?xml version="1.0" encoding="UTF-8"?>';
-						$output .= '<urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">';
+						$output .= $this->getUrlsetOpen(false);
 							
 						$params = [
 							'store_id' => $store['store_id'], 
@@ -652,9 +924,9 @@ class ControllerExtensionFeedBoostSitemap extends Controller {
 					
 						foreach ($informations as $information) {
 							$output .= '<url>';
-							$output .= '  <loc>' . $this->link($store['url'], 'information/information', 'information_id=' . $information['information_id'], $store['store_id'], $language['language_id']) . '</loc>';
-							$output .= '  <changefreq>monthly</changefreq>';
-							$output .= '  <priority>0.5</priority>';
+							$args = 'information_id=' . $information['information_id'];
+							$output .= '<loc>' . $this->escapeXml($this->link($store['url'], 'information/information', $args, $store['store_id'], $language['language_id'])) . '</loc>';
+							$output .= $this->getAlternateLinks($store, 'information/information', $args);
 							$output .= '</url>';
 						}
 					
@@ -666,12 +938,7 @@ class ControllerExtensionFeedBoostSitemap extends Controller {
 							$file_name = 'sitemap_' . $store['store_id'] . '_' . $language['language_id'] . '_information_' . $i . '.xml';
 						}
 							
-						$xml_file = fopen($this->directory . $file_name, 'w') or die('Unable to open file!');
-							
-						fwrite($xml_file, $output);
-						fclose($xml_file);
-							
-						$this->files[] = 'sitemaps/' . $file_name;	
+						$this->writeSitemap($file_name, $output);
 					}	
 				}
 			}
@@ -698,7 +965,7 @@ class ControllerExtensionFeedBoostSitemap extends Controller {
 		}
 		
         if ($conf_height) { 
-			$width = $conf_height;
+			$height = $conf_height;
 		}
 		
 		foreach ($this->stores as $store) {
@@ -714,7 +981,7 @@ class ControllerExtensionFeedBoostSitemap extends Controller {
 						
 					for ($i = 1; $i <= $total_pages; $i++) {
 						$output  = '<?xml version="1.0" encoding="UTF-8"?>';
-						$output .= '<urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">';
+						$output .= $this->getUrlsetOpen(true);
 							
 						$params = [
 							'store_id' => $store['store_id'],
@@ -726,16 +993,12 @@ class ControllerExtensionFeedBoostSitemap extends Controller {
 					
 						foreach ($manufacturers as $manufacturer) {
 							$output .= '<url>';
-							$output .= '  <loc>' . $this->link($store['url'], 'product/manufacturer/info', 'manufacturer_id=' . $manufacturer['manufacturer_id'], $store['store_id'], $language['language_id']) . '</loc>';
-							$output .= '  <changefreq>monthly</changefreq>';
-							$output .= '  <priority>0.5</priority>';
+							$args = 'manufacturer_id=' . $manufacturer['manufacturer_id'];
+							$output .= '<loc>' . $this->escapeXml($this->link($store['url'], 'product/manufacturer/info', $args, $store['store_id'], $language['language_id'])) . '</loc>';
+							$output .= $this->getAlternateLinks($store, 'product/manufacturer/info', $args);
 								
 							if ($manufacturer['image']) {
-								$output .= '  <image:image>';
-								$output .= '  <image:loc>' . $this->model_extension_feed_boost_sitemap->resizeImage($manufacturer['image'], $width, $height, $store['url']) . '</image:loc>';
-								$output .= '  <image:caption>' . $manufacturer['name'] . '</image:caption>';
-								$output .= '  <image:title>' . $manufacturer['name'] . '</image:title>';
-								$output .= '  </image:image>';
+								$output .= $this->getImageXml($this->model_extension_feed_boost_sitemap->resizeImage($manufacturer['image'], $width, $height, $store['url']));
 							}
 								
 							$output .= '</url>';
@@ -749,12 +1012,7 @@ class ControllerExtensionFeedBoostSitemap extends Controller {
 							$file_name = 'sitemap_' . $store['store_id'] . '_' . $language['language_id'] . '_manufacturer_' . $i . '.xml';
 						}
 							
-						$xml_file = fopen($this->directory . $file_name, 'w') or die('Unable to open file!');
-							
-						fwrite($xml_file, $output);
-						fclose($xml_file);
-							
-						$this->files[] = 'sitemaps/' . $file_name;	
+						$this->writeSitemap($file_name, $output);
 					}	
 				}
 			}
@@ -793,7 +1051,7 @@ class ControllerExtensionFeedBoostSitemap extends Controller {
 						
 					for ($i = 1; $i <= $total_pages; $i++) {
 						$output  = '<?xml version="1.0" encoding="UTF-8"?>';
-						$output .= '<urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">';
+						$output .= $this->getUrlsetOpen(true);
 							
 						$params = [
 							'store_id' => $store['store_id'],
@@ -806,18 +1064,13 @@ class ControllerExtensionFeedBoostSitemap extends Controller {
 					
 						foreach ($categories as $category) {
 							$output .= '<url>';
-                            $output .= '<loc>' . $this->link($store['url'], 'journal3/blog', 'journal_blog_category_id=' . $category['category_id'],$store['store_id'], $language['language_id']) . '</loc>';
-							
-							$output .= '  <changefreq>weekly</changefreq>';
-							$output .= '  <lastmod>' . date('c', strtotime($category['date_updated'])) . '</lastmod>';
-							$output .= '  <priority>0.5</priority>';
+							$args = 'journal_blog_category_id=' . $category['category_id'];
+							$output .= '<loc>' . $this->escapeXml($this->link($store['url'], 'journal3/blog', $args, $store['store_id'], $language['language_id'])) . '</loc>';
+							$output .= $this->getAlternateLinks($store, 'journal3/blog', $args);
+							$output .= $this->getLastmodXml($category['date_updated']);
 							
 							if ($category['image']) {
-								$output .= '  <image:image>';								
-                                $output .= '  <image:loc>' . $this->model_extension_feed_boost_sitemap->resizeImage($category['image'], $width, $height, $store['url']) . '</image:loc>';
-								$output .= '  <image:caption>' . $category['name'] . '</image:caption>';
-								$output .= '  <image:title>' . $category['name'] . '</image:title>';
-								$output .= '  </image:image>';
+								$output .= $this->getImageXml($this->model_extension_feed_boost_sitemap->resizeImage($category['image'], $width, $height, $store['url']));
 							}
 							
 							$output .= '</url>';
@@ -831,12 +1084,7 @@ class ControllerExtensionFeedBoostSitemap extends Controller {
 							$file_name = 'sitemap_' . $store['store_id'] . '_' . $language['language_id'] . '_blog_category_' . $i . '.xml';
 						}
 							
-						$xml_file = fopen($this->directory . $file_name, 'w') or die('Unable to open file!');
-							
-						fwrite($xml_file, $output);
-						fclose($xml_file);
-							
-						$this->files[] = 'sitemaps/' . $file_name;	
+						$this->writeSitemap($file_name, $output);
 					}
 				}
 			}
@@ -865,7 +1113,7 @@ class ControllerExtensionFeedBoostSitemap extends Controller {
 			}
 			
             if ($conf_height) {
-				$width = $conf_height;
+				$height = $conf_height;
 			}
         
 			foreach ($this->languages as $language) {
@@ -885,7 +1133,7 @@ class ControllerExtensionFeedBoostSitemap extends Controller {
 						
 					for ($i = 1; $i <= $total_pages; $i++) {
 						$output  = '<?xml version="1.0" encoding="UTF-8"?>';
-						$output .= '<urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">';
+						$output .= $this->getUrlsetOpen(true);
 							
 						$params = [
 							'store_id' => $store['store_id'],
@@ -897,19 +1145,17 @@ class ControllerExtensionFeedBoostSitemap extends Controller {
 						$posts = $this->model_extension_feed_boost_sitemap->getBlogPosts($params);
 					
 						foreach ($posts as $post) {
-							if ($post['image']) {
+							$args = 'journal_blog_post_id=' . $post['post_id'];
 								$output .= '<url>';
-								$output .= '  <loc>' . $this->link($store['url'], 'journal3/blog/post', 'journal_blog_post_id=' . $post['post_id'], $store['store_id'], $language['language_id']) . '</loc>';
-								$output .= '  <changefreq>weekly</changefreq>';
-								$output .= '  <lastmod>' . date('c', strtotime($post['date_updated'])) . '</lastmod>';
-								$output .= '  <priority>1.0</priority>';
-								$output .= '  <image:image>';
-                                $output .= '  <image:loc>' . $this->model_extension_feed_boost_sitemap->resizeImage($post['image'], $width, $height, $store['url']) . '</image:loc>';
-                                $output .= '  <image:caption>' . $post['name'] . '</image:caption>';
-								$output .= '  <image:title>' . $post['name'] . '</image:title>';
-								$output .= '  </image:image>';
-								$output .= '</url>';
+							$output .= '<loc>' . $this->escapeXml($this->link($store['url'], 'journal3/blog/post', $args, $store['store_id'], $language['language_id'])) . '</loc>';
+							$output .= $this->getAlternateLinks($store, 'journal3/blog/post', $args);
+							$output .= $this->getLastmodXml($post['date_updated']);
+
+							if ($post['image']) {
+								$output .= $this->getImageXml($this->model_extension_feed_boost_sitemap->resizeImage($post['image'], $width, $height, $store['url']));
 							}
+
+							$output .= '</url>';
 						}
 					
 						$output .= '</urlset>';
@@ -920,12 +1166,7 @@ class ControllerExtensionFeedBoostSitemap extends Controller {
 							$file_name = 'sitemap_' . $store['store_id'] . '_' . $language['language_id'] . '_blog_post_' . $i . '.xml';
 						}
 							
-						$xml_file = fopen($this->directory . $file_name, 'w') or die('Unable to open file!');
-							
-						fwrite($xml_file, $output);
-						fclose($xml_file);
-							
-						$this->files[] = 'sitemaps/' . $file_name;	
+						$this->writeSitemap($file_name, $output);
 					}	
 				}
 			}
@@ -953,7 +1194,7 @@ class ControllerExtensionFeedBoostSitemap extends Controller {
 		}
 		
         if ($conf_height) { 
-			$width = $conf_height;
+			$height = $conf_height;
 		}
 		
 		foreach ($this->stores as $store) {
@@ -972,7 +1213,7 @@ class ControllerExtensionFeedBoostSitemap extends Controller {
 						
 					for ($i = 1; $i <= $total_pages; $i++) {
 						$output  = '<?xml version="1.0" encoding="UTF-8"?>';
-						$output .= '<urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">';
+						$output .= $this->getUrlsetOpen(true);
 							
 						$params = [
 							'store_id' => $store['store_id'],
@@ -980,23 +1221,21 @@ class ControllerExtensionFeedBoostSitemap extends Controller {
 							'start' => ($i - 1) * $limit,
 							'limit' => $limit
 						];
-							
+
 						$products = $this->model_extension_feed_boost_sitemap->getProducts($params);
-					
+
 						foreach ($products as $product) {
+							$args = 'product_id=' . $product['product_id'];
+							$output .= '<url>';
+							$output .= '<loc>' . $this->escapeXml($this->link($store['url'], 'product/product', $args, $store['store_id'], $language['language_id'])) . '</loc>';
+							$output .= $this->getAlternateLinks($store, 'product/product', $args);
+							$output .= $this->getLastmodXml($product['date_modified']);
+
 							if ($product['image']) {
-								$output .= '<url>';
-								$output .= '  <loc>' . $this->link($store['url'], 'product/product', 'product_id=' . $product['product_id'], $store['store_id'], $language['language_id']) . '</loc>';
-								$output .= '  <changefreq>weekly</changefreq>';
-								$output .= '  <lastmod>' . date('c', strtotime($product['date_modified'])) . '</lastmod>';
-								$output .= '  <priority>1.0</priority>';
-								$output .= '  <image:image>';
-								$output .= '  <image:loc>' . $this->model_extension_feed_boost_sitemap->resizeImage($product['image'], $width, $height, $store['url']) . '</image:loc>';
-								$output .= '  <image:caption>' . $product['name'] . '</image:caption>';
-								$output .= '  <image:title>' . $product['name'] . '</image:title>';
-								$output .= '  </image:image>';
-								$output .= '</url>';
+								$output .= $this->getImageXml($this->model_extension_feed_boost_sitemap->resizeImage($product['image'], $width, $height, $store['url']));
 							}
+
+							$output .= '</url>';
 						}
 					
 						$output .= '</urlset>';
@@ -1007,12 +1246,7 @@ class ControllerExtensionFeedBoostSitemap extends Controller {
 							$file_name = 'sitemap_' . $store['store_id'] . '_' . $language['language_id'] . '_product_' . $i . '.xml';
 						}
 							
-						$xml_file = fopen($this->directory . $file_name, 'w') or die('Unable to open file!');
-							
-						fwrite($xml_file, $output);
-						fclose($xml_file);
-							
-						$this->files[] = 'sitemaps/' . $file_name;	
+						$this->writeSitemap($file_name, $output);
 					}	
 				}
 			}
@@ -1039,7 +1273,7 @@ class ControllerExtensionFeedBoostSitemap extends Controller {
 		}
 		
         if ($conf_height) { 
-			$width = $conf_height;
+			$height = $conf_height;
 		}
 		
 		foreach ($this->stores as $store) {
@@ -1058,7 +1292,7 @@ class ControllerExtensionFeedBoostSitemap extends Controller {
 						
 					for ($i = 1; $i <= $total_pages; $i++) {
 						$output  = '<?xml version="1.0" encoding="UTF-8"?>';
-						$output .= '<urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">';
+						$output .= $this->getUrlsetOpen(true);
 							
 						$params = [
 							'store_id' => $store['store_id'],
@@ -1071,17 +1305,13 @@ class ControllerExtensionFeedBoostSitemap extends Controller {
 					
 						foreach ($categories as $category) {
 							$output .= '<url>';
-							$output .= '  <loc>' . $this->link($store['url'], 'product/category', 'path=' . $category['path'], $store['store_id'], $language['language_id']) . '</loc>';
-							$output .= '  <changefreq>weekly</changefreq>';
-							$output .= '  <lastmod>' . date('c', strtotime($category['date_modified'])) . '</lastmod>';
-							$output .= '  <priority>0.5</priority>';
+							$args = 'path=' . $category['path'];
+							$output .= '<loc>' . $this->escapeXml($this->link($store['url'], 'product/category', $args, $store['store_id'], $language['language_id'])) . '</loc>';
+							$output .= $this->getAlternateLinks($store, 'product/category', $args);
+							$output .= $this->getLastmodXml($category['date_modified']);
 							
 							if ($category['image']) {
-								$output .= '  <image:image>';
-								$output .= '  <image:loc>' . $this->model_extension_feed_boost_sitemap->resizeImage($category['image'], $width, $height, $store['url']) . '</image:loc>';
-								$output .= '  <image:caption>' . $category['name'] . '</image:caption>';
-								$output .= '  <image:title>' . $category['name'] . '</image:title>';
-								$output .= '  </image:image>';
+								$output .= $this->getImageXml($this->model_extension_feed_boost_sitemap->resizeImage($category['image'], $width, $height, $store['url']));
 							}
 							
 							$output .= '</url>';
@@ -1095,12 +1325,7 @@ class ControllerExtensionFeedBoostSitemap extends Controller {
 							$file_name = 'sitemap_' . $store['store_id'] . '_' . $language['language_id'] . '_category_' . $i . '.xml';
 						}
 							
-						$xml_file = fopen($this->directory . $file_name, 'w') or die('Unable to open file!');
-							
-						fwrite($xml_file, $output);
-						fclose($xml_file);
-							
-						$this->files[] = 'sitemaps/' . $file_name;	
+						$this->writeSitemap($file_name, $output);
 					}
 				}
 			}
@@ -1130,9 +1355,9 @@ class ControllerExtensionFeedBoostSitemap extends Controller {
 						$total_pages = 1;
 					}
 						
-					for ($i = 1; $i <= $total_pages; $i++) {
-						$output  = '<?xml version="1.0" encoding="UTF-8"?>';
-						$output .= '<urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">';
+						for ($i = 1; $i <= $total_pages; $i++) {
+							$output  = '<?xml version="1.0" encoding="UTF-8"?>';
+							$output .= $this->getUrlsetOpen(false);
 							
 						$params = [
 							'store_id' => $store['store_id'],
@@ -1143,11 +1368,19 @@ class ControllerExtensionFeedBoostSitemap extends Controller {
 						$custom_links = $this->model_extension_feed_boost_sitemap->getCustomLinks($params);
 					
 						foreach ($custom_links as $custom_link) {
+							if (!$this->isStoreUrl($custom_link['url'], $store['url'])) {
+								continue;
+							}
+
+							$frequencies = ['always', 'hourly', 'daily', 'weekly', 'monthly', 'yearly', 'never'];
+							$frequency = in_array($custom_link['frequency'], $frequencies, true) ? $custom_link['frequency'] : 'weekly';
+							$priority = (float)$custom_link['priority'];
+							$priority = number_format(max(0, min(1, $priority)), 1, '.', '');
 							$output .= '<url>';
-							$output .= '  <loc>' . $custom_link['url'] . '</loc>';
-							$output .= '  <changefreq>' . $custom_link['frequency'] . '</changefreq>';
-							$output .= '  <lastmod>' . date('c', strtotime($custom_link['date_added'])) . '</lastmod>';
-							$output .= '  <priority>' . $custom_link['frequency'] . '</priority>';
+							$output .= '<loc>' . $this->escapeXml($custom_link['url']) . '</loc>';
+							$output .= '<changefreq>' . $frequency . '</changefreq>';
+							$output .= $this->getLastmodXml($custom_link['date_added']);
+							$output .= '<priority>' . $priority . '</priority>';
 							$output .= '</url>';
 						}
 					
@@ -1161,12 +1394,7 @@ class ControllerExtensionFeedBoostSitemap extends Controller {
 							$file_name = 'sitemap_' . $store['store_id'] . '_custom_link_' . $i . '.xml';
 						}
 							
-						$xml_file = fopen($this->directory . $file_name, 'w') or die('Unable to open file!');
-							
-						fwrite($xml_file, $output);
-						fclose($xml_file);
-							
-						$this->files[] = 'sitemaps/' . $file_name;	
+						$this->writeSitemap($file_name, $output);
 					}
 				}
 			//}
@@ -1235,13 +1463,13 @@ class ControllerExtensionFeedBoostSitemap extends Controller {
 					// Journal Theme Modification
                     } elseif ($key == 'journal_blog_post_id') {
                         $is_journal3_blog = true;
-                        if ($journal_blog_keyword = $this->model_extension_feed_boost_sitemap->rewritePost($value)) {
+						if ($journal_blog_keyword = $this->model_extension_feed_boost_sitemap->rewritePost($value, $language_id)) {
                             $url .= '/' . $journal_blog_keyword;
                             unset($data[$key]);
                         }
                     } elseif ($key == 'journal_blog_category_id') {
                         $is_journal3_blog = true;
-                        if ($journal_blog_keyword = $this->model_extension_feed_boost_sitemap->rewriteCategory($value)) {
+						if ($journal_blog_keyword = $this->model_extension_feed_boost_sitemap->rewriteCategory($value, $language_id)) {
                             $url .= '/' . $journal_blog_keyword;
                             unset($data[$key]);
                         }
@@ -1305,6 +1533,7 @@ class ControllerExtensionFeedBoostSitemap extends Controller {
 	 */
 	public function delete_custom_link() {
 		$json = [];
+		$this->response->addHeader('Content-Type: application/json; charset=UTF-8');
 		
 		$this->load->model('extension/feed/boost_sitemap');
 		
@@ -1314,6 +1543,8 @@ class ControllerExtensionFeedBoostSitemap extends Controller {
 					$this->model_extension_feed_boost_sitemap->deleteCustomLink($custom_link_id);	
 				}
 			}
+		} elseif (isset($this->error['warning'])) {
+			$json['error'] = $this->error['warning'];
 		}
 		
 		$this->response->setOutput(json_encode($json));
@@ -1328,15 +1559,47 @@ class ControllerExtensionFeedBoostSitemap extends Controller {
 	public function custom_link() {
 		$this->load->model('extension/feed/boost_sitemap');
 		
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
+		if ($this->request->server['REQUEST_METHOD'] == 'POST') {
+			$json = [];
+			$this->response->addHeader('Content-Type: application/json; charset=UTF-8');
+
+			if (!$this->validate()) {
+				$json['error'] = $this->error['warning'];
+				$this->response->setOutput(json_encode($json));
+				return;
+			}
+
 			if (isset($this->request->post['custom_link_url']) && isset($this->request->post['custom_link_frequency']) && isset($this->request->post['custom_link_priority']) && isset($this->request->post['custom_link_store_id'])) {
-				$data['url'] = $this->request->post['custom_link_url'];
+				$data['url'] = trim($this->request->post['custom_link_url']);
 				$data['frequency'] = $this->request->post['custom_link_frequency'];
 				$data['priority'] = $this->request->post['custom_link_priority'];
 				$data['store_id'] = (int)$this->request->post['custom_link_store_id'];
+				$frequencies = ['always', 'hourly', 'daily', 'weekly', 'monthly', 'yearly', 'never'];
 				
+				if (!in_array($data['frequency'], $frequencies, true)) {
+					$data['frequency'] = 'weekly';
+				}
+
+				$data['priority'] = number_format(max(0, min(1, (float)$data['priority'])), 1, '.', '');
+
+				$store_url = '';
+
+				foreach ($this->stores as $store) {
+					if ((int)$store['store_id'] === $data['store_id']) {
+						$store_url = $store['url'];
+						break;
+					}
+				}
+
+				if (!$store_url || !$this->isStoreUrl($data['url'], $store_url)) {
+					$json['error'] = $this->language->get('error_custom_link');
+				} else {
 				$this->model_extension_feed_boost_sitemap->addCustomLink($data);	
+					$json['success'] = true;
 			}
+			}
+
+			$this->response->setOutput(json_encode($json));
 		} else {
 			$custom_links = $this->model_extension_feed_boost_sitemap->getCustomLinks();
 			
@@ -1346,10 +1609,10 @@ class ControllerExtensionFeedBoostSitemap extends Controller {
 				foreach ($custom_links as $custom_link) {
 					$html .= '<tr>';
 					$html .= '<td><input type="checkbox" name="custom_link_ids[]" value="' . (int)$custom_link['boost_sitemap_custom_link_id'] . '" /></td>';
-					$html .= '<td>' . ($custom_link['store_name'] ? $custom_link['store_name'] : 'Default') . '</td>';
-					$html .= '<td>' . $custom_link['url'] . '</td>';
-					$html .= '<td>' . $custom_link['frequency'] . '</td>';
-					$html .= '<td>' . $custom_link['priority'] . '</td>';
+					$html .= '<td>' . htmlspecialchars(($custom_link['store_name'] ? $custom_link['store_name'] : 'Default'), ENT_QUOTES, 'UTF-8') . '</td>';
+					$html .= '<td>' . htmlspecialchars($custom_link['url'], ENT_QUOTES, 'UTF-8') . '</td>';
+					$html .= '<td>' . htmlspecialchars($custom_link['frequency'], ENT_QUOTES, 'UTF-8') . '</td>';
+					$html .= '<td>' . htmlspecialchars($custom_link['priority'], ENT_QUOTES, 'UTF-8') . '</td>';
 					$html .= '</tr>';
 				}
 			} else {

@@ -179,6 +179,15 @@ public function add_to_cart() {
 			$json['total_items'] = $this->cart->countProducts() + (isset($this->session->data['vouchers']) ? count($this->session->data['vouchers']) : 0);
 			$json['total_amount'] = $this->currency->format($total, $this->session->data['currency']);
 
+			if (is_file(DIR_APPLICATION . 'model/extension/cmpltguagaf.php')) {
+				$this->load->model('extension/cmpltguagaf');
+				$google_event = $this->model_extension_cmpltguagaf->atcw($product_id, $quantity, 1);
+
+				if ($google_event !== '') {
+					$json['google_analytics_event_encoded'] = base64_encode($google_event);
+				}
+			}
+
 			} else {
 				$json['redirect'] = str_replace('&amp;', '&', $this->url->link('product/product', 'product_id=' . $this->request->post['product_id']));
 			}
@@ -208,6 +217,13 @@ public function remove_from_cart() {
 
 		// Remove
 		if (isset($this->request->post['key'])) {
+			$google_event = '';
+
+			if (is_file(DIR_APPLICATION . 'model/extension/cmpltguagaf.php')) {
+				$this->load->model('extension/cmpltguagaf');
+				$google_event = $this->model_extension_cmpltguagaf->rmc($this->request->post['key']);
+			}
+
 			$this->cart->remove($this->request->post['key']);
 
 			unset($this->session->data['vouchers'][$this->request->post['key']]);
@@ -266,6 +282,10 @@ public function remove_from_cart() {
 
 			$json['total_items'] = $this->cart->countProducts() + (isset($this->session->data['vouchers']) ? count($this->session->data['vouchers']) : 0);
 			$json['total_amount'] = $this->currency->format($total, $this->session->data['currency']);
+
+			if ($google_event !== '') {
+				$json['google_analytics_event_encoded'] = base64_encode($google_event);
+			}
 		}
 
 		$this->response->addHeader('Content-Type: application/json');
@@ -368,6 +388,15 @@ public function add_to_wishlist() {
 
 				$json['total'] = sprintf($this->language->get('text_wishlist'), (isset($this->session->data['wishlist']) ? count($this->session->data['wishlist']) : 0));
 				$json['total_counter'] = (isset($this->session->data['wishlist']) ? count($this->session->data['wishlist']) : 0);
+			}
+
+			if (is_file(DIR_APPLICATION . 'model/extension/cmpltguagaf.php')) {
+				$this->load->model('extension/cmpltguagaf');
+				$google_event = $this->model_extension_cmpltguagaf->atcw($product_id, 1, 2);
+
+				if ($google_event !== '') {
+					$json['google_analytics_event_encoded'] = base64_encode($google_event);
+				}
 			}
 		}
 

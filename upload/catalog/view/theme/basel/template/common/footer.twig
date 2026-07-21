@@ -118,6 +118,7 @@
                 <a href="index.php?route=information/information&amp;information_id=12">Sigurnost plaćanja</a>
                 <a href="index.php?route=information/information&amp;information_id=3">Pravila privatnosti</a>
                 <a href="index.php?route=information/information&amp;information_id=17">Povrati i reklamacije</a>
+                <a href="#cookie-settings" data-cookie-consent-trigger>{{ text_cookie_settings }}</a>
             </nav>
 
             <div class="col-xs-12 text-center cards-holder" aria-label="Prihvaćeni načini plaćanja">
@@ -191,5 +192,24 @@
 </div><!-- .outer-container ends -->
 
 <a href="#top" class="scroll-to-top top primary-bg-color" aria-label="Na vrh" onclick="$('html, body').animate({scrollTop:0});"><img src="image/up.svg" class="ikona" width="18" height="10" alt="" aria-hidden="true"></a>
+<button type="button" class="gk-cookie-fab" data-cookie-consent-trigger aria-label="{{ text_cookie_settings }}" title="{{ text_cookie_settings }}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 1 0 10 10 4 4 0 0 1-5-5 4 4 0 0 1-5-5Z"/><path d="M8.5 8.5h.01M16 15.5h.01M12 12h.01M11 17h.01M7 14h.01"/></svg></button>
 <div id="featherlight-holder"></div>
+<script>
+(function(){
+  function loadCookieConsent(){
+    if(window.gkCookieConsentLoading){return;}
+    window.gkCookieConsentLoading=true;
+    var core=document.createElement('script');
+    core.src='catalog/view/javascript/cookieconsent/cookieconsent.umd.js?v=3.1';
+    core.onload=function(){
+      var config=document.createElement('script');
+      config.src='catalog/view/javascript/cookieconsent/dryzen-consent.js?v=1.0';
+      document.head.appendChild(config);
+    };
+    document.head.appendChild(core);
+  }
+  if('requestAnimationFrame' in window){requestAnimationFrame(function(){setTimeout(loadCookieConsent,100);});}
+  else{setTimeout(loadCookieConsent,100);}
+}());
+</script>
 </body></html>

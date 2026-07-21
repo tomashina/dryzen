@@ -26,6 +26,13 @@ class ControllerStartupSeoUrl extends Controller {
 	public function index() {
 		$this->hydrateRouteFromRequestUri();
 
+		// Boost Sitemap advertises this stable root URL in robots.txt. Resolve it
+		// without requiring a fragile, manually-created seo_url database row.
+		if (isset($this->request->get['_route_']) && trim($this->request->get['_route_'], '/') === 'sitemap-index.xml') {
+			$this->request->get['route'] = 'extension/feed/boost_sitemap';
+			unset($this->request->get['_route_']);
+		}
+
 		// Add rewrite to url class
 		if ($this->config->get('config_seo_url')) {
 			$this->url->addRewrite($this);

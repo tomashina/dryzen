@@ -44,6 +44,27 @@ dostavu, sigurnost plaćanja te povrate i reklamacije. Može se sigurno pokrenut
 više puta. Nakon njezina pokretanja ponovno osvježite OCMOD cache u
 administraciji.
 
+## Cookie consent i tracking
+
+DryZen koristi vlastiti CookieConsent 3 modul koji odvojeno upravlja nužnim,
+analitičkim i marketinškim kolačićima. Google Analytics i Meta Pixel ostaju
+neaktivni dok posjetitelj ne prihvati pripadajuću kategoriju.
+
+Nakon uvoza baze ili postavljanja tracking izmjena pokrenite:
+
+```bash
+php scripts/apply-tracking-consent.php --refresh
+```
+
+Skripta postavlja Meta Pixel `3630339670455864`, uključuje događaje `PageView`,
+`AddToCart` i `Purchase`, isključuje stari GDPR banner te prilagođava postojeći
+Meta OCMOD za odgođeno učitavanje. Bez opcije `--refresh` potrebno je ručno
+osvježiti **Extensions > Modifications** u OpenCart administraciji. Meta ad
+account `2473286479801468` konfigurira se u Meta Business sučelju i nije dio
+browser pixel snippeta. Produkcijski Google Analytics Measurement ID je
+`G-X8YR3077DZ`; ostaje konfiguriran kroz postojeći Complete Google Analytics +
+GA4 modul i ova skripta ga ne prepisuje.
+
 ## Git remote
 
 Nakon izrade praznog udaljenog repozitorija:

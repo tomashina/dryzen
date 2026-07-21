@@ -14,6 +14,12 @@ class ControllerCommonHeader extends Controller {
 			}
 		}
 
+		// Keep analytics inert until the visitor explicitly accepts analytics
+		// cookies. OCMOD analytics integrations append their markup to this same
+		// array before this point, so their pageview and configuration code is
+		// covered as well.
+		$data['analytics_encoded'] = base64_encode(implode("\n", $data['analytics']));
+
 		if ($this->request->server['HTTPS']) {
 			$server = $this->config->get('config_ssl');
 		} else {
@@ -84,6 +90,11 @@ class ControllerCommonHeader extends Controller {
 		$data['search'] = $this->load->controller('common/search');
 		$data['cart'] = $this->load->controller('common/cart');
 		$data['menu'] = $this->load->controller('common/menu');
+
+		// The custom consent manager below replaces the obsolete ModulePoints
+		// banner injected by OCMOD. This late assignment intentionally overrides
+		// the value injected earlier in this controller.
+		$data['mpgdpr_cbstatus'] = false;
 
 		return $this->load->view('common/header', $data);
 	}

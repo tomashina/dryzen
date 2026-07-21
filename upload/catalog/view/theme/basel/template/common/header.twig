@@ -29,6 +29,9 @@
 <link href="catalog/view/theme/basel/stylesheet/dryzen-fonts.css?v=20260719a" rel="stylesheet">
 <link href="catalog/view/theme/basel/stylesheet/dryzen-privacy.css?v=20260719a" rel="stylesheet">
 <link href="catalog/view/theme/basel/stylesheet/stylesheet.css?v=mobile-header-20260720-1" rel="stylesheet">
+<link href="catalog/view/javascript/cookieconsent/cookieconsent.css?v=3.1" rel="stylesheet" media="print" onload="this.media='all'">
+<link href="catalog/view/javascript/cookieconsent/dryzen-consent.css?v=1.0" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="catalog/view/javascript/cookieconsent/cookieconsent.css?v=3.1" rel="stylesheet"><link href="catalog/view/javascript/cookieconsent/dryzen-consent.css?v=1.0" rel="stylesheet"></noscript>
 
 {% if dryzen_mandatory_stylesheet %}
 <link href="{{ dryzen_mandatory_stylesheet }}" rel="stylesheet" />
@@ -56,10 +59,66 @@
 <link href="{{ link.href }}" rel="{{ link.rel }}" />
 {% endif %}
 {% endfor %}
-<!-- Analytic tools -->
-{% for analytic in analytics %}
-{{ analytic }}
-{% endfor %}
+<!-- Consent defaults and deferred tracking loaders. No third-party tracking
+     resource is requested until its category has been accepted. -->
+<script>
+window.dataLayer=window.dataLayer||[];
+window.gkPendingAnalyticsEvents=window.gkPendingAnalyticsEvents||[];
+window.gkAnalyticsConsentGranted=false;
+window.gtag=function(){
+  var args=Array.prototype.slice.call(arguments);
+  if(args[0]==='consent'||window.gkAnalyticsConsentGranted){window.dataLayer.push(arguments);}
+  else{window.gkPendingAnalyticsEvents.push(args);}
+};
+window.gtag('consent','default',{
+  ad_storage:'denied',
+  ad_user_data:'denied',
+  ad_personalization:'denied',
+  analytics_storage:'denied'
+});
+window.gkSetGoogleConsent=function(analytics,marketing){
+  window.gtag('consent','update',{
+    analytics_storage:analytics?'granted':'denied',
+    ad_storage:marketing?'granted':'denied',
+    ad_user_data:marketing?'granted':'denied',
+    ad_personalization:marketing?'granted':'denied'
+  });
+};
+window.gkInjectEncodedMarkup=function(encoded){
+  if(!encoded){return false;}
+  var holder=document.createElement('div');
+  holder.innerHTML=window.atob(encoded);
+  Array.prototype.slice.call(holder.childNodes).forEach(function(node){
+    if(node.nodeName==='SCRIPT'){
+      var script=document.createElement('script');
+      Array.prototype.slice.call(node.attributes||[]).forEach(function(attr){script.setAttribute(attr.name,attr.value);});
+      script.text=node.text||node.textContent||'';
+      document.head.appendChild(script);
+    }else{
+      document.head.appendChild(node.cloneNode(true));
+    }
+  });
+  return true;
+};
+window.gkLoadAnalytics=function(){
+  if(window.gkAnalyticsLoaded){return true;}
+  var encoded='{{ analytics_encoded }}';
+  if(!encoded){return false;}
+  window.gkAnalyticsLoaded=true;
+  window.gkAnalyticsConsentGranted=true;
+  window.gkInjectEncodedMarkup(encoded);
+  var pending=window.gkPendingAnalyticsEvents.splice(0);
+  pending.forEach(function(args){window.gtag.apply(window,args);});
+  return true;
+};
+window.gkLoadMetaPixel=function(){
+  if(window.gkMetaPixelLoaded){return true;}
+  var encoded=window.gkMetaPixelEncoded||'';
+  if(!encoded){return false;}
+  window.gkMetaPixelLoaded=true;
+  return window.gkInjectEncodedMarkup(encoded);
+};
+</script>
 {% if basel_custom_js_status %}
 <!-- Custom Javascript -->
 <script>

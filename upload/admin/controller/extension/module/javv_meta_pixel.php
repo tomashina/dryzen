@@ -4,7 +4,7 @@ class ControllerExtensionModuleJavvMetaPixel extends Controller {
 
 	private $defaults = array(
 		'module_javv_meta_pixel_status'             => '1',
-		'module_javv_meta_pixel_pixel_id'           => '2208670019904141',
+		'module_javv_meta_pixel_pixel_id'           => '3630339670455864',
 		'module_javv_meta_pixel_page_view_status'   => '1',
 		'module_javv_meta_pixel_add_to_cart_status' => '1',
 		'module_javv_meta_pixel_purchase_status'    => '1',
