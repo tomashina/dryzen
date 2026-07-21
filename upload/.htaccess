@@ -23,6 +23,11 @@ Options -Indexes
   ExpiresByType text/javascript "access plus 6 months"
 </IfModule>
 
+<IfModule mod_mime.c>
+  # Generated sitemap files must always be parsed as XML, never as HTML/text.
+  AddType application/xml .xml
+</IfModule>
+
 <IfModule mod_headers.c>
   <FilesMatch "\.(?:avif|webp|svg|jpe?g|png|woff2?|ttf)$">
     Header set Cache-Control "public, max-age=31536000, immutable"
@@ -126,8 +131,15 @@ ExpiresByType image/x-icon "access plus 1 year"
 ExpiresDefault "access plus 1 year"
 </IfModule>
 
-# Set up 5 week caching on commonly updated files
-<FilesMatch "\.(xml|txt|html|js|css)$">
+# Sitemap files change whenever the generator runs. Keep their browser/proxy
+# cache short so crawlers and browsers do not retain an old sitemap or MIME type.
+<FilesMatch "\.xml$">
+ExpiresDefault A300
+Header set Cache-Control "public, max-age=300, must-revalidate"
+</FilesMatch>
+
+# Set up 5 week caching on other commonly updated files
+<FilesMatch "\.(txt|html|js|css)$">
 ExpiresDefault A3024000
 Header append Cache-Control "proxy-revalidate"
 </FilesMatch>
