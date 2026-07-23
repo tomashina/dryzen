@@ -3,6 +3,74 @@
  * Kept static so production updates do not depend on database CSS sync.
  */
 
+body.information-information-18 .dryzen-hands-product-media,
+body.information-information-19 .dryzen-need-product-media,
+body.information-information-20 .dryzen-need-product-media,
+body.information-information-21 .dryzen-need-product-media {
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+body.information-information-18 .dryzen-hands-product-card:nth-child(1) .dryzen-hands-product-media {
+  background-image: url("/image/catalog/need-hands-2026/women-word.jpg");
+  background-position: 58% center;
+}
+
+body.information-information-18 .dryzen-hands-product-card:nth-child(2) .dryzen-hands-product-media {
+  background-image: url("/image/catalog/need-hands-2026/men-word.jpg");
+  background-position: center 20%;
+}
+
+body.information-information-18 .dryzen-hands-product-card:nth-child(3) .dryzen-hands-product-media {
+  background-image: url("/image/catalog/need-hands-2026/sport-word.jpg");
+  background-position: 55% center;
+}
+
+body.information-information-18 .dryzen-hands-product-card:nth-child(4) .dryzen-hands-product-media {
+  background-image: url("/image/catalog/need-hands-2026/kids-word.jpg");
+}
+
+body.information-information-19 .dryzen-need-product-card:nth-child(1) .dryzen-need-product-media {
+  background-image: url("/image/catalog/need-feet-2026/women-word.jpg");
+  background-position: 55% center;
+}
+
+body.information-information-19 .dryzen-need-product-card:nth-child(2) .dryzen-need-product-media {
+  background-image: url("/image/catalog/need-feet-2026/men-word.png");
+}
+
+body.information-information-19 .dryzen-need-product-card:nth-child(3) .dryzen-need-product-media {
+  background-image: url("/image/catalog/need-feet-2026/sport-word.jpg");
+  background-position: 55% center;
+}
+
+body.information-information-19 .dryzen-need-product-card:nth-child(4) .dryzen-need-product-media {
+  background-image: url("/image/catalog/need-feet-2026/kids-word.jpg");
+}
+
+body.information-information-20 .dryzen-need-product-card:nth-child(1) .dryzen-need-product-media {
+  background-image: url("/image/catalog/need-armpits-2026/dryzen-slike-a-web.png");
+  background-position: 55% center;
+}
+
+body.information-information-20 .dryzen-need-product-card:nth-child(2) .dryzen-need-product-media {
+  background-image: url("/image/catalog/need-armpits-2026/men-word.png");
+}
+
+body.information-information-20 .dryzen-need-product-card:nth-child(3) .dryzen-need-product-media {
+  background-image: url("/image/catalog/need-armpits-2026/sport-word.jpg");
+  background-position: 55% center;
+}
+
+body.information-information-20 .dryzen-need-product-card:nth-child(4) .dryzen-need-product-media {
+  background-image: url("/image/catalog/need-armpits-2026/kids-word.jpg");
+}
+
+body.information-information-21 .dryzen-need-single-product .dryzen-need-product-media {
+  background-image: url("/image/catalog/need-shoes-2026/product-word.jpg");
+}
+
 @media (max-width: 767px) {
   html,
   body {
@@ -397,21 +465,19 @@
     body.information-information-20,
     body.information-information-21
   ) .dryzen-need-product-media {
-    aspect-ratio: 3 / 2;
+    display: block !important;
+    height: auto !important;
+    aspect-ratio: 3 / 2 !important;
+    overflow: hidden;
+    font-size: 0;
+    line-height: 0;
   }
 
   body.information-information-18 .dryzen-hands-product-media img,
-  :is(
-    body.information-information-19,
-    body.information-information-20,
-    body.information-information-21
-  ) .dryzen-need-product-media img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain !important;
-    object-position: center center !important;
-    transform: none !important;
-    transform-origin: center center;
+  body.information-information-19 .dryzen-need-product-media img,
+  body.information-information-20 .dryzen-need-product-media img,
+  body.information-information-21 .dryzen-need-product-media img {
+    display: none !important;
   }
 
   body.information-information-18 .dryzen-hands-product-card .dryzen-hands-product-media,
@@ -421,7 +487,7 @@
   ) .dryzen-need-product-card .dryzen-need-product-media {
     height: auto !important;
     overflow: hidden;
-    aspect-ratio: 3 / 2;
+    aspect-ratio: 3 / 2 !important;
   }
 
   body.information-information-18 .dryzen-hands-product-body,
