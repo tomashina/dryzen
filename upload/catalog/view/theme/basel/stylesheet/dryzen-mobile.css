@@ -355,7 +355,7 @@
     body.information-information-20,
     body.information-information-21
   ) .dryzen-need-products-header {
-    margin-bottom: 26px;
+    margin-bottom: 18px;
   }
 
   body.information-information-18 .dryzen-hands-product-grid,
@@ -391,23 +391,80 @@
     aspect-ratio: 3 / 2;
   }
 
-  body.information-information-18 .dryzen-hands-product-media img,
+  body.information-information-18 .dryzen-hands-product-card .dryzen-hands-product-media img,
   :is(
     body.information-information-19,
     body.information-information-20,
     body.information-information-21
-  ) .dryzen-need-product-media img {
-    object-fit: contain;
+  ) .dryzen-need-product-card .dryzen-need-product-media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover !important;
+    object-position: center center;
+    transform: scale(1.08);
+    transform-origin: center center;
+  }
+
+  body.information-information-18 .dryzen-hands-product-card .dryzen-hands-product-media,
+  :is(
+    body.information-information-19,
+    body.information-information-20
+  ) .dryzen-need-product-card .dryzen-need-product-media {
+    height: auto !important;
+    overflow: hidden;
+    aspect-ratio: 3 / 2;
+  }
+
+  body.information-information-18 .dryzen-hands-product-card:nth-child(1) .dryzen-hands-product-media img {
+    object-position: 58% center !important;
+    transform: scale(1.12) !important;
+  }
+
+  body.information-information-18 .dryzen-hands-product-card:nth-child(2) .dryzen-hands-product-media img {
+    object-position: center 20% !important;
+    transform: none !important;
+  }
+
+  body.information-information-18 .dryzen-hands-product-card:nth-child(3) .dryzen-hands-product-media img {
+    object-position: 55% center !important;
+    transform: scale(1.1) !important;
+  }
+
+  body.information-information-18 .dryzen-hands-product-card:nth-child(4) .dryzen-hands-product-media img {
+    object-position: center center !important;
+    transform: scale(1.07) !important;
   }
 
   :is(
     body.information-information-19,
     body.information-information-20
-  ) .dryzen-need-product-card:nth-child(2) .dryzen-need-product-media img {
-    object-fit: cover;
-    object-position: center center;
-    transform: scale(1.12);
-    transform-origin: center center;
+  ) .dryzen-need-product-card--women .dryzen-need-product-media img {
+    object-position: 55% center !important;
+    transform: scale(1.16) !important;
+  }
+
+  :is(
+    body.information-information-19,
+    body.information-information-20
+  ) .dryzen-need-product-card--men .dryzen-need-product-media img {
+    object-position: center center !important;
+    transform: scale(1.12) !important;
+  }
+
+  :is(
+    body.information-information-19,
+    body.information-information-20
+  ) .dryzen-need-product-card--sport .dryzen-need-product-media img {
+    object-position: 55% center !important;
+    transform: scale(1.1) !important;
+  }
+
+  :is(
+    body.information-information-19,
+    body.information-information-20
+  ) .dryzen-need-product-card--kids .dryzen-need-product-media img {
+    object-position: center center !important;
+    transform: scale(1.07) !important;
   }
 
   body.information-information-18 .dryzen-hands-product-body,
