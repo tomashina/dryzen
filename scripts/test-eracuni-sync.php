@@ -82,13 +82,15 @@ class FakeEracuniApi extends \Agmedia\Api\Api {
                     'productCode' => '007',
                     'name' => 'Existing product',
                     'grossPrice' => 99,
-                    'allowChangeOfPriceOnTheInvoice' => true
+                    'allowChangeOfPriceOnTheInvoice' => true,
+                    'allowChangeOfVatRateOnTheInvoice' => true
                 ),
                 array(
                     'productCode' => 'DOSTAVA',
                     'name' => 'Dostava',
                     'grossPrice' => 0,
-                    'allowChangeOfPriceOnTheInvoice' => true
+                    'allowChangeOfPriceOnTheInvoice' => true,
+                    'allowChangeOfVatRateOnTheInvoice' => true
                 )
             );
         }
@@ -124,12 +126,14 @@ class FakeLockedPriceEracuniApi extends \Agmedia\Api\Api {
                 array(
                     'productCode' => '007',
                     'name' => 'Hand wipes women',
-                    'allowChangeOfPriceOnTheInvoice' => false
+                    'allowChangeOfPriceOnTheInvoice' => false,
+                    'allowChangeOfVatRateOnTheInvoice' => false
                 ),
                 array(
                     'productCode' => 'DOSTAVA',
                     'name' => 'Dostava',
-                    'allowChangeOfPriceOnTheInvoice' => true
+                    'allowChangeOfPriceOnTheInvoice' => true,
+                    'allowChangeOfVatRateOnTheInvoice' => true
                 )
             );
         }
@@ -142,7 +146,7 @@ $lockedApi = new FakeLockedPriceEracuniApi();
 $lockedConnector = new \Agmedia\Api\Connection\Csv\Eracuni(array(
     'order_id' => 42,
     'products' => array(
-        array('model' => '007', 'name' => 'Hand wipes women', 'quantity' => 1, 'price' => 13.6, 'tax' => 3.4)
+        array('model' => '007', 'name' => 'Hand wipes women', 'quantity' => 1, 'price' => 23.84, 'tax' => 5.96)
     )
 ));
 $lockedConnector->ensureCatalogueProductsExist($lockedApi, array('username' => 'u', 'secretKey' => 's', 'token' => 't'));
@@ -154,15 +158,53 @@ assertSameValue(
     array(
         'productCode' => '007',
         'name' => 'Hand wipes women',
-        'allowChangeOfPriceOnTheInvoice' => true
+        'allowChangeOfPriceOnTheInvoice' => true,
+        'allowChangeOfVatRateOnTheInvoice' => true
     ),
     $lockedApi->calls[1]['parameters']['product'],
-    'Only the product identity and line-price permission are updated.'
+    'Only the product identity and document override permissions are updated.'
 );
 assertSameValue(
-    '13.600000',
-    $lockedSale['SalesOrder']['Items'][0]['netPrice'],
-    'The actual OpenCart line price remains in the outgoing order.'
+    false,
+    $lockedSale['sendIssuedInvoiceByEmail'],
+    'e-Racuni buyer email delivery is disabled.'
+);
+assertSameValue(
+    'Retail',
+    $lockedSale['SalesOrder']['type'],
+    'Orders without company tax data are sent as B2C Retail documents.'
+);
+assertSameValue(
+    '29.800000',
+    $lockedSale['SalesOrder']['Items'][0]['price'],
+    'B2C items carry the VAT-inclusive OpenCart price.'
+);
+assertSameValue(
+    25.0,
+    $lockedSale['SalesOrder']['Items'][0]['vatPercentage'],
+    'B2C items carry the documented vatPercentage API field.'
+);
+assertSameValue(
+    false,
+    array_key_exists('netPrice', $lockedSale['SalesOrder']['Items'][0]),
+    'B2C items do not send the B2B-only netPrice field.'
+);
+
+$businessConnector = new \Agmedia\Api\Connection\Csv\Eracuni(array(
+    'order_id' => 43,
+    'custom_field' => json_encode(array(1 => 'Test d.o.o.', 2 => '12345678901')),
+    'products' => array(
+        array('model' => '007', 'name' => 'Hand wipes women', 'quantity' => 1, 'price' => 23.84, 'tax' => 5.96)
+    )
+));
+$businessSale = $businessConnector->createSale('order', 'json');
+assertSameValue('Gross', $businessSale['SalesOrder']['type'], 'Orders with company tax data are sent as B2B Gross documents.');
+assertSameValue('23.840000', $businessSale['SalesOrder']['Items'][0]['netPrice'], 'B2B items carry the net OpenCart price.');
+assertSameValue(25.0, $businessSale['SalesOrder']['Items'][0]['vatPercentage'], 'B2B items also carry VAT percentage.');
+assertSameValue(
+    false,
+    strpos($businessConnector->createSale('order', 'form'), 'sendIssuedInvoiceByEmail=true') !== false,
+    'Form payloads never request buyer email delivery.'
 );
 
 $redact = new ReflectionMethod('Agmedia\\Api\\Api', 'redactSecrets');

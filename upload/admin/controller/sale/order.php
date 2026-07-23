@@ -2134,8 +2134,20 @@ class ControllerSaleOrder extends Controller {
         if (!empty($sale[$rootKey]['Items']) && is_array($sale[$rootKey]['Items'])) {
             foreach ($sale[$rootKey]['Items'] as &$it) {
                 if (isset($it['quantity'])) $it['quantity'] = (int) $it['quantity'];
-                if (isset($it['netPrice']) && is_numeric($it['netPrice'])) {
-                    $it['netPrice'] = $this->formatPayloadDecimal($it['netPrice'], 6);
+
+                foreach (['price', 'netPrice'] as $priceKey) {
+                    if (isset($it[$priceKey]) && is_numeric($it[$priceKey])) {
+                        $it[$priceKey] = $this->formatPayloadDecimal($it[$priceKey], 6);
+                    }
+                }
+
+                if (isset($it['vatPercent']) && !isset($it['vatPercentage'])) {
+                    $it['vatPercentage'] = $it['vatPercent'];
+                    unset($it['vatPercent']);
+                }
+
+                if (isset($it['vatPercentage']) && is_numeric($it['vatPercentage'])) {
+                    $it['vatPercentage'] = (float) $it['vatPercentage'];
                 }
             }
             unset($it);
@@ -2185,20 +2197,20 @@ class ControllerSaleOrder extends Controller {
 
         $shippingVatRate = $this->getShippingVatRate($order);
         $shippingTax = $this->getShippingTaxTotal($order);
+        $isRetail = isset($sale[$rootKey]['type']) && $sale[$rootKey]['type'] === 'Retail';
 
         $sale[$rootKey]['Items'][$shippingIndex]['quantity'] = 1;
-        $sale[$rootKey]['Items'][$shippingIndex]['netPrice'] = $this->formatPayloadDecimal($shippingNet, 2);
 
-        foreach (['taxRate', 'vatRate', 'taxPercent', 'vatPercent'] as $key) {
-            if ($shippingVatRate !== null && array_key_exists($key, $sale[$rootKey]['Items'][$shippingIndex])) {
-                $sale[$rootKey]['Items'][$shippingIndex][$key] = $shippingVatRate;
-            }
+        if ($isRetail) {
+            $sale[$rootKey]['Items'][$shippingIndex]['price'] = $this->formatPayloadDecimal($shippingNet + $shippingTax, 2);
+            unset($sale[$rootKey]['Items'][$shippingIndex]['netPrice']);
+        } else {
+            $sale[$rootKey]['Items'][$shippingIndex]['netPrice'] = $this->formatPayloadDecimal($shippingNet, 2);
+            unset($sale[$rootKey]['Items'][$shippingIndex]['price']);
         }
 
-        foreach (['grossPrice', 'grossAmount'] as $key) {
-            if (array_key_exists($key, $sale[$rootKey]['Items'][$shippingIndex])) {
-                $sale[$rootKey]['Items'][$shippingIndex][$key] = round($shippingNet + $shippingTax, 2);
-            }
+        if ($shippingVatRate !== null) {
+            $sale[$rootKey]['Items'][$shippingIndex]['vatPercentage'] = $shippingVatRate;
         }
 
         return $this->synchronizeNetTotalsPayload($sale, $order, $type);
@@ -2223,6 +2235,10 @@ class ControllerSaleOrder extends Controller {
         }
 
         $sale[$rootKey]['Items'] = array_values($items);
+
+        if (isset($sale[$rootKey]['type']) && $sale[$rootKey]['type'] === 'Retail') {
+            return $sale;
+        }
 
         $targetNetTotal = round(
             $this->getOrderTotalValue($order, 'sub_total') + $this->getOrderTotalValue($order, 'shipping'),

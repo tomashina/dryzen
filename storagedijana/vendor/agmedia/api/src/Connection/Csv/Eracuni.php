@@ -117,21 +117,21 @@ class Eracuni
 
         if ($mode === 'json') {
             return [
-                'sendIssuedInvoiceByEmail' => true,
+                'sendIssuedInvoiceByEmail' => false,
                 'apiTransactionId'         => $apiTransactionId,
                 $rootKey                   => $sale,
             ];
         }
 
         if ($mode === 'form') {
-            $data  = 'apiTransactionId="' . $apiTransactionId . '"&sendIssuedInvoiceByEmail=true';
+            $data  = 'apiTransactionId="' . $apiTransactionId . '"&sendIssuedInvoiceByEmail=false';
             $data .= '&' . $rootKey . '=' . json_encode($sale, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
 
             return $data;
         }
 
         return [
-            'sendIssuedInvoiceByEmail' => true,
+            'sendIssuedInvoiceByEmail' => false,
             'apiTransactionId'         => $apiTransactionId,
             $rootKey                   => $sale,
         ];
@@ -186,8 +186,11 @@ class Eracuni
             $buyerName = 'Kupac';
         }
 
+        $documentType = !empty($company[1]) && !empty($company[2]) ? 'Gross' : 'Retail';
+
         return [
             'vatTransactionType' => '0',
+            'type'               => $documentType,
             'buyerTaxNumber'     => $company[2] ?? '',
             'buyerName'          => $buyerName,
             'buyerFirstName'     => $this->data['payment_firstname'] ?? '',
@@ -201,7 +204,7 @@ class Eracuni
             'validUntil'         => Carbon::now()->addDays(7)->format('Y-m-d'),
             'methodOfPayment'    => $this->getSaleMethodOfPayment(),
             'country'            => $country,
-            'Items'              => $this->getSaleItems(),
+            'Items'              => $this->getSaleItems($documentType),
             'Address'            => $this->getSaleAddress($company, $country),
         ];
     }
@@ -227,6 +230,7 @@ class Eracuni
             'description' => $name,
             'allowChangeOfPriceOnTheInvoice'              => true,
             'allowChangeOfProductDescriptionOnTheInvoice' => true,
+            'allowChangeOfVatRateOnTheInvoice'             => true,
         ];
     }
 
@@ -284,8 +288,13 @@ class Eracuni
         // prices, stock settings or other product data.
         foreach ($catalogueProducts as $code => $catalogueProduct) {
             if ($code !== 'DOSTAVA' && !isset($products[$code])) continue;
-            if (!array_key_exists('allowChangeOfPriceOnTheInvoice', $catalogueProduct)) continue;
-            if (!$this->isFalseBoolean($catalogueProduct['allowChangeOfPriceOnTheInvoice'])) continue;
+
+            $priceIsLocked = array_key_exists('allowChangeOfPriceOnTheInvoice', $catalogueProduct)
+                && $this->isFalseBoolean($catalogueProduct['allowChangeOfPriceOnTheInvoice']);
+            $vatIsLocked = array_key_exists('allowChangeOfVatRateOnTheInvoice', $catalogueProduct)
+                && $this->isFalseBoolean($catalogueProduct['allowChangeOfVatRateOnTheInvoice']);
+
+            if (!$priceIsLocked && !$vatIsLocked) continue;
 
             $fallbackName = $code === 'DOSTAVA'
                 ? 'Dostava'
@@ -334,7 +343,7 @@ class Eracuni
             if ($code !== '') {
                 if (!isset($products[$code])) $products[$code] = [];
 
-                foreach (['name', 'allowChangeOfPriceOnTheInvoice'] as $key) {
+                foreach (['name', 'allowChangeOfPriceOnTheInvoice', 'allowChangeOfVatRateOnTheInvoice'] as $key) {
                     if (array_key_exists($key, $node)) {
                         $products[$code][$key] = $node[$key];
                     }
@@ -356,9 +365,10 @@ class Eracuni
             'method'     => 'ProductUpdate',
             'parameters' => [
                 'product' => [
-                    'productCode'                     => $code,
-                    'name'                            => $name,
-                    'allowChangeOfPriceOnTheInvoice' => true,
+                    'productCode'                      => $code,
+                    'name'                             => $name,
+                    'allowChangeOfPriceOnTheInvoice'   => true,
+                    'allowChangeOfVatRateOnTheInvoice' => true,
                 ],
             ],
         ], 'json');
@@ -366,7 +376,7 @@ class Eracuni
         if ($this->isApiError($resp)) {
             $description = $this->apiDescription($resp) ?: 'Nepoznata greška';
             throw new \RuntimeException(
-                "Ne mogu omogućiti promjenu cijene na dokumentu za e-Računi artikl ($code): $description"
+                "Ne mogu omogućiti promjenu cijene i PDV-a na dokumentu za e-Računi artikl ($code): $description"
             );
         }
     }
@@ -391,6 +401,7 @@ class Eracuni
             'currency'    => 'EUR',
             'allowChangeOfPriceOnTheInvoice'              => true,
             'allowChangeOfProductDescriptionOnTheInvoice' => true,
+            'allowChangeOfVatRateOnTheInvoice'             => true,
         ];
 
         $resp = $this->apiPostWithRetry($api, [
@@ -425,14 +436,11 @@ class Eracuni
     }
 
     /**
-     * Items — šaljemo productCode, quantity i stvarni netPrice iz narudžbe,
-     * + DOSTAVA.
+     * Retail/B2C documents use VAT-inclusive price, while Gross/B2B documents
+     * use netPrice. Both explicitly carry the OpenCart VAT percentage.
      */
-    private function getSaleItems(): array
+    private function getSaleItems(string $documentType = 'Retail'): array
     {
-        $vatPercent = 25.0;
-        $vatFactor  = 1 + ($vatPercent / 100);
-
         $items = [];
 
         $getGrossUnit = function (array $p): float {
@@ -457,27 +465,45 @@ class Eracuni
             $qty = (int) ($p['quantity'] ?? 1);
             if ($qty < 1) $qty = 1;
 
-            $grossUnit = $getGrossUnit($p);
-            $netUnit = $this->resolveProductNetUnitPrice($p, $qty, $grossUnit / $vatFactor);
+            $fallbackGrossUnit = $getGrossUnit($p);
+            $netUnit = $this->resolveProductNetUnitPrice($p, $qty, $fallbackGrossUnit);
+            $vatPercentage = $this->resolveProductVatPercentage($p, $netUnit);
+            $grossUnit = $this->resolveProductGrossUnitPrice($p, $netUnit, $vatPercentage);
 
-            $items[] = [
+            $item = [
                 'productCode' => $code,
                 'quantity'    => $qty,
-                'netPrice'    => $netUnit,
-                'vatPercent'  => $vatPercent,
+                'vatTransactionType' => '0',
+                'vatPercentage'      => $vatPercentage,
             ];
+
+            if ($documentType === 'Retail') {
+                $item['price'] = $grossUnit;
+            } else {
+                $item['netPrice'] = $netUnit;
+            }
+
+            $items[] = $item;
         }
 
         // 2) Dostava
-        // OpenCart shipping total je neto iznos, pa ga šaljemo direktno kao netPrice.
+        // OpenCart shipping total is net; Retail documents require gross price.
         $shippingNet = (float) $this->getShippingTotal();
         if ($shippingNet > 0) {
-            $items[] = [
+            $shippingItem = [
                 'productCode' => 'DOSTAVA',
                 'quantity'    => 1,
-                'netPrice'    => $this->decimal($shippingNet, 2),
-                'vatPercent'  => $vatPercent,
+                'vatTransactionType' => '0',
+                'vatPercentage'      => 25.0,
             ];
+
+            if ($documentType === 'Retail') {
+                $shippingItem['price'] = $this->decimal($shippingNet * 1.25, 2);
+            } else {
+                $shippingItem['netPrice'] = $this->decimal($shippingNet, 2);
+            }
+
+            $items[] = $shippingItem;
         }
 
         return $items;
@@ -498,6 +524,32 @@ class Eracuni
         }
 
         return $this->decimal($fallback, 6);
+    }
+
+    private function resolveProductVatPercentage(array $product, float $netUnit): float
+    {
+        if ($netUnit > 0 && isset($product['tax']) && is_numeric($product['tax']) && (float) $product['tax'] > 0) {
+            return round(((float) $product['tax'] / $netUnit) * 100, 2);
+        }
+
+        return 25.0;
+    }
+
+    private function resolveProductGrossUnitPrice(array $product, float $netUnit, float $vatPercentage): string
+    {
+        if (isset($product['price_gross']) && is_numeric($product['price_gross'])) {
+            return $this->decimal($product['price_gross'], 6);
+        }
+
+        if (isset($product['grossPrice']) && is_numeric($product['grossPrice'])) {
+            return $this->decimal($product['grossPrice'], 6);
+        }
+
+        if (isset($product['tax']) && is_numeric($product['tax'])) {
+            return $this->decimal($netUnit + (float) $product['tax'], 6);
+        }
+
+        return $this->decimal($netUnit * (1 + ($vatPercentage / 100)), 6);
     }
 
     private function getShippingTotal(): float
