@@ -11,6 +11,9 @@ class ControllerCommonDashboard extends Controller {
 			&& $this->user->hasPermission('modify', 'common/developer')
 			&& $this->user->hasPermission('access', 'marketplace/modification')
 			&& $this->user->hasPermission('modify', 'marketplace/modification');
+		$data['eracuni_sync_url'] = $this->user->hasPermission('access', 'extension/module/eracuni_sync')
+			? $this->url->link('extension/module/eracuni_sync', 'user_token=' . $this->session->data['user_token'], true)
+			: '';
 
 		if (isset($this->session->data['success'])) {
 			$data['success'] = $this->session->data['success'];

@@ -3,6 +3,9 @@
   <div class="page-header">
     <div class="container-fluid">
       <div class="pull-right">
+        {% if eracuni_sync_url %}
+        <a href="{{ eracuni_sync_url }}" id="button-eracuni-sync" title="{{ text_eracuni_sync_help }}" data-toggle="tooltip" class="btn btn-primary" style="margin-right: 6px;"><i class="fa fa-refresh"></i> {{ button_eracuni_sync }}</a>
+        {% endif %}
         {% if can_clear_cache %}
         <form action="{{ cache_clear }}" method="post" class="form-inline" style="display: inline-block; margin-right: 6px;">
           <button type="submit" id="button-cache-clear" title="{{ text_clear_cache_help }}" data-loading-text="{{ text_loading }}" data-toggle="tooltip" class="btn btn-warning"><i class="fa fa-eraser"></i> {{ button_clear_cache }}</button>

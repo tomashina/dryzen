@@ -26,3 +26,5 @@ $_['error_install']                = 'Upozorenje: Install direktorij/folder još
 // Button
 $_['button_clear_cache']            = 'Očisti cache';
 $_['text_clear_cache_help']         = 'Osvježi OCMOD i obriši page, podatkovni i Twig cache';
+$_['button_eracuni_sync']            = 'e-Računi sinkronizacija';
+$_['text_eracuni_sync_help']         = 'Otvori modul za sinkronizaciju cijena i zalihe';
