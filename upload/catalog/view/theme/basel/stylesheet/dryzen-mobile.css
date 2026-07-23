@@ -250,11 +250,38 @@
     border-radius: 18px;
   }
 
+  body.information-information-18 .dryzen-hands-hero-media {
+    background-image: url("/image/catalog/need-hands-2026/hands-hero.jpg") !important;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+    background-size: contain !important;
+  }
+
+  body.information-information-19 .dryzen-need-hero-media {
+    background-image: url("/image/catalog/need-feet-2026/hero.jpg") !important;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+    background-size: contain !important;
+  }
+
+  body.information-information-20 .dryzen-need-hero-media {
+    background-image: url("/image/catalog/need-armpits-2026/hero.jpg") !important;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+    background-size: contain !important;
+  }
+
+  body.information-information-21 .dryzen-need-hero-media {
+    background-image: url("/image/catalog/need-shoes-2026/hero.jpg") !important;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+    background-size: contain !important;
+  }
+
   /*
    * iOS Safari can leave these images on an empty composited layer when the
-   * desktop will-change/transform animation is combined with object-fit.
-   * The source images already use the same 3:2 ratio as their containers, so
-   * a normal, non-animated cover render preserves the complete photograph.
+   * desktop will-change/transform animation is combined with object-fit. The
+   * same source is therefore rendered on the figure background on mobile.
    */
   body.information-information-18 .dryzen-hands-hero-media img,
   :is(
@@ -262,14 +289,7 @@
     body.information-information-20,
     body.information-information-21
   ) .dryzen-need-hero-media img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center center;
-    -webkit-transform: none !important;
-    transform: none !important;
-    transition: none !important;
-    will-change: auto !important;
+    display: none !important;
   }
 
   body.information-information-18 .dryzen-hands-symptoms,
