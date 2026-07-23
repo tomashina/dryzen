@@ -121,7 +121,8 @@
           <div class="row">
             
               <div class="col-md-6">
-                  <button onclick="sendOrder('order')" data-toggle="tooltip" title="Pošalji narudžbu kupcu" class="btn btn-success btn-sm btn-block"><i class="fa fa-truck fa-fw"></i> Pošalji Narudžbu</button>
+                  <button type="button" id="button-send-order" onclick="sendOrder('order')" data-loading-text="<i class='fa fa-spinner fa-spin fa-fw'></i> Kreiranje..." data-toggle="tooltip" title="Pošalji narudžbu kupcu" class="btn btn-success btn-sm btn-block"><i class="fa fa-truck fa-fw"></i> Pošalji Narudžbu</button>
+                  <div id="send-order-notification" style="margin-top: 10px;"></div>
               </div>
           </div>
 	  </div>
@@ -452,12 +453,60 @@
 	});
   });
 
+   function showSendOrderNotification(level, message) {
+          var icon = level === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle';
+          var alert = $('<div>', {
+              'class': 'alert alert-' + level + ' alert-dismissible',
+              'role': 'alert'
+          });
+
+          $('<button>', {
+              'type': 'button',
+              'class': 'close',
+              'data-dismiss': 'alert',
+              'aria-label': 'Zatvori'
+          }).html('&times;').appendTo(alert);
+
+          $('<i>', {'class': 'fa ' + icon}).appendTo(alert);
+          alert.append(document.createTextNode(' ' + message));
+
+          $('#send-order-notification').empty().append(alert);
+      }
+
    function sendOrder(type) {
+          var button = $('#button-send-order');
+
+          if (button.prop('disabled')) {
+              return;
+          }
+
           $.ajax({
               url: 'index.php?route=sale/order/sendOrder&user_token={{ user_token }}&order_id={{ order_id }}&type=' + type,
               dataType: 'json',
+              beforeSend: function() {
+                  $('#send-order-notification').empty();
+                  button.tooltip('hide');
+                  button.button('loading').prop('disabled', true);
+              },
+              complete: function() {
+                  button.button('reset').prop('disabled', false);
+              },
               success: function(json) {
-                  console.log(json)
+                  var status = parseInt(json.status, 10);
+                  var message = json.message || (status === 200 ? 'Narudžba je uspješno kreirana.' : 'Kreiranje narudžbe nije uspjelo.');
+
+                  showSendOrderNotification(status === 200 ? 'success' : 'danger', message);
+              },
+              error: function(xhr, ajaxOptions, thrownError) {
+                  var message = 'Došlo je do greške u komunikaciji sa serverom.';
+
+                  if (xhr.responseJSON && xhr.responseJSON.message) {
+                      message = xhr.responseJSON.message;
+                  } else if (thrownError) {
+                      message += ' ' + thrownError;
+                  }
+
+                  showSendOrderNotification('danger', message);
               }
           });
       }
