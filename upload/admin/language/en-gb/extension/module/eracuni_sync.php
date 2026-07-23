@@ -38,7 +38,7 @@ $_['entry_cron_url'] = 'EasyCron URL';
 
 $_['help_code_field'] = 'Use Model for DryZen: OpenCart models 001–013 match the e-Računi product codes.';
 $_['help_price_field'] = 'The existing DryZen connector uses grossPrice. retailPrice and purchasePrice are available for differently configured catalogues. Zero prices are always skipped for safety.';
-$_['help_price_includes_tax'] = 'OpenCart stores net prices when a tax class is assigned. Enable only when the selected API field actually includes VAT.';
+$_['help_price_includes_tax'] = 'OpenCart stores net prices when a tax class is assigned. retailPrice is always converted to net automatically; for other fields enable this option only when they include VAT.';
 $_['help_warehouse_code'] = 'Leave blank to total all warehouses. Enter a code only when the shop uses one specific warehouse.';
 $_['help_cron_key'] = 'Changing the key immediately invalidates the previous EasyCron URL.';
 

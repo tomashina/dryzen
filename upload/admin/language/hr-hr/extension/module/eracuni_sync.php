@@ -38,7 +38,7 @@ $_['entry_cron_url'] = 'EasyCron URL';
 
 $_['help_code_field'] = 'Za DryZen koristi Model: OpenCart modeli 001–013 odgovaraju šiframa artikala u e-Računi.';
 $_['help_price_field'] = 'Postojeći DryZen konektor koristi grossPrice. retailPrice i purchasePrice dostupni su za drugačije postavljen katalog. Nulte cijene se radi sigurnosti uvijek preskaču.';
-$_['help_price_includes_tax'] = 'OpenCart cijenu sprema bez PDV-a kada proizvod ima poreznu klasu. Uključite samo ako odabrano API polje zaista sadrži PDV.';
+$_['help_price_includes_tax'] = 'OpenCart cijenu sprema bez PDV-a kada proizvod ima poreznu klasu. retailPrice se uvijek automatski pretvara u neto cijenu; za ostala polja uključite ovu opciju samo ako sadrže PDV.';
 $_['help_warehouse_code'] = 'Ostavite prazno za zbroj svih skladišta. Upišite šifru samo ako web trgovina koristi jedno određeno skladište.';
 $_['help_cron_key'] = 'Promjena ključa odmah poništava prethodni EasyCron URL.';
 

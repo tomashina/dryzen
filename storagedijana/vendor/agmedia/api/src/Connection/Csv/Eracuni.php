@@ -273,8 +273,29 @@ class Eracuni
             throw new \RuntimeException('e-Računi ProductList nije vratio ispravan odgovor.');
         }
 
-        $existing = [];
-        $this->collectProductCodes($listResponse, $existing);
+        $catalogueProducts = [];
+        $this->collectCatalogueProducts($listResponse, $catalogueProducts);
+        $existing = array_fill_keys(array_keys($catalogueProducts), true);
+
+        // The order payload deliberately sends the actual OpenCart line price
+        // so discounts and historical order totals remain unchanged. Existing
+        // e-Racuni catalogue items can reject that price unless this flag is
+        // enabled. Update only that permission; never overwrite catalogue
+        // prices, stock settings or other product data.
+        foreach ($catalogueProducts as $code => $catalogueProduct) {
+            if ($code !== 'DOSTAVA' && !isset($products[$code])) continue;
+            if (!array_key_exists('allowChangeOfPriceOnTheInvoice', $catalogueProduct)) continue;
+            if (!$this->isFalseBoolean($catalogueProduct['allowChangeOfPriceOnTheInvoice'])) continue;
+
+            $fallbackName = $code === 'DOSTAVA'
+                ? 'Dostava'
+                : (string) ($products[$code]['name'] ?? $code);
+            $name = trim((string) ($catalogueProduct['name'] ?? $fallbackName));
+
+            if ($name === '') $name = $fallbackName;
+
+            $this->enableLinePriceChange($api, $auth, $code, $name);
+        }
 
         foreach ($products as $code => $p) {
             if (isset($existing[$code])) continue;
@@ -303,18 +324,58 @@ class Eracuni
         }
     }
 
-    private function collectProductCodes($node, array &$codes): void
+    private function collectCatalogueProducts($node, array &$products): void
     {
         if (!is_array($node)) return;
 
         if (isset($node['productCode']) && is_scalar($node['productCode'])) {
             $code = trim((string) $node['productCode']);
-            if ($code !== '') $codes[$code] = true;
+
+            if ($code !== '') {
+                if (!isset($products[$code])) $products[$code] = [];
+
+                foreach (['name', 'allowChangeOfPriceOnTheInvoice'] as $key) {
+                    if (array_key_exists($key, $node)) {
+                        $products[$code][$key] = $node[$key];
+                    }
+                }
+            }
         }
 
         foreach ($node as $value) {
-            if (is_array($value)) $this->collectProductCodes($value, $codes);
+            if (is_array($value)) $this->collectCatalogueProducts($value, $products);
         }
+    }
+
+    private function enableLinePriceChange(\Agmedia\Api\Api $api, array $auth, string $code, string $name): void
+    {
+        $resp = $this->apiPostWithRetry($api, [
+            'username'   => $auth['username'],
+            'secretKey'  => $auth['secretKey'],
+            'token'      => $auth['token'],
+            'method'     => 'ProductUpdate',
+            'parameters' => [
+                'product' => [
+                    'productCode'                     => $code,
+                    'name'                            => $name,
+                    'allowChangeOfPriceOnTheInvoice' => true,
+                ],
+            ],
+        ], 'json');
+
+        if ($this->isApiError($resp)) {
+            $description = $this->apiDescription($resp) ?: 'Nepoznata greška';
+            throw new \RuntimeException(
+                "Ne mogu omogućiti promjenu cijene na dokumentu za e-Računi artikl ($code): $description"
+            );
+        }
+    }
+
+    private function isFalseBoolean($value): bool
+    {
+        if ($value === false || $value === 0 || $value === '0') return true;
+
+        return is_string($value) && strtolower(trim($value)) === 'false';
     }
 
     private function upsertServiceProduct(\Agmedia\Api\Api $api, array $auth, string $code, string $name, string $desc): void

@@ -46,6 +46,27 @@ $prices = $sync->extractProductRecords($pricePayload, 'grossPrice');
 assertSameValue('001', $prices[0]['productCode'], 'Leading zeroes are preserved in product codes.');
 assertSameValue('16.50', $prices[1]['grossPrice'], 'API decimal strings are preserved until database conversion.');
 
+$retailRecord = array(
+    'productCode' => '007',
+    'retailPrice' => 29.8,
+    'vatPercentage' => 0,
+    'PriceCalculation' => array(
+        'retailPrice' => 23.84,
+        'outgoingVatPercentage' => 25,
+        'salesPrice' => 29.8
+    )
+);
+assertSameValue(
+    23.84,
+    round($sync->resolveOpenCartPrice($retailRecord, 'retailPrice', false), 4),
+    'retailPrice is always converted from VAT-inclusive to OpenCart net price.'
+);
+assertSameValue(
+    100.0,
+    round($sync->resolveOpenCartPrice(array('grossPrice' => 125, 'vatPercentage' => 25), 'grossPrice', true), 4),
+    'Other VAT-inclusive price fields use the product VAT percentage.'
+);
+
 class FakeEracuniApi extends \Agmedia\Api\Api {
     public $calls = array();
 
@@ -57,8 +78,18 @@ class FakeEracuniApi extends \Agmedia\Api\Api {
 
         if ($body['method'] === 'ProductList') {
             return array(
-                array('productCode' => '007', 'grossPrice' => 99),
-                array('productCode' => 'DOSTAVA', 'grossPrice' => 0)
+                array(
+                    'productCode' => '007',
+                    'name' => 'Existing product',
+                    'grossPrice' => 99,
+                    'allowChangeOfPriceOnTheInvoice' => true
+                ),
+                array(
+                    'productCode' => 'DOSTAVA',
+                    'name' => 'Dostava',
+                    'grossPrice' => 0,
+                    'allowChangeOfPriceOnTheInvoice' => true
+                )
             );
         }
 
@@ -78,6 +109,61 @@ $connector->ensureCatalogueProductsExist($api, array('username' => 'u', 'secretK
 assertSameValue('ProductList', $api->calls[0]['method'], 'Order submission checks the catalogue in one ProductList call.');
 assertSameValue(2, count($api->calls), 'Only one missing catalogue product is imported.');
 assertSameValue('008', $api->calls[1]['parameters']['product']['productCode'], 'Existing catalogue products are not overwritten by order submission.');
+
+class FakeLockedPriceEracuniApi extends \Agmedia\Api\Api {
+    public $calls = array();
+
+    public function __construct() {
+    }
+
+    public function post(string $endpoint, $body, string $headers_type = 'form', array $extraHeaders = array()) {
+        $this->calls[] = $body;
+
+        if ($body['method'] === 'ProductList') {
+            return array(
+                array(
+                    'productCode' => '007',
+                    'name' => 'Hand wipes women',
+                    'allowChangeOfPriceOnTheInvoice' => false
+                ),
+                array(
+                    'productCode' => 'DOSTAVA',
+                    'name' => 'Dostava',
+                    'allowChangeOfPriceOnTheInvoice' => true
+                )
+            );
+        }
+
+        return array('status' => 'ok');
+    }
+}
+
+$lockedApi = new FakeLockedPriceEracuniApi();
+$lockedConnector = new \Agmedia\Api\Connection\Csv\Eracuni(array(
+    'order_id' => 42,
+    'products' => array(
+        array('model' => '007', 'name' => 'Hand wipes women', 'quantity' => 1, 'price' => 13.6, 'tax' => 3.4)
+    )
+));
+$lockedConnector->ensureCatalogueProductsExist($lockedApi, array('username' => 'u', 'secretKey' => 's', 'token' => 't'));
+$lockedSale = $lockedConnector->createSale('order', 'json');
+
+assertSameValue(2, count($lockedApi->calls), 'A locked catalogue price triggers one ProductUpdate request.');
+assertSameValue('ProductUpdate', $lockedApi->calls[1]['method'], 'ProductUpdate enables line-price changes before order submission.');
+assertSameValue(
+    array(
+        'productCode' => '007',
+        'name' => 'Hand wipes women',
+        'allowChangeOfPriceOnTheInvoice' => true
+    ),
+    $lockedApi->calls[1]['parameters']['product'],
+    'Only the product identity and line-price permission are updated.'
+);
+assertSameValue(
+    '13.600000',
+    $lockedSale['SalesOrder']['Items'][0]['netPrice'],
+    'The actual OpenCart line price remains in the outgoing order.'
+);
 
 $redact = new ReflectionMethod('Agmedia\\Api\\Api', 'redactSecrets');
 $redact->setAccessible(true);
