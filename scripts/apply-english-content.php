@@ -325,7 +325,10 @@ function englishApplyNavigationAndFooter(mysqli $db)
 {
     $menuLinks = array(
         53 => array(3 => '/', 1 => '/'),
-        50 => array(3 => 'shop', 1 => 'shop'),
+        50 => array(
+            3 => '/index.php?route=product/category&path=1',
+            1 => 'shop',
+        ),
         49 => array(3 => 'o-nama', 1 => 'about-us'),
         52 => array(3 => 'kontakt', 1 => 'contact'),
     );
