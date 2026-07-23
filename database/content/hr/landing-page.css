@@ -664,7 +664,7 @@ body.common-home a.btn.dryzen-finder-btn:focus {
   body.common-home #mod5,
   body.common-home #mod6,
   body.common-home #mod7 {
-    margin-bottom: 72px !important;
+    margin-bottom: 60px !important;
   }
 
   body.common-home #mod2 .widget-title,
@@ -673,7 +673,7 @@ body.common-home a.btn.dryzen-finder-btn:focus {
   body.common-home #mod5 .widget-title,
   body.common-home #mod6 .widget-title,
   body.common-home #mod7 .widget-title {
-    margin-bottom: 28px;
+    margin-bottom: 22px;
   }
 
   body.common-home #mod2 .main-title,
@@ -682,45 +682,89 @@ body.common-home a.btn.dryzen-finder-btn:focus {
   body.common-home #mod5 .main-title,
   body.common-home #mod6 .main-title,
   body.common-home #mod7 .main-title {
-    font-size: 29px;
+    font-size: 26px;
+    line-height: 1.18;
   }
 
   body.common-home #mod3 .sub-line,
   body.common-home #mod4 .sub-line {
-    margin-top: 10px;
-    font-size: 16px;
+    margin-top: 8px;
+    font-size: 15px;
+    line-height: 1.55;
   }
 
   body.common-home #mod1 .cm_content > .row {
+    display: block;
+    height: auto !important;
     border-radius: 24px;
+  }
+
+  body.common-home #mod1 .type-img:not(.hidden-xs),
+  body.common-home #mod1 .type-img:not(.hidden-xs) > a,
+  body.common-home #mod1 .type-img:not(.hidden-xs) .banner_wrap,
+  body.common-home #mod1 .type-img:not(.hidden-xs) .zoom_image_wrap,
+  body.common-home #mod1 .type-img:not(.hidden-xs) img,
+  body.common-home #mod1 .type-html,
+  body.common-home #mod1 .type-html .cm_item_wrapper,
+  body.common-home #mod1 .type-html .cm_item {
+    min-height: 0 !important;
+    height: auto !important;
+  }
+
+  body.common-home #mod1 .type-img:not(.hidden-xs) .banner_wrap,
+  body.common-home #mod1 .type-img:not(.hidden-xs) .zoom_image_wrap,
+  body.common-home #mod1 .type-img:not(.hidden-xs) img {
+    width: 100%;
+    display: block;
+  }
+
+  body.common-home #mod1 .type-img:not(.hidden-xs) img {
+    aspect-ratio: 3 / 2;
+    object-fit: cover;
+    object-position: center center;
   }
 
   body.common-home .dryzen-hero-panel {
     min-height: 0;
-    padding: 36px 24px 38px;
+    height: auto !important;
+    padding: 28px 22px 30px;
   }
 
   body.common-home .dryzen-hero-title {
-    margin-bottom: 20px;
-    font-size: 34px;
+    margin-bottom: 14px;
+    font-size: 30px;
+    line-height: 1.12;
   }
 
   body.common-home .dryzen-hero-copy {
-    margin-bottom: 26px;
-    font-size: 16px;
+    margin-bottom: 22px;
+    font-size: 15px;
+    line-height: 1.62;
+  }
+
+  body.common-home a.btn.dryzen-hero-btn,
+  body.common-home a.btn.dryzen-hero-btn:hover,
+  body.common-home a.btn.dryzen-hero-btn:focus {
+    min-height: 44px;
+    padding: 0 20px;
+    font-size: 14px;
+    line-height: 42px;
   }
 
   body.common-home .dryzen-intro {
-    padding-left: 22px;
+    padding-left: 18px;
   }
 
   body.common-home .dryzen-intro-lead {
-    font-size: 23px;
+    margin-bottom: 14px;
+    font-size: 21px;
+    line-height: 1.35;
   }
 
   body.common-home .dryzen-intro p:not(.dryzen-intro-lead) {
-    font-size: 16px;
-    line-height: 1.75;
+    margin-bottom: 14px;
+    font-size: 15px;
+    line-height: 1.65;
   }
 
   body.common-home .dryzen-need-grid {
@@ -751,11 +795,22 @@ body.common-home a.btn.dryzen-finder-btn:focus {
     grid-template-areas:
       "steps"
       "visual";
-    gap: 26px;
+    gap: 20px;
+  }
+
+  body.common-home .dryzen-step,
+  body.common-home .dryzen-step + .dryzen-step {
+    padding: 18px 0;
   }
 
   body.common-home .dryzen-step h3 {
-    font-size: 20px;
+    margin-bottom: 8px;
+    font-size: 19px;
+  }
+
+  body.common-home .dryzen-step p {
+    font-size: 15px;
+    line-height: 1.62;
   }
 
   body.common-home .dryzen-routine-visual {
@@ -766,11 +821,11 @@ body.common-home a.btn.dryzen-finder-btn:focus {
   }
 
   body.common-home #mod5 {
-    padding: 58px 0;
+    padding: 48px 0;
   }
 
   body.common-home #mod7 {
-    padding: 58px 0;
+    padding: 48px 0;
   }
 
   body.common-home .dryzen-reasons {
@@ -778,18 +833,19 @@ body.common-home a.btn.dryzen-finder-btn:focus {
   }
 
   body.common-home .dryzen-reasons li {
-    min-height: 64px;
-    padding: 17px 0 17px 24px;
-    font-size: 16px;
+    min-height: 58px;
+    padding: 15px 0 15px 22px;
+    font-size: 15px;
+    line-height: 1.45;
   }
 
   body.common-home .dryzen-reasons li::before {
-    top: 27px;
+    top: 24px;
   }
 
   body.common-home .dryzen-faq summary {
-    padding: 21px 48px 21px 0;
-    font-size: 16px;
+    padding: 18px 44px 18px 0;
+    font-size: 15px;
   }
 
   body.common-home .dryzen-faq summary::after {
@@ -799,8 +855,9 @@ body.common-home a.btn.dryzen-finder-btn:focus {
   }
 
   body.common-home .dryzen-faq-answer {
-    padding: 0 0 24px;
+    padding: 0 0 20px;
     font-size: 15px;
+    line-height: 1.65;
   }
 
   body.common-home #mod7 .cm_content > .row {
@@ -821,42 +878,69 @@ body.common-home a.btn.dryzen-finder-btn:focus {
 
   body.common-home .dryzen-finder-copy {
     max-width: none;
-    padding: 34px 10px 0;
+    padding: 26px 6px 0;
   }
 
   body.common-home .dryzen-finder-copy p {
+    margin-bottom: 14px;
     font-size: 15px;
+    line-height: 1.62;
   }
 
   body.common-home .dryzen-finder-copy p:first-child {
-    font-size: 17px;
+    margin-bottom: 16px;
+    font-size: 16px;
   }
 }
 
 @media (max-width: 575px) {
   body.common-home .dryzen-need-grid {
-    grid-template-columns: 1fr;
-    gap: 16px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px 12px;
   }
 
   body.common-home .dryzen-need-card {
-    display: grid;
-    min-height: 148px;
-    grid-template-columns: minmax(128px, 42%) minmax(0, 1fr);
+    display: flex;
+    min-height: 0;
+    flex-direction: column;
+    border-radius: 17px;
   }
 
   body.common-home .dryzen-need-media {
-    height: 100%;
-    aspect-ratio: auto;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 3 / 2;
+  }
+
+  body.common-home .dryzen-need-media img {
+    object-fit: contain;
   }
 
   body.common-home .dryzen-need-content {
-    min-height: 148px;
-    padding: 18px 54px 18px 18px;
+    min-height: 94px;
+    padding: 14px 44px 15px 14px;
+  }
+
+  body.common-home .dryzen-need-eyebrow {
+    margin-bottom: 5px;
+    font-size: 10px;
+  }
+
+  body.common-home .dryzen-need-title {
+    font-size: 15px;
+    line-height: 1.28;
   }
 
   body.common-home .dryzen-need-arrow {
-    right: 14px;
+    right: 11px;
+    width: 32px;
+    height: 32px;
+  }
+}
+
+@media (max-width: 359px) {
+  body.common-home .dryzen-need-grid {
+    grid-template-columns: 1fr;
   }
 }
 

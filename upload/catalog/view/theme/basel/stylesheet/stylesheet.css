@@ -8092,12 +8092,6 @@ div.ui-slider-range.ui-widget-header, .ui-state-default, .ui-widget-content .ui-
 		opacity: 0.7;
 		cursor: default;
 		color: inherit;
-		white-space: nowrap;
-		overflow: hidden;
-		text-overflow: ellipsis;
-		max-width: 100px;
-		display: inline-block;
-		margin-bottom: -8px;
 	}
 
 	.ms-layer.ms-caption {

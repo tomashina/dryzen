@@ -314,50 +314,70 @@ body.information-information-__INFORMATION_ID__ a.dryzen-hands-product-link:focu
 }
 
 @media (max-width: 767px) {
+  body.information-information-__INFORMATION_ID__ .breadcrumb-holder {
+    padding: 26px 0 18px !important;
+  }
+
+  body.information-information-__INFORMATION_ID__ .breadcrumb-holder #title-holder {
+    margin-bottom: 6px !important;
+  }
+
+  body.information-information-__INFORMATION_ID__ .breadcrumb-holder #title-holder #page-title {
+    font-size: 22px !important;
+    line-height: 1.15;
+  }
+
   body.information-information-__INFORMATION_ID__ .dryzen-hands-hero {
     min-height: 0;
     grid-template-columns: 1fr;
-    gap: 30px;
-    padding: 56px 20px 60px;
+    gap: 22px;
+    padding: 36px 20px 44px;
   }
 
   body.information-information-__INFORMATION_ID__ .dryzen-hands-hero h1 {
-    margin-bottom: 18px;
-    font-size: 32px;
+    margin-bottom: 14px;
+    font-size: 28px;
+    line-height: 1.12;
+    letter-spacing: -0.03em;
   }
 
   body.information-information-__INFORMATION_ID__ .dryzen-hands-hero p {
-    font-size: 16px;
-    line-height: 1.65;
+    font-size: 15px;
+    line-height: 1.6;
   }
 
   body.information-information-__INFORMATION_ID__ .dryzen-hands-hero-media {
-    height: 300px;
-    border-radius: 22px;
+    height: auto;
+    aspect-ratio: 3 / 2;
+    border-radius: 18px;
   }
 
   body.information-information-__INFORMATION_ID__ .dryzen-hands-hero-media img {
+    object-fit: contain;
+    object-position: center center;
     transform: none;
   }
 
   body.information-information-__INFORMATION_ID__ .dryzen-hands-symptoms {
-    padding-top: 72px;
+    padding-top: 56px;
   }
 
   body.information-information-__INFORMATION_ID__ .dryzen-hands-symptoms h2,
   body.information-information-__INFORMATION_ID__ .dryzen-hands-products h2 {
-    font-size: 29px;
+    font-size: 26px;
+    line-height: 1.18;
   }
 
   body.information-information-__INFORMATION_ID__ .dryzen-hands-symptom-list {
     grid-template-columns: 1fr;
-    margin-top: 30px;
+    margin-top: 24px;
   }
 
   body.information-information-__INFORMATION_ID__ .dryzen-hands-symptom-list li {
     min-height: 0;
-    padding: 20px 0 20px 30px;
-    font-size: 16px;
+    padding: 16px 0 16px 25px;
+    font-size: 15px;
+    line-height: 1.5;
   }
 
   body.information-information-__INFORMATION_ID__ .dryzen-hands-symptom-list li::before {
@@ -365,25 +385,44 @@ body.information-information-__INFORMATION_ID__ a.dryzen-hands-product-link:focu
   }
 
   body.information-information-__INFORMATION_ID__ .dryzen-hands-products {
-    margin-top: 72px;
-    padding: 64px 20px;
+    margin-top: 56px;
+    padding: 52px 20px;
   }
 
   body.information-information-__INFORMATION_ID__ .dryzen-hands-products-header {
-    margin-bottom: 32px;
+    margin-bottom: 26px;
   }
 
   body.information-information-__INFORMATION_ID__ .dryzen-hands-product-grid {
     grid-template-columns: 1fr;
-    gap: 20px;
+    gap: 16px;
   }
 
   body.information-information-__INFORMATION_ID__ .dryzen-hands-product-card {
-    border-radius: 20px;
+    border-radius: 18px;
+  }
+
+  body.information-information-__INFORMATION_ID__ .dryzen-hands-product-media {
+    aspect-ratio: 3 / 2;
+  }
+
+  body.information-information-__INFORMATION_ID__ .dryzen-hands-product-media img {
+    object-fit: contain;
   }
 
   body.information-information-__INFORMATION_ID__ .dryzen-hands-product-body {
-    padding: 23px 22px 24px;
+    padding: 20px 20px 22px;
+  }
+
+  body.information-information-__INFORMATION_ID__ .dryzen-hands-product-card h3 {
+    margin-bottom: 9px;
+    font-size: 19px;
+  }
+
+  body.information-information-__INFORMATION_ID__ .dryzen-hands-product-card p {
+    margin-bottom: 20px;
+    font-size: 15px;
+    line-height: 1.6;
   }
 }
 

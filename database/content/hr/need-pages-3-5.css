@@ -407,73 +407,121 @@ __PAGE_SCOPE__ .dryzen-need-feature-list li:nth-child(3)::before {
 }
 
 @media (max-width: 767px) {
+  __PAGE_SCOPE__ .breadcrumb-holder {
+    padding: 26px 0 18px !important;
+  }
+
+  __PAGE_SCOPE__ .breadcrumb-holder #title-holder {
+    margin-bottom: 6px !important;
+  }
+
+  __PAGE_SCOPE__ .breadcrumb-holder #title-holder #page-title {
+    font-size: 22px !important;
+    line-height: 1.15;
+  }
+
   __PAGE_SCOPE__ .dryzen-need-hero {
     min-height: 0;
     grid-template-columns: 1fr;
-    gap: 30px;
-    padding: 56px 20px 60px;
+    gap: 22px;
+    padding: 36px 20px 44px;
   }
 
   __PAGE_SCOPE__ .dryzen-need-hero h1 {
-    margin-bottom: 18px;
-    font-size: 32px;
+    margin-bottom: 14px;
+    font-size: 28px;
+    line-height: 1.12;
+    letter-spacing: -0.03em;
   }
 
   __PAGE_SCOPE__ .dryzen-need-hero p {
-    font-size: 16px;
-    line-height: 1.65;
+    font-size: 15px;
+    line-height: 1.6;
   }
 
   __PAGE_SCOPE__ .dryzen-need-hero-media {
-    height: 300px;
-    border-radius: 22px;
+    height: auto;
+    aspect-ratio: 3 / 2;
+    border-radius: 18px;
   }
 
   __PAGE_SCOPE__ .dryzen-need-hero-media img {
+    object-fit: contain;
+    object-position: center center;
     transform: none;
   }
 
   __PAGE_SCOPE__ .dryzen-need-symptoms {
-    padding-top: 72px;
+    padding-top: 56px;
   }
 
   __PAGE_SCOPE__ .dryzen-need-symptoms h2,
   __PAGE_SCOPE__ .dryzen-need-products h2 {
-    font-size: 29px;
+    font-size: 26px;
+    line-height: 1.18;
   }
 
   __PAGE_SCOPE__ .dryzen-need-symptom-list {
     grid-template-columns: 1fr;
-    margin-top: 30px;
+    margin-top: 24px;
   }
 
   __PAGE_SCOPE__ .dryzen-need-symptom-list li {
     min-height: 0;
-    padding: 20px 0 20px 30px;
-    font-size: 16px;
+    padding: 16px 0 16px 25px;
+    font-size: 15px;
+    line-height: 1.5;
   }
 
   __PAGE_SCOPE__ .dryzen-need-products {
-    margin-top: 72px;
-    padding: 64px 20px;
+    margin-top: 56px;
+    padding: 52px 20px;
   }
 
   __PAGE_SCOPE__ .dryzen-need-products-header {
-    margin-bottom: 32px;
+    margin-bottom: 26px;
   }
 
   __PAGE_SCOPE__ .dryzen-need-product-grid {
     grid-template-columns: 1fr;
-    gap: 20px;
+    gap: 16px;
   }
 
   __PAGE_SCOPE__ .dryzen-need-product-card,
   __PAGE_SCOPE__ .dryzen-need-single-product {
-    border-radius: 20px;
+    border-radius: 18px;
+  }
+
+  __PAGE_SCOPE__ .dryzen-need-product-media {
+    aspect-ratio: 3 / 2;
+  }
+
+  __PAGE_SCOPE__ .dryzen-need-product-media img {
+    object-fit: contain;
+  }
+
+  __PAGE_SCOPE__ .dryzen-need-product-card--men .dryzen-need-product-media img {
+    object-fit: cover;
+    object-position: center center;
+    transform: scale(1.12);
+    transform-origin: center center;
   }
 
   __PAGE_SCOPE__ .dryzen-need-product-body {
-    padding: 23px 22px 24px;
+    padding: 20px 20px 22px;
+  }
+
+  __PAGE_SCOPE__ .dryzen-need-product-card h3,
+  __PAGE_SCOPE__ .dryzen-need-single-copy h3 {
+    margin-bottom: 9px;
+    font-size: 19px;
+  }
+
+  __PAGE_SCOPE__ .dryzen-need-product-card p,
+  __PAGE_SCOPE__ .dryzen-need-single-copy > p {
+    margin-bottom: 20px;
+    font-size: 15px;
+    line-height: 1.6;
   }
 
   __PAGE_SCOPE__ .dryzen-need-single-product {
@@ -482,15 +530,23 @@ __PAGE_SCOPE__ .dryzen-need-feature-list li:nth-child(3)::before {
 
   __PAGE_SCOPE__ .dryzen-need-single-product .dryzen-need-product-media {
     min-height: 0;
-    height: 300px;
+    height: auto;
+    aspect-ratio: 3 / 2;
   }
 
   __PAGE_SCOPE__ .dryzen-need-single-copy {
-    padding: 28px 22px 30px;
+    padding: 24px 20px 26px;
   }
 
   __PAGE_SCOPE__ .dryzen-need-feature-list {
     grid-template-columns: 1fr;
+    margin-bottom: 22px;
+  }
+
+  __PAGE_SCOPE__ .dryzen-need-feature-list li {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    font-size: 14px;
   }
 }
 

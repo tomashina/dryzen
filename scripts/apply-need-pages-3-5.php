@@ -503,7 +503,9 @@ function needPagesRenderProductGrid($intro, $buttonText, array $products)
         . '<div class="dryzen-need-product-grid">';
 
     foreach ($products as $product) {
-        $html .= '<article class="dryzen-need-product-card">'
+        $variantClass = strtolower(trim((string) preg_replace('/[^a-z0-9]+/i', '-', $product['label']), '-'));
+        $html .= '<article class="dryzen-need-product-card dryzen-need-product-card--'
+            . needPagesEscape($variantClass) . '">'
             . '<a class="dryzen-need-product-media" href="' . $product['href'] . '" aria-label="'
             . needPagesEscape($product['product_name']) . '">'
             . '<img src="/image/' . needPagesEscape($product['image']) . '" alt="'
@@ -704,6 +706,54 @@ function needPagesUpsertCss(mysqli $db, $pageCss)
     $insert->close();
 }
 
+function needPagesClearFileCache(array $results)
+{
+    if (!defined('DIR_CACHE') || !is_dir(DIR_CACHE)) {
+        return array('removed' => 0, 'failed' => array());
+    }
+
+    $cacheDirectory = rtrim(DIR_CACHE, '/\\') . DIRECTORY_SEPARATOR;
+    $patterns = array(
+        $cacheDirectory . 'cache.dryzen.page.*',
+        $cacheDirectory . 'cache.basel_styles_cache_store_0.*',
+    );
+
+    foreach ($results as $result) {
+        $patterns[] = $cacheDirectory . 'cache.layout.modules.'
+            . (int) $result['layout_id'] . '.*';
+
+        foreach ($result['module_ids'] as $moduleId) {
+            $patterns[] = $cacheDirectory . 'cache.module.catalog.'
+                . (int) $moduleId . '.*';
+        }
+    }
+
+    $removed = 0;
+    $failed = array();
+
+    foreach (array_unique($patterns) as $pattern) {
+        $files = glob($pattern);
+
+        if (!$files) {
+            continue;
+        }
+
+        foreach ($files as $file) {
+            if (!is_file($file)) {
+                continue;
+            }
+
+            if (unlink($file)) {
+                $removed++;
+            } else {
+                $failed[] = $file;
+            }
+        }
+    }
+
+    return array('removed' => $removed, 'failed' => $failed);
+}
+
 function needPagesAuditText(array $page, $html)
 {
     $expected = array(
@@ -838,10 +888,20 @@ try {
     needPagesUpsertCss($db, $resolvedCss);
 
     $db->commit();
+    $cacheResult = needPagesClearFileCache($results);
 
     echo "Need pages 3-5 applied successfully.\n";
     echo json_encode($results, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) . "\n";
+    echo 'Cache files removed: ' . $cacheResult['removed'] . "\n";
     echo 'Backup: ' . $backupFile . "\n";
+
+    if ($cacheResult['failed']) {
+        fwrite(
+            STDERR,
+            'Warning: unable to remove cache files: '
+                . implode(', ', $cacheResult['failed']) . "\n"
+        );
+    }
 } catch (Throwable $exception) {
     $db->rollback();
     fwrite(STDERR, $exception->getMessage() . "\n");
