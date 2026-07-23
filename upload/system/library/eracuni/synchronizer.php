@@ -137,11 +137,6 @@ class Synchronizer {
 			}
 
 			$summary = $this->baseSummary('prices', count($price_records));
-			// e-Racuni's top-level retailPrice is the final sales price with
-			// outgoing VAT included. OpenCart stores the net price and applies
-			// the configured tax class later, so retailPrice must always be
-			// converted to net to avoid charging VAT twice.
-			$price_includes_tax = (bool)$this->config->get('module_eracuni_sync_price_includes_tax');
 			$this->db->query('START TRANSACTION');
 
 			try {
@@ -153,7 +148,7 @@ class Synchronizer {
 						continue;
 					}
 
-					$price = $this->resolveOpenCartPrice($record, $price_field, $price_includes_tax);
+					$price = $this->resolveOpenCartPrice($record, $price_field);
 
 					// A zero catalogue price is commonly used by the legacy order
 					// connector as a placeholder. Never let that erase a live shop
@@ -207,37 +202,13 @@ class Synchronizer {
 	}
 
 	/** Public for deterministic fixture tests. */
-	public function resolveOpenCartPrice(array $record, $price_field, $price_includes_tax) {
-		$price_includes_tax = $price_field === 'retailPrice' || (bool)$price_includes_tax;
-		$price = isset($record[$price_field]) && is_numeric($record[$price_field])
+	public function resolveOpenCartPrice(array $record, $price_field) {
+		// The selected e-Racuni catalogue price is the final OpenCart product
+		// price. Import it unchanged; VAT configuration belongs to OpenCart and
+		// must never alter the synchronized catalogue value.
+		return isset($record[$price_field]) && is_numeric($record[$price_field])
 			? max(0, (float)$record[$price_field])
 			: 0.0;
-
-		if (!$price_includes_tax || $price <= 0) {
-			return $price;
-		}
-
-		$vat = isset($record['vatPercentage']) && is_numeric($record['vatPercentage'])
-			? (float)$record['vatPercentage']
-			: 0.0;
-
-		// ProductList can return vatPercentage=0 on the product itself even
-		// though retailPrice contains VAT. The actual outgoing VAT rate is then
-		// available in the nested price calculation.
-		if ($vat <= 0
-			&& isset($record['PriceCalculation'])
-			&& is_array($record['PriceCalculation'])
-			&& isset($record['PriceCalculation']['outgoingVatPercentage'])
-			&& is_numeric($record['PriceCalculation']['outgoingVatPercentage'])
-		) {
-			$vat = (float)$record['PriceCalculation']['outgoingVatPercentage'];
-		}
-
-		if ($vat > 0) {
-			$price = $price / (1 + ($vat / 100));
-		}
-
-		return $price;
 	}
 
 	/** Public for deterministic fixture tests. */

@@ -110,15 +110,6 @@
                 </select>
               </div>
             </div>
-            <div class="form-group">
-              <label class="col-sm-3 control-label" for="input-price-tax"><span data-toggle="tooltip" title="{{ help_price_includes_tax }}">{{ entry_price_includes_tax }}</span></label>
-              <div class="col-sm-9">
-                <select name="module_eracuni_sync_price_includes_tax" id="input-price-tax" class="form-control">
-                  <option value="0"{% if not module_eracuni_sync_price_includes_tax %} selected="selected"{% endif %}>{{ text_price_net }}</option>
-                  <option value="1"{% if module_eracuni_sync_price_includes_tax %} selected="selected"{% endif %}>{{ text_price_gross }}</option>
-                </select>
-              </div>
-            </div>
           </fieldset>
 
           <fieldset>

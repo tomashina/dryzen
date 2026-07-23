@@ -31,7 +31,7 @@ $_['text_semi_month']          = 'half-month';
 $_['text_month']               = 'month';
 $_['text_year']                = 'year';
 
-$_['text_tax_included']                 = '25% VAT included';
+$_['text_tax_included']                 = '';
 
 $_['text_rok']                 = 'Delivery time';
 $_['text_d']                 = 'days';

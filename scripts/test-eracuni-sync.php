@@ -57,14 +57,14 @@ $retailRecord = array(
     )
 );
 assertSameValue(
-    23.84,
-    round($sync->resolveOpenCartPrice($retailRecord, 'retailPrice', false), 4),
-    'retailPrice is always converted from VAT-inclusive to OpenCart net price.'
+    29.8,
+    round($sync->resolveOpenCartPrice($retailRecord, 'retailPrice'), 4),
+    'retailPrice is imported unchanged without a VAT calculation.'
 );
 assertSameValue(
-    100.0,
-    round($sync->resolveOpenCartPrice(array('grossPrice' => 125, 'vatPercentage' => 25), 'grossPrice', true), 4),
-    'Other VAT-inclusive price fields use the product VAT percentage.'
+    125.0,
+    round($sync->resolveOpenCartPrice(array('grossPrice' => 125, 'vatPercentage' => 25), 'grossPrice'), 4),
+    'API VAT fields cannot alter the selected catalogue price.'
 );
 
 class FakeEracuniApi extends \Agmedia\Api\Api {
@@ -257,8 +257,8 @@ class FakeSyncClient {
         }
 
         return array(
-            array('productCode' => '001', 'grossPrice' => 20, 'vatPercentage' => 25),
-            array('productCode' => '007', 'grossPrice' => 0, 'vatPercentage' => 25)
+            array('productCode' => '001', 'retailPrice' => 29.8, 'vatPercentage' => 25),
+            array('productCode' => '007', 'retailPrice' => 0, 'vatPercentage' => 25)
         );
     }
 }
@@ -315,8 +315,7 @@ setPrivateProperty($fullSync, 'config', new FakeSyncConfig(array(
     'module_eracuni_sync_code_field' => 'model',
     'module_eracuni_sync_warehouse_code' => '',
     'module_eracuni_sync_stock_mode' => 'available',
-    'module_eracuni_sync_price_field' => 'grossPrice',
-    'module_eracuni_sync_price_includes_tax' => 0
+    'module_eracuni_sync_price_field' => 'retailPrice'
 )));
 setPrivateProperty($fullSync, 'client', new FakeSyncClient());
 setPrivateProperty($fullSync, 'log', new FakeSyncLog());
@@ -329,7 +328,7 @@ assertSameValue(0, $fakeDb->products['007']['quantity'], 'A valid zero stock val
 $priceSummary = $fullSync->syncPrices();
 assertSameValue(1, $priceSummary['updated'], 'Only a positive changed price is updated.');
 assertSameValue(1, $priceSummary['skipped'], 'A zero API price is safely skipped.');
-assertSameValue(20.0, $fakeDb->products['001']['price'], 'Positive API prices are applied.');
+assertSameValue(29.8, $fakeDb->products['001']['price'], 'retailPrice is applied unchanged.');
 assertSameValue(15.0, $fakeDb->products['007']['price'], 'Zero API prices never erase live shop prices.');
 
 echo "e-Racuni sync fixture tests passed.\n";

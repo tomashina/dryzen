@@ -119,14 +119,14 @@
     {% if price %}
       <ul class="list-unstyled price">
         {% if not special %}
-        <li><span class="live-price">{{ price }} <small>{{ text_tax_included }}</small></span></li>
+        <li><span class="live-price">{{ price }}</span></li>
         {% else %}
-        <li><span class="price-old">{{ price }}</span><span class="live-price-new">{{ special }} <small>{{ text_tax_included }}</small></span></li>
+        <li><span class="price-old">{{ price }}</span><span class="live-price-new">{{ special }}</span></li>
         <span id="special_countdown"></span>
         {% endif %}
       </ul>
  {% if special %}
-      <p class="dryzen-lowest-price">Najniža cijena u zadnjih 30 dana: {{ price }}<small>{{ text_tax_included }} </small></p>
+      <p class="dryzen-lowest-price">Najniža cijena u zadnjih 30 dana: {{ price }}</p>
 {% endif %}
 
     

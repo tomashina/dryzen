@@ -19,8 +19,6 @@ $_['text_last_run'] = 'Last run';
 $_['text_never'] = 'Never run';
 $_['text_available'] = 'Available inventory (on hand minus reserved)';
 $_['text_physical'] = 'Physical inventory';
-$_['text_price_net'] = 'No, the value is net';
-$_['text_price_gross'] = 'Yes, remove API VAT before saving';
 $_['text_copy'] = 'Copy URL';
 $_['text_copied'] = 'URL copied.';
 
@@ -29,7 +27,6 @@ $_['entry_stock_status'] = 'Allow inventory synchronization';
 $_['entry_price_status'] = 'Allow price synchronization';
 $_['entry_code_field'] = 'Product code match';
 $_['entry_price_field'] = 'e-Računi price field';
-$_['entry_price_includes_tax'] = 'Selected price includes VAT';
 $_['entry_stock_mode'] = 'Quantity type';
 $_['entry_warehouse_code'] = 'Warehouse code';
 $_['entry_timeout'] = 'API timeout (seconds)';
@@ -37,8 +34,7 @@ $_['entry_cron_key'] = 'Secret cron key';
 $_['entry_cron_url'] = 'EasyCron URL';
 
 $_['help_code_field'] = 'Use Model for DryZen: OpenCart models 001–013 match the e-Računi product codes.';
-$_['help_price_field'] = 'The existing DryZen connector uses grossPrice. retailPrice and purchasePrice are available for differently configured catalogues. Zero prices are always skipped for safety.';
-$_['help_price_includes_tax'] = 'OpenCart stores net prices when a tax class is assigned. retailPrice is always converted to net automatically; for other fields enable this option only when they include VAT.';
+$_['help_price_field'] = 'Use retailPrice for DryZen. The selected value is copied to OpenCart without adding or removing VAT. Zero prices are always skipped for safety.';
 $_['help_warehouse_code'] = 'Leave blank to total all warehouses. Enter a code only when the shop uses one specific warehouse.';
 $_['help_cron_key'] = 'Changing the key immediately invalidates the previous EasyCron URL.';
 
