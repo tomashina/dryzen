@@ -20,7 +20,7 @@
   body.common-home #mod5 .widget-title,
   body.common-home #mod6 .widget-title,
   body.common-home #mod7 .widget-title {
-    margin-bottom: 22px;
+    margin-bottom: 26px;
   }
 
   body.common-home #mod2 .main-title,
@@ -29,8 +29,8 @@
   body.common-home #mod5 .main-title,
   body.common-home #mod6 .main-title,
   body.common-home #mod7 .main-title {
-    font-size: 26px;
-    line-height: 1.18;
+    font-size: 28px;
+    line-height: 1.15;
   }
 
   body.common-home #mod3 .sub-line,
@@ -104,7 +104,7 @@
 
   body.common-home .dryzen-intro-lead {
     margin-bottom: 14px;
-    font-size: 21px;
+    font-size: 20px;
     line-height: 1.35;
   }
 
@@ -224,7 +224,7 @@
     body.information-information-21
   ) .dryzen-need-hero h1 {
     margin-bottom: 14px;
-    font-size: 28px;
+    font-size: 30px;
     line-height: 1.12;
     letter-spacing: -0.03em;
   }
