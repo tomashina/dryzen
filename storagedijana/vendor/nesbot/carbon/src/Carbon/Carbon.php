@@ -920,12 +920,24 @@ class Carbon extends DateTime implements JsonSerializable
     /**
      * Set last errors.
      *
-     * @param array $lastErrors
+     * @param array|false $lastErrors
      *
      * @return void
      */
-    private static function setLastErrors(array $lastErrors)
+    private static function setLastErrors($lastErrors)
     {
+        // DateTime::getLastErrors() returns false on PHP 8.2+ when parsing
+        // succeeds without warnings or errors. Carbon 1.x predates that
+        // behavior and used to require an array here.
+        if ($lastErrors === false) {
+            $lastErrors = array(
+                'warning_count' => 0,
+                'warnings'      => array(),
+                'error_count'   => 0,
+                'errors'        => array(),
+            );
+        }
+
         static::$lastErrors = $lastErrors;
     }
 
