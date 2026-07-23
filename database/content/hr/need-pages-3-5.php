@@ -86,7 +86,7 @@ return array(
             array(
                 'label' => 'Women',
                 'product_id' => 16,
-                'image' => 'catalog/need-armpits-2026/women-word.jpg',
+                'image' => 'catalog/need-armpits-2026/dryzen-slike-a-web.png',
                 'description' => 'Za žene koje žele jednostavnu večernju rutinu za kontrolu znojenja pazuha.',
             ),
             array(

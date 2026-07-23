@@ -486,6 +486,70 @@ function englishUpdateModule(
     return $moduleId;
 }
 
+function englishReplaceModuleImageForLanguages(
+    mysqli $db,
+    $name,
+    $oldImage,
+    $newImage,
+    array $languageIds
+) {
+    $statement = $db->prepare(
+        'SELECT module_id, setting
+         FROM ' . DB_PREFIX . 'module
+         WHERE name = ? AND code = \'basel_content\'
+         LIMIT 1'
+    );
+    $statement->bind_param('s', $name);
+    $statement->execute();
+    $row = $statement->get_result()->fetch_assoc();
+    $statement->close();
+
+    if (!$row) {
+        throw new RuntimeException('Content module not found: ' . $name);
+    }
+
+    $settings = json_decode($row['setting'], true);
+    if (!is_array($settings) || empty($settings['columns'])) {
+        throw new RuntimeException('Invalid content module settings: ' . $name);
+    }
+
+    foreach ($settings['columns'] as &$column) {
+        if (!is_array($column) || ($column['type'] ?? '') !== 'html') {
+            continue;
+        }
+
+        foreach ($languageIds as $languageId) {
+            $languageId = (int) $languageId;
+            $html = isset($column['data1'][$languageId])
+                ? (string) $column['data1'][$languageId]
+                : '';
+            $html = str_replace($oldImage, $newImage, $html);
+
+            if (strpos($html, $newImage) === false) {
+                throw new RuntimeException(
+                    'Shared image was not found in ' . $name . ' for language ' . $languageId
+                );
+            }
+
+            $column['data1'][$languageId] = $html;
+        }
+    }
+    unset($column);
+
+    $json = json_encode($settings, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+    if ($json === false) {
+        throw new RuntimeException('Unable to encode content module: ' . $name);
+    }
+
+    $moduleId = (int) $row['module_id'];
+    $update = $db->prepare(
+        'UPDATE ' . DB_PREFIX . 'module SET setting = ? WHERE module_id = ?'
+    );
+    $update->bind_param('si', $json, $moduleId);
+    $update->execute();
+    $update->close();
+}
+
 function englishRenderNeedHero(array $hero)
 {
     return '<section class="dryzen-need-hero dryzen-need-hero--'
@@ -1196,6 +1260,14 @@ try {
         $moduleIds[] = englishUpdateModule($db, $prefix . ' Symptoms', $symptomsHtml);
         $moduleIds[] = englishUpdateModule($db, $prefix . ' Products', $productsHtml);
     }
+
+    englishReplaceModuleImageForLanguages(
+        $db,
+        'DryZen Armpits Products',
+        '/image/catalog/need-armpits-2026/women-word.jpg',
+        '/image/catalog/need-armpits-2026/dryzen-slike-a-web.png',
+        array(1, 3)
+    );
 
     $aboutSections = englishRenderAboutSections($about);
     englishUpdateInformation(
