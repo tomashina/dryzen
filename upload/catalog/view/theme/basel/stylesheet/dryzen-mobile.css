@@ -4,6 +4,15 @@
  */
 
 @media (max-width: 767px) {
+  html,
+  body {
+    overscroll-behavior-y: none;
+  }
+
+  html {
+    background-color: #fff;
+  }
+
   body.common-home #mod1,
   body.common-home #mod2,
   body.common-home #mod3,
