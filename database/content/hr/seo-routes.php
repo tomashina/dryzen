@@ -3,6 +3,9 @@
 return array(
     'language_id' => 3,
     'store_id' => 0,
+    'categories' => array(
+        1 => 'proizvodi',
+    ),
     'products' => array(
         6 => 'dry-zen-maramice-za-ruke-antiperspirant-maramice-za-ruke',
         9 => 'dryzen-maramice-za-ruke-za-muskarce',

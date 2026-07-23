@@ -14,6 +14,7 @@ $requiredFiles = array(
     'legal' => $projectRoot . '/database/content/en/legal-pages.php',
     'products' => $projectRoot . '/database/content/en/product-catalog.json',
     'seo' => $projectRoot . '/database/content/en/seo-routes.php',
+    'seo_hr' => $projectRoot . '/database/content/hr/seo-routes.php',
 );
 
 foreach ($requiredFiles as $requiredFile) {
@@ -29,6 +30,7 @@ $needPages = require $requiredFiles['needs'];
 $about = require $requiredFiles['about'];
 $legalPages = require $requiredFiles['legal'];
 $seoRoutes = require $requiredFiles['seo'];
+$croatianSeoRoutes = require $requiredFiles['seo_hr'];
 
 try {
     $products = json_decode(
@@ -236,6 +238,14 @@ function englishSaveBackup(
                )
              ORDER BY seo_url_id'
         ),
+        'croatian_shop_seo' => englishFetchAll(
+            $db,
+            'SELECT * FROM ' . DB_PREFIX . 'seo_url
+             WHERE store_id = ' . DRYZEN_STORE_ID . '
+               AND language_id = 3
+               AND query = \'category_id=1\'
+             ORDER BY seo_url_id'
+        ),
         'modules' => englishFetchAll(
             $db,
             'SELECT * FROM ' . DB_PREFIX . 'module
@@ -274,7 +284,7 @@ function englishSaveBackup(
     return $backupFile;
 }
 
-function englishUpsertSeo(mysqli $db, $query, $keyword)
+function englishUpsertSeoForLanguage(mysqli $db, $languageId, $query, $keyword)
 {
     $conflict = $db->prepare(
         'SELECT query FROM ' . DB_PREFIX . 'seo_url
@@ -282,7 +292,7 @@ function englishUpsertSeo(mysqli $db, $query, $keyword)
          LIMIT 1'
     );
     $storeId = DRYZEN_STORE_ID;
-    $languageId = DRYZEN_ENGLISH_LANGUAGE_ID;
+    $languageId = (int) $languageId;
     $conflict->bind_param('iiss', $storeId, $languageId, $keyword, $query);
     $conflict->execute();
     $conflictRow = $conflict->get_result()->fetch_assoc();
@@ -290,7 +300,8 @@ function englishUpsertSeo(mysqli $db, $query, $keyword)
 
     if ($conflictRow) {
         throw new RuntimeException(
-            'English SEO slug "' . $keyword . '" is already used by ' . $conflictRow['query'] . '.'
+            'SEO slug "' . $keyword . '" is already used by '
+            . $conflictRow['query'] . ' for language ' . $languageId . '.'
         );
     }
 
@@ -312,6 +323,16 @@ function englishUpsertSeo(mysqli $db, $query, $keyword)
     $insert->close();
 }
 
+function englishUpsertSeo(mysqli $db, $query, $keyword)
+{
+    englishUpsertSeoForLanguage(
+        $db,
+        DRYZEN_ENGLISH_LANGUAGE_ID,
+        $query,
+        $keyword
+    );
+}
+
 function englishSetLanguageValue(array &$container, $key, $value)
 {
     if (!isset($container[$key]) || !is_array($container[$key])) {
@@ -325,10 +346,7 @@ function englishApplyNavigationAndFooter(mysqli $db)
 {
     $menuLinks = array(
         53 => array(3 => '/', 1 => '/'),
-        50 => array(
-            3 => '/index.php?route=product/category&path=1',
-            1 => 'shop',
-        ),
+        50 => array(3 => 'proizvodi', 1 => 'shop'),
         49 => array(3 => 'o-nama', 1 => 'about-us'),
         52 => array(3 => 'kontakt', 1 => 'contact'),
     );
@@ -1179,6 +1197,15 @@ try {
     }
 
     $productNames = englishApplyProducts($db, $products, $seoRoutes['products']);
+    if (!isset($croatianSeoRoutes['categories'][1])) {
+        throw new RuntimeException('Croatian Shop category SEO route is missing.');
+    }
+    englishUpsertSeoForLanguage(
+        $db,
+        (int) $croatianSeoRoutes['language_id'],
+        'category_id=1',
+        $croatianSeoRoutes['categories'][1]
+    );
     englishApplyNavigationAndFooter($db);
     foreach ($seoRoutes['categories'] as $categoryId => $keyword) {
         englishUpsertSeo($db, 'category_id=' . (int) $categoryId, $keyword);

@@ -19,6 +19,8 @@
     </div>
     <input type="hidden" name="code" value="" />
     <input type="hidden" name="redirect" value="{{ redirect }}" />
+    <input type="hidden" name="redirect_route" value="{{ redirect_route|e }}" />
+    <input type="hidden" name="redirect_query" value="{{ redirect_query|e }}" />
   </form>
 </div>
 {% endif %}
