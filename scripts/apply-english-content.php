@@ -502,11 +502,38 @@ function englishRenderNeedHero(array $hero)
         . '</section>';
 }
 
+function englishRenderHandsHero(array $hero)
+{
+    return '<section class="dryzen-hands-hero">'
+        . '<div class="dryzen-hands-hero-copy">'
+        . '<h1>' . englishEscape($hero['title'] . ' ' . $hero['subtitle']) . '</h1>'
+        . '<p>' . englishEscape($hero['copy']) . '</p>'
+        . '</div>'
+        . '<figure class="dryzen-hands-hero-media">'
+        . '<img src="/image/' . englishEscape($hero['image'])
+        . '" alt="" width="1600" height="1066">'
+        . '</figure>'
+        . '</section>';
+}
+
 function englishRenderNeedSymptoms(array $symptoms)
 {
     $html = '<section class="dryzen-need-symptoms">'
         . '<h2>' . englishEscape($symptoms['title']) . '</h2>'
         . '<ul class="dryzen-need-symptom-list">';
+
+    foreach ($symptoms['items'] as $item) {
+        $html .= '<li>' . englishEscape($item) . '</li>';
+    }
+
+    return $html . '</ul></section>';
+}
+
+function englishRenderHandsSymptoms(array $symptoms)
+{
+    $html = '<section class="dryzen-hands-symptoms">'
+        . '<h2>' . englishEscape($symptoms['title']) . '</h2>'
+        . '<ul class="dryzen-hands-symptom-list">';
 
     foreach ($symptoms['items'] as $item) {
         $html .= '<li>' . englishEscape($item) . '</li>';
@@ -583,6 +610,37 @@ function englishRenderNeedProducts(array $page, array $productNames, array $prod
         '<ul class="dryzen-need-feature-list">',
         $html
     );
+}
+
+function englishRenderHandsProducts(array $page, array $productNames, array $productSlugs)
+{
+    $html = '<section id="odaberi-proizvod" class="dryzen-hands-products">'
+        . '<header class="dryzen-hands-products-header">'
+        . '<h2>' . englishEscape($page['products_intro']) . '</h2>'
+        . '</header>'
+        . '<div class="dryzen-hands-product-grid">';
+
+    foreach ($page['products'] as $product) {
+        $productId = (int) $product['product_id'];
+        $href = '/' . $productSlugs[$productId];
+        $html .= '<article class="dryzen-hands-product-card">'
+            . '<a class="dryzen-hands-product-media" href="' . englishEscape($href)
+            . '" aria-label="' . englishEscape($productNames[$productId]) . '">'
+            . '<img src="/image/' . englishEscape($product['image']) . '" alt="'
+            . englishEscape($productNames[$productId])
+            . '" width="1100" height="733" loading="lazy">'
+            . '</a>'
+            . '<div class="dryzen-hands-product-body">'
+            . '<h3>' . englishEscape($product['label']) . '</h3>'
+            . '<p>' . englishEscape($product['description']) . '</p>'
+            . '<a class="dryzen-hands-product-link" href="' . englishEscape($href) . '">'
+            . englishEscape($page['button_text'])
+            . '</a>'
+            . '</div>'
+            . '</article>';
+    }
+
+    return $html . '</div></section>';
 }
 
 function englishRenderAboutParagraphs(array $paragraphs)
@@ -1111,18 +1169,28 @@ try {
         );
     }
 
-    foreach ($needPages as $page) {
+    foreach ($needPages as $needKey => $page) {
         englishUpdateInformation($db, array_merge(
             $page['page'],
             array('information_id' => $page['information_id'])
         ));
-        $heroHtml = englishRenderNeedHero($page['hero']);
-        $symptomsHtml = englishRenderNeedSymptoms($page['symptoms']);
-        $productsHtml = englishRenderNeedProducts(
-            $page,
-            $productNames,
-            $seoRoutes['products']
-        );
+        if ($needKey === 'hands') {
+            $heroHtml = englishRenderHandsHero($page['hero']);
+            $symptomsHtml = englishRenderHandsSymptoms($page['symptoms']);
+            $productsHtml = englishRenderHandsProducts(
+                $page,
+                $productNames,
+                $seoRoutes['products']
+            );
+        } else {
+            $heroHtml = englishRenderNeedHero($page['hero']);
+            $symptomsHtml = englishRenderNeedSymptoms($page['symptoms']);
+            $productsHtml = englishRenderNeedProducts(
+                $page,
+                $productNames,
+                $seoRoutes['products']
+            );
+        }
         $prefix = $page['page']['module_prefix'];
         $moduleIds[] = englishUpdateModule($db, $prefix . ' Hero', $heroHtml);
         $moduleIds[] = englishUpdateModule($db, $prefix . ' Symptoms', $symptomsHtml);
