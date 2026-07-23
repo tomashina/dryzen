@@ -1,3 +1,4 @@
+{% set dryzen_english_labels = basel_text_out_of_stock == 'Sold out' %}
 <div class="item single-product{% if dryzen_shop_card %} dryzen-shop-card{% endif %}">
     <div class="edge">
 <div class="image">
@@ -58,10 +59,10 @@
   {% endif %}
 
   <div class="dryzen-card-purchase">
-    <div class="dryzen-card-qty" aria-label="Količina">
-      <button type="button" data-quantity-direction="down" aria-label="Smanji količinu" disabled>-</button>
-      <input class="dryzen-card-quantity" type="number" min="{{ product.minimum }}" step="1" value="{{ product.minimum }}" inputmode="numeric" aria-label="Količina proizvoda" />
-      <button type="button" data-quantity-direction="up" aria-label="Povećaj količinu">+</button>
+    <div class="dryzen-card-qty" aria-label="{{ dryzen_english_labels ? 'Quantity' : 'Količina' }}">
+      <button type="button" data-quantity-direction="down" aria-label="{{ dryzen_english_labels ? 'Decrease quantity' : 'Smanji količinu' }}" disabled>-</button>
+      <input class="dryzen-card-quantity" type="number" min="{{ product.minimum }}" step="1" value="{{ product.minimum }}" inputmode="numeric" aria-label="{{ dryzen_english_labels ? 'Product quantity' : 'Količina proizvoda' }}" />
+      <button type="button" data-quantity-direction="up" aria-label="{{ dryzen_english_labels ? 'Increase quantity' : 'Povećaj količinu' }}">+</button>
     </div>
     {% if ((product.quantity < 1) and (stock_badge_status)) %}
     <button class="dryzen-card-cart" type="button" disabled aria-label="{{ button_cart }}" title="{{ button_cart }}"><span class="global-cart" aria-hidden="true"></span></button>

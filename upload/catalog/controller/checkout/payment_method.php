@@ -2,6 +2,19 @@
 class ControllerCheckoutPaymentMethod extends Controller {
 	public function index() {
 		$this->load->language('checkout/checkout');
+		foreach (array(
+			'text_payment_security_title',
+			'text_payment_accepted_cards',
+			'text_payment_cards_label',
+			'text_payment_security_programs',
+			'text_payment_card_handling',
+			'text_payment_security_more',
+			'text_payment_currency_title',
+			'text_payment_currency_copy',
+			'text_opens_new_window'
+		) as $languageKey) {
+			$data[$languageKey] = $this->language->get($languageKey);
+		}
 
 		if (isset($this->session->data['payment_address'])) {
 			// Totals

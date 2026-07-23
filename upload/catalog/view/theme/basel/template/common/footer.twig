@@ -111,33 +111,33 @@
                 </div><!-- .row ends -->
             </div><!-- .col-md-8 ends -->
 
-            <nav class="col-xs-12 text-center otp-footer-compliance-links" aria-label="Informacije za kupce">
+            <nav class="col-xs-12 text-center otp-footer-compliance-links" aria-label="{{ text_customer_information }}">
                 {% for compliance_link in compliance_links %}
                     <a href="{{ compliance_link.href }}">{{ compliance_link.title }}</a>
                 {% endfor %}
                 <a href="#cookie-settings" data-cookie-consent-trigger>{{ text_cookie_settings }}</a>
             </nav>
 
-            <div class="col-xs-12 text-center cards-holder" aria-label="Prihvaćeni načini plaćanja">
-                <a href="https://www.mastercard.com/" target="_blank" rel="noopener noreferrer" aria-label="MasterCard – otvara se u novom prozoru">
+            <div class="col-xs-12 text-center cards-holder" aria-label="{{ text_accepted_payment_methods }}">
+                <a href="https://www.mastercard.com/" target="_blank" rel="noopener noreferrer" aria-label="MasterCard – {{ text_opens_new_window }}">
                     <img class="cards-img" src="image/catalog/credit-cards/master-new.svg" alt="MasterCard" height="30" width="50">
                 </a>
-                <a href="https://www.mastercard.hr/hr-hr/consumers/find-card-products/debit-cards/maestro-debit.html" target="_blank" rel="noopener noreferrer" aria-label="Maestro – otvara se u novom prozoru">
+                <a href="https://www.mastercard.hr/hr-hr/consumers/find-card-products/debit-cards/maestro-debit.html" target="_blank" rel="noopener noreferrer" aria-label="Maestro – {{ text_opens_new_window }}">
                     <img class="cards-img" src="image/catalog/credit-cards/maestro-new.svg" alt="Maestro" height="30" width="50">
                 </a>
-                <a href="https://www.visaeurope.com" target="_blank" rel="noopener noreferrer" aria-label="Visa – otvara se u novom prozoru">
+                <a href="https://www.visaeurope.com" target="_blank" rel="noopener noreferrer" aria-label="Visa – {{ text_opens_new_window }}">
                     <img class="cards-img" src="image/catalog/credit-cards/visa.webp" alt="Visa" height="30" width="50">
                 </a>
-                <a href="https://www.dinersclub.com/" target="_blank" rel="noopener noreferrer" aria-label="Diners Club – otvara se u novom prozoru">
+                <a href="https://www.dinersclub.com/" target="_blank" rel="noopener noreferrer" aria-label="Diners Club – {{ text_opens_new_window }}">
                     <img class="cards-img" src="image/catalog/credit-cards/diners.svg" alt="Diners Club" height="30" width="50">
                 </a>
-                <a href="https://pay.google.com/" target="_blank" rel="noopener noreferrer" aria-label="Google Pay – otvara se u novom prozoru">
+                <a href="https://pay.google.com/" target="_blank" rel="noopener noreferrer" aria-label="Google Pay – {{ text_opens_new_window }}">
                     <img class="cards-img" src="image/google_pay.svg" alt="Google Pay" height="30" width="50">
                 </a>
-                <a href="https://www.apple.com/apple-pay/" target="_blank" rel="noopener noreferrer" aria-label="Apple Pay – otvara se u novom prozoru">
+                <a href="https://www.apple.com/apple-pay/" target="_blank" rel="noopener noreferrer" aria-label="Apple Pay – {{ text_opens_new_window }}">
                     <img class="cards-img" src="image/apple_pay.svg" alt="Apple Pay" height="30" width="50">
                 </a>
-                <a href="https://www.corvuspay.com/" target="_blank" rel="noopener noreferrer" aria-label="CorvusPay – otvara se u novom prozoru">
+                <a href="https://www.corvuspay.com/" target="_blank" rel="noopener noreferrer" aria-label="CorvusPay – {{ text_opens_new_window }}">
                     <img class="cards-img p4 hidden-xs" src="image/corvus-logo-i.svg" alt="CorvusPay" height="30" width="114">
                 </a>
             </div>
@@ -188,7 +188,7 @@
 
 </div><!-- .outer-container ends -->
 
-<a href="#top" class="scroll-to-top top primary-bg-color" aria-label="Na vrh" onclick="$('html, body').animate({scrollTop:0});"><img src="image/up.svg" class="ikona" width="18" height="10" alt="" aria-hidden="true"></a>
+<a href="#top" class="scroll-to-top top primary-bg-color" aria-label="{{ text_back_to_top }}" onclick="$('html, body').animate({scrollTop:0});"><img src="image/up.svg" class="ikona" width="18" height="10" alt="" aria-hidden="true"></a>
 <button type="button" class="gk-cookie-fab" data-cookie-consent-trigger aria-label="{{ text_cookie_settings }}" title="{{ text_cookie_settings }}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 1 0 10 10 4 4 0 0 1-5-5 4 4 0 0 1-5-5Z"/><path d="M8.5 8.5h.01M16 15.5h.01M12 12h.01M11 17h.01M7 14h.01"/></svg></button>
 <div id="featherlight-holder"></div>
 <script>

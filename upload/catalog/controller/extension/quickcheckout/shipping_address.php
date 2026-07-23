@@ -42,9 +42,10 @@ class ControllerExtensionQuickCheckoutShippingAddress extends Controller {
 			$data['zone_id'] = isset($zone['default']) ? $zone['default'] : 0;
 		}
 
-		$this->load->model('localisation/country');
+		$this->load->model('localisation/delivery_country');
 
-		$data['countries'] = $this->model_localisation_country->getCountries();
+		$data['countries'] = $this->model_localisation_delivery_country->getCountries();
+		$data['country_id'] = $this->model_localisation_delivery_country->getAvailableCountryId($data['countries'], $data['country_id']);
 		
 		// Custom Fields
 		$this->load->model('account/custom_field');

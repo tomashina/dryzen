@@ -67,6 +67,17 @@ $_['entry_zone']                     = 'Region / State';
 $_['entry_newsletter']               = 'I wish to subscribe to the %s newsletter.';
 $_['entry_shipping']                 = 'My delivery and billing addresses are the same.';
 
+// DryZen payment security
+$_['text_payment_security_title'] = 'Secure Debit/Credit Card Payment';
+$_['text_payment_accepted_cards'] = 'Accepted cards: MasterCard<sup>®</sup>, Maestro<sup>®</sup>, Visa and Diners.';
+$_['text_payment_cards_label'] = 'Accepted cards';
+$_['text_payment_security_programs'] = 'Card payment security programmes';
+$_['text_payment_card_handling'] = 'Card details are transferred over a secure connection directly to the authorised payment service provider. DryZen does not store or process them on its servers.';
+$_['text_payment_security_more'] = 'More about payment security';
+$_['text_payment_currency_title'] = 'Currency conversion statement:';
+$_['text_payment_currency_copy'] = 'all payments are made in euros (EUR). If the card is linked to an account in another currency, conversion is performed by the card scheme or issuing bank according to its own exchange rate and terms, and the final amount charged is subject to their calculation.';
+$_['text_opens_new_window'] = 'opens in a new window';
+
 // Error
 $_['error_warning']                  = 'There was a problem while trying to process your order! If the problem persists please try selecting a different payment method or you can contact the store owner by <a href="%s">clicking here</a>.';
 $_['error_login']                    = 'Warning: No match for E-Mail Address and/or Password.';

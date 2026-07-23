@@ -48,6 +48,18 @@ $_['entry_coupon']        		     = 'Enter your coupon here:';
 $_['entry_voucher']      		     = 'Enter your gift voucher code here:';
 $_['entry_reward']          		 = 'Enter reward points to use (Max %s, Available %s):';
 
+// DryZen checkout notices
+$_['text_order_rights_copy'] = 'Your purchase does not limit your statutory rights in the event of a product defect. The reporting, return and complaint procedure is described on the';
+$_['text_order_rights_link'] = 'Returns, Exchanges and Complaints page';
+$_['text_shipping_notice_title'] = 'Delivery area and cost:';
+$_['text_shipping_notice_copy'] = 'delivery is available within the Republic of Croatia and, for other European Union countries, according to the options shown for the entered address. The available method and final delivery cost are shown above before the order is confirmed.';
+$_['text_terms_expand'] = 'Open larger view';
+$_['text_terms_open_page'] = 'Open separate page';
+$_['text_close'] = 'Close';
+$_['error_temporary_request'] = 'A temporary error occurred. Your details remain in the form; please try again.';
+$_['text_boxnow_select'] = 'Choose a BOX NOW locker';
+$_['text_boxnow_selected_placeholder'] = 'Selected BOX NOW locker';
+
 // Error
 $_['error_fax']       		         = 'Fax must be between 3 and 32 characters!';
 $_['error_company']    		         = 'Company must be between 3 and 32 characters!';

@@ -28,9 +28,16 @@ class ModelExtensionPaymentRevolutCard extends Model
         }
 
         if ($status) {
+            $configuredTitle = (string)$this->config->get('payment_revolut_card_title');
+            $paymentTitle = $configuredTitle ?: $this->language->get('text_title');
+
+            if (preg_match('/Debitna|kreditna|[čćžšđ]/iu', $paymentTitle)) {
+                $paymentTitle = $this->language->get('text_title');
+            }
+
             $method_data = array(
                 'code'       => 'revolut_card',
-                'title'      => ($this->config->get('payment_revolut_card_title') ? $this->config->get('payment_revolut_card_title') : $this->language->get('text_title')) . $this->session->data["card_logos"],
+                'title'      => $paymentTitle . $this->session->data["card_logos"],
                 'terms'      => '',
                 'sort_order' => $this->config->get('payment_revolut_card_sort_order')
             );

@@ -47,6 +47,18 @@ $_['entry_coupon']                   = 'Unesite kod kupona:';
 $_['entry_voucher']                  = 'Unesite kod poklon bona:';
 $_['entry_reward']                   = 'Unesite broj bodova koje želite iskoristiti (Maksimalno: %s, Dostupno: %s):';
 
+// DryZen obavijesti naplate
+$_['text_order_rights_copy'] = 'Kupnja ne ograničava zakonska prava kupca u slučaju materijalnog nedostatka. Postupak prijave, povrata i reklamacije opisan je na stranici';
+$_['text_order_rights_link'] = 'Povrat robe, zamjena i reklamacije';
+$_['text_shipping_notice_title'] = 'Područje i trošak dostave:';
+$_['text_shipping_notice_copy'] = 'dostava je dostupna na području Republike Hrvatske, a za druge države Europske unije prema mogućnostima prikazanim za unesenu adresu. Dostupna metoda i konačan trošak dostave prikazuju se iznad prije potvrde narudžbe.';
+$_['text_terms_expand'] = 'Otvori u većem prikazu';
+$_['text_terms_open_page'] = 'Otvori zasebnu stranicu';
+$_['text_close'] = 'Zatvori';
+$_['error_temporary_request'] = 'Došlo je do privremene greške. Vaši podaci su ostali u obrascu; pokušajte ponovno.';
+$_['text_boxnow_select'] = 'Odaberite BOX NOW paketomat';
+$_['text_boxnow_selected_placeholder'] = 'Odabrani BOX NOW paketomat';
+
 // Error
 $_['error_fax']                      = 'Faks mora imati između 3 i 32 znaka!';
 $_['error_company']                  = 'Naziv tvrtke mora imati između 3 i 32 znaka!';

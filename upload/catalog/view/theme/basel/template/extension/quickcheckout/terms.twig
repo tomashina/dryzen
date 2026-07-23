@@ -5,7 +5,7 @@
     <div class="otp-terms-heading">
       <h4 id="otp-terms-title">{{ terms_title }}</h4>
       <button type="button" class="btn btn-link otp-terms-open" data-toggle="modal" data-target="#otp-terms-modal">
-        <i class="fa fa-expand" aria-hidden="true"></i> Otvori u većem prikazu
+        <i class="fa fa-expand" aria-hidden="true"></i> {{ text_terms_expand }}
       </button>
     </div>
     <div class="otp-terms-box" tabindex="0">{{ terms_description }}</div>
@@ -15,13 +15,13 @@
     <div class="modal-dialog modal-lg" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Zatvori"><span aria-hidden="true">&times;</span></button>
+          <button type="button" class="close" data-dismiss="modal" aria-label="{{ text_close }}"><span aria-hidden="true">&times;</span></button>
           <h4 class="modal-title" id="otp-terms-modal-title">{{ terms_title }}</h4>
         </div>
         <div class="modal-body otp-terms-modal-body">{{ terms_description }}</div>
         <div class="modal-footer">
-          <a class="btn btn-default" href="{{ terms_url }}" target="_blank" rel="noopener">Otvori zasebnu stranicu</a>
-          <button type="button" class="btn btn-primary" data-dismiss="modal">Zatvori</button>
+          <a class="btn btn-default" href="{{ terms_url }}" target="_blank" rel="noopener">{{ text_terms_open_page }}</a>
+          <button type="button" class="btn btn-primary" data-dismiss="modal">{{ text_close }}</button>
         </div>
       </div>
     </div>

@@ -76,12 +76,12 @@
 
            {% if logged %}
            
-         <a class="shortcut-wrapper wishlist" title="Korisnički račun" href="{{ login }}"><i class="icon-user icon"></i></a><a class="shortcut-wrapper wishlist" title="Odjava" href="{{ logout }}"> Odjava  <div class="wishlist-hover"></div>
+         <a class="shortcut-wrapper wishlist" title="{{ text_account }}" href="{{ login }}"><i class="icon-user icon"></i></a><a class="shortcut-wrapper wishlist" title="{{ text_logout }}" href="{{ logout }}"> {{ text_logout }}  <div class="wishlist-hover"></div>
         </a>
 
           {% else %}
 
-             <a class="shortcut-wrapper wishlist" title="Korisnički račun" href="{{ login }}">
+             <a class="shortcut-wrapper wishlist" title="{{ text_account }}" href="{{ login }}">
                  <div class="wishlist-hover"><i class="icon-user icon"></i></div>
         </a>
           

@@ -17,7 +17,7 @@
       <h1 class="dryzen-contact-title">{{ heading_title }}</h1>
       <p class="dryzen-contact-lead">{{ text_contact_intro }}</p>
 
-      <nav class="dryzen-contact-breadcrumbs" aria-label="Putanja stranice">
+      <nav class="dryzen-contact-breadcrumbs" aria-label="{{ text_breadcrumbs }}">
         <ol>
           {% for breadcrumb in breadcrumbs %}
           <li>
@@ -53,7 +53,7 @@
 
       <section class="dryzen-contact-form-card" aria-labelledby="dryzen-contact-form-title">
         <div class="dryzen-contact-section-heading">
-          <p class="dryzen-contact-kicker">PIŠI NAM</p>
+          <p class="dryzen-contact-kicker">{{ text_contact_form_kicker }}</p>
           <h2 id="dryzen-contact-form-title">{{ text_contact }}</h2>
         </div>
 
@@ -107,7 +107,7 @@
 
       <aside class="dryzen-contact-info-card" aria-labelledby="dryzen-contact-info-title">
         <div>
-          <p class="dryzen-contact-kicker">PODRŠKA</p>
+          <p class="dryzen-contact-kicker">{{ text_contact_support_kicker }}</p>
           <h2 id="dryzen-contact-info-title">{{ text_contact_direct_title }}</h2>
           <p class="dryzen-contact-info-copy">{{ text_contact_direct_copy }}</p>
         </div>

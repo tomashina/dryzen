@@ -15,7 +15,7 @@ class ControllerInformationContact extends Controller {
 		$this->document->addLink($contactUrl, 'canonical');
 
 		if (method_exists($this->document, 'setOpengraph')) {
-			$this->document->setOpengraph('og:title', 'Kontakt | DryZen');
+			$this->document->setOpengraph('og:title', $this->language->get('heading_title') . ' | DryZen');
 			$this->document->setOpengraph('og:type', 'website');
 			$this->document->setOpengraph('og:site_name', $this->config->get('config_name'));
 			$this->document->setOpengraph('og:url', $contactUrl);
@@ -115,6 +115,9 @@ class ControllerInformationContact extends Controller {
 		$data['text_contact_intro'] = $this->language->get('text_contact_intro');
 		$data['text_contact_direct_title'] = $this->language->get('text_contact_direct_title');
 		$data['text_contact_direct_copy'] = $this->language->get('text_contact_direct_copy');
+		$data['text_contact_form_kicker'] = $this->language->get('text_contact_form_kicker');
+		$data['text_contact_support_kicker'] = $this->language->get('text_contact_support_kicker');
+		$data['text_breadcrumbs'] = $this->language->get('text_breadcrumbs');
 		$data['text_address'] = $this->language->get('text_address');
 		$data['text_telephone'] = $this->language->get('text_telephone');
 		$data['text_email'] = $this->language->get('text_email');
@@ -135,14 +138,14 @@ class ControllerInformationContact extends Controller {
 		}
 
 		$data['store'] = $this->config->get('config_name');
-		$data['address'] = nl2br($this->config->get('config_address'));
+		$data['address'] = nl2br($this->language->get('text_contact_address_value'));
 		$data['geocode'] = $this->config->get('config_geocode');
 		$data['geocode_hl'] = $this->config->get('config_language');
 		$data['telephone'] = $this->config->get('config_telephone');
 		$data['telephone_href'] = preg_replace('/[^0-9+]/', '', $this->config->get('config_telephone'));
 		$data['email'] = $this->config->get('config_email');
 		$data['fax'] = $this->config->get('config_fax');
-		$data['open'] = nl2br($this->config->get('config_open'));
+		$data['open'] = nl2br($this->language->get('text_contact_open_value'));
 		$data['comment'] = $this->config->get('config_comment');
 
 		$data['locations'] = array();

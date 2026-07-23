@@ -513,9 +513,9 @@ $weight = (float)$product_info['weight'];
 
 // Tekst isporuke ovisno o težini
 if ($weight > 15) {
-    $data['delivery_time'] = '8-15 dana';
+    $data['delivery_time'] = '8-15 ' . $this->language->get('text_d');
 } else {
-    $data['delivery_time'] = '3-5 dana';
+    $data['delivery_time'] = '3-5 ' . $this->language->get('text_d');
 }
 $data['weight'] = $weight;
 

@@ -1354,7 +1354,7 @@ $(document).ajaxError(function(event, xhr, settings) {
 	{% endif %}
 
 	if (!$('#warning-messages .checkout-request-error').length) {
-		$('#warning-messages').prepend('<div class="alert alert-danger checkout-request-error"><i class="fa fa-exclamation-circle"></i> Došlo je do privremene greške. Vaši podaci su ostali u obrascu; pokušajte ponovno.</div>');
+		$('#warning-messages').prepend('<div class="alert alert-danger checkout-request-error"><i class="fa fa-exclamation-circle"></i> {{ error_temporary_request|escape('js') }}</div>');
 	}
 });
 

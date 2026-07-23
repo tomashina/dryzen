@@ -19,12 +19,12 @@ class ControllerCommonFooter extends Controller {
 		$data['compliance_links'] = array();
 
 		$compliance_information_pages = array(
-			13 => 'O nama i podaci o trgovcu',
-			5  => 'Opći uvjeti kupnje',
-			7  => 'Plaćanje i dostava',
-			12 => 'Sigurnost plaćanja',
-			3  => 'Pravila privatnosti',
-			17 => 'Povrati i reklamacije'
+			13 => $this->language->get('text_compliance_about'),
+			5  => $this->language->get('text_compliance_terms'),
+			7  => $this->language->get('text_compliance_delivery'),
+			12 => $this->language->get('text_compliance_payment'),
+			3  => $this->language->get('text_compliance_privacy'),
+			17 => $this->language->get('text_compliance_returns')
 		);
 
 		foreach ($compliance_information_pages as $information_id => $title) {
@@ -46,6 +46,10 @@ class ControllerCommonFooter extends Controller {
 		$data['order'] = $this->url->link('account/order', '', true);
 		$data['wishlist'] = $this->url->link('account/wishlist', '', true);
 		$data['newsletter'] = $this->url->link('account/newsletter', '', true);
+		$data['text_customer_information'] = $this->language->get('text_customer_information');
+		$data['text_accepted_payment_methods'] = $this->language->get('text_accepted_payment_methods');
+		$data['text_opens_new_window'] = $this->language->get('text_opens_new_window');
+		$data['text_back_to_top'] = $this->language->get('text_back_to_top');
 
 		$data['powered'] = sprintf($this->language->get('text_powered'), $this->config->get('config_name'), date('Y', time()));
 		$data['config_email'] = $this->config->get('config_email');

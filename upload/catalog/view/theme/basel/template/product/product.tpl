@@ -50,7 +50,7 @@
 
 <ul class="breadcrumb">
     <?php foreach ($breadcrumbs as $breadcrumb) { ?>
-    <li><a href="<?php echo $breadcrumb['href']; ?>" aria-label="<?php echo trim(strip_tags($breadcrumb['text'])) ?: 'Naslovna'; ?>"><?php echo $breadcrumb['text']; ?></a></li>
+    <li><a href="<?php echo $breadcrumb['href']; ?>" aria-label="<?php echo trim(strip_tags($breadcrumb['text'])); ?>"><?php echo $breadcrumb['text']; ?></a></li>
     <?php } ?>
   </ul>
 

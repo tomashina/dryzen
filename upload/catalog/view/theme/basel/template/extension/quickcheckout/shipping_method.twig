@@ -51,7 +51,7 @@
 <br />
 {% endif %}
 <div class="otp-shipping-notice">
-  <strong>Područje i trošak dostave:</strong> dostava je dostupna na području Republike Hrvatske, a za druge države Europske unije prema mogućnostima prikazanim za unesenu adresu. Dostupna metoda i konačan trošak dostave prikazuju se iznad prije potvrde narudžbe.
+  <strong>{{ text_shipping_notice_title }}</strong> {{ text_shipping_notice_copy }}
 </div>
 {% if delivery and (not delivery_delivery_time or delivery_delivery_time == '1' or delivery_delivery_time == '3') %} 
 <div{{ delivery_required ? ' class="required"' }}>
@@ -83,6 +83,10 @@
   <input type="text" name="delivery_date" value="" class="hide" />
   <select name="delivery_time" class="hide"><option value=""></option></select>
 {% endif %}
+<script>
+$('.boxnow-map-widget-button').text('{{ text_boxnow_select|escape('js') }}');
+$('#boxnow').attr('placeholder', '{{ text_boxnow_selected_placeholder|escape('js') }}');
+</script>
 
 <script type="text/javascript"><!--
 $('#shipping-method input[name=\'shipping_method\'], #shipping-method select[name=\'shipping_method\']').on('change', function() {

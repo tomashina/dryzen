@@ -14,3 +14,7 @@ $_['text_logout']        = 'Logout';
 $_['text_checkout']      = 'Checkout';
 $_['text_search']        = 'Search';
 $_['text_all']           = 'Show All';
+$_['text_close_menu']     = 'Close menu';
+$_['text_open_menu']      = 'Open menu';
+$_['text_back_previous']  = 'Back to previous page';
+$_['text_social_image_alt'] = 'DryZen products and team';

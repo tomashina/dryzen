@@ -1,6 +1,8 @@
 <?php
 class ControllerCommonHeader extends Controller {
 	public function index() {
+		$this->load->language('common/header');
+
 		// Analytics
 		$this->load->model('setting/extension');
 
@@ -57,7 +59,11 @@ class ControllerCommonHeader extends Controller {
 			$data['logo'] = '';
 		}
 
-		$this->load->language('common/header');
+		$data['text_close_menu'] = $this->language->get('text_close_menu');
+		$data['text_open_menu'] = $this->language->get('text_open_menu');
+		$data['text_back_previous'] = $this->language->get('text_back_previous');
+		$data['text_account'] = $this->language->get('text_account');
+		$data['text_logout'] = $this->language->get('text_logout');
 
 		// Wishlist
 		if ($this->customer->isLogged()) {
@@ -139,17 +145,19 @@ class ControllerCommonHeader extends Controller {
 		}
 
 		$defaultImage = $server . 'image/catalog/seo/dryzen-social-1200x630.webp';
+		$languageCode = strtolower(str_replace('_', '-', (string) $this->language->get('code')));
+		$openGraphLocale = strpos($languageCode, 'en') === 0 ? 'en_GB' : 'hr_HR';
 		$defaults = array(
 			'og:title' => $title,
 			'og:type' => 'website',
 			'og:site_name' => (string) $this->config->get('config_name'),
 			'og:url' => $canonical,
 			'og:description' => $description,
-			'og:locale' => 'hr_HR',
+			'og:locale' => $openGraphLocale,
 			'og:image' => $defaultImage,
 			'og:image:width' => '1200',
 			'og:image:height' => '630',
-			'og:image:alt' => 'DryZen proizvodi i tim',
+			'og:image:alt' => $this->language->get('text_social_image_alt'),
 		);
 
 		foreach ($defaults as $name => $content) {

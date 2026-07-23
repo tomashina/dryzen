@@ -73,6 +73,17 @@ $_['entry_zone']                     = 'Županija (regija)';
 $_['entry_newsletter']               = 'Želim se pretplatiti na %s newsletter.';
 $_['entry_shipping'] 	             = 'Adresa slanja računa jednaka je adresi dostave';
 
+// DryZen sigurnost plaćanja
+$_['text_payment_security_title'] = 'Sigurno plaćanje debitnom/kreditnom karticom';
+$_['text_payment_accepted_cards'] = 'Prihvaćene kartice: MasterCard<sup>®</sup>, Maestro<sup>®</sup>, Visa i Diners.';
+$_['text_payment_cards_label'] = 'Prihvaćene kartice';
+$_['text_payment_security_programs'] = 'Sigurnosni programi kartičnog plaćanja';
+$_['text_payment_card_handling'] = 'Podaci kartice prenose se zaštićenom vezom izravno ovlaštenom pružatelju platnih usluga. DryZen ih ne pohranjuje ni ne obrađuje na svojim poslužiteljima.';
+$_['text_payment_security_more'] = 'Više o sigurnosti plaćanja';
+$_['text_payment_currency_title'] = 'Izjava o konverziji valuta:';
+$_['text_payment_currency_copy'] = 'sva plaćanja izvršavaju se u eurima (EUR). Ako je kartica vezana uz račun u drugoj valuti, konverziju provodi kartična kuća ili banka izdavatelj prema vlastitom tečaju i uvjetima te je konačni terećeni iznos podložan njihovom obračunu.';
+$_['text_opens_new_window'] = 'otvara se u novom prozoru';
+
 // Error
 $_['error_warning']                  = 'Nastao je problem pri pokušaju obrade Vaše narudžbe! Ukoliko se problem nastavi pojavljivati, molim odaberite drugačiji način plaćanja ili kontaktirajte vlasnika web trgovine <a href="%s">kliknuvši ovdje</a>.';
 $_['error_login']                    = 'Upozorenje: Ne odgovaraju e-mail adresa i/ili lozinke.';

@@ -1,0 +1,41 @@
+<?php
+
+return array(
+    'language_id' => 1,
+    'store_id' => 0,
+    'categories' => array(
+        1 => 'shop',
+        2 => 'dryzen-men',
+        3 => 'dryzen-women',
+        4 => 'dryzen-sport',
+        5 => 'dryzen-kids',
+    ),
+    'products' => array(
+        6 => 'dryzen-women-antiperspirant-hand-wipes',
+        9 => 'dryzen-men-antiperspirant-hand-wipes',
+        10 => 'dryzen-sport-antiperspirant-hand-wipes',
+        11 => 'dryzen-kids-antiperspirant-hand-wipes',
+        12 => 'dryzen-women-antiperspirant-foot-wipes',
+        13 => 'dryzen-men-antiperspirant-foot-wipes',
+        14 => 'dryzen-sport-antiperspirant-foot-wipes',
+        15 => 'dryzen-kids-antiperspirant-foot-wipes',
+        16 => 'dryzen-women-antiperspirant-roll-on',
+        17 => 'dryzen-men-antiperspirant-roll-on',
+        18 => 'dryzen-sport-antiperspirant-roll-on',
+        19 => 'dryzen-kids-antiperspirant-roll-on',
+        20 => 'dryzen-shoe-spray',
+    ),
+    'information' => array(
+        3 => 'privacy-policy',
+        5 => 'general-terms-of-use',
+        7 => 'payment-and-delivery',
+        12 => 'security-of-online-payments',
+        13 => 'about-us',
+        15 => 'right-to-submit-a-complaint',
+        17 => 'returns-exchanges-and-complaints',
+        18 => 'sweaty-palms',
+        19 => 'sweaty-feet',
+        20 => 'sweaty-underarms',
+        21 => 'unpleasant-shoe-odour',
+    ),
+);

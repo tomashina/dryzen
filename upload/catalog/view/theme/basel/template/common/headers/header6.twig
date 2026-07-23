@@ -71,10 +71,10 @@
            <div class="icon-element is_wishlist">
 
                {% if logged %}
-                   <a class="shortcut-wrapper wishlist " title="Moj račun" href="{{ login }}"><i class="icon-user icon"></i></a><a class="shortcut-wrapper wishlist hidden-xs"  title="Odjava" href="{{ logout }}"> Odjava<div class="wishlist-hover"></div>
+                   <a class="shortcut-wrapper wishlist " title="{{ text_account }}" href="{{ login }}"><i class="icon-user icon"></i></a><a class="shortcut-wrapper wishlist hidden-xs" title="{{ text_logout }}" href="{{ logout }}"> {{ text_logout }}<div class="wishlist-hover"></div>
                </a>
                {% else %}
-                   <a class="shortcut-wrapper wishlist" title="Moj račun" href="{{ login }}">
+                   <a class="shortcut-wrapper wishlist" title="{{ text_account }}" href="{{ login }}">
                        <div class="wishlist-hover"><i class="icon-user icon"></i></div>
                    </a>
                {% endif %}
@@ -101,7 +101,7 @@
         </div>
         
         <div class="icon-element">
-        <button type="button" class="shortcut-wrapper menu-trigger hidden-md hidden-lg" aria-label="Otvori izbornik" aria-expanded="false">
+        <button type="button" class="shortcut-wrapper menu-trigger hidden-md hidden-lg" aria-label="{{ text_open_menu }}" aria-expanded="false">
         <i class="icon-line-menu icon" aria-hidden="true"></i>
         </button>
         </div>

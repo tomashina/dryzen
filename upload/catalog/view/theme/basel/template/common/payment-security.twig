@@ -1,32 +1,32 @@
 <section class="otp-payment-security" aria-labelledby="otp-payment-security-title">
-  <h4 id="otp-payment-security-title">Sigurno plaćanje debitnom/kreditnom karticom</h4>
-  <p>Prihvaćene kartice: MasterCard<sup>®</sup>, Maestro<sup>®</sup>, Visa i Diners.</p>
+  <h4 id="otp-payment-security-title">{{ text_payment_security_title }}</h4>
+  <p>{{ text_payment_accepted_cards }}</p>
 
-  <div class="otp-card-logos" aria-label="Prihvaćene kartice">
-    <a href="https://www.mastercard.com/" target="_blank" rel="noopener noreferrer" aria-label="MasterCard – otvara se u novom prozoru">
+  <div class="otp-card-logos" aria-label="{{ text_payment_cards_label }}">
+    <a href="https://www.mastercard.com/" target="_blank" rel="noopener noreferrer" aria-label="MasterCard – {{ text_opens_new_window }}">
       <img src="image/catalog/credit-cards/master-new.svg" alt="MasterCard">
     </a>
-    <a href="https://www.mastercard.hr/hr-hr/consumers/find-card-products/debit-cards/maestro-debit.html" target="_blank" rel="noopener noreferrer" aria-label="Maestro – otvara se u novom prozoru">
+    <a href="https://www.mastercard.hr/hr-hr/consumers/find-card-products/debit-cards/maestro-debit.html" target="_blank" rel="noopener noreferrer" aria-label="Maestro – {{ text_opens_new_window }}">
       <img src="image/catalog/credit-cards/maestro-new.svg" alt="Maestro">
     </a>
-    <a href="https://www.visaeurope.com" target="_blank" rel="noopener noreferrer" aria-label="Visa – otvara se u novom prozoru">
+    <a href="https://www.visaeurope.com" target="_blank" rel="noopener noreferrer" aria-label="Visa – {{ text_opens_new_window }}">
       <img src="image/catalog/credit-cards/visa.webp" alt="Visa">
     </a>
-    <a href="https://www.dinersclub.com/" target="_blank" rel="noopener noreferrer" aria-label="Diners Club – otvara se u novom prozoru">
+    <a href="https://www.dinersclub.com/" target="_blank" rel="noopener noreferrer" aria-label="Diners Club – {{ text_opens_new_window }}">
       <img src="image/catalog/credit-cards/diners.svg" alt="Diners Club">
     </a>
   </div>
 
-  <div class="otp-security-logos" aria-label="Sigurnosni programi kartičnog plaćanja">
-    <a href="https://www.mastercard.com/global/en/personal/get-support/safety-and-security/identity-check.html" target="_blank" rel="noopener noreferrer" aria-label="Mastercard Identity Check – otvara se u novom prozoru">
+  <div class="otp-security-logos" aria-label="{{ text_payment_security_programs }}">
+    <a href="https://www.mastercard.com/global/en/personal/get-support/safety-and-security/identity-check.html" target="_blank" rel="noopener noreferrer" aria-label="Mastercard Identity Check – {{ text_opens_new_window }}">
       <img src="image/catalog/credit-cards/mastercard-identity-check.webp" alt="Mastercard Identity Check">
     </a>
-    <a href="https://www.visa.com.hr/pay-with-visa/security-and-assistance/protected-payments.html" target="_blank" rel="noopener noreferrer" aria-label="Visa Secure – otvara se u novom prozoru">
+    <a href="https://www.visa.com.hr/pay-with-visa/security-and-assistance/protected-payments.html" target="_blank" rel="noopener noreferrer" aria-label="Visa Secure – {{ text_opens_new_window }}">
       <img src="image/catalog/credit-cards/visa-secure.webp" alt="Visa Secure">
     </a>
   </div>
 
-  <p>Podaci kartice prenose se zaštićenom vezom izravno ovlaštenom pružatelju platnih usluga. DryZen ih ne pohranjuje ni ne obrađuje na svojim poslužiteljima. <a href="index.php?route=information/information&amp;information_id=12">Više o sigurnosti plaćanja</a>.</p>
+  <p>{{ text_payment_card_handling }} <a href="index.php?route=information/information&amp;information_id=12">{{ text_payment_security_more }}</a>.</p>
 
-  <p class="otp-currency-note"><strong>Izjava o konverziji valuta:</strong> sva plaćanja izvršavaju se u eurima (EUR). Ako je kartica vezana uz račun u drugoj valuti, konverziju provodi kartična kuća ili banka izdavatelj prema vlastitom tečaju i uvjetima te je konačni terećeni iznos podložan njihovom obračunu.</p>
+  <p class="otp-currency-note"><strong>{{ text_payment_currency_title }}</strong> {{ text_payment_currency_copy }}</p>
 </section>

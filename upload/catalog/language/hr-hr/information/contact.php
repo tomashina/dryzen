@@ -17,6 +17,11 @@ $_['text_contact_eyebrow'] = 'KONTAKT';
 $_['text_contact_intro'] = 'Pošalji nam upit o proizvodima, narudžbi ili korištenju. Odgovorit ćemo ti u najkraćem mogućem roku.';
 $_['text_contact_direct_title'] = 'Tu smo za tvoja pitanja.';
 $_['text_contact_direct_copy'] = 'Za pomoć pri odabiru proizvoda ili informacije o narudžbi javi nam se obrascem, telefonom ili e-mailom.';
+$_['text_contact_form_kicker'] = 'PIŠI NAM';
+$_['text_contact_support_kicker'] = 'PODRŠKA';
+$_['text_breadcrumbs'] = 'Putanja stranice';
+$_['text_contact_address_value'] = "GORDOM USLUGE d.o.o.\nWickerhauserova ulica 52\n10000 Zagreb, Hrvatska\nOIB: 59379806135\nMBS: 080540845";
+$_['text_contact_open_value'] = "Ponedjeljak – Petak: 08:00–20:00\nSubota: 08:00–15:00";
 $_['text_success']   = '<p>Vaš upit uspješno je poslan vlasniku trgovine!</p>';
 $_['text_message']   = '<p>Vaš upit uspješno je poslan vlasniku trgovine!</p>'; 
 

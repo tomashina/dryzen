@@ -1,0 +1,212 @@
+<?php
+
+return array(
+    'hands' => array(
+        'information_id' => 18,
+        'page' => array(
+            'title' => 'Sweaty Palms',
+            'meta_title' => 'Sweaty Palms | DryZen',
+            'meta_description' => 'Sweaty palms can make everyday situations feel uncomfortable. Find the DryZen product best suited to your needs.',
+            'slug' => 'sweaty-palms',
+            'module_prefix' => 'DryZen Hands',
+        ),
+        'hero' => array(
+            'title' => 'Do sweaty palms get in the way of your everyday life?',
+            'subtitle' => 'Do you find yourself wiping your hands before a handshake?',
+            'copy' => 'Sweaty palms can make everyday situations feel uncomfortable.',
+            'image' => 'catalog/need-hands-2026/hands-hero.jpg',
+            'modifier' => 'hands',
+        ),
+        'symptoms' => array(
+            'title' => 'You might notice that you:',
+            'items' => array(
+                'hesitate before shaking hands',
+                'experience sweaty palms during meetings or conversations',
+                'find your keyboard, mouse or phone uncomfortable to use',
+                'want a more comfortable grip while driving or working',
+                'think about your sweaty hands more often than you\'d like',
+            ),
+        ),
+        'products_intro' => 'Choose which category best suits your needs.',
+        'button_text' => 'View Product',
+        'products' => array(
+            array(
+                'label' => 'Women',
+                'product_id' => 6,
+                'image' => 'catalog/need-hands-2026/women-word.jpg',
+                'description' => 'For women looking for a simple evening routine to help manage sweaty palms throughout their everyday activities.',
+            ),
+            array(
+                'label' => 'Men',
+                'product_id' => 9,
+                'image' => 'catalog/need-hands-2026/men-word.jpg',
+                'description' => 'For men looking for a simple evening routine to help manage sweaty palms at work and in everyday life.',
+            ),
+            array(
+                'label' => 'Sport',
+                'product_id' => 10,
+                'image' => 'catalog/need-hands-2026/sport-word.jpg',
+                'description' => 'For active individuals whose sweaty palms may become uncomfortable during training, exercise or sports.',
+            ),
+            array(
+                'label' => 'Kids',
+                'product_id' => 11,
+                'image' => 'catalog/need-hands-2026/kids-word.jpg',
+                'description' => 'For children aged 10 - 16 whose sweaty palms may cause discomfort at school, during play or while taking part in sports and other activities.',
+            ),
+        ),
+    ),
+    'feet' => array(
+        'information_id' => 19,
+        'page' => array(
+            'title' => 'Sweaty Feet',
+            'meta_title' => 'Sweaty Feet | DryZen',
+            'meta_description' => 'Excessive foot sweating and the unpleasant odours that may accompany it can make everyday activities uncomfortable and frustrating.',
+            'slug' => 'sweaty-feet',
+            'module_prefix' => 'DryZen Feet',
+        ),
+        'hero' => array(
+            'title' => 'Do your feet become sweaty throughout the day?',
+            'subtitle' => 'Do you feel embarrassed taking off your shoes because of unpleasant odours?',
+            'copy' => 'Excessive foot sweating and the unpleasant odours that may accompany it can make everyday activities uncomfortable and frustrating.',
+            'image' => 'catalog/need-feet-2026/hero.jpg',
+            'modifier' => 'feet',
+        ),
+        'symptoms' => array(
+            'title' => 'You might notice that:',
+            'items' => array(
+                'your feet become damp after just a few hours in shoes',
+                'unpleasant odours appear when you take your shoes off',
+                'you change your socks several times a day',
+                'you spend long hours in closed shoes at work',
+                'you\'re looking for a simple solution that fits easily into your daily routine',
+            ),
+        ),
+        'products_intro' => 'Choose which category best suits your needs.',
+        'button_text' => 'View Product',
+        'products' => array(
+            array(
+                'label' => 'Women',
+                'product_id' => 12,
+                'image' => 'catalog/need-feet-2026/women-word.jpg',
+                'description' => 'For women looking to help manage excessive foot sweating.',
+            ),
+            array(
+                'label' => 'Men',
+                'product_id' => 13,
+                'image' => 'catalog/need-feet-2026/men-word.png',
+                'description' => 'For men who spend most of the day on their feet or wear closed shoes.',
+            ),
+            array(
+                'label' => 'Sport',
+                'product_id' => 14,
+                'image' => 'catalog/need-feet-2026/sport-word.jpg',
+                'description' => 'For active individuals whose feet sweat more during training, exercise or sports.',
+            ),
+            array(
+                'label' => 'Kids',
+                'product_id' => 15,
+                'image' => 'catalog/need-feet-2026/kids-word.jpg',
+                'description' => 'For children aged 10 - 16 whose sweaty feet may cause discomfort at school, during play or while taking part in sports and other activities.',
+            ),
+        ),
+    ),
+    'armpits' => array(
+        'information_id' => 20,
+        'page' => array(
+            'title' => 'Sweaty Underarms',
+            'meta_title' => 'Sweaty Underarms | DryZen',
+            'meta_description' => 'Excessive underarm sweating can affect your everyday comfort and confidence.',
+            'slug' => 'sweaty-underarms',
+            'module_prefix' => 'DryZen Armpits',
+        ),
+        'hero' => array(
+            'title' => 'Do you experience sweaty underarms that lower your confidence?',
+            'subtitle' => 'Are sweat marks on your clothes a constant concern?',
+            'copy' => 'Excessive underarm sweating can affect your everyday comfort and confidence.',
+            'image' => 'catalog/need-armpits-2026/hero.jpg',
+            'modifier' => 'armpits',
+        ),
+        'symptoms' => array(
+            'title' => 'You might notice that you:',
+            'items' => array(
+                'worry about sweat marks on your clothing',
+                'frequently check your shirt or top for sweat marks',
+                'reapply deodorant throughout the day',
+                'feel self-conscious at work, school or social events',
+                'want a simpler routine that fits seamlessly into your day',
+            ),
+        ),
+        'products_intro' => 'Choose which category best suits your needs.',
+        'button_text' => 'View Product',
+        'products' => array(
+            array(
+                'label' => 'Women',
+                'product_id' => 16,
+                'image' => 'catalog/need-armpits-2026/women-word.jpg',
+                'description' => 'For women looking for a simple evening routine to help manage underarm sweating.',
+            ),
+            array(
+                'label' => 'Men',
+                'product_id' => 17,
+                'image' => 'catalog/need-armpits-2026/men-word.png',
+                'description' => 'For men looking to help manage underarm sweating throughout the day.',
+            ),
+            array(
+                'label' => 'Sport',
+                'product_id' => 18,
+                'image' => 'catalog/need-armpits-2026/sport-word.jpg',
+                'description' => 'For active individuals whose underarm sweating may become more noticeable during training, exercise or sports.',
+            ),
+            array(
+                'label' => 'Kids',
+                'product_id' => 19,
+                'image' => 'catalog/need-armpits-2026/kids-word.jpg',
+                'description' => 'For children aged 10 - 16 whose underarm sweating may cause discomfort at school, during play or while taking part in sports and other activities.',
+            ),
+        ),
+    ),
+    'shoes' => array(
+        'information_id' => 21,
+        'page' => array(
+            'title' => 'Unpleasant Shoe Odour',
+            'meta_title' => 'Unpleasant Shoe Odour | DryZen',
+            'meta_description' => 'Unpleasant odours can develop inside your shoes after long hours of wear, intense physical activity or regular everyday use.',
+            'slug' => 'unpleasant-shoe-odour',
+            'module_prefix' => 'DryZen Shoes',
+        ),
+        'hero' => array(
+            'title' => 'Does unpleasant shoe odour bother you after a long day?',
+            'subtitle' => 'Could your shoe cabinet use a little freshening up?',
+            'copy' => 'Unpleasant odours can develop inside your shoes after long hours of wear, intense physical activity or regular everyday use.',
+            'image' => 'catalog/need-shoes-2026/hero.jpg',
+            'modifier' => 'shoes',
+        ),
+        'symptoms' => array(
+            'title' => 'You might notice that:',
+            'items' => array(
+                'your trainers or shoes develop unpleasant odours after wearing them',
+                'you avoid taking your shoes off at work, at friends\' homes or in other social settings',
+                'unpleasant odours linger even after airing your shoes out',
+                'you wear sports or work shoes every day',
+                'you want to keep the inside of your shoes fresher between wears',
+            ),
+        ),
+        'products_intro' => 'If you\'re looking to keep your shoes feeling fresher and help reduce odours associated with everyday wear, DryZen Shoe Spray could be the perfect choice.',
+        'button_text' => 'View Product',
+        'single_product' => array(
+            'label' => 'DryZen Footwear Refreshing Spray',
+            'product_id' => 20,
+            'image' => 'catalog/need-shoes-2026/product-word.jpg',
+            'description' => 'Helps maintain the freshness of your shoes and reduce odours associated with everyday wear.',
+            'features_title' => 'Ideal for:',
+            'features' => array(
+                'Trainers',
+                'Sports shoes',
+                'Work shoes',
+                'Everyday footwear',
+                'Frequently worn shoes',
+            ),
+        ),
+    ),
+);

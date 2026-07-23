@@ -15,3 +15,7 @@ $_['text_logout']        = 'Odjava';
 $_['text_checkout']      = 'Naplata';
 $_['text_search']        = 'Traži';
 $_['text_all']           = 'Prikaži sve';
+$_['text_close_menu']     = 'Zatvori izbornik';
+$_['text_open_menu']      = 'Otvori izbornik';
+$_['text_back_previous']  = 'Povratak na prethodnu stranicu';
+$_['text_social_image_alt'] = 'DryZen proizvodi i tim';

@@ -2,7 +2,7 @@
 
 <ul class="breadcrumb">
     {% for breadcrumb in breadcrumbs %}
-    <li><a href="{{ breadcrumb.href }}" aria-label="{% if loop.first %}Naslovna{% else %}{{ breadcrumb.text|striptags|trim }}{% endif %}">{{ breadcrumb.text }}</a></li>
+    <li><a href="{{ breadcrumb.href }}" aria-label="{{ breadcrumb.text|striptags|trim }}">{{ breadcrumb.text }}</a></li>
     {% endfor %}
   </ul>
 
@@ -37,19 +37,19 @@
         </a>
         {% endfor %}
      </div>
-     <div class="dryzen-gallery-controls" aria-label="Galerija proizvoda">
-       <button class="dryzen-gallery-arrow" type="button" data-gallery-direction="previous" aria-label="Prethodna slika">
+     <div class="dryzen-gallery-controls" aria-label="{{ basel_text_out_of_stock == 'Sold out' ? 'Product gallery' : 'Galerija proizvoda' }}">
+       <button class="dryzen-gallery-arrow" type="button" data-gallery-direction="previous" aria-label="{{ basel_text_out_of_stock == 'Sold out' ? 'Previous image' : 'Prethodna slika' }}">
          <span aria-hidden="true">←</span>
        </button>
-       <div class="dryzen-gallery-dots" role="group" aria-label="Odabir slike">
+       <div class="dryzen-gallery-dots" role="group" aria-label="{{ basel_text_out_of_stock == 'Sold out' ? 'Choose image' : 'Odabir slike' }}">
          {% if thumb %}
-         <button class="dryzen-gallery-dot is-active" type="button" aria-label="Prikaži sliku 1" aria-current="true"></button>
+         <button class="dryzen-gallery-dot is-active" type="button" aria-label="{{ basel_text_out_of_stock == 'Sold out' ? 'Show image 1' : 'Prikaži sliku 1' }}" aria-current="true"></button>
          {% endif %}
          {% for image in images %}
-         <button class="dryzen-gallery-dot" type="button" aria-label="Prikaži sliku {{ loop.index + 1 }}" aria-current="false"></button>
+         <button class="dryzen-gallery-dot" type="button" aria-label="{{ basel_text_out_of_stock == 'Sold out' ? 'Show image ' : 'Prikaži sliku ' }}{{ loop.index + 1 }}" aria-current="false"></button>
          {% endfor %}
        </div>
-       <button class="dryzen-gallery-arrow" type="button" data-gallery-direction="next" aria-label="Sljedeća slika">
+       <button class="dryzen-gallery-arrow" type="button" data-gallery-direction="next" aria-label="{{ basel_text_out_of_stock == 'Sold out' ? 'Next image' : 'Sljedeća slika' }}">
          <span aria-hidden="true">→</span>
        </button>
      </div>
@@ -126,7 +126,7 @@
         {% endif %}
       </ul>
  {% if special %}
-      <p class="dryzen-lowest-price">Najniža cijena u zadnjih 30 dana: {{ price }}</p>
+      <p class="dryzen-lowest-price">{{ basel_text_out_of_stock == 'Sold out' ? 'Lowest price in the last 30 days:' : 'Najniža cijena u zadnjih 30 dana:' }} {{ price }}</p>
 {% endif %}
 
     
@@ -331,9 +331,9 @@
             
             <div class="form-group buy catalog_hide dryzen-buy-box">
             <div class="dryzen-qty-control">
-            <button type="button" class="dryzen-qty-btn dryzen-qty-btn-minus" data-direction="down" aria-label="Smanji količinu">-</button>
-            <input type="number" step="1" min="{{ minimum }}" name="quantity" value="{{ minimum }}" id="input-quantity" class="form-control input-quantity" inputmode="numeric" aria-label="Količina" />
-            <button type="button" class="dryzen-qty-btn dryzen-qty-btn-plus" data-direction="up" aria-label="Povećaj količinu">+</button>
+            <button type="button" class="dryzen-qty-btn dryzen-qty-btn-minus" data-direction="down" aria-label="{{ basel_text_out_of_stock == 'Sold out' ? 'Decrease quantity' : 'Smanji količinu' }}">-</button>
+            <input type="number" step="1" min="{{ minimum }}" name="quantity" value="{{ minimum }}" id="input-quantity" class="form-control input-quantity" inputmode="numeric" aria-label="{{ basel_text_out_of_stock == 'Sold out' ? 'Quantity' : 'Količina' }}" />
+            <button type="button" class="dryzen-qty-btn dryzen-qty-btn-plus" data-direction="up" aria-label="{{ basel_text_out_of_stock == 'Sold out' ? 'Increase quantity' : 'Povećaj količinu' }}">+</button>
             </div>
               <input type="hidden" name="product_id" value="{{ product_id }}" />
               <button type="button" {% if ((qty < 1) and (stock_badge_status)) %}{% else %} id="button-cart" {% endif %}  data-loading-text="{{ text_loading }}" class="btn btn-primary">{% if ((qty < 1) and (stock_badge_status)) %}{{ basel_text_out_of_stock }}{% else %}<span class="global-cart"></span><span>{{ button_cart }}</span>{% endif %}</button>
@@ -660,8 +660,8 @@ var initRelatedCarousel = function() {
 	});
 
 	$(relatedCarousel).slick({
-prevArrow: "<button type=\"button\" class=\"arrow-left\" aria-label=\"Prethodni proizvodi\"><span class=\"dryzen-carousel-chevron\" aria-hidden=\"true\"></span></button>",
-nextArrow: "<button type=\"button\" class=\"arrow-right\" aria-label=\"Sljedeći proizvodi\"><span class=\"dryzen-carousel-chevron\" aria-hidden=\"true\"></span></button>",
+prevArrow: "<button type=\"button\" class=\"arrow-left\" aria-label=\"{{ basel_text_out_of_stock == 'Sold out' ? 'Previous products' : 'Prethodni proizvodi' }}\"><span class=\"dryzen-carousel-chevron\" aria-hidden=\"true\"></span></button>",
+nextArrow: "<button type=\"button\" class=\"arrow-right\" aria-label=\"{{ basel_text_out_of_stock == 'Sold out' ? 'Next products' : 'Sljedeći proizvodi' }}\"><span class=\"dryzen-carousel-chevron\" aria-hidden=\"true\"></span></button>",
 dots:true,
 {% if direction == 'rtl' %}
 rtl: true,

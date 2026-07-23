@@ -46,12 +46,13 @@
 <div class="clearfix"></div>
 </div>
 {% if carousel %}
+{% set dryzen_english_labels = basel_text_out_of_stock == 'Sold out' %}
 <script>
 $(function() {
 $('.grid-holder.prod_module{{ module }}').slick({
 {% if carousel_a %}
-prevArrow: "<button type=\"button\" class=\"arrow-left\" aria-label=\"Prethodni proizvodi\"><span class=\"dryzen-carousel-chevron\" aria-hidden=\"true\"></span></button>",
-nextArrow: "<button type=\"button\" class=\"arrow-right\" aria-label=\"Sljedeći proizvodi\"><span class=\"dryzen-carousel-chevron\" aria-hidden=\"true\"></span></button>",
+prevArrow: "<button type=\"button\" class=\"arrow-left\" aria-label=\"{{ dryzen_english_labels ? 'Previous products' : 'Prethodni proizvodi' }}\"><span class=\"dryzen-carousel-chevron\" aria-hidden=\"true\"></span></button>",
+nextArrow: "<button type=\"button\" class=\"arrow-right\" aria-label=\"{{ dryzen_english_labels ? 'Next products' : 'Sljedeći proizvodi' }}\"><span class=\"dryzen-carousel-chevron\" aria-hidden=\"true\"></span></button>",
 {% else %}
 arrows: false,
 {% endif %}
