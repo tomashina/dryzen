@@ -207,7 +207,9 @@ class Eracuni
     }
 
     /**
-     * Katalog proizvod – držimo grossPrice = 0.00 jer cijenu šaljemo u Items.
+     * Payload used only when an order contains a product that does not yet
+     * exist in e-Racuni. Existing catalogue records are never overwritten by
+     * order submission, so their price and stock-management setup stay intact.
      */
     public function buildCatalogueProduct(array $orderProduct): array
     {
@@ -229,19 +231,53 @@ class Eracuni
     }
 
     /**
-     * Osiguraj da svi artikli postoje u katalogu + DOSTAVA.
+     * Ensure all order products and DOSTAVA exist in the catalogue.
      *
-     * VAŽNO: NEMA ProductGetByCode (da ne dobiješ 429).
-     * createOrUpdate je idempotentan -> sigurno.
+     * One ProductList request replaces N ProductGetByCode requests. Only
+     * missing products are imported; existing products are deliberately left
+     * untouched because e-Racuni is the source of truth for price and stock.
      */
     public function ensureCatalogueProductsExist(\Agmedia\Api\Api $api, array $auth): void
     {
-        $seen = [];
+        $products = [];
 
         foreach (($this->data['products'] ?? []) as $p) {
             $code = (string) ($p['model'] ?? '');
-            if ($code === '' || isset($seen[$code])) continue;
-            $seen[$code] = true;
+            if ($code === '' || isset($products[$code])) continue;
+            $products[$code] = $p;
+        }
+
+        $codes = array_keys($products);
+        $codes[] = 'DOSTAVA';
+
+        $listResponse = $this->apiPostWithRetry($api, [
+            'username'   => $auth['username'],
+            'secretKey'  => $auth['secretKey'],
+            'token'      => $auth['token'],
+            'method'     => 'ProductList',
+            'parameters' => [
+                'productCode' => implode(',', $codes),
+            ],
+        ], 'json');
+
+        if ($listResponse === false || $listResponse === null) {
+            throw new \RuntimeException('Ne mogu provjeriti e-Računi katalog zbog greške u komunikaciji.');
+        }
+
+        if ($this->isApiError($listResponse)) {
+            $description = $this->apiDescription($listResponse) ?: 'Nepoznata greška';
+            throw new \RuntimeException('Ne mogu provjeriti e-Računi katalog: ' . $description);
+        }
+
+        if (!is_array($listResponse)) {
+            throw new \RuntimeException('e-Računi ProductList nije vratio ispravan odgovor.');
+        }
+
+        $existing = [];
+        $this->collectProductCodes($listResponse, $existing);
+
+        foreach ($products as $code => $p) {
+            if (isset($existing[$code])) continue;
 
             $payload = $this->buildCatalogueProduct($p);
 
@@ -262,8 +298,23 @@ class Eracuni
             }
         }
 
-        // DOSTAVA kao service (grossPrice 0.00 u katalogu)
-        $this->upsertServiceProduct($api, $auth, 'DOSTAVA', 'Dostava', 'Trošak dostave');
+        if (!isset($existing['DOSTAVA'])) {
+            $this->upsertServiceProduct($api, $auth, 'DOSTAVA', 'Dostava', 'Trošak dostave');
+        }
+    }
+
+    private function collectProductCodes($node, array &$codes): void
+    {
+        if (!is_array($node)) return;
+
+        if (isset($node['productCode']) && is_scalar($node['productCode'])) {
+            $code = trim((string) $node['productCode']);
+            if ($code !== '') $codes[$code] = true;
+        }
+
+        foreach ($node as $value) {
+            if (is_array($value)) $this->collectProductCodes($value, $codes);
+        }
     }
 
     private function upsertServiceProduct(\Agmedia\Api\Api $api, array $auth, string $code, string $name, string $desc): void
@@ -546,7 +597,17 @@ class Eracuni
      */
     private function apiDescription($resp): string
     {
-        return (string) ($resp['description'] ?? ($resp['response']['description'] ?? ''));
+        $description = (string) ($resp['description'] ?? ($resp['response']['description'] ?? ''));
+
+        if (stripos($description, 'Invalid web services token') !== false) {
+            return 'API token nije važeći. Kopirajte aktualni token iz Postavke > Postavke tvrtke > API Web services i ažurirajte upload/env.php.';
+        }
+
+        if (stripos($description, 'korisničko ime ili zaporka') !== false || stripos($description, 'username or password') !== false) {
+            return 'API korisničko ime ili tajni ključ nisu valjani. U upload/env.php polje password mora sadržavati Secret key API korisnika, a ne lozinku za običnu prijavu.';
+        }
+
+        return $description;
     }
 
     /**

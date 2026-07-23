@@ -1,0 +1,207 @@
+{{ header }}{{ column_left }}
+<div id="content">
+  <div class="page-header">
+    <div class="container-fluid">
+      <div class="pull-right">
+        <button type="button" id="button-test" data-toggle="tooltip" title="{{ button_test }}" class="btn btn-info"><i class="fa fa-plug"></i> {{ button_test }}</button>
+        <button type="submit" form="form-module" data-toggle="tooltip" title="{{ button_save }}" class="btn btn-primary"><i class="fa fa-save"></i></button>
+        <a href="{{ cancel }}" data-toggle="tooltip" title="{{ button_cancel }}" class="btn btn-default"><i class="fa fa-reply"></i></a>
+      </div>
+      <h1>{{ heading_title }}</h1>
+      <ul class="breadcrumb">
+        {% for breadcrumb in breadcrumbs %}
+        <li><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+  <div class="container-fluid">
+    {% if error_warning %}
+    <div class="alert alert-danger alert-dismissible"><i class="fa fa-exclamation-circle"></i> {{ error_warning }}
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+    </div>
+    {% endif %}
+    <div id="sync-result" class="alert" style="display:none"></div>
+
+    <div class="panel panel-default">
+      <div class="panel-heading"><h3 class="panel-title"><i class="fa fa-exchange"></i> {{ text_edit }}</h3></div>
+      <div class="panel-body">
+        <fieldset>
+          <legend>{{ text_connection }}</legend>
+          {% if connection.configured %}
+          <div class="alert alert-success"><i class="fa fa-check-circle"></i> {{ text_connection_ready }} <small>{{ connection.endpoint }}</small></div>
+          {% else %}
+          <div class="alert alert-danger"><i class="fa fa-exclamation-triangle"></i> {{ text_connection_missing }} {{ connection_missing }}</div>
+          {% endif %}
+        </fieldset>
+
+        <form action="{{ action }}" method="post" enctype="multipart/form-data" id="form-module" class="form-horizontal">
+          <div class="form-group">
+            <label class="col-sm-3 control-label" for="input-status">{{ entry_status }}</label>
+            <div class="col-sm-9">
+              <select name="module_eracuni_sync_status" id="input-status" class="form-control">
+                <option value="1"{% if module_eracuni_sync_status %} selected="selected"{% endif %}>{{ text_enabled }}</option>
+                <option value="0"{% if not module_eracuni_sync_status %} selected="selected"{% endif %}>{{ text_disabled }}</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-3 control-label" for="input-code-field"><span data-toggle="tooltip" title="{{ help_code_field }}">{{ entry_code_field }}</span></label>
+            <div class="col-sm-9">
+              <select name="module_eracuni_sync_code_field" id="input-code-field" class="form-control">
+                <option value="model"{% if module_eracuni_sync_code_field == 'model' %} selected="selected"{% endif %}>Model</option>
+                <option value="sku"{% if module_eracuni_sync_code_field == 'sku' %} selected="selected"{% endif %}>SKU</option>
+                <option value="ean"{% if module_eracuni_sync_code_field == 'ean' %} selected="selected"{% endif %}>EAN</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-3 control-label" for="input-timeout">{{ entry_timeout }}</label>
+            <div class="col-sm-9">
+              <input type="number" min="5" max="120" name="module_eracuni_sync_timeout" value="{{ module_eracuni_sync_timeout }}" id="input-timeout" class="form-control" />
+              {% if error_timeout %}<div class="text-danger">{{ error_timeout }}</div>{% endif %}
+            </div>
+          </div>
+
+          <fieldset>
+            <legend>{{ text_stock }}</legend>
+            <div class="form-group">
+              <label class="col-sm-3 control-label" for="input-stock-status">{{ entry_stock_status }}</label>
+              <div class="col-sm-9">
+                <select name="module_eracuni_sync_stock_status" id="input-stock-status" class="form-control">
+                  <option value="1"{% if module_eracuni_sync_stock_status %} selected="selected"{% endif %}>{{ text_enabled }}</option>
+                  <option value="0"{% if not module_eracuni_sync_stock_status %} selected="selected"{% endif %}>{{ text_disabled }}</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-sm-3 control-label" for="input-stock-mode">{{ entry_stock_mode }}</label>
+              <div class="col-sm-9">
+                <select name="module_eracuni_sync_stock_mode" id="input-stock-mode" class="form-control">
+                  <option value="available"{% if module_eracuni_sync_stock_mode == 'available' %} selected="selected"{% endif %}>{{ text_available }}</option>
+                  <option value="physical"{% if module_eracuni_sync_stock_mode == 'physical' %} selected="selected"{% endif %}>{{ text_physical }}</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-sm-3 control-label" for="input-warehouse"><span data-toggle="tooltip" title="{{ help_warehouse_code }}">{{ entry_warehouse_code }}</span></label>
+              <div class="col-sm-9"><input type="text" name="module_eracuni_sync_warehouse_code" value="{{ module_eracuni_sync_warehouse_code }}" id="input-warehouse" class="form-control" /></div>
+            </div>
+          </fieldset>
+
+          <fieldset>
+            <legend>{{ text_prices }}</legend>
+            <div class="form-group">
+              <label class="col-sm-3 control-label" for="input-price-status">{{ entry_price_status }}</label>
+              <div class="col-sm-9">
+                <select name="module_eracuni_sync_price_status" id="input-price-status" class="form-control">
+                  <option value="1"{% if module_eracuni_sync_price_status %} selected="selected"{% endif %}>{{ text_enabled }}</option>
+                  <option value="0"{% if not module_eracuni_sync_price_status %} selected="selected"{% endif %}>{{ text_disabled }}</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-sm-3 control-label" for="input-price-field"><span data-toggle="tooltip" title="{{ help_price_field }}">{{ entry_price_field }}</span></label>
+              <div class="col-sm-9">
+                <select name="module_eracuni_sync_price_field" id="input-price-field" class="form-control">
+                  <option value="grossPrice"{% if module_eracuni_sync_price_field == 'grossPrice' %} selected="selected"{% endif %}>grossPrice</option>
+                  <option value="retailPrice"{% if module_eracuni_sync_price_field == 'retailPrice' %} selected="selected"{% endif %}>retailPrice</option>
+                  <option value="purchasePrice"{% if module_eracuni_sync_price_field == 'purchasePrice' %} selected="selected"{% endif %}>purchasePrice</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-sm-3 control-label" for="input-price-tax"><span data-toggle="tooltip" title="{{ help_price_includes_tax }}">{{ entry_price_includes_tax }}</span></label>
+              <div class="col-sm-9">
+                <select name="module_eracuni_sync_price_includes_tax" id="input-price-tax" class="form-control">
+                  <option value="0"{% if not module_eracuni_sync_price_includes_tax %} selected="selected"{% endif %}>{{ text_price_net }}</option>
+                  <option value="1"{% if module_eracuni_sync_price_includes_tax %} selected="selected"{% endif %}>{{ text_price_gross }}</option>
+                </select>
+              </div>
+            </div>
+          </fieldset>
+
+          <fieldset>
+            <legend>{{ text_cron }}</legend>
+            <div class="alert alert-info"><i class="fa fa-info-circle"></i> {{ text_cron_help }}</div>
+            <div class="form-group">
+              <label class="col-sm-3 control-label" for="input-cron-key"><span data-toggle="tooltip" title="{{ help_cron_key }}">{{ entry_cron_key }}</span></label>
+              <div class="col-sm-9">
+                <input type="text" name="module_eracuni_sync_cron_key" value="{{ module_eracuni_sync_cron_key }}" id="input-cron-key" class="form-control" autocomplete="off" />
+                {% if error_cron_key %}<div class="text-danger">{{ error_cron_key }}</div>{% endif %}
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-sm-3 control-label" for="input-cron-url">{{ entry_cron_url }}</label>
+              <div class="col-sm-9">
+                <div class="input-group">
+                  <input type="text" value="{{ cron_url }}" id="input-cron-url" class="form-control" readonly="readonly" />
+                  <span class="input-group-btn"><button type="button" id="button-copy-cron" class="btn btn-default"><i class="fa fa-copy"></i> {{ text_copy }}</button></span>
+                </div>
+              </div>
+            </div>
+          </fieldset>
+        </form>
+
+        <fieldset>
+          <legend>{{ text_sync }}</legend>
+          <p>{{ text_sync_help }}</p>
+          <button type="button" class="btn btn-primary button-sync" data-type="stock"><i class="fa fa-cubes"></i> {{ button_sync_stock }}</button>
+          <button type="button" class="btn btn-primary button-sync" data-type="prices"><i class="fa fa-eur"></i> {{ button_sync_prices }}</button>
+          <div class="row" style="margin-top:20px">
+            <div class="col-sm-6">
+              <strong>{{ text_stock }} — {{ text_last_run }}:</strong>
+              {% if last_stock.finished_at %}{{ last_stock.finished_at }} · {{ last_stock.message }}{% else %}{{ text_never }}{% endif %}
+            </div>
+            <div class="col-sm-6">
+              <strong>{{ text_prices }} — {{ text_last_run }}:</strong>
+              {% if last_prices.finished_at %}{{ last_prices.finished_at }} · {{ last_prices.message }}{% else %}{{ text_never }}{% endif %}
+            </div>
+          </div>
+        </fieldset>
+      </div>
+    </div>
+  </div>
+</div>
+<script type="text/javascript"><!--
+function showSyncResult(success, message, data) {
+  var box = $('#sync-result');
+  var detail = '';
+  if (data && typeof data.updated !== 'undefined') {
+    detail = ' Ažurirano: ' + data.updated + ', bez promjene: ' + data.unchanged + ', preskočeno: ' + data.skipped + '.';
+  }
+  box.removeClass('alert-success alert-danger').addClass(success ? 'alert-success' : 'alert-danger').text(message + detail).show();
+  window.scrollTo(0, 0);
+}
+
+$('#button-test').on('click', function() {
+  var button = $(this);
+  button.prop('disabled', true).find('i').removeClass('fa-plug').addClass('fa-spinner fa-spin');
+  $.ajax({url: '{{ test_url|replace({'&amp;': '&'}) }}', type: 'post', dataType: 'json'})
+    .done(function(json) { showSyncResult(!!json.success, json.message || '', json); })
+    .fail(function(xhr) { showSyncResult(false, 'HTTP greška ' + xhr.status + '.', null); })
+    .always(function() { button.prop('disabled', false).find('i').removeClass('fa-spinner fa-spin').addClass('fa-plug'); });
+});
+
+$('.button-sync').on('click', function() {
+  var button = $(this);
+  button.prop('disabled', true).find('i').addClass('fa-spin');
+  $.ajax({url: '{{ sync_url|replace({'&amp;': '&'}) }}', type: 'post', data: {type: button.data('type')}, dataType: 'json'})
+    .done(function(json) { showSyncResult(!!json.success, json.message || '', json); })
+    .fail(function(xhr) { showSyncResult(false, 'HTTP greška ' + xhr.status + '.', null); })
+    .always(function() { button.prop('disabled', false).find('i').removeClass('fa-spin'); });
+});
+
+$('#button-copy-cron').on('click', function() {
+  var input = document.getElementById('input-cron-url');
+  input.select();
+  input.setSelectionRange(0, 99999);
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(input.value);
+  } else {
+    document.execCommand('copy');
+  }
+  showSyncResult(true, '{{ text_copied|e('js') }}', null);
+});
+//--></script>
+{{ footer }}

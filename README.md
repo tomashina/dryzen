@@ -20,6 +20,25 @@ eventualne integracije te uklonite nastavak `.example` iz imena.
 Nakon uvoza baze u administraciji otvorite **Extensions > Modifications** i
 kliknite gumb za osvježavanje kako bi se ponovno generirao OCMOD cache.
 
+## e-Računi: cijene i zaliha
+
+OpenCart modul **Extensions > Extensions > Modules > e-Računi sinkronizacija**
+povezuje proizvode po modelu/SKU-u/EAN-u (za DryZen je zadano polje `model`,
+odnosno šifre `001`–`013`). Modul omogućuje ručno ažuriranje cijena i zalihe,
+test API veze te generira zaštićeni HTTP GET URL za EasyCron. Cron ažurira samo
+količine; preporučeni interval je svakih 15 minuta.
+
+API vjerodajnice ostaju isključivo u ignoriranoj datoteci `upload/env.php` pod
+`OC_ENV['import']['api']`. Token, API korisnik i tajni ključ dostupni su u
+e-Računi kroz **Postavke > Postavke tvrtke > API Web services**. Polje
+`password` sadrži Secret key API korisnika, a ne lozinku za običnu prijavu.
+Nakon promjene vjerodajnica prvo upotrijebite gumb **Testiraj vezu**, a zatim
+ručnu sinkronizaciju.
+
+Sinkronizacija količine koristi `WarehouseGetArticleStockQuantity`, a cijene
+`ProductList`. Prazan ili neprepoznatljiv API odgovor nikada ne postavlja sve
+proizvode na nulu. Istovremena cron izvršavanja zaštićena su MySQL lockom.
+
 ## BOX NOW tracking
 
 Nakon postavljanja BOX NOW tracking izmjena pokrenite idempotentnu migraciju:

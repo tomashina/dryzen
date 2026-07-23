@@ -41,7 +41,6 @@ class Api
             $ch = curl_init($url);
             curl_setopt_array($ch, [
                 CURLOPT_RETURNTRANSFER => true,
-                CURLOPT_USERPWD        => $this->resolveApiPassword(),
                 CURLOPT_HTTPHEADER     => $this->resolveHeaders('json', $extraHeaders), // Accept: application/json
                 CURLOPT_TIMEOUT        => 30,
                 CURLOPT_CONNECTTIMEOUT => 10,
@@ -102,7 +101,6 @@ class Api
                 CURLOPT_RETURNTRANSFER => true,
                 CURLOPT_POST           => 1,
                 CURLOPT_POSTFIELDS     => $body,
-                CURLOPT_USERPWD        => $this->resolveApiPassword(),
                 CURLOPT_HTTPHEADER     => $httpHeaders,
                 CURLOPT_TIMEOUT        => 60,
                 CURLOPT_CONNECTTIMEOUT => 10,
@@ -113,7 +111,8 @@ class Api
             $error    = curl_error($ch);
             $code     = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
-            $this->log('POST ' . $endpoint . ' REQ', is_string($body) ? $body : '[binary]');
+            // Never persist API credentials in plain-text request logs.
+            $this->log('POST ' . $endpoint . ' REQ', is_string($body) ? $this->redactSecrets($body) : '[binary]');
             $this->log('POST ' . $endpoint . ' RESP', (string) $response);
 
             if ($errno) {
@@ -155,9 +154,25 @@ class Api
         return $decoded;
     }
 
-    private function resolveApiPassword(): string
+    private function redactSecrets(string $body): string
     {
-        return $this->username . ':' . $this->token . '_' . $this->password;
+        $decoded = json_decode($body, true);
+
+        if (is_array($decoded)) {
+            foreach (['username', 'secretKey', 'password', 'token'] as $key) {
+                if (array_key_exists($key, $decoded)) {
+                    $decoded[$key] = '[REDACTED]';
+                }
+            }
+
+            return (string) json_encode($decoded, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRESERVE_ZERO_FRACTION);
+        }
+
+        return (string) preg_replace(
+            '/((?:username|secretKey|password|token)(?:%5B|\[)?[^=]*=)[^&]*/i',
+            '$1[REDACTED]',
+            $body
+        );
     }
 
     /**
