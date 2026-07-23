@@ -1,3 +1,18 @@
+{# Static mobile overrides load here to avoid stale OCMOD header copies. #}
+<script>
+(function (document) {
+    var stylesheet = document.querySelector('link[href*="dryzen-mobile.css"]');
+
+    if (!stylesheet) {
+        stylesheet = document.createElement('link');
+        stylesheet.rel = 'stylesheet';
+        document.head.appendChild(stylesheet);
+    }
+
+    stylesheet.href = 'catalog/view/theme/basel/stylesheet/dryzen-mobile.css?v=20260723l';
+})(document);
+</script>
+
 <div class="main-menu-wrapper hidden-md hidden-lg">
 
 
