@@ -94,7 +94,16 @@ osvježiti **Extensions > Modifications** u OpenCart administraciji. Meta ad
 account `2473286479801468` konfigurira se u Meta Business sučelju i nije dio
 browser pixel snippeta. Produkcijski Google Analytics Measurement ID je
 `G-X8YR3077DZ`; ostaje konfiguriran kroz postojeći Complete Google Analytics +
-GA4 modul i ova skripta ga ne prepisuje.
+GA4 modul i ova skripta ga ne prepisuje. Modul podržava i Google Tag Manager
+web-spremnik u formatu `GTM-XXXXXXX`. Otvara se u administraciji preko stavke
+**Complete Google Analytics + GA4** (odnosno novog naslova
+**Google Analytics + GA4 + Google Tag Manager**) u lijevom izborniku. GTM se
+učitava tek nakon prihvaćanja analitičkih kolačića.
+
+Ako je isti GA4 mjerni ID postavljen unutar GTM spremnika, polje **GA4 ID** u
+modulu treba ostaviti prazno kako bi se izbjeglo dvostruko bilježenje događaja.
+Detaljne upute nalaze se u
+[`docs/google-analytics-tag-manager.md`](docs/google-analytics-tag-manager.md).
 
 ## Git remote
 

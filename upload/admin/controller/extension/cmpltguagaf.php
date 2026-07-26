@@ -94,8 +94,9 @@ class ControllerExtensioncmpltguagaf extends Controller {
 				
 				$data['desc'][$store_id] = array(
 					'status' => 0,
- 					'gaid' => 'UA-XXXXXXXX-X',
-  					'gafid' => 'G-XXXXXXXXX',
+					'gaid' => '',
+					'gafid' => '',
+					'gtmid' => '',
    				);
 			}
 			//print_r($data['desc']);exit;
@@ -110,7 +111,19 @@ class ControllerExtensioncmpltguagaf extends Controller {
 	protected function validateForm() {
 		if (!$this->user->hasPermission('modify', $this->modpath)) {
 			$this->error['warning'] = $this->language->get('error_permission');
-		}		
+		}
+
+		if (isset($this->request->post['desc'])) {
+			foreach ($this->request->post['desc'] as $value) {
+				$gtmid = isset($value['gtmid']) ? strtoupper(trim($value['gtmid'])) : '';
+
+				if ($gtmid !== '' && !preg_match('/^GTM-[A-Z0-9]+$/', $gtmid)) {
+					$this->error['warning'] = $this->language->get('error_gtmid');
+					break;
+				}
+			}
+		}
+
 		return !$this->error;
 	}
 }

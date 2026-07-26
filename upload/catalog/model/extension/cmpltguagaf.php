@@ -1,6 +1,7 @@
 <?php 
 class ModelExtensioncmpltguagaf extends Controller { 
 	private $emittedGtagEvents = array();
+	private $databaseReady = false;
 
 	private function renderGtagEvent($event, array $payload) {
 		$signature = $event . ':' . hash('sha256', json_encode($payload));
@@ -17,15 +18,20 @@ class ModelExtensioncmpltguagaf extends Controller {
 	}
 
 	public function checkdb() {
+		if ($this->databaseReady) {
+			return;
+		}
+
 		ini_set("serialize_precision", -1);
  		$q = $this->db->query("SHOW TABLES LIKE '" . DB_PREFIX . "cmpltguagaf' ");
 		if($q->num_rows == 0) {
 			$this->db->query("CREATE TABLE IF NOT EXISTS `" . DB_PREFIX . "cmpltguagaf` (
 				  `cmpltguagaf_id` int(11) NOT NULL AUTO_INCREMENT,
   				  `store_id` int(11) NOT NULL,
- 				  `status` tinyint(1) NOT NULL,
+				  `status` tinyint(1) NOT NULL,
 				  `gaid` varchar(100) NOT NULL,
 				  `gafid` varchar(250) NOT NULL,
+				  `gtmid` varchar(100) NOT NULL DEFAULT '',
    				  PRIMARY KEY (`cmpltguagaf_id`)
 				) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 			");
@@ -34,6 +40,14 @@ class ModelExtensioncmpltguagaf extends Controller {
 			"From ".$this->config->get('config_email'). "\r\n" . "Used At - ".HTTP_CATALOG,
 			"From: ".$this->config->get('config_email'));
 		}
+
+		$gtm_column = $this->db->query("SHOW COLUMNS FROM `" . DB_PREFIX . "cmpltguagaf` LIKE 'gtmid'");
+
+		if ($gtm_column->num_rows == 0) {
+			$this->db->query("ALTER TABLE `" . DB_PREFIX . "cmpltguagaf` ADD `gtmid` varchar(100) NOT NULL DEFAULT '' AFTER `gafid`");
+		}
+
+		$this->databaseReady = true;
 	}
 	public function getrsdata() {		
 		$this->checkdb();
@@ -108,37 +122,56 @@ class ModelExtensioncmpltguagaf extends Controller {
 	}
 	public function pageview() {
 		$rsdata = $this->getrsdata();
-		if($rsdata) {
-			$gafid = $rsdata['gafid'] && $rsdata['status'] ? $rsdata['gafid'] : false;
-			$gaid = $rsdata['gaid'] && $rsdata['status'] ? $rsdata['gaid'] : false;
-			$code = '';
 
-if($gaid) { 
-	$code = '<!-- Global site tag (gtag.js) - Google Analytics -->
-	<script async src="https://www.googletagmanager.com/gtag/js?id='.$gaid.'"></script>
-	<script>
-	window.dataLayer = window.dataLayer || [];
-	function gtag(){dataLayer.push(arguments);}
-	gtag(\'js\', new Date());
-	gtag(\'config\', \''.$gaid.'\');';
-	if($gafid) { 
-		$code .= 'gtag(\'config\', \''.$gafid.'\');';
-	}
-	$code .= '</script>'; 
-} elseif($gafid) { 
-	$code = '<!-- Global site tag (gtag.js) - Google Analytics -->
-	<script async src="https://www.googletagmanager.com/gtag/js?id='.$gafid.'"></script>
-	<script>
-	window.dataLayer = window.dataLayer || [];
-	function gtag(){dataLayer.push(arguments);}
-	gtag(\'js\', new Date());
-	gtag(\'config\', \''.$gafid.'\');';
-	$code .= '</script>'; 
-} 
-
-return $code;
+		if (!$rsdata || empty($rsdata['status'])) {
+			return '';
 		}
-	}  
+
+		$gaid = $this->normaliseTrackingId(isset($rsdata['gaid']) ? $rsdata['gaid'] : '', '/^UA-[0-9]+-[0-9]+$/');
+		$gafid = $this->normaliseTrackingId(isset($rsdata['gafid']) ? $rsdata['gafid'] : '', '/^G-[A-Z0-9]+$/');
+		$gtmid = $this->normaliseTrackingId(isset($rsdata['gtmid']) ? $rsdata['gtmid'] : '', '/^GTM-[A-Z0-9]+$/');
+		$code = '';
+
+		if ($gtmid) {
+			$gtmid_json = json_encode($gtmid);
+			$code .= '<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w.gkGtmContainerActive=true;w[l].push({\'gtm.start\':
+new Date().getTime(),event:\'gtm.js\'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!==\'dataLayer\'?\'&l=\'+l:\'\';j.async=true;j.src=
+\'https://www.googletagmanager.com/gtm.js?id=\'+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,\'script\',\'dataLayer\',' . $gtmid_json . ');</script>
+<!-- End Google Tag Manager -->';
+		}
+
+		$loader_id = $gaid ? $gaid : $gafid;
+
+		if ($loader_id) {
+			$code .= '<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=' . rawurlencode($loader_id) . '"></script>
+<script>
+window.dataLayer=window.dataLayer||[];
+window.gtag=window.gtag||function(){window.dataLayer.push(arguments);};
+window.gtag(\'js\',new Date());';
+
+			if ($gaid) {
+				$code .= 'window.gtag(\'config\',' . json_encode($gaid) . ');';
+			}
+
+			if ($gafid) {
+				$code .= 'window.gtag(\'config\',' . json_encode($gafid) . ');';
+			}
+
+			$code .= '</script>';
+		}
+
+		return $code;
+	}
+
+	private function normaliseTrackingId($value, $pattern) {
+		$value = strtoupper(trim((string)$value));
+
+		return preg_match($pattern, $value) ? $value : '';
+	}
 	public function atcw($product_id, $quantity, $flg) {
 		$rs = $this->getrsdata();
 
