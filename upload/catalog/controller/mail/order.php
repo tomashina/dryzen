@@ -100,7 +100,9 @@ class ControllerMailOrder extends Controller {
 
 		$data['order_id'] = $order_info['order_id'];
 		$data['date_added'] = date($language->get('date_format_short'), strtotime($order_info['date_added']));
-		$data['payment_method'] = $order_info['payment_method'];
+		// Payment method titles can contain card-logo markup used at checkout.
+		// Order emails only need the readable payment method name.
+		$data['payment_method'] = trim(strip_tags(html_entity_decode($order_info['payment_method'], ENT_QUOTES, 'UTF-8')));
 		$data['shipping_method'] = $order_info['shipping_method'];
 		$data['email'] = $order_info['email'];
 		$data['telephone'] = $order_info['telephone'];
