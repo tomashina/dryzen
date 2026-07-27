@@ -1954,6 +1954,10 @@ class ControllerSaleOrder extends Controller {
         return $this->response(300, 'Narudžba ne postoji.');
     }
 
+    if (trim((string)$order->number_order) !== '') {
+        return $this->response(200, 'Narudžba je već poslana u e-Računi.');
+    }
+
     // 4) API auth + wrapper
     $username  = agconf('import.api.username');
     $secretKey = agconf('import.api.password');
@@ -1982,6 +1986,7 @@ class ControllerSaleOrder extends Controller {
 
         // B) tek onda složi sale payload
         $params = $eracuni->createSale($type, 'json');
+        $params['apiTransactionId'] = 'dryzen-' . $type . '-' . (int)$order_id;
         $params = $this->normalizeSalePayload($params, $type);
         $params = $this->synchronizeShippingPayload($params, $order_data, $type);
 

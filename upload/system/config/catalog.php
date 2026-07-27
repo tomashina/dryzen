@@ -45,7 +45,10 @@ $_['action_event'] = array(
 	),
 	'controller/*/after' => array(
 		'event/language/after'
-	),	
+	),
+	'controller/checkout/success/before' => array(
+		900 => 'extension/module/eracuni_order/checkoutSuccess'
+	),
 	'view/*/before' => array(
 		500  => 'event/theme',
 		998  => 'event/language',
