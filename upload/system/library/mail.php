@@ -13,6 +13,7 @@
 class Mail {
 	protected $adaptor;
 	protected $to;
+	protected $bcc = array();
 	protected $from;
 	protected $sender;
 	protected $reply_to;
@@ -52,6 +53,15 @@ class Mail {
      */
 	public function setTo($to) {
 		$this->to = $to;
+	}
+
+	/**
+     *
+     *
+     * @param	mixed	$bcc
+     */
+	public function setBcc($bcc) {
+		$this->bcc = $bcc;
 	}
 	
 	/**

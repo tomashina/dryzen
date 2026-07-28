@@ -20,9 +20,11 @@ class Mail
     public $smtp_port;
     public $smtp_timeout;
     public $to;
+    public $bcc;
     public $from;
     public $sender;
     public $subject;
+    public $text;
     public $html;
 
     public function __construct($engine)
@@ -33,6 +35,11 @@ class Mail
     public function setTo($value)
     {
         $this->to = $value;
+    }
+
+    public function setBcc($value)
+    {
+        $this->bcc = $value;
     }
 
     public function setFrom($value)
@@ -48,6 +55,11 @@ class Mail
     public function setSubject($value)
     {
         $this->subject = $value;
+    }
+
+    public function setText($value)
+    {
+        $this->text = $value;
     }
 
     public function setHtml($value)
@@ -199,27 +211,52 @@ $controller->config = new DryzenOrderMailTestConfig(array(
 $createMail = $reflection->getMethod('createOrderConfirmationMail');
 $createMail->setAccessible(true);
 $fullHtml = '<html><body><h1>Narudžba 15</h1><p>Proizvodi i ukupni iznos.</p></body></html>';
-$adminMail = $createMail->invoke(
+$orderMail = $createMail->invoke(
     $controller,
-    'admin@milla.hr',
-    'shop@milla.hr',
-    'DryZen',
-    'DryZen - Narudžba 15',
-    $fullHtml
-);
-$additionalMail = $createMail->invoke(
-    $controller,
-    'nabava@milla.hr',
+    'customer@example.com',
+    array('admin@milla.hr', 'nabava@milla.hr', 'order@milla.hr'),
     'shop@milla.hr',
     'DryZen',
     'DryZen - Narudžba 15',
     $fullHtml
 );
 
-dryzenOrderMailAssertSame(false, $adminMail === $additionalMail, 'Every recipient gets a separate Mail instance.');
-dryzenOrderMailAssertSame($fullHtml, $adminMail->html, 'The admin mail contains the full rendered customer HTML.');
-dryzenOrderMailAssertSame($fullHtml, $additionalMail->html, 'The additional recipient mail contains the same full rendered customer HTML.');
-dryzenOrderMailAssertSame('admin@milla.hr', $adminMail->to, 'The admin copy has the correct recipient.');
-dryzenOrderMailAssertSame('nabava@milla.hr', $additionalMail->to, 'The additional copy has the correct recipient.');
+dryzenOrderMailAssertSame($fullHtml, $orderMail->html, 'The order mail contains the full rendered customer HTML.');
+dryzenOrderMailAssertSame(
+    "Narudžba 15\nProizvodi i ukupni iznos.",
+    $orderMail->text,
+    'The same order also has a complete plain-text fallback for strict mail clients.'
+);
+dryzenOrderMailAssertSame('customer@example.com', $orderMail->to, 'The customer remains the visible primary recipient.');
+dryzenOrderMailAssertSame(
+    array('admin@milla.hr', 'nabava@milla.hr', 'order@milla.hr'),
+    $orderMail->bcc,
+    'The admin and additional addresses receive the exact same message through BCC.'
+);
+
+$route = '';
+$args = array();
+$controller->alert($route, $args);
+
+require_once dirname(__DIR__) . '/upload/system/library/mail/smtp.php';
+
+$smtp = new \Mail\Smtp();
+$smtp->to = 'customer@example.com';
+$smtp->bcc = array('admin@milla.hr', 'nabava@milla.hr', 'ADMIN@milla.hr');
+$smtpReflection = new ReflectionClass('Mail\\Smtp');
+$getSmtpRecipients = $smtpReflection->getMethod('getRecipients');
+$getSmtpRecipients->setAccessible(true);
+
+dryzenOrderMailAssertSame(
+    array('customer@example.com', 'ADMIN@milla.hr', 'nabava@milla.hr'),
+    $getSmtpRecipients->invoke($smtp),
+    'SMTP sends one payload to the primary and unique BCC envelope recipients.'
+);
+
+dryzenOrderMailAssertSame(
+    false,
+    strpos(file_get_contents(dirname(__DIR__) . '/upload/system/library/mail/smtp.php'), 'Bcc:') !== false,
+    'BCC addresses are not exposed in the SMTP message headers.'
+);
 
 echo "Order mail tests passed.\n";

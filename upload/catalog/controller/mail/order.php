@@ -286,18 +286,18 @@ class ControllerMailOrder extends Controller {
 		$sender = html_entity_decode($order_info['store_name'], ENT_QUOTES, 'UTF-8');
 		$subject = html_entity_decode(sprintf($language->get('text_subject'), $order_info['store_name'], $order_info['order_id']), ENT_QUOTES, 'UTF-8');
 
-		foreach ($this->getOrderMailRecipients($order_info['email']) as $recipient) {
-			// A fresh Mail instance is required for every copy. Some SMTP/mail
-			// adaptors consume the body of a sent instance, leaving later copies empty.
-			$mail = $this->createOrderConfirmationMail($recipient['email'], $from, $sender, $subject, $html);
-			$this->sendSafely($mail, $order_info['order_id'], $recipient['context']);
+		$recipients = $this->getOrderMailRecipients($order_info['email']);
+		$primary_recipient = array_shift($recipients);
+		$bcc = array();
+
+		foreach ($recipients as $recipient) {
+			$bcc[] = $recipient['email'];
 		}
 
-		if (in_array('order', (array)$this->config->get('config_mail_alert'))) {
-			// Prevent mail/order/alert from sending a second, abbreviated email
-			// to the same additional recipients during this order request.
-			$this->config->set('dryzen_full_order_alert_sent', true);
-		}
+		// One SMTP DATA payload guarantees that the customer, store and all
+		// configured order-alert recipients receive the identical HTML body.
+		$mail = $this->createOrderConfirmationMail($primary_recipient['email'], $bcc, $from, $sender, $subject, $html);
+		$this->sendSafely($mail, $order_info['order_id'], 'customer and store confirmations');
 	}
 	
 	public function edit($order_info, $order_status_id, $comment) {
@@ -357,144 +357,10 @@ class ControllerMailOrder extends Controller {
 	
 	// Admin Alert Mail
 	public function alert(&$route, &$args) {
-		if (isset($args[0])) {
-			$order_id = $args[0];
-		} else {
-			$order_id = 0;
-		}
-		
-		if (isset($args[1])) {
-			$order_status_id = $args[1];
-		} else {
-			$order_status_id = 0;
-		}	
-		
-		if (isset($args[2])) {
-			$comment = $args[2];
-		} else {
-			$comment = '';
-		}
-		
-		if (isset($args[3])) {
-			$notify = $args[3];
-		} else {
-			$notify = '';
-		}
-
-		$order_info = $this->model_checkout_order->getOrder($order_id);
-		
-		if ($order_info && !$order_info['order_status_id'] && $order_status_id && in_array('order', (array)$this->config->get('config_mail_alert')) && !$this->config->get('dryzen_full_order_alert_sent')) {
-			$this->load->language('mail/order_alert');
-			
-			// HTML Mail
-			$data['text_received'] = $this->language->get('text_received');
-			$data['text_order_id'] = $this->language->get('text_order_id');
-			$data['text_date_added'] = $this->language->get('text_date_added');
-			$data['text_order_status'] = $this->language->get('text_order_status');
-			$data['text_product'] = $this->language->get('text_product');
-			$data['text_total'] = $this->language->get('text_total');
-			$data['text_comment'] = $this->language->get('text_comment');
-			
-			$data['order_id'] = $order_info['order_id'];
-			$data['date_added'] = date($this->language->get('date_format_short'), strtotime($order_info['date_added']));
-
-			$order_status_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "order_status WHERE order_status_id = '" . (int)$order_status_id . "' AND language_id = '" . (int)$this->config->get('config_language_id') . "'");
-
-			if ($order_status_query->num_rows) {
-				$data['order_status'] = $order_status_query->row['name'];
-			} else {
-				$data['order_status'] = '';
-			}
-
-			$this->load->model('tool/upload');
-			
-			$data['products'] = array();
-
-			$order_products = $this->model_checkout_order->getOrderProducts($order_id);
-
-			foreach ($order_products as $order_product) {
-				$option_data = array();
-				
-				$order_options = $this->model_checkout_order->getOrderOptions($order_info['order_id'], $order_product['order_product_id']);
-				
-				foreach ($order_options as $order_option) {
-					if ($order_option['type'] != 'file') {
-						$value = $order_option['value'];
-					} else {
-						$upload_info = $this->model_tool_upload->getUploadByCode($order_option['value']);
-	
-						if ($upload_info) {
-							$value = $upload_info['name'];
-						} else {
-							$value = '';
-						}
-					}
-
-					$option_data[] = array(
-						'name'  => $order_option['name'],
-						'value' => (utf8_strlen($value) > 20 ? utf8_substr($value, 0, 20) . '..' : $value)
-					);					
-				}
-					
-				$data['products'][] = array(
-					'name'     => $order_product['name'],
-					'model'    => $order_product['model'],
-					'quantity' => $order_product['quantity'],
-					'option'   => $option_data,
-					'total'    => html_entity_decode($this->currency->format($order_product['total'] + ($this->config->get('config_tax') ? ($order_product['tax'] * $order_product['quantity']) : 0), $order_info['currency_code'], $order_info['currency_value']), ENT_NOQUOTES, 'UTF-8')
-				);
-			}
-			
-			$data['vouchers'] = array();
-			
-			$order_vouchers = $this->model_checkout_order->getOrderVouchers($order_id);
-
-			foreach ($order_vouchers as $order_voucher) {
-				$data['vouchers'][] = array(
-					'description' => $order_voucher['description'],
-					'amount'      => html_entity_decode($this->currency->format($order_voucher['amount'], $order_info['currency_code'], $order_info['currency_value']), ENT_NOQUOTES, 'UTF-8')
-				);					
-			}
-
-			$data['totals'] = array();
-			
-			$order_totals = $this->model_checkout_order->getOrderTotals($order_id);
-
-			foreach ($order_totals as $order_total) {
-				$data['totals'][] = array(
-					'title' => $order_total['title'],
-					'value' => html_entity_decode($this->currency->format($order_total['value'], $order_info['currency_code'], $order_info['currency_value']), ENT_NOQUOTES, 'UTF-8')
-				);
-			}
-
-			$data['comment'] = strip_tags($order_info['comment']);
-
-			$mail = new Mail($this->config->get('config_mail_engine'));
-			$mail->parameter = $this->config->get('config_mail_parameter');
-			$mail->smtp_hostname = $this->config->get('config_mail_smtp_hostname');
-			$mail->smtp_username = $this->config->get('config_mail_smtp_username');
-			$mail->smtp_password = html_entity_decode($this->config->get('config_mail_smtp_password'), ENT_QUOTES, 'UTF-8');
-			$mail->smtp_port = $this->config->get('config_mail_smtp_port');
-			$mail->smtp_timeout = $this->config->get('config_mail_smtp_timeout');
-
-			$mail->setTo($this->config->get('config_email'));
-			$mail->setFrom($this->config->get('config_email'));
-			$mail->setSender(html_entity_decode($order_info['store_name'], ENT_QUOTES, 'UTF-8'));
-			$mail->setSubject(html_entity_decode(sprintf($this->language->get('text_subject'), $this->config->get('config_name'), $order_info['order_id']), ENT_QUOTES, 'UTF-8'));
-			$mail->setText($this->load->view('mail/order_alert', $data));
-		//	$mail->send();
-
-			// Send to additional alert emails
-			$emails = explode(',', $this->config->get('config_mail_alert_email'));
-
-			foreach ($emails as $email) {
-				$email = trim($email);
-				if ($email && filter_var($email, FILTER_VALIDATE_EMAIL)) {
-					$mail->setTo($email);
-					$this->sendSafely($mail, $order_info['order_id'], 'additional store alert');
-				}
-			}
-		}
+		// The full HTML order confirmation is already sent to the store and
+		// configured order-alert recipients as BCC in add(). The legacy alert
+		// is intentionally disabled because it can create a second empty email.
+		return;
 	}
 
 	private function formatShippingMethodForEmail($order_info, $language) {
@@ -589,7 +455,7 @@ class ControllerMailOrder extends Controller {
 		);
 	}
 
-	private function createOrderConfirmationMail($recipient, $from, $sender, $subject, $html) {
+	private function createOrderConfirmationMail($recipient, $bcc, $from, $sender, $subject, $html) {
 		$mail = new Mail($this->config->get('config_mail_engine'));
 		$mail->parameter = $this->config->get('config_mail_parameter');
 		$mail->smtp_hostname = $this->config->get('config_mail_smtp_hostname');
@@ -598,12 +464,24 @@ class ControllerMailOrder extends Controller {
 		$mail->smtp_port = $this->config->get('config_mail_smtp_port');
 		$mail->smtp_timeout = $this->config->get('config_mail_smtp_timeout');
 		$mail->setTo($recipient);
+		$mail->setBcc($bcc);
 		$mail->setFrom($from);
 		$mail->setSender($sender);
 		$mail->setSubject($subject);
+		$mail->setText($this->orderHtmlToText($html));
 		$mail->setHtml($html);
 
 		return $mail;
+	}
+
+	private function orderHtmlToText($html) {
+		$text = preg_replace('/<\s*br\s*\/?\s*>/i', "\n", (string)$html);
+		$text = preg_replace('/<\/(?:p|div|h[1-6]|tr|td|th|li|table)>/i', "\n", $text);
+		$text = html_entity_decode(strip_tags($text), ENT_QUOTES, 'UTF-8');
+		$text = preg_replace("/[ \t]+\n/", "\n", $text);
+		$text = preg_replace("/\n{3,}/", "\n\n", $text);
+
+		return trim($text);
 	}
 
 	private function sendSafely($mail, $order_id, $context) {

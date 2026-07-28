@@ -2,6 +2,7 @@
 namespace Mail;
 class Smtp {
 	public $to;
+	public $bcc = array();
 	public $from;
 	public $sender;
 	public $reply_to;
@@ -170,23 +171,13 @@ class Smtp {
 
 			$this->handleReply($handle, 250, 'Error: MAIL FROM not accepted from server!');
 
-			if (!is_array($this->to)) {
-				fputs($handle, 'RCPT TO: <' . $this->to . '>' . "\r\n");
+			foreach ($this->getRecipients() as $recipient) {
+				fputs($handle, 'RCPT TO: <' . $recipient . '>' . "\r\n");
 
-				$reply = $this->handleReply($handle, false, 'RCPT TO [!array]');
+				$reply = $this->handleReply($handle, false, 'RCPT TO');
 
 				if ((substr($reply, 0, 3) != 250) && (substr($reply, 0, 3) != 251)) {
 					throw new \Exception('Error: RCPT TO not accepted from server! Server reply: ' . trim(preg_replace('/\\s+/', ' ', $reply)));
-				}
-			} else {
-				foreach ($this->to as $recipient) {
-					fputs($handle, 'RCPT TO: <' . $recipient . '>' . "\r\n");
-
-					$reply = $this->handleReply($handle, false, 'RCPT TO [array]');
-
-					if ((substr($reply, 0, 3) != 250) && (substr($reply, 0, 3) != 251)) {
-						throw new \Exception('Error: RCPT TO not accepted from server! Server reply: ' . trim(preg_replace('/\\s+/', ' ', $reply)));
-					}
 				}
 			}
 
@@ -224,6 +215,24 @@ class Smtp {
 
 			fclose($handle);
 		}
+	}
+
+	private function getRecipients() {
+		$recipients = array_merge(
+			is_array($this->to) ? $this->to : array($this->to),
+			is_array($this->bcc) ? $this->bcc : array($this->bcc)
+		);
+		$result = array();
+
+		foreach ($recipients as $recipient) {
+			$recipient = trim((string)$recipient);
+
+			if ($recipient !== '') {
+				$result[strtolower($recipient)] = $recipient;
+			}
+		}
+
+		return array_values($result);
 	}
 
 	private function handleReply($handle, $status_code = false, $error_text = false, $counter = 0) {

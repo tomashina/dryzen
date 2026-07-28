@@ -2,6 +2,7 @@
 namespace Mail;
 class Mail {
 	public $to;
+	public $bcc = array();
 	public $from;
 	public $sender;
 	public $reply_to;
@@ -87,10 +88,22 @@ class Mail {
 
 		ini_set('sendmail_from', $this->from);
 
-		if ($this->parameter) {
-			mail($to, '=?UTF-8?B?' . base64_encode($this->subject) . '?=', $message, $header, $this->parameter);
-		} else {
-			mail($to, '=?UTF-8?B?' . base64_encode($this->subject) . '?=', $message, $header);
+		$recipients = array($to);
+
+		foreach ((array)$this->bcc as $recipient) {
+			$recipient = trim((string)$recipient);
+
+			if ($recipient !== '' && !in_array($recipient, $recipients, true)) {
+				$recipients[] = $recipient;
+			}
+		}
+
+		foreach ($recipients as $recipient) {
+			if ($this->parameter) {
+				mail($recipient, '=?UTF-8?B?' . base64_encode($this->subject) . '?=', $message, $header, $this->parameter);
+			} else {
+				mail($recipient, '=?UTF-8?B?' . base64_encode($this->subject) . '?=', $message, $header);
+			}
 		}
 	}
 }
