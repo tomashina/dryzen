@@ -28,6 +28,12 @@
 /upload/sitemaps/*
 !/upload/sitemaps/index.html
 !/upload/sitemaps/sitemap-style.xml
+!/upload/sitemaps/sitemap_0_1_category.xml
+!/upload/sitemaps/sitemap_0_1_information.xml
+!/upload/sitemaps/sitemap_0_1_product.xml
+!/upload/sitemaps/sitemap_0_3_category.xml
+!/upload/sitemaps/sitemap_0_3_information.xml
+!/upload/sitemaps/sitemap_0_3_product.xml
 /upload/system/storage/
 /storagedijana/cache/*
 !/storagedijana/cache/index.html

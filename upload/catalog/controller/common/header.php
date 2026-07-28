@@ -209,18 +209,153 @@ class ControllerCommonHeader extends Controller {
 			return array();
 		}
 
-		$code = str_replace('_', '-', (string) $this->config->get('config_language'));
-		$parts = explode('-', $code, 2);
+		$route = isset($this->request->get['route']) ? (string)$this->request->get['route'] : 'common/home';
+		$route_query = $this->getDryzenSeoRouteQuery($route);
+		$base_url = rtrim((string)($this->config->get('config_ssl') ?: $this->config->get('config_url')), '/') . '/';
+		$default_code = (string)$this->config->get('config_language');
+		$default_url = '';
+		$alternates = array();
+
+		$this->load->model('localisation/language');
+		$languages = $this->model_localisation_language->getLanguages();
+
+		foreach ($languages as $language) {
+			if (empty($language['status'])) {
+				continue;
+			}
+
+			$href = $this->getDryzenLanguageUrl(
+				$route,
+				$route_query,
+				$language,
+				$base_url,
+				$default_code
+			);
+
+			if ($href === '') {
+				continue;
+			}
+
+			if (isset($this->request->get['page']) && (int)$this->request->get['page'] > 1) {
+				$href .= (strpos($href, '?') === false ? '?' : '&') . 'page=' . (int)$this->request->get['page'];
+			}
+
+			$alternates[] = array(
+				'hreflang' => $this->formatDryzenHreflang($language['code']),
+				'href' => $href,
+			);
+
+			if (strtolower($language['code']) === strtolower($default_code)) {
+				$default_url = $href;
+			}
+		}
+
+		$unique_urls = array_unique(array_column($alternates, 'href'));
+
+		if (count($alternates) < 2 || count($unique_urls) !== count($alternates)) {
+			$current_code = $this->formatDryzenHreflang($this->language->get('code'));
+			$alternates = array(array('hreflang' => $current_code, 'href' => $canonical));
+
+			if (strtolower((string)$this->language->get('code')) === strtolower($default_code)) {
+				$alternates[] = array('hreflang' => 'x-default', 'href' => $canonical);
+			}
+
+			return $alternates;
+		}
+
+		if ($default_url !== '') {
+			$alternates[] = array('hreflang' => 'x-default', 'href' => $default_url);
+		}
+
+		return $alternates;
+	}
+
+	private function getDryzenSeoRouteQuery($route) {
+		if ($route === 'information/information' && isset($this->request->get['information_id'])) {
+			return 'information_id=' . (int)$this->request->get['information_id'];
+		}
+
+		if ($route === 'product/product' && isset($this->request->get['product_id'])) {
+			return 'product_id=' . (int)$this->request->get['product_id'];
+		}
+
+		if ($route === 'product/manufacturer/info' && isset($this->request->get['manufacturer_id'])) {
+			return 'manufacturer_id=' . (int)$this->request->get['manufacturer_id'];
+		}
+
+		if ($route === 'product/category' && isset($this->request->get['path'])) {
+			$path = explode('_', (string)$this->request->get['path']);
+
+			return 'category_id=' . (int)end($path);
+		}
+
+		return '';
+	}
+
+	private function getDryzenLanguageUrl($route, $route_query, $language, $base_url, $default_code) {
+		$language_id = (int)$language['language_id'];
+		$store_id = (int)$this->config->get('config_store_id');
+
+		if ($route === 'common/home') {
+			if (strtolower($language['code']) === strtolower($default_code)) {
+				return $base_url;
+			}
+
+			$query = $this->db->query(
+				"SELECT keyword FROM " . DB_PREFIX . "seo_url WHERE query = 'language_id="
+				. $language_id
+				. "' AND language_id = '" . $language_id
+				. "' AND store_id = '" . $store_id
+				. "' LIMIT 1"
+			);
+
+			return ($query->num_rows && $query->row['keyword'])
+				? $base_url . ltrim($query->row['keyword'], '/')
+				: '';
+		}
+
+		if ($route_query !== '') {
+			$query = $this->db->query(
+				"SELECT keyword FROM " . DB_PREFIX . "seo_url WHERE query = '"
+				. $this->db->escape($route_query)
+				. "' AND language_id = '" . $language_id
+				. "' AND store_id = '" . $store_id
+				. "' LIMIT 1"
+			);
+		} else {
+			$query = $this->db->query(
+				"SELECT keyword FROM " . DB_PREFIX . "seo_url WHERE query = '"
+				. $this->db->escape($route)
+				. "' AND language_id = '" . $language_id
+				. "' AND store_id = '" . $store_id
+				. "' LIMIT 1"
+			);
+
+			if (!$query->num_rows) {
+				$query = $this->db->query(
+					"SELECT keyword FROM " . DB_PREFIX . "hb_url WHERE route = '"
+					. $this->db->escape($route)
+					. "' AND language_id = '" . $language_id
+					. "' AND store_id = '" . $store_id
+					. "' LIMIT 1"
+				);
+			}
+		}
+
+		return ($query->num_rows && $query->row['keyword'])
+			? $base_url . ltrim($query->row['keyword'], '/')
+			: '';
+	}
+
+	private function formatDryzenHreflang($code) {
+		$parts = explode('-', str_replace('_', '-', (string)$code), 2);
 		$locale = strtolower($parts[0]);
 
 		if (isset($parts[1]) && $parts[1] !== '') {
 			$locale .= '-' . strtoupper($parts[1]);
 		}
 
-		return array(
-			array('hreflang' => $locale, 'href' => $canonical),
-			array('hreflang' => 'x-default', 'href' => $canonical),
-		);
+		return $locale;
 	}
 
 	private function getDryzenRobotsDirective() {

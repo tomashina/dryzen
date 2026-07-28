@@ -38,6 +38,8 @@ class ControllerStartupSeoUrl extends Controller {
 			$this->url->addRewrite($this);
 		}
 
+		$this->redirectLegacyQueryUrl();
+
 		// Decode URL
 		if (isset($this->request->get['_route_'])) {
 			$parts = explode('/', $this->request->get['_route_']);
@@ -97,6 +99,112 @@ class ControllerStartupSeoUrl extends Controller {
 		}
 	}
 
+	/**
+	 * Permanently consolidate clean, parameter-only OpenCart content URLs.
+	 *
+	 * This intentionally redirects only a small allowlist and only when no
+	 * functional/filter parameters are present. SEO rewrites and AJAX routes
+	 * therefore continue to work normally.
+	 */
+	private function redirectLegacyQueryUrl() {
+		$method = isset($this->request->server['REQUEST_METHOD']) ? strtoupper($this->request->server['REQUEST_METHOD']) : 'GET';
+
+		if (!in_array($method, array('GET', 'HEAD'), true) || empty($this->request->server['REQUEST_URI'])) {
+			return;
+		}
+
+		$request_path = parse_url($this->request->server['REQUEST_URI'], PHP_URL_PATH);
+
+		if (basename((string)$request_path) !== 'index.php' || empty($this->request->get['route'])) {
+			return;
+		}
+
+		$route = (string)$this->request->get['route'];
+		$route_keys = array(
+			'common/home' => array(),
+			'account/return/add' => array(),
+			'extension/blog/home' => array(),
+			'information/contact' => array(),
+			'information/information' => array('information_id'),
+			'product/product' => array('product_id'),
+			'product/category' => array('path'),
+			'product/manufacturer/info' => array('manufacturer_id'),
+		);
+
+		if (!isset($route_keys[$route])) {
+			return;
+		}
+
+		$allowed_keys = array_merge(array('route'), $route_keys[$route]);
+		$request_keys = array_keys($this->request->get);
+
+		if (array_diff($request_keys, $allowed_keys)) {
+			return;
+		}
+
+		$args = array();
+
+		foreach ($route_keys[$route] as $key) {
+			if (!isset($this->request->get[$key]) || $this->request->get[$key] === '') {
+				return;
+			}
+
+			$args[$key] = $this->request->get[$key];
+		}
+
+		if ($route === 'common/home') {
+			$canonical = $this->getCanonicalHomeUrl();
+		} else {
+			$canonical = html_entity_decode(
+				$this->url->link($route, http_build_query($args, '', '&'), true),
+				ENT_QUOTES,
+				'UTF-8'
+			);
+		}
+		$canonical_parts = parse_url($canonical);
+
+		if (empty($canonical_parts['host']) || strpos((string)$canonical_parts['path'], '/index.php') !== false) {
+			return;
+		}
+
+		$current_scheme = $this->request->server['HTTPS'] ? 'https' : 'http';
+		$current_host = isset($this->request->server['HTTP_HOST']) ? $this->request->server['HTTP_HOST'] : '';
+		$current_url = $current_scheme . '://' . $current_host . $this->request->server['REQUEST_URI'];
+
+		if (rtrim($canonical, '/') !== rtrim($current_url, '/')) {
+			$this->response->redirect($canonical, 301);
+		}
+	}
+
+	private function getCanonicalHomeUrl() {
+		$base_url = rtrim((string)($this->config->get('config_ssl') ?: $this->config->get('config_url')), '/') . '/';
+		$current_language_id = (int)$this->config->get('config_language_id');
+		$default_language = (string)$this->config->get('config_language');
+
+		$query = $this->db->query(
+			"SELECT language_id FROM " . DB_PREFIX . "language WHERE code = '"
+			. $this->db->escape($default_language)
+			. "' LIMIT 1"
+		);
+		$default_language_id = $query->num_rows ? (int)$query->row['language_id'] : $current_language_id;
+
+		if ($current_language_id === $default_language_id) {
+			return $base_url;
+		}
+
+		$query = $this->db->query(
+			"SELECT keyword FROM " . DB_PREFIX . "seo_url WHERE query = 'language_id="
+			. $current_language_id
+			. "' AND language_id = '" . $current_language_id
+			. "' AND store_id = '" . (int)$this->config->get('config_store_id')
+			. "' LIMIT 1"
+		);
+
+		return ($query->num_rows && $query->row['keyword'])
+			? $base_url . ltrim($query->row['keyword'], '/')
+			: $base_url;
+	}
+
 	public function rewrite($link) {
 		$url_info = parse_url(str_replace('&amp;', '&', $link));
 
@@ -140,7 +248,31 @@ class ControllerStartupSeoUrl extends Controller {
 			}
 		}
 
-		if ($url) {
+		// Route aliases (for example /contact and /kontakt) live in seo_url on
+		// this store. HuntBee historically checked only its separate hb_url
+		// table, which left one language on an index.php?route=... canonical.
+		if (isset($data['route']) && $data['route'] === 'extension/blog/home') {
+			$route_keyword = $this->getRouteRewriteKeyword($data['route']);
+
+			if ($route_keyword !== '') {
+				$url = '/' . ltrim($route_keyword, '/');
+			}
+		} elseif ($url === '' && isset($data['route'])) {
+			if ($data['route'] === 'common/home') {
+				$home_keyword = $this->getHomeRewriteKeyword();
+				$url = '/' . ltrim($home_keyword, '/');
+			} else {
+				$route_keyword = $this->getRouteRewriteKeyword($data['route']);
+
+				if ($route_keyword !== '') {
+					$url = '/' . ltrim($route_keyword, '/');
+				}
+			}
+		}
+
+		// The explicit comparison keeps the obsolete HuntBee route injection
+		// from appending a second copy of aliases already handled above.
+		if ($url !== '') {
 			unset($data['route']);
 
 			$query = '';
@@ -159,5 +291,57 @@ class ControllerStartupSeoUrl extends Controller {
 		} else {
 			return $link;
 		}
+	}
+
+	private function getRouteRewriteKeyword($route) {
+		$store_id = (int)$this->config->get('config_store_id');
+		$language_id = (int)$this->config->get('config_language_id');
+		$route = (string)$route;
+		$query = $this->db->query(
+			"SELECT keyword FROM " . DB_PREFIX . "seo_url WHERE query = '"
+			. $this->db->escape($route)
+			. "' AND language_id = '" . $language_id
+			. "' AND store_id = '" . $store_id
+			. "' LIMIT 1"
+		);
+
+		if ($query->num_rows && $query->row['keyword']) {
+			return $query->row['keyword'];
+		}
+
+		$query = $this->db->query(
+			"SELECT keyword FROM " . DB_PREFIX . "hb_url WHERE route = '"
+			. $this->db->escape($route)
+			. "' AND language_id = '" . $language_id
+			. "' AND store_id = '" . $store_id
+			. "' LIMIT 1"
+		);
+
+		return ($query->num_rows && $query->row['keyword']) ? $query->row['keyword'] : '';
+	}
+
+	private function getHomeRewriteKeyword() {
+		$current_language_id = (int)$this->config->get('config_language_id');
+		$default_language = (string)$this->config->get('config_language');
+		$query = $this->db->query(
+			"SELECT language_id FROM " . DB_PREFIX . "language WHERE code = '"
+			. $this->db->escape($default_language)
+			. "' LIMIT 1"
+		);
+		$default_language_id = $query->num_rows ? (int)$query->row['language_id'] : $current_language_id;
+
+		if ($current_language_id === $default_language_id) {
+			return '';
+		}
+
+		$query = $this->db->query(
+			"SELECT keyword FROM " . DB_PREFIX . "seo_url WHERE query = 'language_id="
+			. $current_language_id
+			. "' AND language_id = '" . $current_language_id
+			. "' AND store_id = '" . (int)$this->config->get('config_store_id')
+			. "' LIMIT 1"
+		);
+
+		return ($query->num_rows && $query->row['keyword']) ? $query->row['keyword'] : '';
 	}
 }

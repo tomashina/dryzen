@@ -37,6 +37,7 @@ Options -Indexes
   </FilesMatch>
   Header always set X-Content-Type-Options "nosniff"
   Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  Header always set Strict-Transport-Security "max-age=31536000" "expr=%{HTTPS} == 'on' || req('X-Forwarded-Proto') =~ m#^https(?:,|$)#"
 </IfModule>
 
 # Prevent Direct Access to files
@@ -53,11 +54,33 @@ RewriteEngine On
 
 RewriteBase /
 
-RewriteCond %{HTTPS} off
-RewriteCond %{HTTP_HOST} ^www\. [NC]
-RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
-RewriteCond %{HTTP_HOST} !^www\. [NC]
-RewriteRule ^ https://www.%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+# Preserve authority accumulated by old product and sitemap URLs.
+RewriteCond %{HTTP_HOST} ^(?:www\.)?dryzen\.eu(?::[0-9]+)?$ [NC]
+RewriteRule ^dryzen-naramnice-za-ruke-sport/?$ https://www.dryzen.eu/dryzen-maramice-za-ruke-sport [R=301,L,NE]
+
+RewriteCond %{HTTP_HOST} ^(?:www\.)?dryzen\.eu(?::[0-9]+)?$ [NC]
+RewriteRule ^payment-and-shipping-methods/?$ https://www.dryzen.eu/payment-and-delivery [R=301,L,NE]
+
+RewriteCond %{HTTP_HOST} ^(?:www\.)?dryzen\.eu(?::[0-9]+)?$ [NC]
+RewriteRule ^pravo-i-nacin-podnosenja-prigovora-15-1/?$ https://www.dryzen.eu/right-to-submit-a-complaint [R=301,L,NE]
+
+# Friendly content URLs are canonical without a trailing slash. Existing real
+# directories are excluded, including /sitemaps/.
+RewriteCond %{HTTP_HOST} ^(?:www\.)?dryzen\.eu(?::[0-9]+)?$ [NC]
+RewriteCond %{THE_REQUEST} \s/+(.+?)/+[?\x20] [NC]
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.+?)/+$ https://www.dryzen.eu/$1 [R=301,L,NE]
+
+# One canonical production origin. Respect the TLS proxy headers used by
+# Engintron/nginx so an HTTPS request never enters a redirect loop in Apache.
+RewriteCond %{HTTP_HOST} ^dryzen\.eu(?::[0-9]+)?$ [NC]
+RewriteRule ^ https://www.dryzen.eu%{REQUEST_URI} [R=301,L,NE]
+
+RewriteCond %{HTTP_HOST} ^www\.dryzen\.eu(?::[0-9]+)?$ [NC]
+RewriteCond %{HTTPS} !=on
+RewriteCond %{HTTP:X-Forwarded-Proto} !^https(?:,|$) [NC]
+RewriteCond %{HTTP:X-Forwarded-SSL} !^on$ [NC]
+RewriteRule ^ https://www.dryzen.eu%{REQUEST_URI} [R=301,L,NE]
 
 RewriteRule ^sitemap-index.xml$ index.php?route=extension/feed/boost_sitemap [L]
 RewriteRule ^googlebase.xml$ index.php?route=extension/feed/google_base [L]
@@ -72,8 +95,6 @@ RewriteRule ^sitemaps/([^?]*)/category_to_product_sitemap.xml$ index.php?route=e
 RewriteRule ^sitemaps/([^?]*)/brand_to_product_sitemap.xml$ index.php?route=extension/hbseo/sitemap/brand_to_product&hbxmllang=$1 [L,QSA] 
 RewriteRule ^sitemaps/misc_sitemap.xml$ index.php?route=extension/hbseo/sitemap/misc [L,QSA] 
 RewriteRule ^sitemaps/([^?]*)/journal3blog_sitemap.xml$ index.php?route=extension/hbseo/sitemap/journal3blog&hbxmllang=$1 [L,QSA] 
-RewriteRule ^contact index.php?route=information/contact [L]
-RewriteRule ^kontakt index.php?route=information/contact [L]
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_URI} !.*\.(ico|gif|jpg|jpeg|png|js|css)

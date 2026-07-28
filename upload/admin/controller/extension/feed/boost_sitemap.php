@@ -518,6 +518,32 @@ class ControllerExtensionFeedBoostSitemap extends Controller {
 	}
 
 	/**
+	 * Resolve a URL that is safe to advertise as canonical in a sitemap.
+	 * Parameter fallbacks indicate a missing SEO alias and must be omitted.
+	 *
+	 * @param array $store
+	 * @param string $route
+	 * @param string $args
+	 * @param int $language_id
+	 * @return string
+	 */
+	protected function getCanonicalSitemapUrl($store, $route, $args, $language_id) {
+		$url = $this->link($store['url'], $route, $args, $store['store_id'], $language_id);
+		$parts = parse_url(html_entity_decode($url, ENT_QUOTES, 'UTF-8'));
+
+		if (
+			!$this->isStoreUrl($url, $store['url'])
+			|| empty($parts['path'])
+			|| strpos($parts['path'], '/index.php') !== false
+			|| !empty($parts['query'])
+		) {
+			return '';
+		}
+
+		return $url;
+	}
+
+	/**
 	 * Add all reciprocal language variants for multilingual search and AI discovery.
 	 *
 	 * @param array $store
@@ -536,7 +562,12 @@ class ControllerExtensionFeedBoostSitemap extends Controller {
 
 		foreach ($this->languages as $language) {
 			$code = strtolower(str_replace('_', '-', $language['code']));
-			$href = $this->link($store['url'], $route, $args, $store['store_id'], $language['language_id']);
+			$href = $this->getCanonicalSitemapUrl($store, $route, $args, $language['language_id']);
+
+			if ($href === '') {
+				return '';
+			}
+
 			$links[] = ['code' => $code, 'href' => $href];
 
 			if ($code === $default_code || strpos($code, $default_code . '-') === 0) {
@@ -935,9 +966,15 @@ class ControllerExtensionFeedBoostSitemap extends Controller {
 						$informations = $this->model_extension_feed_boost_sitemap->getInformations($params);
 					
 						foreach ($informations as $information) {
-							$output .= '<url>';
 							$args = 'information_id=' . $information['information_id'];
-							$output .= '<loc>' . $this->escapeXml($this->link($store['url'], 'information/information', $args, $store['store_id'], $language['language_id'])) . '</loc>';
+							$canonical_url = $this->getCanonicalSitemapUrl($store, 'information/information', $args, $language['language_id']);
+
+							if ($canonical_url === '') {
+								continue;
+							}
+
+							$output .= '<url>';
+							$output .= '<loc>' . $this->escapeXml($canonical_url) . '</loc>';
 							$output .= $this->getAlternateLinks($store, 'information/information', $args);
 							$output .= '</url>';
 						}
@@ -1238,8 +1275,14 @@ class ControllerExtensionFeedBoostSitemap extends Controller {
 
 						foreach ($products as $product) {
 							$args = 'product_id=' . $product['product_id'];
+							$canonical_url = $this->getCanonicalSitemapUrl($store, 'product/product', $args, $language['language_id']);
+
+							if ($canonical_url === '') {
+								continue;
+							}
+
 							$output .= '<url>';
-							$output .= '<loc>' . $this->escapeXml($this->link($store['url'], 'product/product', $args, $store['store_id'], $language['language_id'])) . '</loc>';
+							$output .= '<loc>' . $this->escapeXml($canonical_url) . '</loc>';
 							$output .= $this->getAlternateLinks($store, 'product/product', $args);
 							$output .= $this->getLastmodXml($product['date_modified']);
 
@@ -1316,9 +1359,17 @@ class ControllerExtensionFeedBoostSitemap extends Controller {
 						$categories = $this->model_extension_feed_boost_sitemap->getCategories($params);
 					
 						foreach ($categories as $category) {
+							// Category pages canonicalise to the leaf alias, not
+							// to every possible parent-path combination.
+							$args = 'path=' . $category['category_id'];
+							$canonical_url = $this->getCanonicalSitemapUrl($store, 'product/category', $args, $language['language_id']);
+
+							if ($canonical_url === '') {
+								continue;
+							}
+
 							$output .= '<url>';
-							$args = 'path=' . $category['path'];
-							$output .= '<loc>' . $this->escapeXml($this->link($store['url'], 'product/category', $args, $store['store_id'], $language['language_id'])) . '</loc>';
+							$output .= '<loc>' . $this->escapeXml($canonical_url) . '</loc>';
 							$output .= $this->getAlternateLinks($store, 'product/category', $args);
 							$output .= $this->getLastmodXml($category['date_modified']);
 							

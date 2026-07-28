@@ -75,6 +75,23 @@ function dryzenSeoJsonLd($html)
     return $items;
 }
 
+function dryzenSeoHreflangValue($html, $code)
+{
+    preg_match_all('~<link\b[^>]*\brel=["\']alternate["\'][^>]*>~i', $html, $matches);
+
+    foreach ($matches[0] as $tag) {
+        if (
+            preg_match('~\bhreflang=["\']([^"\']+)["\']~i', $tag, $hreflang)
+            && strcasecmp($hreflang[1], $code) === 0
+            && preg_match('~\bhref=["\']([^"\']+)["\']~i', $tag, $href)
+        ) {
+            return html_entity_decode($href[1], ENT_QUOTES | ENT_HTML5, 'UTF-8');
+        }
+    }
+
+    return '';
+}
+
 function dryzenSeoSchemaByType(array $items, $type)
 {
     return array_values(array_filter($items, static function ($item) use ($type) {
@@ -82,7 +99,7 @@ function dryzenSeoSchemaByType(array $items, $type)
     }));
 }
 
-function dryzenSeoAuditPage($url, $canonical, $expectedSchemaType = '')
+function dryzenSeoAuditPage($url, $canonical, $expectedSchemaType = '', array $expectedAlternates = array())
 {
     $html = dryzenSeoFetch($url);
 
@@ -90,14 +107,18 @@ function dryzenSeoAuditPage($url, $canonical, $expectedSchemaType = '')
         dryzenSeoHeadValue($html, 'link', 'rel', 'canonical', 'href') === $canonical,
         'Canonical mismatch for ' . $url
     );
-    dryzenSeoAssert(
-        strpos($html, 'rel="alternate" hreflang="hr-HR" href="' . $canonical . '"') !== false,
-        'Missing self hreflang for ' . $url
-    );
-    dryzenSeoAssert(
-        strpos($html, 'rel="alternate" hreflang="x-default" href="' . $canonical . '"') !== false,
-        'Missing x-default hreflang for ' . $url
-    );
+
+    if (!$expectedAlternates) {
+        $expectedAlternates = array('hr-HR' => $canonical, 'x-default' => $canonical);
+    }
+
+    foreach ($expectedAlternates as $code => $href) {
+        dryzenSeoAssert(
+            dryzenSeoHreflangValue($html, $code) === $href,
+            'Invalid or missing hreflang ' . $code . ' for ' . $url
+        );
+    }
+
     dryzenSeoAssert(
         dryzenSeoHeadValue($html, 'meta', 'property', 'og:title', 'content') !== '',
         'Missing Open Graph title for ' . $url
@@ -105,6 +126,10 @@ function dryzenSeoAuditPage($url, $canonical, $expectedSchemaType = '')
     dryzenSeoAssert(
         dryzenSeoHeadValue($html, 'meta', 'property', 'og:image', 'content') !== '',
         'Missing Open Graph image for ' . $url
+    );
+    dryzenSeoAssert(
+        dryzenSeoHeadValue($html, 'meta', 'property', 'og:url', 'content') === $canonical,
+        'Open Graph URL mismatch for ' . $url
     );
     dryzenSeoAssert(
         dryzenSeoHeadValue($html, 'meta', 'name', 'twitter:card', 'content') === 'summary_large_image',
@@ -190,7 +215,7 @@ try {
 
     $keyPages = array(
         '/' => 'OnlineStore',
-        '/shop' => 'ItemList',
+        '/proizvodi' => 'ItemList',
         '/o-nama' => 'BreadcrumbList',
         '/kontakt' => 'ContactPage',
     );
@@ -200,9 +225,35 @@ try {
         dryzenSeoAuditPage($canonical, $canonical, $schemaType);
     }
 
+    $hrReturnsUrl = $baseUrl . '/povrat-robe-zamjena-i-reklamacije';
+    $enReturnsUrl = $baseUrl . '/returns-exchanges-and-complaints';
+    dryzenSeoAuditPage(
+        $enReturnsUrl,
+        $enReturnsUrl,
+        '',
+        array(
+            'hr-HR' => $hrReturnsUrl,
+            'en-GB' => $enReturnsUrl,
+            'x-default' => $hrReturnsUrl,
+        )
+    );
+
+    $hrContactUrl = $baseUrl . '/kontakt';
+    $enContactUrl = $baseUrl . '/contact';
+    dryzenSeoAuditPage(
+        $enContactUrl,
+        $enContactUrl,
+        'ContactPage',
+        array(
+            'hr-HR' => $hrContactUrl,
+            'en-GB' => $enContactUrl,
+            'x-default' => $hrContactUrl,
+        )
+    );
+
     echo 'PASS SEO route database audit: ' . count($config['products']) . " products\n";
     echo 'PASS custom routes: ' . count($config['routes']) . "\n";
-    echo 'PASS rendered SEO audit: ' . (count($config['products']) + count($keyPages)) . " pages\n";
+    echo 'PASS rendered SEO audit: ' . (count($config['products']) + count($keyPages) + 2) . " pages\n";
 } catch (Throwable $exception) {
     fwrite(STDERR, 'FAIL: ' . $exception->getMessage() . "\n");
     exit(1);

@@ -32,6 +32,21 @@ class ControllerStartupStartup extends Controller {
 			}
 		}
 
+		// Once a request has arrived over HTTPS, generate every storefront URL
+		// from the secure store origin. OpenCart normally keeps config_url on
+		// HTTP, which otherwise leaks HTTP canonicals, internal links and schema
+		// URLs into HTTPS pages even though the web server redirects them back.
+		if ($this->request->server['HTTPS']) {
+			$secure_url = $this->config->get('config_ssl') ?: $this->config->get('config_url');
+
+			if ($secure_url) {
+				$secure_url = preg_replace('#^http://#i', 'https://', (string)$secure_url);
+				$secure_url = rtrim($secure_url, '/') . '/';
+				$this->config->set('config_url', $secure_url);
+				$this->config->set('config_ssl', $secure_url);
+			}
+		}
+
 		// Set time zone
 		if ($this->config->get('config_timezone')) {
 			date_default_timezone_set($this->config->get('config_timezone'));

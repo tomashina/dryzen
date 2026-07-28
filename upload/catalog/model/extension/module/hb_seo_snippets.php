@@ -547,12 +547,12 @@ class ModelExtensionModuleHbSeoSnippets extends Model {
 	
 	public function home_social() {
 		//$this->load->model('tool/image');
+		$config_url = $this->config->get('config_url');
+		$og_img = $this->config->get('hb_snippets_og_img');
+		$home_url = $this->getCanonicalHomeUrl();
 
 		// Open Graph
 		if ($this->config->get('hb_snippets_og_enable')) {
-			$config_url = $this->config->get('config_url');
-			$og_img = $this->config->get('hb_snippets_og_img');
-
 			if (strlen($this->config->get('hb_snippets_og_id')) > 5) {
 				$this->document->setOpengraph('fb:app_id', $this->config->get('hb_snippets_og_id'));
 			}
@@ -560,7 +560,7 @@ class ModelExtensionModuleHbSeoSnippets extends Model {
 			$this->document->setOpengraph('og:title', $this->config->get('config_meta_title'));
 			$this->document->setOpengraph('og:type', 'website');
 			$this->document->setOpengraph('og:site_name', $this->config->get('config_name'));
-			$this->document->setOpengraph('og:url', $config_url);
+			$this->document->setOpengraph('og:url', $home_url);
 			$this->document->setOpengraph('og:description', $this->config->get('config_meta_description'));
 
 			if ($og_img) {
@@ -581,6 +581,35 @@ class ModelExtensionModuleHbSeoSnippets extends Model {
 				$this->document->setTwittercard('twitter:image', $config_url . 'image/' . $og_img);
 			}
 		}
+	}
+
+	private function getCanonicalHomeUrl() {
+		$base_url = rtrim((string)($this->config->get('config_ssl') ?: $this->config->get('config_url')), '/') . '/';
+		$current_language_id = (int)$this->config->get('config_language_id');
+		$default_language = (string)$this->config->get('config_language');
+
+		$query = $this->db->query(
+			"SELECT language_id FROM " . DB_PREFIX . "language WHERE code = '"
+			. $this->db->escape($default_language)
+			. "' LIMIT 1"
+		);
+		$default_language_id = $query->num_rows ? (int)$query->row['language_id'] : $current_language_id;
+
+		if ($current_language_id === $default_language_id) {
+			return $base_url;
+		}
+
+		$query = $this->db->query(
+			"SELECT keyword FROM " . DB_PREFIX . "seo_url WHERE query = 'language_id="
+			. $current_language_id
+			. "' AND language_id = '" . $current_language_id
+			. "' AND store_id = '" . (int)$this->config->get('config_store_id')
+			. "' LIMIT 1"
+		);
+
+		return ($query->num_rows && $query->row['keyword'])
+			? $base_url . ltrim($query->row['keyword'], '/')
+			: $base_url;
 	}
 	
 	public function getProductCategory(int $product_id): array{
