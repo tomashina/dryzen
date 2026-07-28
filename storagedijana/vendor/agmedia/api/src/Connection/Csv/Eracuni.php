@@ -224,7 +224,6 @@ class Eracuni
             'name'        => $name,
             'status'      => 'active',
             'type'        => 'goodsWithoutStockManagement',
-            'unit'        => 'piece',
             'grossPrice'  => $this->money(0),
             'barCode'     => (string) ($orderProduct['ean'] ?? $orderProduct['barcode'] ?? ''),
             'description' => $name,

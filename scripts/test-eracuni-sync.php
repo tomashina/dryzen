@@ -106,6 +106,15 @@ $connector = new \Agmedia\Api\Connection\Csv\Eracuni(array(
         array('model' => '008', 'name' => 'Missing product')
     )
 ));
+$catalogueProduct = $connector->buildCatalogueProduct(array(
+    'model' => '008',
+    'name' => 'Missing product'
+));
+assertSameValue(
+    false,
+    array_key_exists('unit', $catalogueProduct),
+    'New catalogue products omit the unit so e-Racuni displays JM as "-".'
+);
 $connector->ensureCatalogueProductsExist($api, array('username' => 'u', 'secretKey' => 's', 'token' => 't'));
 
 assertSameValue('ProductList', $api->calls[0]['method'], 'Order submission checks the catalogue in one ProductList call.');
