@@ -26,6 +26,7 @@ class Mail
     public $subject;
     public $text;
     public $html;
+    public $single_part_html = false;
 
     public function __construct($engine)
     {
@@ -65,6 +66,11 @@ class Mail
     public function setHtml($value)
     {
         $this->html = $value;
+    }
+
+    public function setSinglePartHtml($value)
+    {
+        $this->single_part_html = (bool)$value;
     }
 }
 
@@ -217,7 +223,8 @@ $customerMail = $createMail->invoke(
     'shop@milla.hr',
     'DryZen',
     'DryZen - Narudžba 15',
-    $fullHtml
+    $fullHtml,
+    false
 );
 $adminMail = $createMail->invoke(
     $controller,
@@ -225,7 +232,8 @@ $adminMail = $createMail->invoke(
     'shop@milla.hr',
     'DryZen',
     'DryZen - Narudžba 15',
-    $fullHtml
+    $fullHtml,
+    true
 );
 $additionalMail = $createMail->invoke(
     $controller,
@@ -233,7 +241,8 @@ $additionalMail = $createMail->invoke(
     'shop@milla.hr',
     'DryZen',
     'DryZen - Narudžba 15',
-    $fullHtml
+    $fullHtml,
+    true
 );
 
 dryzenOrderMailAssertSame(false, $customerMail === $adminMail, 'The customer and admin receive standalone messages.');
@@ -255,6 +264,9 @@ dryzenOrderMailAssertSame($customerMail->text, $additionalMail->text, 'Additiona
 dryzenOrderMailAssertSame('customer@example.com', $customerMail->to, 'The customer copy has the correct recipient.');
 dryzenOrderMailAssertSame('admin@milla.hr', $adminMail->to, 'The admin copy has the correct recipient.');
 dryzenOrderMailAssertSame('nabava@milla.hr', $additionalMail->to, 'The additional copy has the correct recipient.');
+dryzenOrderMailAssertSame(false, $customerMail->single_part_html, 'The customer keeps the existing multipart mail.');
+dryzenOrderMailAssertSame(true, $adminMail->single_part_html, 'The admin receives Roundcube-compatible single-part HTML.');
+dryzenOrderMailAssertSame(true, $additionalMail->single_part_html, 'Additional recipients receive single-part HTML.');
 
 $route = '';
 $args = array();
@@ -297,5 +309,106 @@ dryzenOrderMailAssertSame(
     base64_decode(implode('', $encodedLines), true),
     'Strict mail clients can decode the complete HTML body.'
 );
+
+if (function_exists('pcntl_fork') && function_exists('stream_socket_pair')) {
+    $server = stream_socket_server('tcp://127.0.0.1:0', $serverErrorNumber, $serverError);
+
+    if (!$server) {
+        throw new RuntimeException('Unable to start the test SMTP server: ' . $serverError);
+    }
+
+    $serverAddress = stream_socket_get_name($server, false);
+    $serverPort = (int)substr(strrchr($serverAddress, ':'), 1);
+    $transport = stream_socket_pair(STREAM_PF_UNIX, STREAM_SOCK_STREAM, 0);
+    $processId = pcntl_fork();
+
+    if ($processId === 0) {
+        fclose($transport[0]);
+        $connection = stream_socket_accept($server, 10);
+        $capturedMessage = '';
+
+        if ($connection) {
+            fwrite($connection, "220 localhost test SMTP\r\n");
+
+            while (($line = fgets($connection)) !== false) {
+                $command = rtrim($line, "\r\n");
+
+                if (stripos($command, 'EHLO ') === 0 || stripos($command, 'HELO ') === 0) {
+                    fwrite($connection, "250 localhost\r\n");
+                } elseif (stripos($command, 'MAIL FROM:') === 0 || stripos($command, 'RCPT TO:') === 0) {
+                    fwrite($connection, "250 accepted\r\n");
+                } elseif ($command === 'DATA') {
+                    fwrite($connection, "354 send message\r\n");
+
+                    while (($dataLine = fgets($connection)) !== false) {
+                        if (rtrim($dataLine, "\r\n") === '.') {
+                            break;
+                        }
+
+                        $capturedMessage .= $dataLine;
+                    }
+
+                    fwrite($connection, "250 queued\r\n");
+                } elseif ($command === 'QUIT') {
+                    fwrite($connection, "221 bye\r\n");
+                    break;
+                }
+            }
+
+            fclose($connection);
+        }
+
+        fwrite($transport[1], $capturedMessage);
+        fclose($transport[1]);
+        fclose($server);
+        exit(0);
+    }
+
+    if ($processId < 0) {
+        throw new RuntimeException('Unable to fork the test SMTP server.');
+    }
+
+    fclose($transport[1]);
+    $singlePartSmtp = new \Mail\Smtp();
+    $singlePartSmtp->to = 'admin@milla.hr';
+    $singlePartSmtp->from = 'shop@milla.hr';
+    $singlePartSmtp->sender = 'DryZen';
+    $singlePartSmtp->subject = 'DryZen - Narudžba 15';
+    $singlePartSmtp->text = 'Puni sadržaj narudžbe.';
+    $singlePartSmtp->html = $fullHtml;
+    $singlePartSmtp->single_part_html = true;
+    $singlePartSmtp->smtp_hostname = '127.0.0.1';
+    $singlePartSmtp->smtp_port = $serverPort;
+    $singlePartSmtp->smtp_timeout = 5;
+    $singlePartSmtp->send();
+    $capturedMessage = stream_get_contents($transport[0]);
+    fclose($transport[0]);
+    fclose($server);
+    pcntl_waitpid($processId, $processStatus);
+
+    dryzenOrderMailAssertSame(
+        true,
+        strpos($capturedMessage, 'Content-Type: text/html; charset="utf-8"') !== false,
+        'The internal SMTP copy is a single-part HTML message.'
+    );
+    dryzenOrderMailAssertSame(
+        true,
+        strpos($capturedMessage, 'Content-Transfer-Encoding: quoted-printable') !== false,
+        'The internal SMTP copy uses Roundcube-compatible quoted-printable encoding.'
+    );
+    dryzenOrderMailAssertSame(
+        false,
+        strpos($capturedMessage, 'multipart/') !== false,
+        'The internal SMTP copy has no multipart structure for Roundcube to misparse.'
+    );
+
+    $capturedParts = preg_split("/\r?\n\r?\n/", $capturedMessage, 2);
+    $capturedBody = isset($capturedParts[1]) ? $capturedParts[1] : '';
+    dryzenOrderMailAssertSame(
+        $fullHtml,
+        rtrim(quoted_printable_decode($capturedBody), "\r\n"),
+        'The full customer HTML survives the actual SMTP transport for the admin.'
+    );
+}
 
 echo "Order mail tests passed.\n";

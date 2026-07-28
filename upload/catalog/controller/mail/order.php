@@ -289,7 +289,8 @@ class ControllerMailOrder extends Controller {
 		foreach ($this->getOrderMailRecipients($order_info['email']) as $recipient) {
 			// Render once, but create and send a complete standalone message for
 			// every recipient so each mailbox gets the same HTML and text body.
-			$mail = $this->createOrderConfirmationMail($recipient['email'], $from, $sender, $subject, $html);
+			$single_part_html = $recipient['context'] !== 'customer confirmation';
+			$mail = $this->createOrderConfirmationMail($recipient['email'], $from, $sender, $subject, $html, $single_part_html);
 			$this->sendSafely($mail, $order_info['order_id'], $recipient['context']);
 		}
 	}
@@ -449,7 +450,7 @@ class ControllerMailOrder extends Controller {
 		);
 	}
 
-	private function createOrderConfirmationMail($recipient, $from, $sender, $subject, $html) {
+	private function createOrderConfirmationMail($recipient, $from, $sender, $subject, $html, $single_part_html = false) {
 		$mail = new Mail($this->config->get('config_mail_engine'));
 		$mail->parameter = $this->config->get('config_mail_parameter');
 		$mail->smtp_hostname = $this->config->get('config_mail_smtp_hostname');
@@ -463,6 +464,7 @@ class ControllerMailOrder extends Controller {
 		$mail->setSubject($subject);
 		$mail->setText($this->orderHtmlToText($html));
 		$mail->setHtml($html);
+		$mail->setSinglePartHtml($single_part_html);
 
 		return $mail;
 	}

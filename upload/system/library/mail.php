@@ -20,6 +20,7 @@ class Mail {
 	protected $subject;
 	protected $text;
 	protected $html;
+	protected $single_part_html = false;
 	protected $attachments = array();
 	public $protocol;
 	public $parameter;
@@ -116,6 +117,15 @@ class Mail {
      */
 	public function setHtml($html) {
 		$this->html = $html;
+	}
+
+	/**
+     *
+     *
+     * @param	bool	$enabled
+     */
+	public function setSinglePartHtml($enabled = true) {
+		$this->single_part_html = (bool)$enabled;
 	}
 	
 	/**

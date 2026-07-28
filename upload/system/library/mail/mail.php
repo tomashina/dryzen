@@ -9,6 +9,7 @@ class Mail {
 	public $subject;
 	public $text;
 	public $html;
+	public $single_part_html = false;
 	public $attachments = array();
 	public $protocol;
 	public $parameter;
@@ -39,14 +40,20 @@ class Mail {
 		
 		$header .= 'Return-Path: ' . $this->from . PHP_EOL;
 		$header .= 'X-Mailer: PHP/' . phpversion() . PHP_EOL;
-		$header .= 'Content-Type: multipart/mixed; boundary="' . $boundary . '"' . PHP_EOL . PHP_EOL;
+		$single_part_html = $this->single_part_html && $this->html && !$this->attachments;
 
-		if (!$this->html) {
+		if ($single_part_html) {
+			$header .= 'Content-Type: text/html; charset="utf-8"' . PHP_EOL;
+			$header .= 'Content-Transfer-Encoding: quoted-printable' . PHP_EOL . PHP_EOL;
+			$message = quoted_printable_encode($this->html) . PHP_EOL;
+		} elseif (!$this->html) {
+			$header .= 'Content-Type: multipart/mixed; boundary="' . $boundary . '"' . PHP_EOL . PHP_EOL;
 			$message  = '--' . $boundary . PHP_EOL;
 			$message .= 'Content-Type: text/plain; charset="utf-8"' . PHP_EOL;
 			$message .= 'Content-Transfer-Encoding: base64' . PHP_EOL . PHP_EOL;
 			$message .= $this->encodeBase64($this->text);
 		} else {
+			$header .= 'Content-Type: multipart/mixed; boundary="' . $boundary . '"' . PHP_EOL . PHP_EOL;
 			$message  = '--' . $boundary . PHP_EOL;
 			$message .= 'Content-Type: multipart/alternative; boundary="' . $boundary . '_alt"' . PHP_EOL . PHP_EOL;
 			$message .= '--' . $boundary . '_alt' . PHP_EOL;
@@ -66,25 +73,27 @@ class Mail {
 			$message .= '--' . $boundary . '_alt--' . PHP_EOL;
 		}
 
-		foreach ($this->attachments as $attachment) {
-			if (file_exists($attachment)) {
-				$handle = fopen($attachment, 'r');
+		if (!$single_part_html) {
+			foreach ($this->attachments as $attachment) {
+				if (file_exists($attachment)) {
+					$handle = fopen($attachment, 'r');
 
-				$content = fread($handle, filesize($attachment));
+					$content = fread($handle, filesize($attachment));
 
-				fclose($handle);
+					fclose($handle);
 
-				$message .= '--' . $boundary . PHP_EOL;
-				$message .= 'Content-Type: application/octet-stream; name="' . basename($attachment) . '"' . PHP_EOL;
-				$message .= 'Content-Transfer-Encoding: base64' . PHP_EOL;
-				$message .= 'Content-Disposition: attachment; filename="' . basename($attachment) . '"' . PHP_EOL;
-				$message .= 'Content-ID: <' . urlencode(basename($attachment)) . '>' . PHP_EOL;
-				$message .= 'X-Attachment-Id: ' . urlencode(basename($attachment)) . PHP_EOL . PHP_EOL;
-				$message .= chunk_split(base64_encode($content));
+					$message .= '--' . $boundary . PHP_EOL;
+					$message .= 'Content-Type: application/octet-stream; name="' . basename($attachment) . '"' . PHP_EOL;
+					$message .= 'Content-Transfer-Encoding: base64' . PHP_EOL;
+					$message .= 'Content-Disposition: attachment; filename="' . basename($attachment) . '"' . PHP_EOL;
+					$message .= 'Content-ID: <' . urlencode(basename($attachment)) . '>' . PHP_EOL;
+					$message .= 'X-Attachment-Id: ' . urlencode(basename($attachment)) . PHP_EOL . PHP_EOL;
+					$message .= chunk_split(base64_encode($content));
+				}
 			}
-		}
 
-		$message .= '--' . $boundary . '--' . PHP_EOL;
+			$message .= '--' . $boundary . '--' . PHP_EOL;
+		}
 
 		ini_set('sendmail_from', $this->from);
 
