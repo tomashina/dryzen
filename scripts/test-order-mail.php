@@ -10,6 +10,52 @@ class Controller
     public $config;
 }
 
+class Mail
+{
+    public $engine;
+    public $parameter;
+    public $smtp_hostname;
+    public $smtp_username;
+    public $smtp_password;
+    public $smtp_port;
+    public $smtp_timeout;
+    public $to;
+    public $from;
+    public $sender;
+    public $subject;
+    public $html;
+
+    public function __construct($engine)
+    {
+        $this->engine = $engine;
+    }
+
+    public function setTo($value)
+    {
+        $this->to = $value;
+    }
+
+    public function setFrom($value)
+    {
+        $this->from = $value;
+    }
+
+    public function setSender($value)
+    {
+        $this->sender = $value;
+    }
+
+    public function setSubject($value)
+    {
+        $this->subject = $value;
+    }
+
+    public function setHtml($value)
+    {
+        $this->html = $value;
+    }
+}
+
 class DryzenOrderMailTestConfig
 {
     private $data;
@@ -64,6 +110,13 @@ $controller->config = new DryzenOrderMailTestConfig(array(
     'config_email' => 'shop@milla.hr',
     'config_mail_alert' => array('order', 'review'),
     'config_mail_alert_email' => "nabava@milla.hr, order@milla.hr\nORDER@milla.hr;invalid-address",
+    'config_mail_engine' => 'smtp',
+    'config_mail_parameter' => '',
+    'config_mail_smtp_hostname' => 'tls://smtp.example.com',
+    'config_mail_smtp_username' => 'shop@milla.hr',
+    'config_mail_smtp_password' => 'secret',
+    'config_mail_smtp_port' => 587,
+    'config_mail_smtp_timeout' => 5,
 ));
 
 $parseBoxNowLocation = $reflection->getMethod('parseBoxNowLocation');
@@ -132,5 +185,41 @@ dryzenOrderMailAssertSame(
     $getRecipients->invoke($controller, 'customer@example.com'),
     'Additional order recipients respect the Orders alert setting.'
 );
+
+$controller->config = new DryzenOrderMailTestConfig(array(
+    'config_mail_engine' => 'smtp',
+    'config_mail_parameter' => '',
+    'config_mail_smtp_hostname' => 'tls://smtp.example.com',
+    'config_mail_smtp_username' => 'shop@milla.hr',
+    'config_mail_smtp_password' => 'secret',
+    'config_mail_smtp_port' => 587,
+    'config_mail_smtp_timeout' => 5,
+));
+
+$createMail = $reflection->getMethod('createOrderConfirmationMail');
+$createMail->setAccessible(true);
+$fullHtml = '<html><body><h1>Narudžba 15</h1><p>Proizvodi i ukupni iznos.</p></body></html>';
+$adminMail = $createMail->invoke(
+    $controller,
+    'admin@milla.hr',
+    'shop@milla.hr',
+    'DryZen',
+    'DryZen - Narudžba 15',
+    $fullHtml
+);
+$additionalMail = $createMail->invoke(
+    $controller,
+    'nabava@milla.hr',
+    'shop@milla.hr',
+    'DryZen',
+    'DryZen - Narudžba 15',
+    $fullHtml
+);
+
+dryzenOrderMailAssertSame(false, $adminMail === $additionalMail, 'Every recipient gets a separate Mail instance.');
+dryzenOrderMailAssertSame($fullHtml, $adminMail->html, 'The admin mail contains the full rendered customer HTML.');
+dryzenOrderMailAssertSame($fullHtml, $additionalMail->html, 'The additional recipient mail contains the same full rendered customer HTML.');
+dryzenOrderMailAssertSame('admin@milla.hr', $adminMail->to, 'The admin copy has the correct recipient.');
+dryzenOrderMailAssertSame('nabava@milla.hr', $additionalMail->to, 'The additional copy has the correct recipient.');
 
 echo "Order mail tests passed.\n";

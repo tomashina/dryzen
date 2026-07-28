@@ -281,23 +281,15 @@ class ControllerMailOrder extends Controller {
 		if (!$from) {
 			$from = $this->config->get('config_email');
 		}
-		
-		$mail = new Mail($this->config->get('config_mail_engine'));
-		$mail->parameter = $this->config->get('config_mail_parameter');
-		$mail->smtp_hostname = $this->config->get('config_mail_smtp_hostname');
-		$mail->smtp_username = $this->config->get('config_mail_smtp_username');
-		$mail->smtp_password = html_entity_decode($this->config->get('config_mail_smtp_password'), ENT_QUOTES, 'UTF-8');
-		$mail->smtp_port = $this->config->get('config_mail_smtp_port');
-		$mail->smtp_timeout = $this->config->get('config_mail_smtp_timeout');
 
-		$mail->setTo($order_info['email']);
-		$mail->setFrom($from);
-		$mail->setSender(html_entity_decode($order_info['store_name'], ENT_QUOTES, 'UTF-8'));
-		$mail->setSubject(html_entity_decode(sprintf($language->get('text_subject'), $order_info['store_name'], $order_info['order_id']), ENT_QUOTES, 'UTF-8'));
-		$mail->setHtml($this->load->view('mail/order_add', $data));
+		$html = $this->load->view('mail/order_add', $data);
+		$sender = html_entity_decode($order_info['store_name'], ENT_QUOTES, 'UTF-8');
+		$subject = html_entity_decode(sprintf($language->get('text_subject'), $order_info['store_name'], $order_info['order_id']), ENT_QUOTES, 'UTF-8');
 
 		foreach ($this->getOrderMailRecipients($order_info['email']) as $recipient) {
-			$mail->setTo($recipient['email']);
+			// A fresh Mail instance is required for every copy. Some SMTP/mail
+			// adaptors consume the body of a sent instance, leaving later copies empty.
+			$mail = $this->createOrderConfirmationMail($recipient['email'], $from, $sender, $subject, $html);
 			$this->sendSafely($mail, $order_info['order_id'], $recipient['context']);
 		}
 
@@ -595,6 +587,23 @@ class ControllerMailOrder extends Controller {
 			'email'   => $email,
 			'context' => $context
 		);
+	}
+
+	private function createOrderConfirmationMail($recipient, $from, $sender, $subject, $html) {
+		$mail = new Mail($this->config->get('config_mail_engine'));
+		$mail->parameter = $this->config->get('config_mail_parameter');
+		$mail->smtp_hostname = $this->config->get('config_mail_smtp_hostname');
+		$mail->smtp_username = $this->config->get('config_mail_smtp_username');
+		$mail->smtp_password = html_entity_decode($this->config->get('config_mail_smtp_password'), ENT_QUOTES, 'UTF-8');
+		$mail->smtp_port = $this->config->get('config_mail_smtp_port');
+		$mail->smtp_timeout = $this->config->get('config_mail_smtp_timeout');
+		$mail->setTo($recipient);
+		$mail->setFrom($from);
+		$mail->setSender($sender);
+		$mail->setSubject($subject);
+		$mail->setHtml($html);
+
+		return $mail;
 	}
 
 	private function sendSafely($mail, $order_id, $context) {
