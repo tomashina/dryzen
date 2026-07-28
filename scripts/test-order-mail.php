@@ -211,28 +211,50 @@ $controller->config = new DryzenOrderMailTestConfig(array(
 $createMail = $reflection->getMethod('createOrderConfirmationMail');
 $createMail->setAccessible(true);
 $fullHtml = '<html><body><h1>Narudžba 15</h1><p>Proizvodi i ukupni iznos.</p></body></html>';
-$orderMail = $createMail->invoke(
+$customerMail = $createMail->invoke(
     $controller,
     'customer@example.com',
-    array('admin@milla.hr', 'nabava@milla.hr', 'order@milla.hr'),
+    'shop@milla.hr',
+    'DryZen',
+    'DryZen - Narudžba 15',
+    $fullHtml
+);
+$adminMail = $createMail->invoke(
+    $controller,
+    'admin@milla.hr',
+    'shop@milla.hr',
+    'DryZen',
+    'DryZen - Narudžba 15',
+    $fullHtml
+);
+$additionalMail = $createMail->invoke(
+    $controller,
+    'nabava@milla.hr',
     'shop@milla.hr',
     'DryZen',
     'DryZen - Narudžba 15',
     $fullHtml
 );
 
-dryzenOrderMailAssertSame($fullHtml, $orderMail->html, 'The order mail contains the full rendered customer HTML.');
+dryzenOrderMailAssertSame(false, $customerMail === $adminMail, 'The customer and admin receive standalone messages.');
+dryzenOrderMailAssertSame(false, $adminMail === $additionalMail, 'Every additional recipient receives a standalone message.');
+dryzenOrderMailAssertSame($fullHtml, $customerMail->html, 'The customer mail contains the full rendered HTML.');
+dryzenOrderMailAssertSame($fullHtml, $adminMail->html, 'The admin mail contains the same full rendered HTML.');
+dryzenOrderMailAssertSame($fullHtml, $additionalMail->html, 'Additional recipients contain the same full rendered HTML.');
 dryzenOrderMailAssertSame(
     "Narudžba 15\nProizvodi i ukupni iznos.",
-    $orderMail->text,
-    'The same order also has a complete plain-text fallback for strict mail clients.'
+    $customerMail->text,
+    'The customer order has a complete plain-text fallback for strict mail clients.'
 );
-dryzenOrderMailAssertSame('customer@example.com', $orderMail->to, 'The customer remains the visible primary recipient.');
 dryzenOrderMailAssertSame(
-    array('admin@milla.hr', 'nabava@milla.hr', 'order@milla.hr'),
-    $orderMail->bcc,
-    'The admin and additional addresses receive the exact same message through BCC.'
+    $customerMail->text,
+    $adminMail->text,
+    'The admin receives the identical complete plain-text fallback.'
 );
+dryzenOrderMailAssertSame($customerMail->text, $additionalMail->text, 'Additional recipients receive the identical text fallback.');
+dryzenOrderMailAssertSame('customer@example.com', $customerMail->to, 'The customer copy has the correct recipient.');
+dryzenOrderMailAssertSame('admin@milla.hr', $adminMail->to, 'The admin copy has the correct recipient.');
+dryzenOrderMailAssertSame('nabava@milla.hr', $additionalMail->to, 'The additional copy has the correct recipient.');
 
 $route = '';
 $args = array();

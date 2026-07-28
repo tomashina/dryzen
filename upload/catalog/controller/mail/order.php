@@ -286,18 +286,12 @@ class ControllerMailOrder extends Controller {
 		$sender = html_entity_decode($order_info['store_name'], ENT_QUOTES, 'UTF-8');
 		$subject = html_entity_decode(sprintf($language->get('text_subject'), $order_info['store_name'], $order_info['order_id']), ENT_QUOTES, 'UTF-8');
 
-		$recipients = $this->getOrderMailRecipients($order_info['email']);
-		$primary_recipient = array_shift($recipients);
-		$bcc = array();
-
-		foreach ($recipients as $recipient) {
-			$bcc[] = $recipient['email'];
+		foreach ($this->getOrderMailRecipients($order_info['email']) as $recipient) {
+			// Render once, but create and send a complete standalone message for
+			// every recipient so each mailbox gets the same HTML and text body.
+			$mail = $this->createOrderConfirmationMail($recipient['email'], $from, $sender, $subject, $html);
+			$this->sendSafely($mail, $order_info['order_id'], $recipient['context']);
 		}
-
-		// One SMTP DATA payload guarantees that the customer, store and all
-		// configured order-alert recipients receive the identical HTML body.
-		$mail = $this->createOrderConfirmationMail($primary_recipient['email'], $bcc, $from, $sender, $subject, $html);
-		$this->sendSafely($mail, $order_info['order_id'], 'customer and store confirmations');
 	}
 	
 	public function edit($order_info, $order_status_id, $comment) {
@@ -358,7 +352,7 @@ class ControllerMailOrder extends Controller {
 	// Admin Alert Mail
 	public function alert(&$route, &$args) {
 		// The full HTML order confirmation is already sent to the store and
-		// configured order-alert recipients as BCC in add(). The legacy alert
+		// configured order-alert recipients in add(). The legacy alert
 		// is intentionally disabled because it can create a second empty email.
 		return;
 	}
@@ -455,7 +449,7 @@ class ControllerMailOrder extends Controller {
 		);
 	}
 
-	private function createOrderConfirmationMail($recipient, $bcc, $from, $sender, $subject, $html) {
+	private function createOrderConfirmationMail($recipient, $from, $sender, $subject, $html) {
 		$mail = new Mail($this->config->get('config_mail_engine'));
 		$mail->parameter = $this->config->get('config_mail_parameter');
 		$mail->smtp_hostname = $this->config->get('config_mail_smtp_hostname');
@@ -464,7 +458,6 @@ class ControllerMailOrder extends Controller {
 		$mail->smtp_port = $this->config->get('config_mail_smtp_port');
 		$mail->smtp_timeout = $this->config->get('config_mail_smtp_timeout');
 		$mail->setTo($recipient);
-		$mail->setBcc($bcc);
 		$mail->setFrom($from);
 		$mail->setSender($sender);
 		$mail->setSubject($subject);

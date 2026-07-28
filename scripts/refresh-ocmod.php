@@ -76,7 +76,7 @@ $activeOrderMailCode = is_file($activeOrderMail)
 
 if (
     strpos($activeOrderMailCode, 'createOrderConfirmationMail') === false
-    || strpos($activeOrderMailCode, 'setBcc($bcc)') === false
+    || strpos($activeOrderMailCode, "foreach (\$this->getOrderMailRecipients") === false
 ) {
     throw new RuntimeException('OCMOD refreshed, but the active order mail controller is stale.');
 }
