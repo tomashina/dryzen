@@ -12,7 +12,7 @@ class ControllerExtensionModuleEracuniOrder extends Controller {
 			$this->order_exporter->export($order_id);
 		} catch (\Throwable $exception) {
 			$this->log->write(
-				'Automatska izrada e-Računi narudžbe #' . $order_id . ' nije uspjela: ' . $exception->getMessage()
+				'Automatska izrada e-Računi računa za narudžbu #' . $order_id . ' nije uspjela: ' . $exception->getMessage()
 			);
 		}
 	}

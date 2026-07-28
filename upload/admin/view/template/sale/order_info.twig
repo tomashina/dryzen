@@ -121,8 +121,13 @@
           <div class="row">
             
               <div class="col-md-6">
-                  <button type="button" id="button-send-order" onclick="sendOrder('order')" data-loading-text="<i class='fa fa-spinner fa-spin fa-fw'></i> Kreiranje..." data-toggle="tooltip" title="Pošalji narudžbu kupcu" class="btn btn-success btn-sm btn-block"><i class="fa fa-truck fa-fw"></i> Pošalji Narudžbu</button>
-                  <div id="send-order-notification" style="margin-top: 10px;"></div>
+                  {% if eracuni_invoice_number %}
+                  <div class="alert alert-success"><i class="fa fa-check-circle"></i> e-Računi račun: <strong>{{ eracuni_invoice_number }}</strong></div>
+                  <button type="button" disabled="disabled" class="btn btn-default btn-sm btn-block"><i class="fa fa-check fa-fw"></i> e-Računi račun kreiran</button>
+                  {% else %}
+                  <button type="button" id="button-send-invoice" onclick="sendInvoice()" data-loading-text="<i class='fa fa-spinner fa-spin fa-fw'></i> Kreiranje..." data-toggle="tooltip" title="Kreiraj ili ponovno pokušaj račun u e-Računi" class="btn btn-success btn-sm btn-block"><i class="fa fa-file-text-o fa-fw"></i> Kreiraj e-Računi račun</button>
+                  {% endif %}
+                  <div id="send-invoice-notification" style="margin-top: 10px;"></div>
               </div>
           </div>
 	  </div>
@@ -453,7 +458,7 @@
 	});
   });
 
-   function showSendOrderNotification(level, message) {
+   function showSendInvoiceNotification(level, message) {
           var icon = level === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle';
           var alert = $('<div>', {
               'class': 'alert alert-' + level + ' alert-dismissible',
@@ -470,32 +475,38 @@
           $('<i>', {'class': 'fa ' + icon}).appendTo(alert);
           alert.append(document.createTextNode(' ' + message));
 
-          $('#send-order-notification').empty().append(alert);
+          $('#send-invoice-notification').empty().append(alert);
       }
 
-   function sendOrder(type) {
-          var button = $('#button-send-order');
+   function sendInvoice() {
+          var button = $('#button-send-invoice');
+          var completedSuccessfully = false;
 
           if (button.prop('disabled')) {
               return;
           }
 
           $.ajax({
-              url: 'index.php?route=sale/order/sendOrder&user_token={{ user_token }}&order_id={{ order_id }}&type=' + type,
+              url: 'index.php?route=sale/order/sendOrder&user_token={{ user_token }}&order_id={{ order_id }}',
               dataType: 'json',
               beforeSend: function() {
-                  $('#send-order-notification').empty();
+                  $('#send-invoice-notification').empty();
                   button.tooltip('hide');
                   button.button('loading').prop('disabled', true);
               },
               complete: function() {
-                  button.button('reset').prop('disabled', false);
+                  button.button('reset').prop('disabled', completedSuccessfully);
+
+                  if (completedSuccessfully) {
+                      button.html("<i class='fa fa-check fa-fw'></i> e-Računi račun kreiran");
+                  }
               },
               success: function(json) {
                   var status = parseInt(json.status, 10);
-                  var message = json.message || (status === 200 ? 'Narudžba je uspješno kreirana.' : 'Kreiranje narudžbe nije uspjelo.');
+                  var message = json.message || (status === 200 ? 'Račun je uspješno kreiran.' : 'Kreiranje računa nije uspjelo.');
 
-                  showSendOrderNotification(status === 200 ? 'success' : 'danger', message);
+                  completedSuccessfully = status === 200;
+                  showSendInvoiceNotification(status === 200 ? 'success' : 'danger', message);
               },
               error: function(xhr, ajaxOptions, thrownError) {
                   var message = 'Došlo je do greške u komunikaciji sa serverom.';
@@ -506,7 +517,7 @@
                       message += ' ' + thrownError;
                   }
 
-                  showSendOrderNotification('danger', message);
+                  showSendInvoiceNotification('danger', message);
               }
           });
       }

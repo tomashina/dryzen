@@ -844,6 +844,7 @@ class ControllerSaleOrder extends Controller {
 			} else {
 				$data['invoice_no'] = '';
 			}
+			$data['eracuni_invoice_number'] = trim((string)($order_info['number_order'] ?? ''));
 
 			$data['date_added'] = date($this->language->get('date_format_short'), strtotime($order_info['date_added']));
 
@@ -1971,108 +1972,33 @@ class ControllerSaleOrder extends Controller {
      */
    public function sendOrder()
 {
-    // 1) Validacija
-    $pass = \Agmedia\Api\Helper\Helper::validate($this->request->get, 'sendOrder');
-    if (!$pass) {
-        return $this->response(300, 'Validacija nije prošla..!');
+    if (!$this->user->hasPermission('modify', 'sale/order')) {
+        return $this->response(300, 'Nemate ovlast za izradu e-Računi računa.');
     }
-
-    // 2) Ulazni parametri
-    $order_id = $this->request->get['order_id'] ?? null;
-    $type_in  = $this->request->get['type'] ?? 'order';
-
-    $type = strtolower(trim($type_in));
-    if ($type === 'quote') $type = 'offer';
-    if (!in_array($type, ['order', 'offer'], true)) $type = 'order';
-
-    // 3) Učitaj narudžbu
-    $order = \Agmedia\Models\Order\Order::query()
-        ->where('order_id', $order_id)
-        ->with(['products', 'totals'])
-        ->first();
-
-    if (!$order) {
-        return $this->response(300, 'Narudžba ne postoji.');
-    }
-
-    if (trim((string)$order->number_order) !== '') {
-        return $this->response(200, 'Narudžba je već poslana u e-Računi.');
-    }
-
-    // 4) API auth + wrapper
-    $username  = agconf('import.api.username');
-    $secretKey = agconf('import.api.password');
-    $token     = agconf('import.api.token');
-
-    $auth = [
-        'username'  => $username,
-        'secretKey' => $secretKey,
-        'token'     => $token,
-    ];
-
-    $api = new \Agmedia\Api\Api();
-    $order_data = $order->toArray();
-    $shipping_total = $this->getOrderTotalValue($order_data, 'shipping');
-
-    // 5) Eracuni
-    $eracuni = new \Agmedia\Api\Connection\Csv\Eracuni($order_data);
 
     try {
-        // A) prvo osiguraj da su artikli u katalogu
-        $eracuni->ensureCatalogueProductsExist($api, $auth);
+        $order_id = isset($this->request->get['order_id']) ? (int)$this->request->get['order_id'] : 0;
 
-        if ($shipping_total > 0.0 && method_exists($eracuni, 'ensureShippingProductExists')) {
-            $eracuni->ensureShippingProductExists($api, $auth);
+        if ($order_id < 1) {
+            return $this->response(300, 'Nedostaje ispravan ID narudžbe.');
         }
 
-        // B) tek onda složi sale payload
-        $params = $eracuni->createSale($type, 'json');
-        $params['apiTransactionId'] = 'dryzen-' . $type . '-' . (int)$order_id;
-        $params = $this->normalizeSalePayload($params, $type);
-        $params = $this->synchronizeShippingPayload($params, $order_data, $type);
+        $this->load->library('eracuni/order_exporter');
+        $result = $this->order_exporter->export($order_id);
+        $message = isset($result['message']) ? $result['message'] : 'Račun je izrađen u e-Računi.';
 
-        $method = ($type === 'order') ? 'SalesOrderCreate' : 'SalesQuoteCreate';
-
-        $body = [
-            'username'   => $username,
-            'secretKey'  => $secretKey,
-            'token'      => $token,
-            'method'     => $method,
-            'parameters' => $params
-        ];
-
-        // C) Pozovi API
-        $resp = $api->post('WebServices/API', $body, 'json');
-
-        if ($resp === false || $resp === null) {
-            return $this->response(300, 'Greška pri komunikaciji s API-jem.');
+        if (!empty($result['number_order']) && strpos($message, (string)$result['number_order']) === false) {
+            $message .= ' Broj računa: ' . $result['number_order'] . '.';
         }
 
-        if (is_array($resp)) {
-            if (isset($resp['response']['status']) && $resp['response']['status'] === 'error') {
-                $desc = $resp['response']['description'] ?? 'Nepoznata greška';
-                return $this->response(300, 'API error: ' . $desc);
-            }
-            if (isset($resp['status']) && $resp['status'] === 'error') {
-                $desc = $resp['description'] ?? 'Nepoznata greška';
-                return $this->response(300, 'API error: ' . $desc);
-            }
+        return $this->response(200, $message);
+    } catch (\Throwable $exception) {
+        $this->log->write(
+            'Ručna izrada e-Računi računa za narudžbu #' . (int)($order_id ?? 0) .
+            ' nije uspjela: ' . $exception->getMessage()
+        );
 
-            $eracuni->saveResponse($type === 'order' ? 'order' : 'offer', $resp, $order_id);
-        }
-
-        return $this->response(200, 'Narudžba je poslana..!');
-
-    } catch (\Throwable $e) {
-       /* \Log::error('WebServices/API call failed', [
-            'order_id' => $order_id,
-            'type_in'  => $type_in,
-            'type'     => $type,
-            'body'     => $body ?? null,
-            'error'    => $e->getMessage(),
-        ]);*/
-
-        return $this->response(300, 'Došlo je do greške pri slanju narudžbe: ' . $e->getMessage());
+        return $this->response(300, 'Izrada e-Računi računa nije uspjela: ' . $exception->getMessage());
     }
 }
 

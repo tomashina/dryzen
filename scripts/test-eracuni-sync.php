@@ -154,6 +154,7 @@ class FakeLockedPriceEracuniApi extends \Agmedia\Api\Api {
 $lockedApi = new FakeLockedPriceEracuniApi();
 $lockedConnector = new \Agmedia\Api\Connection\Csv\Eracuni(array(
     'order_id' => 42,
+    'date_added' => '2026-07-28 14:15:16',
     'products' => array(
         array('model' => '007', 'name' => 'Hand wipes women', 'quantity' => 1, 'price' => 23.84, 'tax' => 5.96)
     )
@@ -197,6 +198,31 @@ assertSameValue(
     false,
     array_key_exists('netPrice', $lockedSale['SalesOrder']['Items'][0]),
     'B2C items do not send the B2B-only netPrice field.'
+);
+
+$invoiceSale = $lockedConnector->createSale('invoice', 'json');
+assertSameValue(true, isset($invoiceSale['SalesInvoice']), 'Invoice payload uses the documented SalesInvoice root key.');
+assertSameValue(false, isset($invoiceSale['SalesOrder']), 'Invoice payload does not contain the SalesOrder root key.');
+assertSameValue('2026-07-28', $invoiceSale['SalesInvoice']['date'], 'Invoice date comes from the OpenCart order.');
+assertSameValue(
+    '2026-07-28',
+    $invoiceSale['SalesInvoice']['dateOfSupplyFrom'],
+    'Invoice date of supply comes from the OpenCart order.'
+);
+assertSameValue(
+    '2026-08-04',
+    $invoiceSale['SalesInvoice']['paymentDueDate'],
+    'Invoice due date is seven days after the invoice date.'
+);
+assertSameValue(
+    false,
+    array_key_exists('validUntil', $invoiceSale['SalesInvoice']),
+    'Invoice payload does not send the order/quote validUntil field.'
+);
+assertSameValue(
+    false,
+    array_key_exists('expirationDate', $invoiceSale['SalesInvoice']),
+    'Invoice payload uses the documented paymentDueDate field.'
 );
 
 $businessConnector = new \Agmedia\Api\Connection\Csv\Eracuni(array(

@@ -10,7 +10,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
 
 /**
- * Klasa za pripremu podataka (proizvodi, narudžbe/ponude) za e-Računi API.
+ * Klasa za pripremu podataka (proizvodi, narudžbe/ponude/računi) za e-Računi API.
  *
  * Pravila:
  * - Da totals budu 1:1 kao u OpenCartu, u Items šaljemo stvarnu neto cijenu iz narudžbe.
@@ -102,18 +102,35 @@ class Eracuni
     }
 
     /**
-     * Kreira payload za narudžbu/ponudu.
+     * Kreira payload za narudžbu, ponudu ili račun.
      *
-     * @param string $type 'order' | 'offer'
+     * @param string $type 'order' | 'offer' | 'invoice'
      * @param string $mode 'json' | 'form'
      * @return array|string
      */
     public function createSale(string $type = 'order', string $mode = 'json')
     {
+        $type = strtolower(trim($type));
         $apiTransactionId = $this->data['order_id'] . '-' . Str::random(9);
-        $rootKey = ($type === 'order') ? 'SalesOrder' : 'SalesQuote';
+        $rootKeys = [
+            'order'   => 'SalesOrder',
+            'offer'   => 'SalesQuote',
+            'quote'   => 'SalesQuote',
+            'invoice' => 'SalesInvoice',
+        ];
+        $rootKey = $rootKeys[$type] ?? 'SalesOrder';
 
         $sale = $this->getSale();
+
+        if ($type === 'invoice') {
+            $documentDate = $this->getDocumentDate();
+
+            unset($sale['validUntil']);
+
+            $sale['date'] = $documentDate;
+            $sale['dateOfSupplyFrom'] = $documentDate;
+            $sale['paymentDueDate'] = Carbon::parse($documentDate)->addDays(7)->format('Y-m-d');
+        }
 
         if ($mode === 'json') {
             return [
@@ -144,7 +161,7 @@ class Eracuni
     {
         if (!isset($response['number'])) return;
 
-        $data = ($type === 'order')
+        $data = (in_array($type, ['order', 'invoice'], true))
             ? ['number_order' => $response['number']]
             : ['number_quote' => $response['number']];
 
@@ -207,6 +224,24 @@ class Eracuni
             'Items'              => $this->getSaleItems($documentType),
             'Address'            => $this->getSaleAddress($company, $country),
         ];
+    }
+
+    /**
+     * Datum web-shop narudžbe koristi se kao datum računa i datum isporuke.
+     */
+    private function getDocumentDate(): string
+    {
+        $dateAdded = trim((string) ($this->data['date_added'] ?? ''));
+
+        if ($dateAdded !== '') {
+            try {
+                return Carbon::parse($dateAdded)->format('Y-m-d');
+            } catch (\Throwable $exception) {
+                // Neispravan naslijeđeni datum ne smije zaustaviti izdavanje računa.
+            }
+        }
+
+        return Carbon::now()->format('Y-m-d');
     }
 
     /**

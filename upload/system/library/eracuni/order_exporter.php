@@ -9,7 +9,7 @@ class OrderExporter {
 	public function __construct($registry) {
 		$this->registry = $registry;
 		$this->db = $registry->get('db');
-		$this->log = new \Log('eracuni_orders.log');
+		$this->log = new \Log('eracuni_invoices.log');
 	}
 
 	public function export($order_id) {
@@ -32,7 +32,7 @@ class OrderExporter {
 					'skipped'      => true,
 					'order_id'     => $order_id,
 					'number_order' => $order['number_order'],
-					'message'      => 'Narudžba je već izrađena u e-Računi.'
+					'message'      => 'Račun je već izrađen u e-Računi.'
 				);
 			}
 
@@ -41,7 +41,7 @@ class OrderExporter {
 					'success'  => true,
 					'skipped'  => true,
 					'order_id' => $order_id,
-					'message'  => 'Nepotvrđena narudžba nije poslana u e-Računi.'
+					'message'  => 'Za nepotvrđenu narudžbu nije izrađen račun u e-Računi.'
 				);
 			}
 
@@ -59,26 +59,26 @@ class OrderExporter {
 				}
 			}
 
-			$api = new \Agmedia\Api\Api();
-			$eracuni = new \Agmedia\Api\Connection\Csv\Eracuni($order);
+			$api = $this->createApi();
+			$eracuni = $this->createConnector($order);
 
 			$eracuni->ensureCatalogueProductsExist($api, $auth);
 
-			$parameters = $eracuni->createSale('order', 'json');
+			$parameters = $eracuni->createSale('invoice', 'json');
 			$parameters['apiTransactionId'] = $this->getTransactionId($order_id);
 
 			$body = array(
 				'username'   => $auth['username'],
 				'secretKey'  => $auth['secretKey'],
 				'token'      => $auth['token'],
-				'method'     => 'SalesOrderCreate',
+				'method'     => 'SalesInvoiceCreate',
 				'parameters' => $parameters
 			);
 
 			$response = $this->postWithRetry($api, $body);
 
 			if (!is_array($response) || empty($response['number'])) {
-				throw new \RuntimeException('e-Računi nije vratio broj izrađene narudžbe.');
+				throw new \RuntimeException('e-Računi nije vratio broj izrađenog računa.');
 			}
 
 			$number = trim((string)$response['number']);
@@ -88,16 +88,24 @@ class OrderExporter {
 				"', date_modified = NOW() WHERE order_id = '" . $order_id . "' AND (number_order IS NULL OR number_order = '')"
 			);
 
-			$this->log->write('Automatski izrađena e-Računi narudžba #' . $order_id . ' (' . $number . ').');
+			$this->log->write('Automatski izrađen e-Računi račun za narudžbu #' . $order_id . ' (' . $number . ').');
 
 			return array(
 				'success'      => true,
 				'skipped'      => false,
 				'order_id'     => $order_id,
 				'number_order' => $number,
-				'message'      => 'Narudžba je izrađena u e-Računi.'
+				'message'      => 'Račun je izrađen u e-Računi.'
 			);
 		});
+	}
+
+	protected function createApi() {
+		return new \Agmedia\Api\Api();
+	}
+
+	protected function createConnector(array $order) {
+		return new \Agmedia\Api\Connection\Csv\Eracuni($order);
 	}
 
 	private function getOrder($order_id) {
@@ -145,7 +153,7 @@ class OrderExporter {
 	}
 
 	private function getTransactionId($order_id) {
-		return 'dryzen-order-' . (int)$order_id;
+		return 'dryzen-invoice-' . (int)$order_id;
 	}
 
 	private function postWithRetry($api, array $body) {
@@ -195,7 +203,7 @@ class OrderExporter {
 	}
 
 	private function withOrderLock($order_id, callable $callback) {
-		$lock_name = DB_PREFIX . 'eracuni_order_' . (int)$order_id;
+		$lock_name = DB_PREFIX . 'eracuni_invoice_' . (int)$order_id;
 		$lock = $this->db->query(
 			"SELECT GET_LOCK('" . $this->db->escape($lock_name) . "', 0) AS acquired"
 		);
@@ -205,7 +213,7 @@ class OrderExporter {
 				'success'  => true,
 				'skipped'  => true,
 				'order_id' => (int)$order_id,
-				'message'  => 'Izrada ove narudžbe u e-Računi već je pokrenuta.'
+				'message'  => 'Izrada računa za ovu narudžbu u e-Računi već je pokrenuta.'
 			);
 		}
 
