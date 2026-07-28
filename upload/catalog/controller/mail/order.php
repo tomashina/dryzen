@@ -103,7 +103,7 @@ class ControllerMailOrder extends Controller {
 		// Payment method titles can contain card-logo markup used at checkout.
 		// Order emails only need the readable payment method name.
 		$data['payment_method'] = trim(strip_tags(html_entity_decode($order_info['payment_method'], ENT_QUOTES, 'UTF-8')));
-		$data['shipping_method'] = $order_info['shipping_method'];
+		$data['shipping_method'] = $this->formatShippingMethodForEmail($order_info, $language);
 		$data['email'] = $order_info['email'];
 		$data['telephone'] = $order_info['telephone'];
 		$data['ip'] = $order_info['ip'];
@@ -295,10 +295,17 @@ class ControllerMailOrder extends Controller {
 		$mail->setSender(html_entity_decode($order_info['store_name'], ENT_QUOTES, 'UTF-8'));
 		$mail->setSubject(html_entity_decode(sprintf($language->get('text_subject'), $order_info['store_name'], $order_info['order_id']), ENT_QUOTES, 'UTF-8'));
 		$mail->setHtml($this->load->view('mail/order_add', $data));
-		$this->sendSafely($mail, $order_info['order_id'], 'customer confirmation');
 
-		$mail->setTo($this->config->get('config_email'));
-		$this->sendSafely($mail, $order_info['order_id'], 'store confirmation');
+		foreach ($this->getOrderMailRecipients($order_info['email']) as $recipient) {
+			$mail->setTo($recipient['email']);
+			$this->sendSafely($mail, $order_info['order_id'], $recipient['context']);
+		}
+
+		if (in_array('order', (array)$this->config->get('config_mail_alert'))) {
+			// Prevent mail/order/alert from sending a second, abbreviated email
+			// to the same additional recipients during this order request.
+			$this->config->set('dryzen_full_order_alert_sent', true);
+		}
 	}
 	
 	public function edit($order_info, $order_status_id, $comment) {
@@ -384,7 +391,7 @@ class ControllerMailOrder extends Controller {
 
 		$order_info = $this->model_checkout_order->getOrder($order_id);
 		
-		if ($order_info && !$order_info['order_status_id'] && $order_status_id && in_array('order', (array)$this->config->get('config_mail_alert'))) {	
+		if ($order_info && !$order_info['order_status_id'] && $order_status_id && in_array('order', (array)$this->config->get('config_mail_alert')) && !$this->config->get('dryzen_full_order_alert_sent')) {
 			$this->load->language('mail/order_alert');
 			
 			// HTML Mail
@@ -496,6 +503,98 @@ class ControllerMailOrder extends Controller {
 				}
 			}
 		}
+	}
+
+	private function formatShippingMethodForEmail($order_info, $language) {
+		$shipping_method = isset($order_info['shipping_method']) ? $order_info['shipping_method'] : '';
+
+		if (!isset($order_info['shipping_code']) || $order_info['shipping_code'] !== 'boxnow.boxnow') {
+			return $shipping_method;
+		}
+
+		$boxnow = $this->parseBoxNowLocation(isset($order_info['boxnow']) ? $order_info['boxnow'] : '');
+
+		if ($boxnow['address'] === '' && $boxnow['locker_id'] === '') {
+			return $shipping_method;
+		}
+
+		$lines = array(
+			'<strong>' . htmlspecialchars($language->get('text_boxnow_locker'), ENT_QUOTES, 'UTF-8') . '</strong>'
+		);
+
+		if ($boxnow['address'] !== '') {
+			$lines[] = '<strong>' . htmlspecialchars($language->get('text_boxnow_address'), ENT_QUOTES, 'UTF-8') . ':</strong> ' . htmlspecialchars($boxnow['address'], ENT_QUOTES, 'UTF-8');
+		}
+
+		if ($boxnow['locker_id'] !== '') {
+			$lines[] = '<strong>' . htmlspecialchars($language->get('text_boxnow_locker_id'), ENT_QUOTES, 'UTF-8') . ':</strong> ' . htmlspecialchars($boxnow['locker_id'], ENT_QUOTES, 'UTF-8');
+		}
+
+		return $shipping_method . '<br /><br />' . implode('<br />', $lines);
+	}
+
+	private function parseBoxNowLocation($value) {
+		$value = trim(preg_replace('/\s+/', ' ', strip_tags(html_entity_decode((string)$value, ENT_QUOTES, 'UTF-8'))));
+		$address = '';
+		$locker_id = '';
+
+		if ($value === '' || stripos($value, 'undefined') !== false) {
+			return array('address' => '', 'locker_id' => '');
+		}
+
+		$separator = strrpos($value, ';');
+
+		if ($separator !== false) {
+			$address = trim(substr($value, 0, $separator));
+			$locker_id = trim(substr($value, $separator + 1));
+		} else {
+			// Older BOX NOW integrations stored only the locker identifier.
+			$locker_id = $value;
+		}
+
+		if ($address === '-' || $address === '-, -') {
+			$address = '';
+		}
+
+		return array(
+			'address'   => $address,
+			'locker_id' => $locker_id
+		);
+	}
+
+	private function getOrderMailRecipients($customer_email) {
+		$recipients = array();
+		$seen = array();
+
+		$this->addOrderMailRecipient($recipients, $seen, $customer_email, 'customer confirmation');
+		$this->addOrderMailRecipient($recipients, $seen, $this->config->get('config_email'), 'store confirmation');
+
+		if (in_array('order', (array)$this->config->get('config_mail_alert'))) {
+			$additional_emails = preg_split('/[\s,;]+/', (string)$this->config->get('config_mail_alert_email'), -1, PREG_SPLIT_NO_EMPTY);
+
+			foreach ($additional_emails as $email) {
+				if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
+					$this->addOrderMailRecipient($recipients, $seen, $email, 'additional store confirmation');
+				}
+			}
+		}
+
+		return $recipients;
+	}
+
+	private function addOrderMailRecipient(&$recipients, &$seen, $email, $context) {
+		$email = trim((string)$email);
+		$key = strtolower($email);
+
+		if ($email === '' || isset($seen[$key])) {
+			return;
+		}
+
+		$seen[$key] = true;
+		$recipients[] = array(
+			'email'   => $email,
+			'context' => $context
+		);
 	}
 
 	private function sendSafely($mail, $order_id, $context) {
