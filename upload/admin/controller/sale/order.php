@@ -1665,6 +1665,9 @@ class ControllerSaleOrder extends Controller {
 				);
 
 				$shipping_address = str_replace(array("\r\n", "\r", "\n"), '<br />', preg_replace(array("/\s\s+/", "/\r\r+/", "/\n\n+/"), '<br />', trim(str_replace($find, $replace, $format))));
+				$boxnow_location = $order_info['shipping_code'] === 'boxnow.boxnow'
+					? $this->parseBoxNowLocation(isset($order_info['boxnow']) ? $order_info['boxnow'] : '')
+					: array();
 
 				$this->load->model('tool/upload');
 
@@ -1742,6 +1745,7 @@ class ControllerSaleOrder extends Controller {
 					'telephone'        => $order_info['telephone'],
 					'shipping_address' => $shipping_address,
 					'shipping_method'  => $order_info['shipping_method'],
+					'boxnow_location'  => $boxnow_location,
 					'payment_address'  => $payment_address,
 					'payment_method'   => $order_info['payment_method'],
 					'product'          => $product_data,
@@ -1841,6 +1845,9 @@ class ControllerSaleOrder extends Controller {
 				);
 
 				$shipping_address = str_replace(array("\r\n", "\r", "\n"), '<br />', preg_replace(array("/\s\s+/", "/\r\r+/", "/\n\n+/"), '<br />', trim(str_replace($find, $replace, $format))));
+				$boxnow_location = $order_info['shipping_code'] === 'boxnow.boxnow'
+					? $this->parseBoxNowLocation(isset($order_info['boxnow']) ? $order_info['boxnow'] : '')
+					: array();
 
 				$this->load->model('tool/upload');
 
@@ -1917,6 +1924,7 @@ class ControllerSaleOrder extends Controller {
 					'telephone'        => $order_info['telephone'],
 					'shipping_address' => $shipping_address,
 					'shipping_method'  => $order_info['shipping_method'],
+					'boxnow_location'  => $boxnow_location,
 					'product'          => $product_data,
 					'comment'          => nl2br($order_info['comment'])
 				);
@@ -1924,6 +1932,39 @@ class ControllerSaleOrder extends Controller {
 		}
 
 		$this->response->setOutput($this->load->view('sale/order_shipping', $data));
+	}
+
+	private function parseBoxNowLocation($value) {
+		$value = trim(preg_replace('/\s+/', ' ', strip_tags(html_entity_decode((string)$value, ENT_QUOTES, 'UTF-8'))));
+
+		if ($value === '' || stripos($value, 'undefined') !== false) {
+			return array();
+		}
+
+		$address = '';
+		$locker_id = '';
+		$separator = strrpos($value, ';');
+
+		if ($separator !== false) {
+			$address = trim(substr($value, 0, $separator));
+			$locker_id = trim(substr($value, $separator + 1));
+		} else {
+			// Older BOX NOW orders stored only the locker identifier.
+			$locker_id = $value;
+		}
+
+		if ($address === '-' || $address === '-, -') {
+			$address = '';
+		}
+
+		if ($address === '' && $locker_id === '') {
+			return array();
+		}
+
+		return array(
+			'address'   => $address,
+			'locker_id' => $locker_id
+		);
 	}
  /**
      * @return mixed

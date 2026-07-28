@@ -59,6 +59,12 @@
             </address></td>
           <td><address>
             {{ order.shipping_address }}
+            {% if order.boxnow_location %}
+            <br/><br/>
+            <strong>{{ text_boxnow_locker }}</strong><br/>
+            {% if order.boxnow_location.locker_id %}<b>{{ text_boxnow_locker_id }}:</b> {{ order.boxnow_location.locker_id }}<br/>{% endif %}
+            {% if order.boxnow_location.address %}<b>{{ text_boxnow_address }}:</b> {{ order.boxnow_location.address }}{% endif %}
+            {% endif %}
             </address></td>
         </tr>
       </tbody>
