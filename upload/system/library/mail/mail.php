@@ -45,7 +45,7 @@ class Mail {
 			$message  = '--' . $boundary . PHP_EOL;
 			$message .= 'Content-Type: text/plain; charset="utf-8"' . PHP_EOL;
 			$message .= 'Content-Transfer-Encoding: base64' . PHP_EOL . PHP_EOL;
-			$message .= base64_encode($this->text) . PHP_EOL;
+			$message .= $this->encodeBase64($this->text);
 		} else {
 			$message  = '--' . $boundary . PHP_EOL;
 			$message .= 'Content-Type: multipart/alternative; boundary="' . $boundary . '_alt"' . PHP_EOL . PHP_EOL;
@@ -54,15 +54,15 @@ class Mail {
 			$message .= 'Content-Transfer-Encoding: base64' . PHP_EOL . PHP_EOL;
 
 			if ($this->text) {
-				$message .= base64_encode($this->text) . PHP_EOL;
+				$message .= $this->encodeBase64($this->text);
 			} else {
-				$message .= base64_encode('This is a HTML email and your email client software does not support HTML email!') . PHP_EOL;
+				$message .= $this->encodeBase64('This is a HTML email and your email client software does not support HTML email!');
 			}
 
 			$message .= '--' . $boundary . '_alt' . PHP_EOL;
 			$message .= 'Content-Type: text/html; charset="utf-8"' . PHP_EOL;
 			$message .= 'Content-Transfer-Encoding: base64' . PHP_EOL . PHP_EOL;
-			$message .= base64_encode($this->html) . PHP_EOL;
+			$message .= $this->encodeBase64($this->html);
 			$message .= '--' . $boundary . '_alt--' . PHP_EOL;
 		}
 
@@ -105,5 +105,9 @@ class Mail {
 				mail($recipient, '=?UTF-8?B?' . base64_encode($this->subject) . '?=', $message, $header);
 			}
 		}
+	}
+
+	private function encodeBase64($value) {
+		return chunk_split(base64_encode((string)$value), 76, PHP_EOL);
 	}
 }

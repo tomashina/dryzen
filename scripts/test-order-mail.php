@@ -246,6 +246,8 @@ $smtp->bcc = array('admin@milla.hr', 'nabava@milla.hr', 'ADMIN@milla.hr');
 $smtpReflection = new ReflectionClass('Mail\\Smtp');
 $getSmtpRecipients = $smtpReflection->getMethod('getRecipients');
 $getSmtpRecipients->setAccessible(true);
+$encodeSmtpBase64 = $smtpReflection->getMethod('encodeBase64');
+$encodeSmtpBase64->setAccessible(true);
 
 dryzenOrderMailAssertSame(
     array('customer@example.com', 'ADMIN@milla.hr', 'nabava@milla.hr'),
@@ -257,6 +259,21 @@ dryzenOrderMailAssertSame(
     false,
     strpos(file_get_contents(dirname(__DIR__) . '/upload/system/library/mail/smtp.php'), 'Bcc:') !== false,
     'BCC addresses are not exposed in the SMTP message headers.'
+);
+
+$longHtml = '<html><body>' . str_repeat('Puni sadržaj narudžbe čćžšđ. ', 100) . '</body></html>';
+$encodedHtml = $encodeSmtpBase64->invoke($smtp, $longHtml);
+$encodedLines = preg_split('/\R/', trim($encodedHtml));
+
+foreach ($encodedLines as $line) {
+    dryzenOrderMailAssertSame(true, strlen($line) <= 76, 'MIME Base64 lines never exceed 76 characters.');
+    dryzenOrderMailAssertSame(0, strlen($line) % 4, 'Every MIME Base64 line ends on a complete encoding quantum.');
+}
+
+dryzenOrderMailAssertSame(
+    $longHtml,
+    base64_decode(implode('', $encodedLines), true),
+    'Strict mail clients can decode the complete HTML body.'
 );
 
 echo "Order mail tests passed.\n";
