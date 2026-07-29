@@ -109,12 +109,13 @@ function refreshRuntimeCaches(mysqli $database)
     $session->execute();
 
     try {
-        $url = rtrim(HTTP_SERVER, '/')
+        $server = defined('HTTPS_SERVER') ? HTTPS_SERVER : HTTP_SERVER;
+        $url = rtrim($server, '/')
             . '/admin/index.php?route=common/developer/cache&user_token=' . rawurlencode($userToken);
         $curl = curl_init($url);
         curl_setopt_array($curl, array(
             CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_FOLLOWLOCATION => false,
             CURLOPT_COOKIE => 'OCSESSID=' . $sessionId,
             CURLOPT_POST => true,
             CURLOPT_TIMEOUT => 180,
