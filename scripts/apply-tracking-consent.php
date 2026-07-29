@@ -82,7 +82,7 @@ function patchMetaPixelModification(mysqli $database)
     $update->execute();
 }
 
-function refreshModifications(mysqli $database)
+function refreshRuntimeCaches(mysqli $database)
 {
     if (!function_exists('curl_init')) {
         throw new RuntimeException('cURL is required for --refresh.');
@@ -110,12 +110,13 @@ function refreshModifications(mysqli $database)
 
     try {
         $url = rtrim(HTTP_SERVER, '/')
-            . '/admin/index.php?route=marketplace/modification/refresh&user_token=' . rawurlencode($userToken);
+            . '/admin/index.php?route=common/developer/cache&user_token=' . rawurlencode($userToken);
         $curl = curl_init($url);
         curl_setopt_array($curl, array(
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_FOLLOWLOCATION => true,
             CURLOPT_COOKIE => 'OCSESSID=' . $sessionId,
+            CURLOPT_POST => true,
             CURLOPT_TIMEOUT => 180,
         ));
         $response = curl_exec($curl);
@@ -124,7 +125,7 @@ function refreshModifications(mysqli $database)
         curl_close($curl);
 
         if ($response === false || $error !== '' || $status >= 400) {
-            throw new RuntimeException('OCMOD refresh failed (HTTP ' . $status . '): ' . $error);
+            throw new RuntimeException('Runtime cache refresh failed (HTTP ' . $status . '): ' . $error);
         }
     } finally {
         $delete = $database->prepare("DELETE FROM `{$sessionTable}` WHERE `session_id` = ?");
@@ -164,10 +165,10 @@ try {
 	$committed = true;
 
     if (in_array('--refresh', $argv, true)) {
-        refreshModifications($database);
-        echo 'REFRESHED OCMOD cache' . PHP_EOL;
+        refreshRuntimeCaches($database);
+        echo 'REFRESHED OCMOD, template, runtime and page caches' . PHP_EOL;
     } else {
-        echo 'Next: refresh Extensions > Modifications in OpenCart admin.' . PHP_EOL;
+        echo 'Next: clear caches in the OpenCart dashboard.' . PHP_EOL;
     }
 
     echo 'Meta Pixel ' . DRYZEN_META_PIXEL_ID . ' configured.' . PHP_EOL;
