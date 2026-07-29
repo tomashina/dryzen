@@ -182,6 +182,9 @@ try {
                         JOIN " . DB_PREFIX . "product_to_store p2s ON p2s.product_id = p.product_id
                         WHERE p2s.store_id = 0 AND p.status = 1 AND p.date_available <= NOW()
                         ORDER BY p.product_id",
+            'additional_images_query' => "SELECT pi.product_id AS entity_id, pi.image
+                                          FROM " . DB_PREFIX . "product_image pi
+                                          ORDER BY pi.product_id, pi.sort_order, pi.product_image_id",
             'alias_prefix' => 'product_id=',
             'images' => true,
         ),
@@ -200,10 +203,37 @@ try {
 
     foreach ($types as $type => $definition) {
         $entities = array();
+        $entityIndexes = array();
         $result = $db->query($definition['query']);
 
         while ($row = $result->fetch_assoc()) {
+            $row['images'] = array();
+
+            if ($definition['images'] && $row['image']) {
+                $row['images'][] = $row['image'];
+            }
+
+            $entityIndexes[(int)$row['entity_id']] = count($entities);
             $entities[] = $row;
+        }
+
+        if (!empty($definition['additional_images_query'])) {
+            $result = $db->query($definition['additional_images_query']);
+
+            while ($row = $result->fetch_assoc()) {
+                $entityId = (int)$row['entity_id'];
+                $image = trim((string)$row['image']);
+
+                if (
+                    $image === ''
+                    || !isset($entityIndexes[$entityId])
+                    || in_array($image, $entities[$entityIndexes[$entityId]]['images'], true)
+                ) {
+                    continue;
+                }
+
+                $entities[$entityIndexes[$entityId]]['images'][] = $image;
+            }
         }
 
         foreach ($languages as $language) {
@@ -231,9 +261,9 @@ try {
                     $output .= '<lastmod>' . sitemapXmlEscape($lastmod) . '</lastmod>';
                 }
 
-                if ($definition['images'] && $entity['image']) {
+                foreach ($entity['images'] as $image) {
                     $output .= '<image:image><image:loc>'
-                        . sitemapXmlEscape(sitemapAssetUrl($baseUrl . 'image/', $entity['image']))
+                        . sitemapXmlEscape(sitemapAssetUrl($baseUrl . 'image/', $image))
                         . '</image:loc></image:image>';
                 }
 
