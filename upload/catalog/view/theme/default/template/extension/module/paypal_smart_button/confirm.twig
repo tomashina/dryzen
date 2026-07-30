@@ -62,7 +62,7 @@
 									{% if payment_address['city'] %}<tr><td><b>{{ entry_city }}</b></td><td>{{ payment_address['city'] }}</td></tr>{% endif %}
 									{% if payment_address['postcode'] %}<tr><td><b>{{ entry_postcode }}</b></td><td>{{ payment_address['postcode'] }}</td></tr>{% endif %}
 									{% if payment_address['country'] %}<tr><td><b>{{ entry_country }}</b></td><td>{{ payment_address['country'] }}</td></tr>{% endif %}
-									{% if payment_address['zone'] %}<tr><td><b>{{ entry_zone }}</b></td><td>{{ payment_address['zone'] }}</td></tr>{% endif %}
+									{% if payment_address['country_id'] != 53 and payment_address['zone'] %}<tr><td><b>{{ entry_zone }}</b></td><td>{{ payment_address['zone'] }}</td></tr>{% endif %}
 									{% for custom_field in custom_fields %}
 									{% if custom_field['location'] == 'address' %}
 									<tr><td><b>{{ custom_field['name'] }}</b></td><td>{{ custom_field['value'] }}</td></tr>
@@ -89,7 +89,7 @@
 						{% if shipping_address['city'] %}<tr><td><b>{{ entry_city }}</b></td><td>{{ shipping_address['city'] }}</td></tr>{% endif %}
 						{% if shipping_address['postcode'] %}<tr><td><b>{{ entry_postcode }}</b></td><td>{{ shipping_address['postcode'] }}</td></tr>{% endif %}
 						{% if shipping_address['country'] %}<tr><td><b>{{ entry_country }}</b></td><td>{{ shipping_address['country'] }}</td></tr>{% endif %}
-						{% if shipping_address['zone'] %}<tr><td><b>{{ entry_zone }}</b></td><td>{{ shipping_address['zone'] }}</td></tr>{% endif %}	
+						{% if shipping_address['country_id'] != 53 and shipping_address['zone'] %}<tr><td><b>{{ entry_zone }}</b></td><td>{{ shipping_address['zone'] }}</td></tr>{% endif %}
 						{% for custom_field in custom_fields %}
 						{% if custom_field['location'] == 'address' %}
 						<tr><td><b>{{ custom_field['name'] }}</b></td><td>{{ custom_field['value'] }}</td></tr>

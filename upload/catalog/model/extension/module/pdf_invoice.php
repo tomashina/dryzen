@@ -416,6 +416,10 @@ class ModelExtensionModulePdfInvoice extends Model {
 			$format = '{firstname} {lastname}' . "\n" . '{company}' . "\n" . '{address_1}' . "\n" . '{address_2}' . "\n" . '{city} {postcode}' . "\n" . '{zone}' . "\n" . '{country}';
 		}
 
+		$country_id_key = $address_prefix . 'country_id';
+		$country_id = isset($address[$country_id_key]) ? $address[$country_id_key] : (isset($address['country_id']) ? $address['country_id'] : 0);
+		$format = dryzen_hide_county_from_address_format($format, $country_id);
+
 		$vars = array(
 			'firstname',
 			'lastname',

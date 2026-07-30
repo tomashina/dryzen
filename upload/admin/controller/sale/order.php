@@ -923,6 +923,8 @@ class ControllerSaleOrder extends Controller {
 				$format = '{firstname} {lastname}' . "\n" . '{company}' . "\n" . '{address_1}' . "\n" . '{address_2}' . "\n" . '{city} {postcode}' . "\n" . '{zone}' . "\n" . '{country}';
 			}
 
+			$format = dryzen_hide_county_from_address_format($format, $order_info['payment_country_id']);
+
 			$find = array(
 				'{firstname}',
 				'{lastname}',
@@ -957,6 +959,8 @@ class ControllerSaleOrder extends Controller {
 			} else {
 				$format = '{firstname} {lastname}' . "\n" . '{company}' . "\n" . '{address_1}' . "\n" . '{address_2}' . "\n" . '{city} {postcode}' . "\n" . '{zone}' . "\n" . '{country}';
 			}
+
+			$format = dryzen_hide_county_from_address_format($format, $order_info['shipping_country_id']);
 
 			$find = array(
 				'{firstname}',
@@ -1605,6 +1609,8 @@ class ControllerSaleOrder extends Controller {
 					$format = '{firstname} {lastname}' . "\n" . '{company}' . "\n" . '{address_1}' . "\n" . '{address_2}' . "\n" . '{city} {postcode}' . "\n" . '{zone}' . "\n" . '{country}';
 				}
 
+				$format = dryzen_hide_county_from_address_format($format, $order_info['payment_country_id']);
+
 				$find = array(
 					'{firstname}',
 					'{lastname}',
@@ -1638,6 +1644,8 @@ class ControllerSaleOrder extends Controller {
 				} else {
 					$format = '{firstname} {lastname}' . "\n" . '{company}' . "\n" . '{address_1}' . "\n" . '{address_2}' . "\n" . '{city} {postcode}' . "\n" . '{zone}' . "\n" . '{country}';
 				}
+
+				$format = dryzen_hide_county_from_address_format($format, $order_info['shipping_country_id']);
 
 				$find = array(
 					'{firstname}',
@@ -1818,6 +1826,8 @@ class ControllerSaleOrder extends Controller {
 				} else {
 					$format = '{firstname} {lastname}' . "\n" . '{company}' . "\n" . '{address_1}' . "\n" . '{address_2}' . "\n" . '{city} {postcode}' . "\n" . '{zone}' . "\n" . '{country}';
 				}
+
+				$format = dryzen_hide_county_from_address_format($format, $order_info['shipping_country_id']);
 
 				$find = array(
 					'{firstname}',

@@ -37,3 +37,16 @@ if(!function_exists('hash_equals')) {
 		}
 	}
 }
+
+/**
+ * Croatian counties are not part of the postal address shown to customers or
+ * administrators. Keep the stored zone ID available for OpenCart internals,
+ * but omit zone placeholders whenever a Croatian address is rendered.
+ */
+function dryzen_hide_county_from_address_format($format, $country_id) {
+	if ((int)$country_id !== 53 || !is_string($format)) {
+		return $format;
+	}
+
+	return str_replace(array('{zone}', '{zone_code}'), '', $format);
+}

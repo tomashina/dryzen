@@ -214,6 +214,11 @@ class ControllerExtensionQuickCheckoutCheckout extends Equotix {
 		if ($country_info) {
 			$this->load->model('localisation/zone');
 
+			$zone_field = $this->config->get('quickcheckout_field_zone');
+			$zones = !empty($zone_field['display'])
+				? $this->model_localisation_zone->getZonesByCountryId($this->request->get['country_id'])
+				: array();
+
 			$json = array(
 				'country_id'        => $country_info['country_id'],
 				'name'              => $country_info['name'],
@@ -221,7 +226,7 @@ class ControllerExtensionQuickCheckoutCheckout extends Equotix {
 				'iso_code_3'        => $country_info['iso_code_3'],
 				'address_format'    => $country_info['address_format'],
 				'postcode_required' => $country_info['postcode_required'],
-				'zone'              => $this->model_localisation_zone->getZonesByCountryId($this->request->get['country_id']),
+				'zone'              => $zones,
 				'status'            => $country_info['status']		
 			);
 		}
