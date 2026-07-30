@@ -226,3 +226,10 @@ class OrderExporter {
 		}
 	}
 }
+
+// OpenCart derives the class name directly from the library route. Loading
+// "eracuni/order_exporter" therefore instantiates Eracuni\order_exporter.
+// Keep the CamelCase implementation above for direct consumers and expose the
+// route-compatible class expected by OpenCart's Loader.
+class order_exporter extends OrderExporter {
+}
