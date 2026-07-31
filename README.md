@@ -50,7 +50,7 @@ ručne gumbe za ponovni pokušaj.
 Nakon postavljanja BOX NOW izmjena pokrenite idempotentnu migraciju:
 
 ```bash
-mysql -u KORISNIK -p NAZIV_BAZE < database/migrations/20260721_boxnow_tracking_email.sql
+mysql -u KORISNIK -p NAZIV_BAZE < database/migrations/20260731_boxnow_automation.sql
 ```
 
 Migracija dodaje evidenciju pokušaja i slanja adresnice te registrira OpenCart
