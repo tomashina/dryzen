@@ -888,6 +888,7 @@ class ControllerSaleOrder extends Controller {
 				$shipment = $this->model_extension_shipping_boxnow->getShipmentByOrderId($order_id);
 				$tracking_code = !empty($shipment['parcel_id']) ? $shipment['parcel_id'] : '';
 				$email_sent_at = !empty($shipment['email_sent_at']) ? date($this->language->get('date_format_short') . ' H:i', strtotime($shipment['email_sent_at'])) : '';
+				$label_email_sent_at = !empty($shipment['label_email_sent_at']) ? date($this->language->get('date_format_short') . ' H:i', strtotime($shipment['label_email_sent_at'])) : '';
 
 				$data['boxnow_tracking_panel'] = array(
 					'created'          => $tracking_code !== '',
@@ -897,22 +898,30 @@ class ControllerSaleOrder extends Controller {
 					'date_modified'    => !empty($shipment['date_modified']) ? date($this->language->get('date_format_short') . ' H:i', strtotime($shipment['date_modified'])) : '',
 					'email_sent_at'    => $email_sent_at,
 					'email_failed'     => !empty($shipment['email_error']),
+					'label_email_sent_at' => $label_email_sent_at,
+					'label_email_failed'  => !empty($shipment['label_email_error']),
+					'creation_error'      => !empty($shipment['creation_error']) ? $shipment['creation_error'] : '',
 					'label_url'        => str_replace('&amp;', '&', $this->url->link('extension/shipping/boxnow/label', 'user_token=' . $this->session->data['user_token'] . '&order_id=' . (int)$order_id, true)),
 					'create_url'       => str_replace('&amp;', '&', $this->url->link('extension/shipping/boxnow/createShipment', 'user_token=' . $this->session->data['user_token'] . '&order_id=' . (int)$order_id, true)),
 					'send_email_url'   => str_replace('&amp;', '&', $this->url->link('extension/shipping/boxnow/sendTrackingEmail', 'user_token=' . $this->session->data['user_token'] . '&order_id=' . (int)$order_id, true)),
+					'send_label_email_url' => str_replace('&amp;', '&', $this->url->link('extension/shipping/boxnow/sendLabelEmail', 'user_token=' . $this->session->data['user_token'] . '&order_id=' . (int)$order_id, true)),
 					'text_title'       => $boxnow_language->get('text_boxnow_shipment'),
 					'text_code'        => $boxnow_language->get('text_tracking_code'),
 					'text_status'      => $boxnow_language->get('text_tracking_status'),
 					'text_updated'     => $boxnow_language->get('text_tracking_updated'),
 					'text_email'       => $boxnow_language->get('text_tracking_email'),
 					'text_email_state' => $email_sent_at !== '' ? sprintf($boxnow_language->get('text_tracking_email_sent_at'), $email_sent_at) : $boxnow_language->get('text_tracking_email_not_sent'),
+					'text_label_email' => $boxnow_language->get('text_label_email'),
+					'text_label_email_state' => $label_email_sent_at !== '' ? sprintf($boxnow_language->get('text_label_email_sent_at'), $label_email_sent_at) : $boxnow_language->get('text_label_email_not_sent'),
 					'text_not_created' => $boxnow_language->get('text_boxnow_not_created'),
 					'text_loading'     => $this->language->get('text_loading'),
 					'button_create'    => $boxnow_language->get('button_create_shipment'),
 					'button_label'     => $boxnow_language->get('button_label'),
 					'button_track'     => $boxnow_language->get('button_track_shipment'),
 					'button_email'     => $boxnow_language->get('button_send_tracking_email'),
-					'error_email'      => $boxnow_language->get('error_tracking_email_failed')
+					'button_label_email' => $label_email_sent_at !== '' ? $boxnow_language->get('button_resend_label_email') : $boxnow_language->get('button_send_label_email'),
+					'error_email'      => $boxnow_language->get('error_tracking_email_failed'),
+					'error_label_email' => $boxnow_language->get('error_label_email_failed')
 				);
 			}
 

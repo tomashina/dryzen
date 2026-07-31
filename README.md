@@ -41,14 +41,30 @@ proizvode na nulu. Istovremena cron izvršavanja zaštićena su MySQL lockom.
 
 ## BOX NOW tracking
 
-Nakon postavljanja BOX NOW tracking izmjena pokrenite idempotentnu migraciju:
+BOX NOW pošiljka automatski se kreira kada narudžba prvi put uđe u jedan od
+OpenCart processing/complete statusa. Nakon uspješnog API odgovora kupcu se
+šalje tracking kod, a trgovini i dodatnim adresama označenima za obavijesti o
+narudžbama šalje se zaseban email s PDF adresnicom. Admin narudžbe zadržava
+ručne gumbe za ponovni pokušaj.
+
+Nakon postavljanja BOX NOW izmjena pokrenite idempotentnu migraciju:
 
 ```bash
 mysql -u KORISNIK -p NAZIV_BAZE < database/migrations/20260721_boxnow_tracking_email.sql
 ```
 
-Zatim u administraciji otvorite **Extensions > Modifications** i osvježite
-OCMOD cache. Migracija se može sigurno pokrenuti više puta.
+Migracija dodaje evidenciju pokušaja i slanja adresnice te registrira OpenCart
+event `boxnow_auto_shipment`. Zatim u administraciji otvorite **Extensions >
+Modifications** i osvježite OCMOD cache. Migracija se može sigurno pokrenuti
+više puta.
+
+Automatizirane provjere BOX NOW toka pokreću se naredbom:
+
+```bash
+php scripts/test-boxnow-automation.php
+```
+
+Test koristi lažne API/PDF/mail odgovore i ne kreira stvarne BOX NOW pošiljke.
 
 ## Istaknuta vrijednost proizvoda
 

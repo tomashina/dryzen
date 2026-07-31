@@ -18,6 +18,8 @@ $_['text_shipment_exists']      = 'The BOX NOW shipment already exists.';
 $_['text_tracking_email_sent']  = 'The tracking email was sent to the customer.';
 $_['text_tracking_email_already_sent'] = 'The tracking email was already sent to the customer.';
 $_['text_tracking_email_history'] = 'BOX NOW tracking email sent to the customer. Parcel number:';
+$_['text_label_email_sent']     = 'The label was sent to the internal recipients.';
+$_['text_label_email_already_sent'] = 'The label was already sent to the internal recipients.';
 
 // Entry
 $_['entry_api_url']             = 'API URL';
@@ -48,6 +50,8 @@ $_['help_compartment_size']     = 'Used as the default parcel size, especially w
 $_['button_create_shipment']    = 'Create BOX NOW shipment';
 $_['button_label']              = 'BOX NOW label';
 $_['button_send_tracking_email'] = 'Send tracking email';
+$_['button_send_label_email']   = 'Email label';
+$_['button_resend_label_email'] = 'Resend label';
 $_['button_track_shipment']     = 'Track shipment';
 
 // Order tracking
@@ -58,6 +62,9 @@ $_['text_tracking_updated']     = 'Last updated';
 $_['text_tracking_email']       = 'Customer email';
 $_['text_tracking_email_not_sent'] = 'Not sent';
 $_['text_tracking_email_sent_at'] = 'Sent %s';
+$_['text_label_email']          = 'Label email';
+$_['text_label_email_not_sent'] = 'Not sent';
+$_['text_label_email_sent_at']  = 'Sent %s';
 $_['text_boxnow_not_created']   = 'The shipment has not been created yet.';
 
 // BOX NOW statuses
@@ -76,10 +83,10 @@ $_['status_unknown']            = 'BOX NOW status: %s';
 $_['status_unavailable']        = 'The status is not available yet.';
 
 // Tracking email
-$_['mail_subject']              = 'Your shipment is on its way - %s';
-$_['mail_heading']              = 'Your order has been shipped';
+$_['mail_subject']              = 'Your BOX NOW shipment - %s';
+$_['mail_heading']              = 'Shipment tracking information';
 $_['mail_greeting']             = 'Hello %s,';
-$_['mail_intro']                = 'your order #%s has been handed over to BOX NOW.';
+$_['mail_intro']                = 'a BOX NOW shipment has been created for your order #%s.';
 $_['mail_tracking_code']        = 'Parcel number';
 $_['mail_tracking_status']      = 'Current status';
 $_['mail_shipping_method']      = 'Shipping method';
@@ -96,3 +103,6 @@ $_['error_not_boxnow_order']    = 'This order is not a BOX NOW shipment.';
 $_['error_missing_parcel_id']   = 'BOX NOW did not return a parcel number.';
 $_['error_missing_customer_email'] = 'This order does not have a customer email address.';
 $_['error_tracking_email_failed'] = 'The shipment was saved, but the tracking email was not sent. Please retry from the order.';
+$_['error_label_email_failed']  = 'The shipment was saved, but the label was not sent to the internal recipients. Please retry from the order.';
+$_['error_missing_label_email_recipients'] = 'There are no valid internal email recipients for the BOX NOW label.';
+$_['error_invalid_label_pdf']   = 'BOX NOW did not return a valid PDF label.';

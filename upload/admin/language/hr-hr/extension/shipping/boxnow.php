@@ -18,6 +18,8 @@ $_['text_shipment_exists']      = 'BOX NOW pošiljka već postoji.';
 $_['text_tracking_email_sent']  = 'Tracking email je poslan kupcu.';
 $_['text_tracking_email_already_sent'] = 'Tracking email je već poslan kupcu.';
 $_['text_tracking_email_history'] = 'Kupcu poslan BOX NOW email za praćenje pošiljke. Broj pošiljke:';
+$_['text_label_email_sent']     = 'Adresnica je poslana internim primateljima.';
+$_['text_label_email_already_sent'] = 'Adresnica je već poslana internim primateljima.';
 
 // Entry
 $_['entry_api_url']             = 'API URL';
@@ -48,6 +50,8 @@ $_['help_compartment_size']     = 'Koristi se kao zadana veličina paketa, poseb
 $_['button_create_shipment']    = 'Kreiraj BOX NOW pošiljku';
 $_['button_label']              = 'BOX NOW labela';
 $_['button_send_tracking_email'] = 'Pošalji tracking email';
+$_['button_send_label_email']   = 'Pošalji adresnicu e-mailom';
+$_['button_resend_label_email'] = 'Ponovno pošalji adresnicu';
 $_['button_track_shipment']     = 'Prati pošiljku';
 
 // Order tracking
@@ -58,6 +62,9 @@ $_['text_tracking_updated']     = 'Zadnje ažuriranje';
 $_['text_tracking_email']       = 'Email kupcu';
 $_['text_tracking_email_not_sent'] = 'Nije poslan';
 $_['text_tracking_email_sent_at'] = 'Poslan %s';
+$_['text_label_email']          = 'Adresnica e-mailom';
+$_['text_label_email_not_sent'] = 'Nije poslana';
+$_['text_label_email_sent_at']  = 'Poslana %s';
 $_['text_boxnow_not_created']   = 'Pošiljka još nije kreirana.';
 
 // BOX NOW statuses
@@ -76,10 +83,10 @@ $_['status_unknown']            = 'BOX NOW status: %s';
 $_['status_unavailable']        = 'Status još nije dostupan.';
 
 // Tracking email
-$_['mail_subject']              = 'Vaša pošiljka je poslana - %s';
-$_['mail_heading']              = 'Vaša narudžba je poslana';
+$_['mail_subject']              = 'Vaša BOX NOW pošiljka - %s';
+$_['mail_heading']              = 'Podaci za praćenje pošiljke';
 $_['mail_greeting']             = 'Bok %s,';
-$_['mail_intro']                = 'vaša narudžba #%s predana je dostavnoj službi BOX NOW.';
+$_['mail_intro']                = 'za vašu narudžbu #%s kreirana je BOX NOW pošiljka.';
 $_['mail_tracking_code']        = 'Broj pošiljke';
 $_['mail_tracking_status']      = 'Trenutni status';
 $_['mail_shipping_method']      = 'Način dostave';
@@ -96,3 +103,6 @@ $_['error_not_boxnow_order']    = 'Narudžba nije BOX NOW dostava.';
 $_['error_missing_parcel_id']   = 'BOX NOW nije vratio broj pošiljke.';
 $_['error_missing_customer_email'] = 'Narudžba nema email adresu kupca.';
 $_['error_tracking_email_failed'] = 'Pošiljka je spremljena, ali tracking email nije poslan. Pokušajte ponovno iz narudžbe.';
+$_['error_label_email_failed']  = 'Pošiljka je spremljena, ali adresnica nije poslana internim primateljima. Pokušajte ponovno iz narudžbe.';
+$_['error_missing_label_email_recipients'] = 'Nema ispravnih internih email adresa za slanje BOX NOW adresnice.';
+$_['error_invalid_label_pdf']   = 'BOX NOW nije vratio ispravnu PDF adresnicu.';

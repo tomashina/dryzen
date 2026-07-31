@@ -138,8 +138,14 @@
 		<h3 class="panel-title"><i class="fa fa-cube"></i> {{ boxnow_tracking_panel.text_title }}</h3>
 	  </div>
 	  <div class="panel-body">
+		{% if boxnow_tracking_panel.creation_error and not boxnow_tracking_panel.created %}
+		<div class="alert alert-danger boxnow-alert"><i class="fa fa-exclamation-circle"></i> {{ boxnow_tracking_panel.creation_error }}</div>
+		{% endif %}
 		{% if boxnow_tracking_panel.email_failed and not boxnow_tracking_panel.email_sent_at %}
 		<div class="alert alert-warning boxnow-alert"><i class="fa fa-exclamation-triangle"></i> {{ boxnow_tracking_panel.error_email }}</div>
+		{% endif %}
+		{% if boxnow_tracking_panel.label_email_failed and not boxnow_tracking_panel.label_email_sent_at %}
+		<div class="alert alert-warning boxnow-alert"><i class="fa fa-exclamation-triangle"></i> {{ boxnow_tracking_panel.error_label_email }}</div>
 		{% endif %}
 		{% if boxnow_tracking_panel.created %}
 		<div class="table-responsive">
@@ -163,6 +169,10 @@
 				<td><strong>{{ boxnow_tracking_panel.text_email }}</strong></td>
 				<td>{{ boxnow_tracking_panel.text_email_state }}</td>
 			  </tr>
+			  <tr>
+				<td><strong>{{ boxnow_tracking_panel.text_label_email }}</strong></td>
+				<td>{{ boxnow_tracking_panel.text_label_email_state }}</td>
+			  </tr>
 			</tbody>
 		  </table>
 		</div>
@@ -170,6 +180,7 @@
 		  {% if boxnow_tracking_panel.tracking_url %}<a href="{{ boxnow_tracking_panel.tracking_url }}" target="_blank" rel="noopener" class="btn btn-primary"><i class="fa fa-map-marker"></i> {{ boxnow_tracking_panel.button_track }}</a>{% endif %}
 		  <a href="{{ boxnow_tracking_panel.label_url }}" target="_blank" class="btn btn-info"><i class="fa fa-file-pdf-o"></i> {{ boxnow_tracking_panel.button_label }}</a>
 		  {% if not boxnow_tracking_panel.email_sent_at %}<button type="button" id="button-boxnow-email" data-url="{{ boxnow_tracking_panel.send_email_url }}" data-loading-text="{{ boxnow_tracking_panel.text_loading }}" class="btn btn-success"><i class="fa fa-envelope"></i> {{ boxnow_tracking_panel.button_email }}</button>{% endif %}
+		  <button type="button" id="button-boxnow-label-email" data-url="{{ boxnow_tracking_panel.send_label_email_url }}" data-loading-text="{{ boxnow_tracking_panel.text_loading }}" class="btn btn-success"><i class="fa fa-paperclip"></i> {{ boxnow_tracking_panel.button_label_email }}</button>
 		</div>
 		{% else %}
 		<p>{{ boxnow_tracking_panel.text_not_created }}</p>
@@ -423,7 +434,7 @@
   </div>
   <script type="text/javascript"><!--
 
-  $(document).delegate('#button-boxnow-create, #button-boxnow-email', 'click', function() {
+  $(document).delegate('#button-boxnow-create, #button-boxnow-email, #button-boxnow-label-email', 'click', function() {
 	var button = $(this);
 
 	$.ajax({

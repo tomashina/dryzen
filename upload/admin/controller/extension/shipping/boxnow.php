@@ -11,6 +11,7 @@ class ControllerExtensionShippingBoxnow extends Controller {
 		$this->load->model('extension/shipping/boxnow');
 
 		$this->model_extension_shipping_boxnow->installSchema();
+		$this->ensureAutomationEvent();
 
 		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
 			$this->model_setting_setting->editSetting('shipping_boxnow', $this->request->post);
@@ -91,6 +92,12 @@ class ControllerExtensionShippingBoxnow extends Controller {
 	public function install() {
 		$this->load->model('extension/shipping/boxnow');
 		$this->model_extension_shipping_boxnow->installSchema();
+		$this->ensureAutomationEvent();
+	}
+
+	public function uninstall() {
+		$this->load->model('setting/event');
+		$this->model_setting_event->deleteEventByCode('boxnow_auto_shipment');
 	}
 
 	public function createShipment() {
@@ -113,6 +120,12 @@ class ControllerExtensionShippingBoxnow extends Controller {
 					$json['success'] .= ' ' . $this->language->get('text_tracking_email_sent');
 				} elseif (!empty($shipment['email_error'])) {
 					$json['warning'] = $this->language->get('error_tracking_email_failed');
+				}
+
+				if (!empty($shipment['label_email_sent'])) {
+					$json['success'] .= ' ' . $this->language->get('text_label_email_sent');
+				} elseif (!empty($shipment['label_email_error'])) {
+					$json['warning'] = isset($json['warning']) ? $json['warning'] . ' ' . $this->language->get('error_label_email_failed') : $this->language->get('error_label_email_failed');
 				}
 
 				$json['parcel_id'] = isset($shipment['parcel_id']) ? $shipment['parcel_id'] : '';
@@ -158,6 +171,35 @@ class ControllerExtensionShippingBoxnow extends Controller {
 		$this->response->setOutput(json_encode($json));
 	}
 
+	public function sendLabelEmail() {
+		$this->load->language('extension/shipping/boxnow');
+		$json = array();
+
+		if (!$this->user->hasPermission('modify', 'extension/shipping/boxnow')) {
+			$json['error'] = $this->language->get('error_permission');
+		} elseif (empty($this->request->get['order_id'])) {
+			$json['error'] = $this->language->get('error_not_boxnow_order');
+		} else {
+			try {
+				$this->load->model('extension/shipping/boxnow');
+				$result = $this->model_extension_shipping_boxnow->sendLabelEmail((int)$this->request->get['order_id'], true);
+
+				if (!empty($result['label_email_sent'])) {
+					$json['success'] = $this->language->get('text_label_email_sent');
+				} elseif (!empty($result['label_email_already_sent'])) {
+					$json['success'] = $this->language->get('text_label_email_already_sent');
+				} else {
+					$json['error'] = $this->language->get('error_label_email_failed');
+				}
+			} catch (\Throwable $exception) {
+				$json['error'] = $this->language->get('error_label_email_failed');
+			}
+		}
+
+		$this->response->addHeader('Content-Type: application/json');
+		$this->response->setOutput(json_encode($json));
+	}
+
 	public function label() {
 		$this->load->language('extension/shipping/boxnow');
 
@@ -186,5 +228,17 @@ class ControllerExtensionShippingBoxnow extends Controller {
 		}
 
 		return !$this->error;
+	}
+
+	private function ensureAutomationEvent() {
+		$this->load->model('setting/event');
+		$event = $this->model_setting_event->getEventByCode('boxnow_auto_shipment');
+		$trigger = 'catalog/model/checkout/order/addOrderHistory/after';
+		$action = 'event/boxnow/afterOrderHistory';
+
+		if (!$event || $event['trigger'] !== $trigger || $event['action'] !== $action || !(int)$event['status']) {
+			$this->model_setting_event->deleteEventByCode('boxnow_auto_shipment');
+			$this->model_setting_event->addEvent('boxnow_auto_shipment', $trigger, $action, 1, 20);
+		}
 	}
 }
