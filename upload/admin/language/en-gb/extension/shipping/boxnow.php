@@ -34,6 +34,7 @@ $_['entry_origin_email']        = 'Sender contact email';
 $_['entry_origin_phone']        = 'Sender contact phone';
 $_['entry_order_prefix']        = 'Order number prefix';
 $_['entry_cost']                = 'Shipping cost';
+$_['entry_three_plus_cost']     = 'Cost for 3 or more items';
 $_['entry_free_total']          = 'Free over';
 $_['entry_compartment_size']    = 'Compartment size';
 $_['entry_tax_class']           = 'Tax Class';
@@ -44,6 +45,7 @@ $_['entry_sort_order']          = 'Sort Order';
 // Help
 $_['help_webhook_url']          = 'BOX NOW webhook URL: %s';
 $_['help_tracking_url']         = 'Use {parcel} where the parcel number should be inserted.';
+$_['help_three_plus_cost']      = 'Applied when the total quantity in the cart is 3 or more. Leave empty to use the regular cost.';
 $_['help_compartment_size']     = 'Used as the default parcel size, especially when shipping from an APM.';
 
 // Button

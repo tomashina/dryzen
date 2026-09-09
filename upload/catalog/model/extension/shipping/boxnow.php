@@ -19,7 +19,12 @@ class ModelExtensionShippingBoxnow extends Model {
 
 		if ($status) {
 			$cost = (float)$this->config->get('shipping_boxnow_cost');
+			$three_plus_cost = $this->config->get('shipping_boxnow_three_plus_cost');
 			$free_total = (float)$this->config->get('shipping_boxnow_free_total');
+
+			if ($this->cart->countProducts() >= 3 && $three_plus_cost !== null && $three_plus_cost !== '') {
+				$cost = (float)$three_plus_cost;
+			}
 
 			if ($free_total > 0 && $this->cart->getSubTotal() >= $free_total) {
 				$cost = 0;

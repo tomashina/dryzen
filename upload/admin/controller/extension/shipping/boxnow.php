@@ -56,6 +56,7 @@ class ControllerExtensionShippingBoxnow extends Controller {
 			'shipping_boxnow_origin_phone'     => $this->config->get('config_telephone'),
 			'shipping_boxnow_order_prefix'     => 'DRYZEN-',
 			'shipping_boxnow_cost'             => '0.00',
+			'shipping_boxnow_three_plus_cost'  => '',
 			'shipping_boxnow_free_total'       => '',
 			'shipping_boxnow_compartment_size' => '2',
 			'shipping_boxnow_tax_class_id'     => 0,

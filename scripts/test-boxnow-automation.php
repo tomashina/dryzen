@@ -272,6 +272,28 @@ class TestLoad {
 	public function library($route) { return null; }
 }
 
+class TestQuoteDb {
+	public function query($sql) {
+		return (object)array('num_rows' => 0, 'row' => array());
+	}
+}
+
+class TestQuoteCart {
+	public $quantity;
+	public $subtotal;
+
+	public function countProducts() { return $this->quantity; }
+	public function getSubTotal() { return $this->subtotal; }
+}
+
+class TestQuoteTax {
+	public function calculate($cost, $tax_class_id, $calculate) { return $cost; }
+}
+
+class TestQuoteCurrency {
+	public function format($amount, $currency) { return (string)$amount; }
+}
+
 function assertTrue($condition, $message) {
 	if (!$condition) {
 		fwrite(STDERR, "FAIL: " . $message . PHP_EOL);
@@ -447,5 +469,43 @@ $revolutCompletedStatusArgs = array(23, 15);
 $eventController->afterOrderHistory($route, $revolutCompletedStatusArgs, $output);
 assertSameValue($beforeLocks + 6, $manager->lockCount, 'The configured Revolut completed status invokes the complete automatic BOX NOW flow.');
 assertSameValue(1, count(array_filter($manager->apiCalls, function ($call) { return $call['endpoint'] === '/api/v1/delivery-requests'; })), 'The event remains idempotent for an existing parcel.');
+
+require_once __DIR__ . '/../upload/system/engine/model.php';
+require_once __DIR__ . '/../upload/catalog/model/extension/shipping/boxnow.php';
+$quoteConfig = new TestConfig(array(
+	'shipping_boxnow_geo_zone_id' => 0,
+	'shipping_boxnow_cost' => '5.00',
+	'shipping_boxnow_three_plus_cost' => '2.50',
+	'shipping_boxnow_free_total' => '50.00',
+	'shipping_boxnow_tax_class_id' => 0,
+	'shipping_boxnow_sort_order' => 0,
+	'config_tax' => false
+));
+$quoteCart = new TestQuoteCart();
+$quoteRegistry = new TestRegistry(array(
+	'load' => new TestLoad(),
+	'language' => new Language('en-gb'),
+	'db' => new TestQuoteDb(),
+	'config' => $quoteConfig,
+	'cart' => $quoteCart,
+	'tax' => new TestQuoteTax(),
+	'currency' => new TestQuoteCurrency(),
+	'session' => (object)array('data' => array('currency' => 'EUR'))
+));
+$quoteModel = new ModelExtensionShippingBoxnow($quoteRegistry);
+$address = array('country_id' => 53, 'zone_id' => 0);
+$quoteCart->quantity = 2;
+$quoteCart->subtotal = 20.00;
+$quote = $quoteModel->getQuote($address);
+assertSameValue(5.0, $quote['quote']['boxnow']['cost'], 'The regular BOX NOW cost applies below three items.');
+$quoteCart->quantity = 3;
+$quote = $quoteModel->getQuote($address);
+assertSameValue(2.5, $quote['quote']['boxnow']['cost'], 'The configured BOX NOW cost applies at three items.');
+$quoteCart->quantity = 5;
+$quote = $quoteModel->getQuote($address);
+assertSameValue(2.5, $quote['quote']['boxnow']['cost'], 'The configured BOX NOW cost applies above three items.');
+$quoteCart->subtotal = 50.00;
+$quote = $quoteModel->getQuote($address);
+assertSameValue(0, $quote['quote']['boxnow']['cost'], 'Free shipping still takes priority over the three-item cost.');
 
 echo "BOX NOW automation tests passed.\n";

@@ -34,6 +34,7 @@ $_['entry_origin_email']        = 'Kontakt email pošiljatelja';
 $_['entry_origin_phone']        = 'Kontakt telefon pošiljatelja';
 $_['entry_order_prefix']        = 'Prefix broja narudžbe';
 $_['entry_cost']                = 'Cijena dostave';
+$_['entry_three_plus_cost']     = 'Cijena za 3 ili više artikala';
 $_['entry_free_total']          = 'Besplatno iznad';
 $_['entry_compartment_size']    = 'Veličina pretinca';
 $_['entry_tax_class']           = 'Porezna stopa';
@@ -44,6 +45,7 @@ $_['entry_sort_order']          = 'Redoslijed sortiranja';
 // Help
 $_['help_webhook_url']          = 'Webhook URL za BOX NOW: %s';
 $_['help_tracking_url']         = 'Koristite {parcel} kao mjesto na koje se umeće broj pošiljke.';
+$_['help_three_plus_cost']      = 'Primjenjuje se kada je ukupna količina artikala u košarici 3 ili veća. Ostavite prazno za redovnu cijenu.';
 $_['help_compartment_size']     = 'Koristi se kao zadana veličina paketa, posebno kod slanja iz APM-a.';
 
 // Button
