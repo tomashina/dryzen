@@ -81,6 +81,13 @@
   display: block;
 }
 
+.dryzen-footer-brand {
+  max-width: 680px;
+  margin: 0 auto;
+  padding-bottom: 30px;
+  text-align: center;
+}
+
 .dryzen-footer-brand strong {
   margin-bottom: 7px;
   color: #1c7fbe;
