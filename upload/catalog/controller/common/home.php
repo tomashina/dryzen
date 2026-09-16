@@ -4,7 +4,7 @@ class ControllerCommonHome extends Controller {
 		$this->document->setTitle($this->config->get('config_meta_title'));
 		$this->document->setDescription($this->config->get('config_meta_description'));
 		$this->document->setKeywords($this->config->get('config_meta_keyword'));
-		$this->document->addStyle('catalog/view/theme/basel/stylesheet/dryzen-homepage.css?v=20260916c');
+		$this->document->addStyle('catalog/view/theme/basel/stylesheet/dryzen-homepage.css?v=20260916d');
 		$this->document->addScript('catalog/view/theme/basel/js/dryzen-homepage.js?v=20260916a');
 
 		$this->document->addLink($this->getCanonicalHomeUrl(), 'canonical');

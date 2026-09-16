@@ -3,6 +3,10 @@
   background: #fff;
 }
 
+.dryzen-global-newsletter + #footer {
+  margin-top: 0;
+}
+
 .dryzen-global-newsletter .dryzen-newsletter {
   max-width: 900px;
   margin: 0 auto;

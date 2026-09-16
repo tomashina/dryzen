@@ -27,7 +27,7 @@ body.common-home #mod12 {
 }
 
 body.common-home .widget.cm_module .widget-title {
-  margin-bottom: 36px;
+  margin-bottom: 32px;
   text-align: center;
 }
 
@@ -46,7 +46,7 @@ body.common-home .widget.cm_module .main-title {
 
 body.common-home .widget.cm_module .sub-line {
   max-width: 660px;
-  margin: 12px auto 0;
+  margin: 10px auto 0;
   color: var(--dryzen-muted);
   font-size: 17px;
   line-height: 1.6;
@@ -245,7 +245,7 @@ body.common-home .dryzen-section-intro,
 body.common-home .dryzen-education-lead,
 body.common-home .dryzen-brand-intro {
   max-width: 850px;
-  margin: 0 auto 36px;
+  margin: 0 auto 32px;
   text-align: center;
 }
 
@@ -286,9 +286,21 @@ body.common-home .dryzen-product-cta-card {
   box-shadow: none;
 }
 
+body.common-home .dryzen-product-category,
+body.common-home .dryzen-chooser-card {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
 body.common-home .dryzen-accent-pink { --dryzen-accent: var(--dryzen-pink); }
 body.common-home .dryzen-accent-orange { --dryzen-accent: var(--dryzen-orange); }
 body.common-home .dryzen-accent-teal { --dryzen-accent: var(--dryzen-teal); }
+
+body.common-home .dryzen-product-category .dryzen-card-kicker,
+body.common-home .dryzen-chooser-card .dryzen-card-kicker {
+  color: var(--dryzen-accent);
+}
 
 body.common-home .dryzen-product-media {
   aspect-ratio: 4 / 3;
@@ -306,6 +318,10 @@ body.common-home .dryzen-product-cta-card img {
 }
 
 body.common-home .dryzen-product-body {
+  min-height: 0;
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
   padding: 24px 24px 26px;
 }
 
@@ -335,7 +351,13 @@ body.common-home .dryzen-variants {
   font-weight: 600;
 }
 
+body.common-home .dryzen-product-body .dryzen-variants,
+body.common-home .dryzen-chooser-card .dryzen-variants {
+  margin-top: auto;
+}
+
 body.common-home .dryzen-text-link {
+  align-self: flex-start;
   color: var(--dryzen-blue);
   font-weight: 700;
   text-decoration: none;
@@ -391,6 +413,21 @@ body.common-home .dryzen-step-number {
   color: var(--dryzen-blue);
   font-size: 12px;
   font-weight: 700;
+}
+
+body.common-home .dryzen-step:nth-child(2) .dryzen-step-number {
+  border-color: #f5c4b4;
+  color: var(--dryzen-orange);
+}
+
+body.common-home .dryzen-step:nth-child(3) .dryzen-step-number {
+  border-color: #a8ded5;
+  color: var(--dryzen-teal);
+}
+
+body.common-home .dryzen-step:nth-child(4) .dryzen-step-number {
+  border-color: #edbfd5;
+  color: var(--dryzen-pink);
 }
 
 body.common-home .dryzen-step h3 {
@@ -512,11 +549,13 @@ body.common-home .dryzen-chooser-card {
 }
 
 body.common-home .dryzen-chooser-card .dryzen-card-btn {
+  align-self: flex-start;
   margin-top: 6px;
 }
 
 body.common-home .dryzen-emotional {
   gap: clamp(34px, 5vw, 70px);
+  align-items: stretch;
 }
 
 body.common-home .dryzen-emotional-media {
@@ -527,18 +566,22 @@ body.common-home .dryzen-emotional-media {
 
 body.common-home .dryzen-emotional-media img {
   width: 100%;
-  height: 500px;
+  height: 100%;
+  min-height: 500px;
   display: block;
   object-fit: cover;
   object-position: center center;
 }
 
 body.common-home .dryzen-emotional-copy {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   padding-right: 12px;
 }
 
 body.common-home .dryzen-emotional-copy h2 {
-  margin: 0 0 22px;
+  margin: 0 0 20px;
   color: var(--dryzen-text);
   font-size: clamp(29px, 2.65vw, 34px);
   line-height: 1.15;
@@ -569,6 +612,10 @@ body.common-home .dryzen-emotional-copy li::before {
   background: var(--dryzen-blue);
 }
 
+body.common-home .dryzen-emotional-copy li:nth-child(2)::before { background: var(--dryzen-pink); }
+body.common-home .dryzen-emotional-copy li:nth-child(3)::before { background: var(--dryzen-orange); }
+body.common-home .dryzen-emotional-copy li:nth-child(4)::before { background: var(--dryzen-teal); }
+
 body.common-home .dryzen-emotional-copy > p {
   margin: 0 0 14px;
   color: var(--dryzen-muted);
@@ -583,6 +630,7 @@ body.common-home .dryzen-emotional-copy .dryzen-statement {
 }
 
 body.common-home .dryzen-emotional-copy a.btn.dryzen-light-btn {
+  align-self: flex-start;
   border-color: var(--dryzen-blue);
   background: var(--dryzen-blue) !important;
   color: #fff !important;
@@ -596,35 +644,52 @@ body.common-home .dryzen-brand-intro .dryzen-statement {
 body.common-home .dryzen-benefits-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-auto-rows: 1fr;
   gap: 22px;
 }
 
 body.common-home .dryzen-benefits-grid article {
+  --dryzen-accent: var(--dryzen-blue);
+  height: 100%;
   display: grid;
   grid-template-columns: 42px 1fr;
   column-gap: 16px;
+  border-top: 3px solid var(--dryzen-accent);
 }
+
+body.common-home .dryzen-benefits-grid article:nth-child(2) { --dryzen-accent: var(--dryzen-orange); }
+body.common-home .dryzen-benefits-grid article:nth-child(3) { --dryzen-accent: var(--dryzen-teal); }
+body.common-home .dryzen-benefits-grid article:nth-child(4) { --dryzen-accent: var(--dryzen-pink); }
 
 body.common-home .dryzen-benefits-grid article > span {
   grid-row: 1 / span 2;
-  color: var(--dryzen-blue);
+  color: var(--dryzen-accent);
   font-size: 13px;
   font-weight: 700;
 }
 
 body.common-home .dryzen-product-cta-card {
-  display: block;
-  border-top-color: var(--dryzen-line);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  border-top-color: var(--dryzen-accent);
   color: var(--dryzen-text);
   text-decoration: none;
 }
+
+body.common-home .dryzen-product-cta-card:nth-child(1) { --dryzen-accent: var(--dryzen-pink); }
+body.common-home .dryzen-product-cta-card:nth-child(2) { --dryzen-accent: var(--dryzen-orange); }
+body.common-home .dryzen-product-cta-card:nth-child(3) { --dryzen-accent: var(--dryzen-teal); }
 
 body.common-home .dryzen-product-cta-card img {
   aspect-ratio: 4 / 3;
 }
 
 body.common-home .dryzen-product-cta-card span {
-  display: block;
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  justify-content: center;
   padding: 20px 22px;
   background: #fff;
 }
@@ -875,7 +940,7 @@ body.common-home .dryzen-final-media img {
 
   body.common-home .dryzen-emotional { gap: 28px; }
   body.common-home .dryzen-emotional-media { border-radius: 20px; }
-  body.common-home .dryzen-emotional-media img { height: auto; aspect-ratio: 3 / 2; }
+  body.common-home .dryzen-emotional-media img { height: auto; min-height: 0; aspect-ratio: 3 / 2; }
   body.common-home .dryzen-emotional-copy { padding: 0; }
   body.common-home .dryzen-emotional-copy h2 { font-size: 27px; }
 
