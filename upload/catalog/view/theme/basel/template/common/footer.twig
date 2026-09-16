@@ -4,6 +4,20 @@
 <div class="container">
     {{ position_bottom }}
 </div>
+<section class="dryzen-global-newsletter" aria-labelledby="dryzen-newsletter-title">
+    <div class="container">
+        <div class="dryzen-newsletter">
+            <div class="dryzen-newsletter-copy">
+                <h2 id="dryzen-newsletter-title">{{ text_dryzen_newsletter_title }}</h2>
+                <p>{{ text_dryzen_newsletter_copy }}</p>
+            </div>
+            <div class="dryzen-newsletter-form">
+                {{ global_newsletter_form }}
+                <p class="dryzen-newsletter-note">{{ text_dryzen_newsletter_note }}</p>
+            </div>
+        </div>
+    </div>
+</section>
 <div id="footer">
 
 
@@ -18,7 +32,7 @@
                 <div class="row">
                     {% if custom_links %}
                         {% for column in basel_footer_columns %}
-                     <div class="footer-column col-xs-12 col-sm-3 {% if loop.first %}col-sm-offset-2{% endif %} eq_height">
+                     <div class="footer-column col-xs-12 col-sm-3 eq_height">
                                 {% if column.title %}
                                     <p class="h5">
                                         <a  role="button" data-toggle="collapse" href="#collapse{{ column.sort }}9" aria-expanded="false" aria-controls="collapse{{ column.sort }}9">
@@ -38,20 +52,15 @@
 
                                 </div>
 
-                                <script>
-                                    $(document).ready(function(){
-                                        if ($(window).width() <= 768) {
-                                            $("#collapse19").removeClass("in");
-                                            $("#collapse29").removeClass("in");
-                                            $("#collapse49").removeClass("in");
-                                        }
-                                    });
-                                </script>
-
-
-
                             </div>
                         {% endfor %}
+                        <script>
+                            $(document).ready(function(){
+                                if ($(window).width() <= 768) {
+                                    $("#footer .footer-column .collapse").removeClass("in");
+                                }
+                            });
+                        </script>
                     {% else %}
                         {% if informations %}
                             <div class="footer-column col-xs-6 col-sm-3 eq_height">

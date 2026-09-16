@@ -26,4 +26,7 @@ $_['text_customer_information'] = 'Customer information';
 $_['text_accepted_payment_methods'] = 'Accepted payment methods';
 $_['text_opens_new_window'] = 'opens in a new window';
 $_['text_back_to_top'] = 'Back to top';
+$_['text_dryzen_newsletter_title'] = 'Be among the first to know.';
+$_['text_dryzen_newsletter_copy'] = 'Sign up for the DryZen newsletter and receive information about new products, benefits and updates.';
+$_['text_dryzen_newsletter_note'] = 'By signing up, you agree to receive DryZen updates. You can unsubscribe at any time.';
 $_['text_powered']      = 'Powered By <a href="http://www.opencart.com">OpenCart</a><br /> %s &copy; %s';

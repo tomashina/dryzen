@@ -50,6 +50,19 @@ class ControllerCommonFooter extends Controller {
 		$data['text_accepted_payment_methods'] = $this->language->get('text_accepted_payment_methods');
 		$data['text_opens_new_window'] = $this->language->get('text_opens_new_window');
 		$data['text_back_to_top'] = $this->language->get('text_back_to_top');
+		$data['text_dryzen_newsletter_title'] = $this->language->get('text_dryzen_newsletter_title');
+		$data['text_dryzen_newsletter_copy'] = $this->language->get('text_dryzen_newsletter_copy');
+		$data['text_dryzen_newsletter_note'] = $this->language->get('text_dryzen_newsletter_note');
+
+		$this->load->language('basel/basel_theme');
+		$data['module'] = 48;
+		$data['widget_module'] = 48;
+		$data['newsletter_consent_mode'] = true;
+		$data['basel_subscribe_email'] = $this->language->get('basel_subscribe_email');
+		$data['basel_subscribe_btn'] = $this->language->get('basel_subscribe_btn');
+		$data['basel_subscribe_consent_label'] = $this->language->get('basel_subscribe_consent_label');
+		$data['basel_subscribe_consent_error'] = $this->language->get('basel_subscribe_consent_error');
+		$data['global_newsletter_form'] = $this->load->view('extension/module/content_widgets/subscribe_field', $data);
 
 		$data['powered'] = sprintf($this->language->get('text_powered'), $this->config->get('config_name'), date('Y', time()));
 		$data['config_email'] = $this->config->get('config_email');

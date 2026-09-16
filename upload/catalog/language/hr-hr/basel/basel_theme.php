@@ -38,7 +38,7 @@ $_['basel_text_success_form'] 			= 'Thank you! Your message was sent.';
 $_['basel_email_subject'] 				= 'New email from %';
 
 /// Newsletter Subscribe
-$_['basel_subscribe_email'] 			= 'Vaša email adresa';
+$_['basel_subscribe_email'] 			= 'Vaša e-mail adresa';
 $_['basel_subscribe_btn'] 				= 'Prijavi se';
 $_['basel_subscribe_consent_label'] 		= 'Pristajem na primanje newslettera i pohranu svoje e-mail adrese';
 $_['basel_subscribe_consent_error'] 		= 'Potvrdite privolu za primanje newslettera.';

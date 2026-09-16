@@ -1,0 +1,113 @@
+.dryzen-global-newsletter {
+  padding: 58px 0;
+  background: #fff;
+}
+
+.dryzen-global-newsletter .dryzen-newsletter {
+  max-width: 900px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.dryzen-global-newsletter .dryzen-newsletter-copy h2 {
+  margin: 0 0 14px;
+  color: #1f2933;
+  font-size: 30px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.dryzen-global-newsletter .dryzen-newsletter-copy > p,
+.dryzen-global-newsletter .dryzen-newsletter-note {
+  margin: 0;
+  color: #53606c;
+  font-size: 14px;
+  line-height: 1.65;
+}
+
+.dryzen-global-newsletter .dryzen-newsletter-copy > p {
+  max-width: 720px;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.dryzen-global-newsletter .dryzen-newsletter-form {
+  max-width: 760px;
+  margin: 24px auto 0;
+}
+
+.dryzen-global-newsletter .newsletter-wrap,
+.dryzen-global-newsletter .sign-up-field {
+  margin: 0;
+}
+
+.dryzen-global-newsletter .sign-up-field-inline {
+  display: flex;
+  gap: 18px;
+  align-items: center;
+}
+
+.dryzen-global-newsletter .sign-up-field-inline .form-control {
+  width: auto;
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.dryzen-global-newsletter .newsletter-submit-wrap {
+  flex: 0 0 190px;
+}
+
+.dryzen-global-newsletter .newsletter-submit-wrap .btn {
+  width: 100%;
+}
+
+.dryzen-global-newsletter .newsletter-consent {
+  display: block;
+  margin: 18px 0 0;
+  text-align: center;
+}
+
+.dryzen-global-newsletter .dryzen-newsletter-note {
+  margin-top: 12px;
+  font-size: 12px;
+}
+
+.dryzen-footer-brand strong,
+.dryzen-footer-brand span {
+  display: block;
+}
+
+.dryzen-footer-brand strong {
+  margin-bottom: 7px;
+  color: #1c7fbe;
+  font-size: 22px;
+}
+
+.dryzen-footer-socials {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 14px 0;
+}
+
+@media (max-width: 767px) {
+  .dryzen-global-newsletter {
+    padding: 44px 0;
+  }
+
+  .dryzen-global-newsletter .dryzen-newsletter {
+    max-width: 620px;
+  }
+
+  .dryzen-global-newsletter .dryzen-newsletter-copy h2 {
+    font-size: 26px;
+  }
+
+  .dryzen-global-newsletter .sign-up-field-inline {
+    display: block;
+  }
+
+  .dryzen-global-newsletter .newsletter-submit-wrap {
+    margin-top: 12px;
+  }
+}

@@ -27,5 +27,8 @@ $_['text_customer_information'] = 'Informacije za kupce';
 $_['text_accepted_payment_methods'] = 'Prihvaćeni načini plaćanja';
 $_['text_opens_new_window'] = 'otvara se u novom prozoru';
 $_['text_back_to_top'] = 'Na vrh';
+$_['text_dryzen_newsletter_title'] = 'Budite među prvima koji saznaju.';
+$_['text_dryzen_newsletter_copy'] = 'Prijavite se na DryZen newsletter i primajte informacije o novim proizvodima, pogodnostima i novostima.';
+$_['text_dryzen_newsletter_note'] = 'Prijavom prihvaćate primanje DryZen obavijesti. Odjava je moguća u bilo kojem trenutku.';
 //$_['text_powered']      = 'Powered By <a href="http://www.opencart.com">OpenCart</a><br /> %s &copy; %s';
 $_['text_powered']      = '<a href="https://www.agmedia.hr" target="agmedia">AG media</a><br /> %s &copy; %s';
