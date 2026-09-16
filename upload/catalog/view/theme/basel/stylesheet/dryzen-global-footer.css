@@ -97,8 +97,26 @@
 .dryzen-footer-socials {
   display: flex;
   flex-wrap: wrap;
-  gap: 12px;
-  margin: 14px 0;
+  gap: 16px;
+  align-items: center;
+  margin: 16px 0 18px;
+}
+
+.dryzen-footer-socials a {
+  width: 24px;
+  height: 24px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: inherit;
+  font-size: 18px;
+  line-height: 1;
+  text-decoration: none;
+}
+
+.dryzen-footer-socials a:hover,
+.dryzen-footer-socials a:focus {
+  color: #1c7fbe;
 }
 
 @media (max-width: 767px) {
