@@ -97,14 +97,14 @@
 .dryzen-footer-socials {
   display: flex;
   flex-wrap: wrap;
-  gap: 16px;
+  gap: 4px;
   align-items: center;
-  margin: 16px 0 18px;
+  margin: 8px 0 10px;
 }
 
 .dryzen-footer-socials a {
-  width: 24px;
-  height: 24px;
+  width: 40px;
+  height: 40px;
   display: inline-flex;
   align-items: center;
   justify-content: center;

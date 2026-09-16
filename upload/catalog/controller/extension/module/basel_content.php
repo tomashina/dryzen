@@ -194,7 +194,7 @@ class ControllerExtensionModuleBaselContent extends Controller {
                     $data1 = false;
                 }
 				
-				if (isset($column['data2'])){
+				if (isset($column['data2']) && trim((string) $column['data2']) !== ''){
 					$data2 = $server . 'image/' . $column['data2'];
                 } else {
                     $data2 = false;
@@ -206,7 +206,7 @@ class ControllerExtensionModuleBaselContent extends Controller {
                     $data3 = false;
                 }
 				
-				if (isset($column['data4'])){
+				if (isset($column['data4']) && trim((string) $column['data4']) !== ''){
 					$data4 = $server . 'image/' . $column['data4'];
                 } else {
                     $data4 = false;

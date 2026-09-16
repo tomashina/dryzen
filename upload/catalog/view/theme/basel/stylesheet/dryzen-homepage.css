@@ -21,9 +21,12 @@ body.common-home #mod7,
 body.common-home #mod8,
 body.common-home #mod9,
 body.common-home #mod10,
-body.common-home #mod11,
-body.common-home #mod12 {
+body.common-home #mod11 {
   margin-bottom: 96px !important;
+}
+
+body.common-home #mod12 {
+  margin-bottom: 0 !important;
 }
 
 body.common-home .widget.cm_module .widget-title {
@@ -873,8 +876,9 @@ body.common-home .dryzen-final-media img {
   body.common-home #mod8,
   body.common-home #mod9,
   body.common-home #mod10,
-  body.common-home #mod11,
-  body.common-home #mod12 { margin-bottom: 60px !important; }
+  body.common-home #mod11 { margin-bottom: 60px !important; }
+
+  body.common-home #mod12 { margin-bottom: 0 !important; }
 
   body.common-home .widget.cm_module .widget-title { margin-bottom: 24px; }
   body.common-home .widget.cm_module .main-title { font-size: 26px; }
@@ -921,6 +925,8 @@ body.common-home .dryzen-final-media img {
   body.common-home .dryzen-benefits-grid,
   body.common-home .dryzen-comparison { grid-template-columns: 1fr; }
 
+  body.common-home .dryzen-benefits-grid { grid-auto-rows: auto; }
+
   body.common-home .dryzen-how-layout { grid-template-columns: 1fr; gap: 24px; }
   body.common-home .dryzen-routine-visual { min-height: 0; aspect-ratio: 3 / 2; border-radius: 20px; }
 
@@ -952,7 +958,7 @@ body.common-home .dryzen-final-media img {
   body.common-home .dryzen-final-copy h2 { font-size: 30px; }
   body.common-home .dryzen-final-media,
   body.common-home .dryzen-final-media img { min-height: 0; }
-  body.common-home .dryzen-final-media img { aspect-ratio: 3 / 2; }
+  body.common-home .dryzen-final-media img { height: auto; aspect-ratio: 3 / 2; }
 
 }
 

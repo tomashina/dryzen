@@ -96,8 +96,12 @@ body.information-information-21 .dryzen-need-single-product .dryzen-need-product
   body.common-home #mod4 .widget-title,
   body.common-home #mod5 .widget-title,
   body.common-home #mod6 .widget-title,
-  body.common-home #mod7 .widget-title {
-    margin-bottom: 26px;
+  body.common-home #mod7 .widget-title,
+  body.common-home #mod8 .widget-title,
+  body.common-home #mod9 .widget-title,
+  body.common-home #mod10 .widget-title,
+  body.common-home #mod11 .widget-title {
+    margin-bottom: 24px;
   }
 
   body.common-home #mod2 .main-title,
@@ -105,8 +109,12 @@ body.information-information-21 .dryzen-need-single-product .dryzen-need-product
   body.common-home #mod4 .main-title,
   body.common-home #mod5 .main-title,
   body.common-home #mod6 .main-title,
-  body.common-home #mod7 .main-title {
-    font-size: 28px;
+  body.common-home #mod7 .main-title,
+  body.common-home #mod8 .main-title,
+  body.common-home #mod9 .main-title,
+  body.common-home #mod10 .main-title,
+  body.common-home #mod11 .main-title {
+    font-size: 26px;
     line-height: 1.15;
   }
 
@@ -210,10 +218,14 @@ body.information-information-21 .dryzen-need-single-product .dryzen-need-product
     line-height: 1.62;
   }
 
-  body.common-home #mod5,
-  body.common-home #mod7 {
+  body.common-home #mod5 {
     padding-top: 48px;
     padding-bottom: 48px;
+  }
+
+  body.common-home #mod7 {
+    padding-top: 0;
+    padding-bottom: 0;
   }
 
   body.common-home .dryzen-reasons li {
