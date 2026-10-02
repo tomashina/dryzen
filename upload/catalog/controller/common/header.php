@@ -34,7 +34,7 @@ class ControllerCommonHeader extends Controller {
 
 		$this->applyDryzenSeoDefaults($server);
 		$this->document->addStyle('catalog/view/theme/basel/stylesheet/dryzen-global-footer.css?v=20260916g');
-		$this->document->addStyle('catalog/view/theme/basel/stylesheet/dryzen-legal-guarantee.css?v=20261002e');
+		$this->document->addStyle($this->url->link('common/header/legalGuaranteeStylesheet', 'v=20261002f', true));
 
 		$data['title'] = $this->document->getTitle();
 
@@ -71,7 +71,7 @@ class ControllerCommonHeader extends Controller {
 		$data['text_legal_guarantee_alt'] = $this->language->get('text_legal_guarantee_alt');
 		$data['text_legal_guarantee_more'] = $this->language->get('text_legal_guarantee_more');
 		$data['text_legal_guarantee_close'] = $this->language->get('text_legal_guarantee_close');
-		$data['legal_guarantee_image'] = $server . 'image/catalog/legal/eu-legal-guarantee-hr.png';
+		$data['legal_guarantee_image'] = $this->url->link('common/header/legalGuaranteeImage', '', true);
 		$data['legal_guarantee_eu_url'] = 'https://europa.eu/youreurope/jamstva_hr';
 
 		// Wishlist
@@ -112,6 +112,32 @@ class ControllerCommonHeader extends Controller {
 		$data['mpgdpr_cbstatus'] = false;
 
 		return $this->load->view('common/header', $data);
+	}
+
+	public function legalGuaranteeImage() {
+		$path = DIR_IMAGE . 'catalog/legal/eu-legal-guarantee-hr.png';
+
+		if (!is_file($path) || !is_readable($path)) {
+			$this->response->addHeader('HTTP/1.1 404 Not Found');
+			return;
+		}
+
+		$this->response->addHeader('Content-Type: image/png');
+		$this->response->addHeader('Cache-Control: public, max-age=86400');
+		$this->response->setOutput(file_get_contents($path));
+	}
+
+	public function legalGuaranteeStylesheet() {
+		$path = DIR_APPLICATION . 'view/theme/basel/stylesheet/dryzen-legal-guarantee.css';
+
+		if (!is_file($path) || !is_readable($path)) {
+			$this->response->addHeader('HTTP/1.1 404 Not Found');
+			return;
+		}
+
+		$this->response->addHeader('Content-Type: text/css; charset=utf-8');
+		$this->response->addHeader('Cache-Control: public, max-age=86400');
+		$this->response->setOutput(file_get_contents($path));
 	}
 
 	private function applyDryzenSeoDefaults($server) {

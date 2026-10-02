@@ -483,7 +483,7 @@ class ControllerExtensionQuickCheckoutConfirm extends Controller {
 		$data['text_legal_guarantee_link'] = $this->language->get('text_legal_guarantee_link');
 		$data['text_withdrawal_rights_copy'] = $this->language->get('text_withdrawal_rights_copy');
 		$data['text_withdrawal_rights_link'] = $this->language->get('text_withdrawal_rights_link');
-		$data['legal_guarantee_image'] = rtrim((string)$server, '/') . '/image/catalog/legal/eu-legal-guarantee-hr.png';
+		$data['legal_guarantee_image'] = $this->url->link('common/header/legalGuaranteeImage', '', true);
 		$data['withdrawal_rights_url'] = $this->url->link('information/information', 'information_id=17', true);
 		
 		$this->response->setOutput($this->load->view('extension/quickcheckout/confirm', $data));

@@ -95,7 +95,7 @@ class ControllerMailOrder extends Controller {
 		$data['store_name'] = $order_info['store_name'];
 		$data['store_url'] = $order_info['store_url'];
 		$store_url = rtrim((string)$order_info['store_url'], '/') . '/';
-		$data['legal_guarantee_image'] = $store_url . 'image/catalog/legal/eu-legal-guarantee-hr.png';
+		$data['legal_guarantee_image'] = $store_url . 'index.php?route=common/header/legalGuaranteeImage';
 		$data['legal_guarantee_eu_url'] = 'https://europa.eu/youreurope/jamstva_hr';
 		$data['withdrawal_rights_url'] = $store_url . 'index.php?route=information/information&amp;information_id=17';
 		$data['customer_id'] = $order_info['customer_id'];

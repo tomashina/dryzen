@@ -45,7 +45,9 @@ if (!$image || $image[0] !== 1654 || $image[1] !== 2339 || $image['mime'] !== 'i
 }
 
 $header_controller = legalGuaranteeRead($root . '/upload/catalog/controller/common/header.php');
-legalGuaranteeContains($header_controller, 'image/catalog/legal/eu-legal-guarantee-hr.png', 'Header does not expose the official notice.');
+legalGuaranteeContains($header_controller, "DIR_IMAGE . 'catalog/legal/eu-legal-guarantee-hr.png'", 'Header does not expose the official notice.');
+legalGuaranteeContains($header_controller, 'public function legalGuaranteeImage()', 'Header does not provide the official notice endpoint.');
+legalGuaranteeContains($header_controller, 'public function legalGuaranteeStylesheet()', 'Header does not provide the legal-guarantee stylesheet endpoint.');
 legalGuaranteeContains($header_controller, 'https://europa.eu/youreurope/jamstva_hr', 'Header does not expose the official EU information URL.');
 
 foreach (array('basel', 'default') as $theme) {
