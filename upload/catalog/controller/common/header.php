@@ -34,7 +34,7 @@ class ControllerCommonHeader extends Controller {
 
 		$this->applyDryzenSeoDefaults($server);
 		$this->document->addStyle('catalog/view/theme/basel/stylesheet/dryzen-global-footer.css?v=20260916g');
-		$this->document->addStyle('catalog/view/theme/basel/stylesheet/dryzen-legal-guarantee.css?v=20261002d');
+		$this->document->addStyle('catalog/view/theme/basel/stylesheet/dryzen-legal-guarantee.css?v=20261002e');
 
 		$data['title'] = $this->document->getTitle();
 
