@@ -8,6 +8,19 @@
   text-align: center;
 }
 
+.dryzen-prefooter-guarantee > .container {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  text-align: center;
+}
+
+.dryzen-prefooter-guarantee .dryzen-legal-guarantee-trigger {
+  align-items: center;
+  display: inline-flex;
+  justify-content: center;
+}
+
 .dryzen-prefooter-guarantee + #footer {
   margin-top: 0;
 }
