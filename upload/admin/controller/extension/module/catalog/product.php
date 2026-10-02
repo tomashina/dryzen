@@ -2203,6 +2203,11 @@ class ControllerExtensionModuleCatalogProduct extends ControllerExtensionModuleP
 
 		$this->load->language('extension/module/catalog/product');
 
+		$data['text_anchor_prices'] = $this->language->get('text_anchor_prices');
+		$data['text_anchor_csv_help'] = $this->language->get('text_anchor_csv_help');
+		$data['button_anchor_csv_import'] = $this->language->get('button_anchor_csv_import');
+		$data['button_anchor_csv_template'] = $this->language->get('button_anchor_csv_template');
+
 		$this->load->model('catalog/product');
 		$this->load->model('extension/module/product_quick_edit');
 
@@ -2254,6 +2259,8 @@ class ControllerExtensionModuleCatalogProduct extends ControllerExtensionModuleP
 		$data['load'] = html_entity_decode($this->url->link('extension/module/product_quick_edit/load', 'user_token=' . $this->session->data['user_token'], true), ENT_QUOTES, 'UTF-8');
 		$data['settings'] = $this->url->link('extension/module/product_quick_edit/settings', $url, true);
 		$data['clear_cache'] = $this->url->link('extension/module/product_quick_edit/clear_cache', $url, true);
+		$data['anchor_price_import'] = $this->url->link('catalog/product/importAnchorPrices', 'user_token=' . $this->session->data['user_token'], true);
+		$data['anchor_price_template'] = $this->url->link('catalog/product/anchorPriceTemplate', 'user_token=' . $this->session->data['user_token'], true);
 		$data['update'] = html_entity_decode($this->url->link('extension/module/product_quick_edit/update', 'user_token=' . $this->session->data['user_token'], true), ENT_QUOTES, 'UTF-8');
 		$data['reload'] = html_entity_decode($this->url->link('extension/module/product_quick_edit/reload', 'user_token=' . $this->session->data['user_token'], true), ENT_QUOTES, 'UTF-8');
 		$data['filter'] = html_entity_decode($this->url->link('extension/module/product_quick_edit/filter', '', true), ENT_QUOTES, 'UTF-8');

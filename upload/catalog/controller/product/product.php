@@ -4,6 +4,7 @@ class ControllerProductProduct extends Controller {
 
 	public function index() {
 		$this->load->language('product/product');
+		$this->document->addStyle('catalog/view/theme/basel/stylesheet/dryzen-shop.css?v=20261002a');
 
 		$data['breadcrumbs'] = array();
 
@@ -368,6 +369,21 @@ class ControllerProductProduct extends Controller {
 				$data['price'] = false;
 
 				  $data['priceeur'] ='';
+			}
+
+			$data['anchor_price'] = false;
+			$data['anchor_price_date'] = '';
+			$data['anchor_price_label'] = '';
+
+			if (($this->customer->isLogged() || !$this->config->get('config_customer_price')) && !empty($product_info['anchor_price']) && (float)$product_info['anchor_price'] > 0) {
+				$data['anchor_price'] = $this->currency->format($this->tax->calculate($product_info['anchor_price'], $product_info['tax_class_id'], $this->config->get('config_tax')), $this->session->data['currency']);
+
+				if (!empty($product_info['anchor_price_date']) && $product_info['anchor_price_date'] !== '0000-00-00') {
+					$data['anchor_price_date'] = date($this->language->get('date_format_short'), strtotime($product_info['anchor_price_date']));
+					$data['anchor_price_label'] = sprintf($this->language->get('text_anchor_price_date'), $data['anchor_price_date']);
+				} else {
+					$data['anchor_price_label'] = $this->language->get('text_anchor_price');
+				}
 			}
 
 			if (!is_null($product_info['special']) && (float)$product_info['special'] >= 0) {

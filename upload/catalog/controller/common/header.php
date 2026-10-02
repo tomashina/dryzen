@@ -34,6 +34,7 @@ class ControllerCommonHeader extends Controller {
 
 		$this->applyDryzenSeoDefaults($server);
 		$this->document->addStyle('catalog/view/theme/basel/stylesheet/dryzen-global-footer.css?v=20260916g');
+		$this->document->addStyle('catalog/view/theme/basel/stylesheet/dryzen-legal-guarantee.css?v=20261002d');
 
 		$data['title'] = $this->document->getTitle();
 
@@ -65,6 +66,13 @@ class ControllerCommonHeader extends Controller {
 		$data['text_back_previous'] = $this->language->get('text_back_previous');
 		$data['text_account'] = $this->language->get('text_account');
 		$data['text_logout'] = $this->language->get('text_logout');
+		$data['text_legal_guarantee_link'] = $this->language->get('text_legal_guarantee_link');
+		$data['text_legal_guarantee_title'] = $this->language->get('text_legal_guarantee_title');
+		$data['text_legal_guarantee_alt'] = $this->language->get('text_legal_guarantee_alt');
+		$data['text_legal_guarantee_more'] = $this->language->get('text_legal_guarantee_more');
+		$data['text_legal_guarantee_close'] = $this->language->get('text_legal_guarantee_close');
+		$data['legal_guarantee_image'] = $server . 'image/catalog/legal/eu-legal-guarantee-hr.png';
+		$data['legal_guarantee_eu_url'] = 'https://europa.eu/youreurope/jamstva_hr';
 
 		// Wishlist
 		if ($this->customer->isLogged()) {

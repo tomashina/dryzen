@@ -16,6 +16,7 @@ $_['text_payment_method']   = 'Payment Method:';
 $_['text_comment']          = 'Order Comments';
 $_['text_history']          = 'Order History';
 $_['text_tracking_title']    = 'BOX NOW shipment tracking';
+$_['text_eurosender_tracking_title'] = 'Eurosender shipment tracking';
 $_['text_tracking_code']     = 'Parcel number:';
 $_['text_tracking_status']   = 'Shipment status:';
 $_['text_tracking_updated']  = 'Last updated:';

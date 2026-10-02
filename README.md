@@ -66,6 +66,96 @@ php scripts/test-boxnow-automation.php
 
 Test koristi lažne API/PDF/mail odgovore i ne kreira stvarne BOX NOW pošiljke.
 
+## Eurosender dostava
+
+OpenCart modul **Extensions > Extensions > Shipping > Eurosender** dohvaća
+aktualne Eurosender cijene za Standard, Priority i Express usluge. Modul je
+pripremljen za Eurosender Sandbox (`https://sandbox-api.eurosender.com`) i
+produkciju (`https://api.eurosender.com`). Sandbox i produkcijski API ključevi
+nisu zamjenjivi.
+
+API ključ ostaje isključivo u ignoriranoj datoteci `upload/env.php`:
+
+```php
+'eurosender' => [
+    'api_key' => 'SANDBOX_ILI_PRODUCTION_KLJUC',
+],
+```
+
+Dok proizvodi nemaju upisane stvarne mase i dimenzije, zadana procjena paketa
+je 20 × 15 × 10 cm, 0,20 kg ambalaže i 0,10 kg po artiklu, uz minimalnu
+obračunsku masu od 0,50 kg. Sve se vrijednosti mogu promijeniti u postavkama
+modula. Prije produkcije treba ih potvrditi vaganjem zapakiranih narudžbi.
+
+Kreiranje Eurosender pošiljke namjerno je ručna radnja na detalju narudžbe:
+API poziv stvara obvezu plaćanja. Admin najprije dobiva svježu cijenu, uslugu,
+iznos dostave naplaćen kupcu i razliku te ih mora izričito potvrditi. Neposredno
+prije naplativog zahtjeva modul još jednom dohvaća cijenu i validira podatke; ako
+cijena poraste makar 0,01 EUR, rezervacija se zaustavlja i traži novu potvrdu.
+Jednokratna potvrda vezana je uz narudžbu, admina i API okruženje. Modul koristi
+bazni lock protiv paralelnog dvostrukog kreiranja i nakon neodređenog timeouta
+ne pokušava automatski ponovno. Labela i tracking osvježavaju se kroz admin.
+
+Nakon postavljanja izmjena pokrenite idempotentnu migraciju:
+
+```bash
+mysql -u KORISNIK -p NAZIV_BAZE < database/migrations/20261002_eurosender_shipping.sql
+```
+
+Zatim instalirajte/uključite Eurosender u OpenCart administraciji. Sigurnosne
+detalje webhook potpisa Eurosender javno ne dokumentira, pa modul zasad koristi
+kontrolirano osvježavanje statusa umjesto nepotvrđenog webhook handlera.
+Nakon postavljanja datoteka osvježite OCMOD cache u administraciji ili pokrenite
+`php scripts/refresh-ocmod.php` kako bi se novi panel prikazao na narudžbi.
+
+## Digitalni XML/CSV cjenik
+
+OpenCart feed **Extensions > Extensions > Feeds > Digitalni XML/CSV cjenik**
+objavljuje aktivne proizvode s kodom, markom, jedinicom i jediničnom cijenom,
+aktualnom bruto i sidrenom cijenom, podacima o akciji/popustu, barkodom i
+dostupnošću. XML i CSV dostupni su na
+javnim URL-ovima prikazanima u postavkama feeda. Datoteke se generiraju u
+privatnom `DIR_STORAGE/digital_pricelist` direktoriju, izvan web-roota, a javni
+kontroler poslužuje samo verziju navedenu u atomarno zapisanom manifestu.
+
+Nakon deploya najprije primijenite migraciju sidrenih cijena, zatim u adminu
+otvorite **Extensions > Extensions**, odaberite **Feeds**, instalirajte
+**Digitalni XML/CSV cjenik**, spremite postavke i kliknite **Generiraj sada**.
+Produkcijski javni URL-ovi tada su:
+
+```bash
+mysql -u KORISNIK -p NAZIV_BAZE < database/migrations/20261002_anchor_prices.sql
+```
+
+```text
+https://www.dryzen.eu/index.php?route=extension/feed/digital_pricelist&format=xml
+https://www.dryzen.eu/index.php?route=extension/feed/digital_pricelist&format=csv
+```
+
+Pri instalaciji feed automatski izrađuje snažan tajni cron ključ. Za svakodnevno
+ažuriranje postavite prikazani zaštićeni cron URL na jedan HTTP GET dnevno
+(radnim danom primjerice u 07:30, prije 08:00). Prvi javni zahtjev u novom danu također pokreće osvježavanje
+ako cron nije izvršen. Svako uspješno generiranje ostaje kao nepromjenjivi XML i
+CSV snapshot; stare verzije čuvaju se i javno su dostupne najmanje 30 dana.
+Naziv datoteke sadrži oblik i adresu objekta, njegovu oznaku, redni broj pohrane
+i vrijeme objave. Neuspjelo osvježavanje ne
+uklanja prethodnu važeću verziju.
+
+Primjer sistemskog crona (ključ se kopira iz admina i ne objavljuje):
+
+```cron
+30 7 * * 1-5 curl --fail --silent --show-error 'https://www.dryzen.eu/index.php?route=extension/feed/digital_pricelist/cron&key=TAJNI_KLJUC_IZ_ADMINA' >/dev/null
+```
+
+Automatizirana provjera generatora pokreće se naredbom:
+
+```bash
+php scripts/test-digital-pricelist.php
+```
+
+Objedinjeni produkcijski postupak za ovaj paket nalazi se u
+[`docs/deployment-20261002.md`](docs/deployment-20261002.md).
+
 ## Istaknuta vrijednost proizvoda
 
 Za poruku o trajnosti/vrijednosti iznad cijene proizvoda pokrenite:

@@ -1,0 +1,117 @@
+.dryzen-prefooter-guarantee {
+  background: #fff;
+  color: #1f2933;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.35;
+  padding: 14px 16px;
+  text-align: center;
+}
+
+.dryzen-prefooter-guarantee + #footer {
+  margin-top: 0;
+}
+
+.dryzen-prefooter-guarantee a,
+.dryzen-prefooter-guarantee a:focus,
+.dryzen-prefooter-guarantee a:hover {
+  color: #1f2933;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.dryzen-prefooter-guarantee .fa {
+  margin-right: 6px;
+}
+
+.dryzen-legal-guarantee-modal .modal-dialog {
+  margin: 20px auto;
+  max-width: 760px;
+  width: calc(100% - 32px);
+}
+
+.dryzen-legal-guarantee-modal .modal-title {
+  font-size: 20px;
+  margin: 0;
+}
+
+.dryzen-legal-guarantee-modal .modal-body {
+  background: #fff;
+  padding: 18px;
+  text-align: center;
+}
+
+.dryzen-legal-guarantee-notice {
+  display: block;
+  height: auto;
+  margin: 0 auto;
+  max-width: 100%;
+  width: auto;
+}
+
+.dryzen-legal-guarantee-more {
+  font-weight: 600;
+  margin: 16px 0 0;
+}
+
+.dryzen-legal-guarantee-full-size {
+  font-weight: 700;
+  margin: 0 0 14px;
+}
+
+.dryzen-checkout-legal-rights {
+  background: #f4f7fc;
+  border: 1px solid #cad7ed;
+  border-left: 4px solid #003399;
+  border-radius: 3px;
+  margin: 16px 0;
+  padding: 14px 16px;
+}
+
+.dryzen-checkout-legal-rights p {
+  margin: 8px 0 0;
+}
+
+.dryzen-checkout-legal-rights .dryzen-legal-guarantee-trigger {
+  color: #003399;
+  display: inline-block;
+  font-weight: 700;
+  text-decoration: underline;
+}
+
+@media (max-width: 767px) {
+  .dryzen-prefooter-guarantee {
+    font-size: 13px;
+    padding: 12px;
+  }
+
+  .dryzen-legal-guarantee-modal .modal-dialog {
+    margin: 8px auto;
+    width: calc(100% - 16px);
+  }
+
+  .dryzen-legal-guarantee-modal .modal-body {
+    overflow-x: auto;
+    padding: 10px;
+    text-align: left;
+  }
+
+  .dryzen-legal-guarantee-notice {
+    margin: 0;
+    max-width: none;
+    width: 900px;
+  }
+
+  .dryzen-legal-guarantee-full-size,
+  .dryzen-legal-guarantee-more {
+    left: 0;
+    max-width: calc(100vw - 52px);
+    position: sticky;
+    text-align: center;
+  }
+
+  .dryzen-checkout-legal-rights {
+    margin: 12px 0;
+    padding: 12px;
+  }
+}

@@ -14,6 +14,9 @@ $_['text_order']          = 'Informacije o narudžbi';
 $_['text_product']        = 'Informacije o artiklu i razlog za povrat artikala';
 $_['text_history']        = 'Dodaj u povijest povrata artikala';
 $_['text_return_items']   = 'Artikli za povrat';
+$_['text_submitted_request'] = 'Podaci predani javnim obrascem';
+$_['text_type_withdrawal'] = 'Jednostrani raskid ugovora';
+$_['text_type_return']     = 'Povrat / zamjena / reklamacija artikala';
 
 // Column
 $_['column_return_id']     = 'Povrat artikla broj';
@@ -37,6 +40,8 @@ $_['entry_order_id']      = 'Narudžba broj';
 $_['entry_date_ordered']  = 'Datum narudžbe';
 $_['entry_invoice_number'] = 'Broj računa/narudžbe';
 $_['entry_invoice_date']   = 'Datum računa';
+$_['entry_request_type']    = 'Vrsta zahtjeva';
+$_['entry_declaration_at']  = 'Nedvosmislena izjava potvrđena';
 $_['entry_firstname']     = 'Ime';
 $_['entry_lastname']      = 'Prezime';
 $_['entry_email']         = 'E-mail';

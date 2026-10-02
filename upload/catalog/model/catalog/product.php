@@ -43,6 +43,8 @@ class ModelCatalogProduct extends Model {
 				'manufacturer'     => $query->row['manufacturer'],
 				'price'            => ($query->row['discount'] ? $query->row['discount'] : $query->row['price']),
 				'special'          => $query->row['special'],
+				'anchor_price'     => isset($query->row['anchor_price']) ? $query->row['anchor_price'] : 0,
+				'anchor_price_date' => isset($query->row['anchor_price_date']) ? $query->row['anchor_price_date'] : null,
 				'reward'           => $query->row['reward'],
 				'points'           => $query->row['points'],
 				'tax_class_id'     => $query->row['tax_class_id'],

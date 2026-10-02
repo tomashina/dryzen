@@ -1,0 +1,171 @@
+{{ header }}{{ column_left }}
+<div id="content">
+  <div class="page-header">
+    <div class="container-fluid">
+      <div class="pull-right">
+        <button type="button" id="button-generate" data-toggle="tooltip" title="{{ button_generate|escape }}" class="btn btn-info"><i class="fa fa-refresh"></i> {{ button_generate|escape }}</button>
+        <button type="submit" form="form-feed" data-toggle="tooltip" title="{{ button_save|escape }}" class="btn btn-primary"><i class="fa fa-save"></i></button>
+        <a href="{{ cancel|escape }}" data-toggle="tooltip" title="{{ button_cancel|escape }}" class="btn btn-default"><i class="fa fa-reply"></i></a>
+      </div>
+      <h1>{{ heading_title|escape }}</h1>
+      <ul class="breadcrumb">
+        {% for breadcrumb in breadcrumbs %}
+        <li><a href="{{ breadcrumb.href|escape }}">{{ breadcrumb.text|escape }}</a></li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+  <div class="container-fluid">
+    {% if error_warning %}
+    <div class="alert alert-danger alert-dismissible"><i class="fa fa-exclamation-circle"></i> {{ error_warning|escape }}
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+    </div>
+    {% endif %}
+    <div id="generation-result" class="alert" style="display:none"></div>
+
+    <div class="panel panel-default">
+      <div class="panel-heading"><h3 class="panel-title"><i class="fa fa-list-alt"></i> {{ text_edit|escape }}</h3></div>
+      <div class="panel-body">
+        <form action="{{ action|escape }}" method="post" enctype="multipart/form-data" id="form-feed" class="form-horizontal">
+          <div class="form-group">
+            <label class="col-sm-3 control-label" for="input-status">{{ entry_status|escape }}</label>
+            <div class="col-sm-9">
+              <select name="feed_digital_pricelist_status" id="input-status" class="form-control">
+                <option value="1"{% if feed_digital_pricelist_status %} selected="selected"{% endif %}>{{ text_enabled|escape }}</option>
+                <option value="0"{% if not feed_digital_pricelist_status %} selected="selected"{% endif %}>{{ text_disabled|escape }}</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-3 control-label" for="input-archive-days"><span data-toggle="tooltip" title="{{ help_archive_days|escape }}">{{ entry_archive_days|escape }}</span></label>
+            <div class="col-sm-9">
+              <input type="number" min="30" max="3650" name="feed_digital_pricelist_archive_days" value="{{ feed_digital_pricelist_archive_days|escape }}" id="input-archive-days" class="form-control" />
+              {% if error_archive_days %}<div class="text-danger">{{ error_archive_days|escape }}</div>{% endif %}
+            </div>
+          </div>
+
+          <fieldset>
+            <legend>{{ text_object_details|escape }}</legend>
+            <div class="alert alert-info"><i class="fa fa-info-circle"></i> {{ text_object_help|escape }}</div>
+            <div class="form-group">
+              <label class="col-sm-3 control-label" for="input-object-type">{{ entry_object_type|escape }}</label>
+              <div class="col-sm-9"><input type="text" name="feed_digital_pricelist_object_type" value="{{ feed_digital_pricelist_object_type|escape }}" id="input-object-type" maxlength="64" class="form-control" /></div>
+            </div>
+            <div class="form-group{% if error_object_address %} has-error{% endif %}">
+              <label class="col-sm-3 control-label" for="input-object-address">{{ entry_object_address|escape }}</label>
+              <div class="col-sm-9">
+                <input type="text" name="feed_digital_pricelist_object_address" value="{{ feed_digital_pricelist_object_address|escape }}" id="input-object-address" maxlength="255" class="form-control" />
+                {% if error_object_address %}<div class="text-danger">{{ error_object_address|escape }}</div>{% endif %}
+              </div>
+            </div>
+            <div class="form-group{% if error_object_designation %} has-error{% endif %}">
+              <label class="col-sm-3 control-label" for="input-object-designation">{{ entry_object_designation|escape }}</label>
+              <div class="col-sm-9">
+                <input type="text" name="feed_digital_pricelist_object_designation" value="{{ feed_digital_pricelist_object_designation|escape }}" id="input-object-designation" maxlength="64" class="form-control" />
+                {% if error_object_designation %}<div class="text-danger">{{ error_object_designation|escape }}</div>{% endif %}
+              </div>
+            </div>
+            <div class="form-group{% if error_unit %} has-error{% endif %}">
+              <label class="col-sm-3 control-label" for="input-unit">{{ entry_unit|escape }}</label>
+              <div class="col-sm-9">
+                <input type="text" name="feed_digital_pricelist_unit" value="{{ feed_digital_pricelist_unit|escape }}" id="input-unit" maxlength="16" class="form-control" />
+                {% if error_unit %}<div class="text-danger">{{ error_unit|escape }}</div>{% endif %}
+              </div>
+            </div>
+          </fieldset>
+
+          <fieldset>
+            <legend>{{ text_public_urls|escape }}</legend>
+            <div class="alert alert-info"><i class="fa fa-info-circle"></i> {{ text_archive_help|escape }}</div>
+            <div class="form-group">
+              <label class="col-sm-3 control-label" for="input-xml-url">{{ entry_xml_url|escape }}</label>
+              <div class="col-sm-9">
+                <div class="input-group">
+                  <input type="text" value="{{ xml_url|escape }}" id="input-xml-url" class="form-control" readonly="readonly" />
+                  <span class="input-group-btn"><button type="button" class="btn btn-default button-copy" data-target="input-xml-url"><i class="fa fa-copy"></i> {{ text_copy|escape }}</button></span>
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-sm-3 control-label" for="input-csv-url">{{ entry_csv_url|escape }}</label>
+              <div class="col-sm-9">
+                <div class="input-group">
+                  <input type="text" value="{{ csv_url|escape }}" id="input-csv-url" class="form-control" readonly="readonly" />
+                  <span class="input-group-btn"><button type="button" class="btn btn-default button-copy" data-target="input-csv-url"><i class="fa fa-copy"></i> {{ text_copy|escape }}</button></span>
+                </div>
+              </div>
+            </div>
+          </fieldset>
+
+          <fieldset>
+            <legend>{{ text_schedule|escape }}</legend>
+            <div class="alert alert-info"><i class="fa fa-clock-o"></i> {{ text_schedule_help|escape }}</div>
+            <div class="form-group">
+              <label class="col-sm-3 control-label" for="input-cron-key"><span data-toggle="tooltip" title="{{ help_cron_key|escape }}">{{ entry_cron_key|escape }}</span></label>
+              <div class="col-sm-9">
+                <input type="text" name="feed_digital_pricelist_cron_key" value="{{ feed_digital_pricelist_cron_key|escape }}" id="input-cron-key" class="form-control" autocomplete="off" />
+                {% if error_cron_key %}<div class="text-danger">{{ error_cron_key|escape }}</div>{% endif %}
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-sm-3 control-label" for="input-cron-url">{{ entry_cron_url|escape }}</label>
+              <div class="col-sm-9">
+                <div class="input-group">
+                  <input type="text" value="{{ cron_url|escape }}" id="input-cron-url" class="form-control" readonly="readonly" />
+                  <span class="input-group-btn"><button type="button" class="btn btn-default button-copy" data-target="input-cron-url"><i class="fa fa-copy"></i> {{ text_copy|escape }}</button></span>
+                </div>
+              </div>
+            </div>
+          </fieldset>
+        </form>
+
+        <fieldset>
+          <legend>{{ text_last_generation|escape }}</legend>
+          {% if pricelist_status.available %}
+          <p><strong>{{ text_last_generation|escape }}:</strong> <span id="last-generated-at">{{ pricelist_status.generated_at|escape }}</span></p>
+          <p><strong>{{ text_product_count|escape }}:</strong> <span id="last-product-count">{{ pricelist_status.product_count }}</span></p>
+          {% else %}
+          <p id="last-generation-empty">{{ text_never|escape }}</p>
+          <p class="hidden"><strong>{{ text_last_generation|escape }}:</strong> <span id="last-generated-at"></span></p>
+          <p class="hidden"><strong>{{ text_product_count|escape }}:</strong> <span id="last-product-count"></span></p>
+          {% endif %}
+        </fieldset>
+      </div>
+    </div>
+  </div>
+</div>
+<script type="text/javascript"><!--
+function showPricelistResult(success, message) {
+  $('#generation-result').removeClass('alert-success alert-danger').addClass(success ? 'alert-success' : 'alert-danger').text(message || '').show();
+  window.scrollTo(0, 0);
+}
+
+$('#button-generate').on('click', function() {
+  var button = $(this);
+  button.prop('disabled', true).find('i').addClass('fa-spin');
+  $.ajax({url: '{{ generate_url|replace({'&amp;': '&'}) }}', type: 'post', dataType: 'json'})
+    .done(function(json) {
+      showPricelistResult(!!json.success, json.message || '');
+      if (json.success) {
+        $('#last-generation-empty').remove();
+        $('#last-generated-at').text(json.generated_at || '').closest('p').removeClass('hidden');
+        $('#last-product-count').text(json.product_count || 0).closest('p').removeClass('hidden');
+      }
+    })
+    .fail(function(xhr) { showPricelistResult(false, 'HTTP ' + xhr.status + '.'); })
+    .always(function() { button.prop('disabled', false).find('i').removeClass('fa-spin'); });
+});
+
+$('.button-copy').on('click', function() {
+  var input = document.getElementById($(this).data('target'));
+  input.select();
+  input.setSelectionRange(0, 99999);
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(input.value);
+  } else {
+    document.execCommand('copy');
+  }
+  showPricelistResult(true, '{{ text_copied|e('js') }}');
+});
+//--></script>
+{{ footer }}

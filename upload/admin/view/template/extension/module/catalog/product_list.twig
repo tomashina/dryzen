@@ -422,6 +422,31 @@
 	</div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 
+<div class="modal fade" id="modal-anchor-price-import" tabindex="-1" role="dialog" aria-labelledby="anchor-price-import-title">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<form action="{{ anchor_price_import }}" method="post" enctype="multipart/form-data">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="{{ button_cancel }}"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title" id="anchor-price-import-title">{{ text_anchor_prices }}</h4>
+				</div>
+				<div class="modal-body">
+					<p>{{ text_anchor_csv_help }}</p>
+					<div class="form-group required">
+						<label class="control-label" for="input-anchor-price-csv">CSV</label>
+						<input type="file" name="anchor_price_csv" id="input-anchor-price-csv" accept=".csv,text/csv" class="form-control" required>
+					</div>
+					<p><a href="{{ anchor_price_template }}"><i class="fa fa-download"></i> {{ button_anchor_csv_template }}</a></p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">{{ button_cancel }}</button>
+					<button type="submit" class="btn btn-primary"><i class="fa fa-upload"></i> {{ button_anchor_csv_import }}</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+
 {{ column_left }}
 <div id="content">
 	<div class="page-header">
@@ -439,6 +464,8 @@
 						<li><a href="{{ clear_cache }}" id="clearCache">{{ text_clear_cache }}</a></li>
 					</ul>
 				</div>
+				<a href="{{ anchor_price_template }}" class="btn btn-default" data-toggle="tooltip" data-container="body" data-placement="bottom" title="{{ button_anchor_csv_template }}"><i class="fa fa-download"></i></a>
+				<button type="button" class="btn btn-default" data-toggle="modal" data-target="#modal-anchor-price-import" title="{{ button_anchor_csv_import }}"><i class="fa fa-upload"></i></button>
 				<button type="button" class="btn btn-primary" data-toggle="tooltip" data-container="body" data-placement="bottom" title="{{ button_add }}" data-url="{{ add }}" id="btn-insert" data-form="#pqe-list-form" data-context="#content"><i class="fa fa-plus"></i></button>
 				<button type="button" class="btn btn-default" data-toggle="tooltip" data-container="body" data-placement="bottom" title="{{ button_copy }}" data-url="{{ copy }}" id="btn-copy" data-form="#pqe-list-form" data-context="#content" data-loading-text="<i class='fa fa-spinner fa-spin'></i>" disabled><i class="fa fa-files-o"></i></button>
 				<button type="button" class="btn btn-danger" data-toggle="tooltip" data-container="body" data-placement="bottom" title="{{ button_delete }}" data-url="{{ delete }}" id="btn-delete" data-form="#pqe-list-form" data-context="#content" data-loading-text="<i class='fa fa-spinner fa-spin'></i>" disabled><i class="fa fa-trash-o"></i></button>

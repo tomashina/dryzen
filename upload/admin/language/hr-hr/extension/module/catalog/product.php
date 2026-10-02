@@ -6,6 +6,8 @@ $_['heading_title'] = 'Artikli';
 $_['text_settings'] = 'Postavke';
 $_['text_search'] = 'Pretraživanje';
 $_['text_list'] = 'Popis proizvoda';
+$_['text_anchor_prices'] = 'Sidrene cijene';
+$_['text_anchor_csv_help'] = 'Učitajte CSV odvojen zarezom ili točka-zarezom sa stupcem product_id, model, SKU ili EAN te stupcima anchor_price i anchor_price_date. Cijela datoteka provjerava se prije izmjene proizvoda.';
 $_['text_items_per_page'] = 'Artikala po stranici';
 $_['text_choose_columns'] = 'Odaberi stupce';
 $_['text_other_settings'] = 'Ostale postavke';
@@ -222,6 +224,10 @@ $_['entry_weight'] = 'Težina';
 $_['entry_store'] = 'Trgovina';
 $_['entry_keyword'] = 'Ključna riječ';
 $_['entry_gross_price'] = 'Bruto cijena';
+
+// Gumbi
+$_['button_anchor_csv_import'] = 'Uvezi sidrene cijene';
+$_['button_anchor_csv_template'] = 'Preuzmi CSV predložak';
 
 // Pomozite
 $_['help_price_relative_to'] = 'Kada koristite relativno brzo uređivanje za cijene Akcije i popuste, izračunajte nove vrijednosti u odnosu na odabranu vrijednost';

@@ -206,6 +206,86 @@ class ControllerSaleReturn extends Controller {
 		$this->getList();
 	}
 
+	public function export() {
+		$this->load->language('sale/return');
+
+		if (!$this->user->hasPermission('access', 'sale/return')) {
+			$this->session->data['error'] = $this->language->get('error_permission');
+			$this->response->redirect($this->url->link('sale/return', 'user_token=' . $this->session->data['user_token'], true));
+			return;
+		}
+
+		$selected = isset($this->request->post['selected']) ? (array)$this->request->post['selected'] : array();
+
+		if (!$selected) {
+			$this->session->data['error'] = $this->language->get('error_export_selected');
+			$this->response->redirect($this->url->link('sale/return', 'user_token=' . $this->session->data['user_token'], true));
+			return;
+		}
+
+		$this->load->model('sale/return');
+		$this->load->library('return_request');
+		$rows = array();
+
+		foreach ($this->model_sale_return->getReturnsForExport($selected) as $return_info) {
+			$fallback = array(array(
+				'name' => $return_info['product'],
+				'code' => $return_info['model'],
+				'quantity' => $return_info['quantity'],
+				'price' => ''
+			));
+			$items = $this->return_request->decodeItems($return_info['return_items'], $fallback);
+
+			foreach ($items as $item) {
+				$rows[] = array(
+					$return_info['return_id'],
+					$return_info['request_type'] === 'return' ? $this->language->get('text_type_return') : $this->language->get('text_type_withdrawal'),
+					$return_info['invoice_number'] !== '' ? $return_info['invoice_number'] : $return_info['order_id'],
+					$return_info['invoice_date'],
+					trim($return_info['firstname'] . ' ' . $return_info['lastname']),
+					$return_info['email'],
+					$return_info['telephone'],
+					$item['name'],
+					$item['code'],
+					$item['quantity'],
+					$item['price'],
+					$return_info['reason'],
+					$return_info['refund_iban'],
+					$return_info['comment'],
+					$return_info['return_status'],
+					$return_info['declaration_at'],
+					$return_info['date_added']
+				);
+			}
+		}
+
+		$headers = array(
+			$this->language->get('column_return_id'),
+			$this->language->get('entry_request_type'),
+			$this->language->get('entry_invoice_number'),
+			$this->language->get('entry_invoice_date'),
+			$this->language->get('column_customer'),
+			$this->language->get('entry_email'),
+			$this->language->get('entry_telephone'),
+			$this->language->get('entry_product'),
+			$this->language->get('column_product_code'),
+			$this->language->get('column_quantity'),
+			$this->language->get('column_price'),
+			$this->language->get('entry_return_reason'),
+			$this->language->get('entry_refund_iban'),
+			$this->language->get('entry_comment'),
+			$this->language->get('column_status'),
+			$this->language->get('entry_declaration_at'),
+			$this->language->get('column_date_added')
+		);
+
+		$filename = 'return-requests-' . date('Y-m-d-His') . '.csv';
+		$this->response->addHeader('Content-Type: text/csv; charset=UTF-8');
+		$this->response->addHeader('Content-Disposition: attachment; filename="' . $filename . '"');
+		$this->response->addHeader('X-Content-Type-Options: nosniff');
+		$this->response->setOutput("\xEF\xBB\xBF" . $this->return_request->buildCsv($rows, $headers));
+	}
+
 	protected function getList() {
 		if (isset($this->request->get['filter_return_id'])) {
 			$filter_return_id = $this->request->get['filter_return_id'];
@@ -333,6 +413,7 @@ class ControllerSaleReturn extends Controller {
 
 		$data['add'] = $this->url->link('sale/return/add', 'user_token=' . $this->session->data['user_token'] . $url, true);
 		$data['delete'] = $this->url->link('sale/return/delete', 'user_token=' . $this->session->data['user_token'] . $url, true);
+		$data['export'] = $this->url->link('sale/return/export', 'user_token=' . $this->session->data['user_token'] . $url, true);
 
 		$data['returns'] = array();
 
@@ -528,6 +609,8 @@ class ControllerSaleReturn extends Controller {
 
 		$data['user_token'] = $this->session->data['user_token'];
 
+		$return_info = array();
+
 		if (isset($this->request->get['return_id'])) {
 			$data['return_id'] = (int)$this->request->get['return_id'];
 		} else {
@@ -648,9 +731,23 @@ class ControllerSaleReturn extends Controller {
 
 		$data['cancel'] = $this->url->link('sale/return', 'user_token=' . $this->session->data['user_token'] . $url, true);
 
-		if (isset($this->request->get['return_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
+		if (isset($this->request->get['return_id'])) {
 			$return_info = $this->model_sale_return->getReturn($this->request->get['return_id']);
 		}
+
+		$this->load->library('return_request');
+		$data['request_type'] = !empty($return_info['request_type']) ? $return_info['request_type'] : '';
+		$data['request_type_label'] = !empty($return_info['request_type']) && $return_info['request_type'] === 'return' ? $this->language->get('text_type_return') : $this->language->get('text_type_withdrawal');
+		$data['invoice_number'] = !empty($return_info['invoice_number']) ? $return_info['invoice_number'] : '';
+		$data['invoice_date'] = !empty($return_info['invoice_date']) && $return_info['invoice_date'] !== '0000-00-00' ? $return_info['invoice_date'] : '';
+		$data['refund_iban'] = !empty($return_info['refund_iban']) ? $return_info['refund_iban'] : '';
+		$data['declaration_at'] = !empty($return_info['declaration_at']) ? $return_info['declaration_at'] : '';
+		$data['return_items'] = !empty($return_info) ? $this->return_request->decodeItems($return_info['return_items'], array(array(
+			'name' => $return_info['product'],
+			'code' => $return_info['model'],
+			'quantity' => $return_info['quantity'],
+			'price' => ''
+		))) : array();
 
 		if (isset($this->request->post['order_id'])) {
 			$data['order_id'] = $this->request->post['order_id'];
@@ -812,7 +909,7 @@ class ControllerSaleReturn extends Controller {
 			$this->error['warning'] = $this->language->get('error_permission');
 		}
 
-		if (empty($this->request->post['order_id'])) {
+		if (empty($this->request->post['order_id']) && empty($this->request->post['invoice_number'])) {
 			$this->error['order_id'] = $this->language->get('error_order_id');
 		}
 
@@ -832,15 +929,15 @@ class ControllerSaleReturn extends Controller {
 			$this->error['telephone'] = $this->language->get('error_telephone');
 		}
 
-		if ((utf8_strlen($this->request->post['product']) < 1) || (utf8_strlen($this->request->post['product']) > 255)) {
+		if (empty($this->request->post['invoice_number']) && ((utf8_strlen($this->request->post['product']) < 1) || (utf8_strlen($this->request->post['product']) > 255))) {
 			$this->error['product'] = $this->language->get('error_product');
 		}
 
-		if ((utf8_strlen($this->request->post['model']) < 1) || (utf8_strlen($this->request->post['model']) > 64)) {
+		if (empty($this->request->post['invoice_number']) && ((utf8_strlen($this->request->post['model']) < 1) || (utf8_strlen($this->request->post['model']) > 64))) {
 			$this->error['model'] = $this->language->get('error_model');
 		}
 
-		if (empty($this->request->post['return_reason_id'])) {
+		if (empty($this->request->post['return_reason_id']) && (!isset($this->request->post['request_type']) || $this->request->post['request_type'] !== 'withdrawal')) {
 			$this->error['reason'] = $this->language->get('error_reason');
 		}
 
@@ -878,7 +975,7 @@ class ControllerSaleReturn extends Controller {
 			$data['histories'][] = array(
 				'notify'     => $result['notify'] ? $this->language->get('text_yes') : $this->language->get('text_no'),
 				'status'     => $result['status'],
-				'comment'    => nl2br($result['comment']),
+				'comment'    => nl2br(htmlspecialchars($result['comment'], ENT_QUOTES, 'UTF-8')),
 				'date_added' => date($this->language->get('date_format_short'), strtotime($result['date_added']))
 			);
 		}

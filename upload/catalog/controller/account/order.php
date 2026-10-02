@@ -44,6 +44,7 @@ class ControllerAccountOrder extends Controller {
 
 		$this->load->model('account/order');
 		$this->load->model('extension/shipping/boxnow');
+		$this->load->model('extension/shipping/eurosender');
 
 		$order_total = $this->model_account_order->getTotalOrders();
 
@@ -54,6 +55,19 @@ class ControllerAccountOrder extends Controller {
 			$voucher_total = $this->model_account_order->getTotalOrderVouchersByOrderId($result['order_id']);
 			$shipment = $this->model_extension_shipping_boxnow->getShipmentByOrderId($result['order_id']);
 			$tracking_code = !empty($shipment['parcel_id']) ? $shipment['parcel_id'] : '';
+			$tracking_url = $this->model_extension_shipping_boxnow->getTrackingUrl($tracking_code);
+			$tracking_status = $tracking_code !== '' ? $this->model_extension_shipping_boxnow->getStatusLabel(isset($shipment['status']) ? $shipment['status'] : '') : '';
+			$eurosender_shipment = array();
+
+			if (strpos($result['shipping_code'], 'eurosender.') === 0) {
+				$eurosender_shipment = $this->model_extension_shipping_eurosender->getShipmentByOrderId($result['order_id']);
+			}
+
+			if (!empty($eurosender_shipment['order_code'])) {
+				$tracking_code = !empty($eurosender_shipment['tracking_number']) ? $eurosender_shipment['tracking_number'] : $eurosender_shipment['order_code'];
+				$tracking_url = $this->model_extension_shipping_eurosender->getTrackingUrl($eurosender_shipment);
+				$tracking_status = $this->model_extension_shipping_eurosender->getStatusLabel(isset($eurosender_shipment['status']) ? $eurosender_shipment['status'] : '');
+			}
 
 			$data['orders'][] = array(
 				'order_id'   => $result['order_id'],
@@ -63,8 +77,8 @@ class ControllerAccountOrder extends Controller {
 				'products'   => ($product_total + $voucher_total),
 				'total'      => $this->currency->format($result['total'], $result['currency_code'], $result['currency_value']),
 				'tracking_code'   => $tracking_code,
-				'tracking_url'    => $this->model_extension_shipping_boxnow->getTrackingUrl($tracking_code),
-				'tracking_status' => $tracking_code !== '' ? $this->model_extension_shipping_boxnow->getStatusLabel(isset($shipment['status']) ? $shipment['status'] : '') : '',
+				'tracking_url'    => $tracking_url,
+				'tracking_status' => $tracking_status,
 				'view'       => $this->url->link('account/order/info', 'order_id=' . $result['order_id'], true),
 			);
 		}
@@ -108,6 +122,7 @@ class ControllerAccountOrder extends Controller {
 
 		$this->load->model('account/order');
 		$this->load->model('extension/shipping/boxnow');
+		$this->load->model('extension/shipping/eurosender');
 
 		$order_info = $this->model_account_order->getOrder($order_id);
 
@@ -252,6 +267,18 @@ class ControllerAccountOrder extends Controller {
 					'url'           => $this->model_extension_shipping_boxnow->getTrackingUrl($tracking_code),
 					'status'        => $this->model_extension_shipping_boxnow->getStatusLabel(isset($shipment['status']) ? $shipment['status'] : ''),
 					'date_modified' => !empty($shipment['date_modified']) ? date($this->language->get('date_format_short') . ' H:i', strtotime($shipment['date_modified'])) : ''
+				);
+			}
+
+			$eurosender_shipment = $this->model_extension_shipping_eurosender->getShipmentByOrderId($order_id);
+			$data['eurosender_tracking'] = array();
+
+			if (!empty($eurosender_shipment['order_code'])) {
+				$data['eurosender_tracking'] = array(
+					'code'          => !empty($eurosender_shipment['tracking_number']) ? $eurosender_shipment['tracking_number'] : $eurosender_shipment['order_code'],
+					'url'           => $this->model_extension_shipping_eurosender->getTrackingUrl($eurosender_shipment),
+					'status'        => $this->model_extension_shipping_eurosender->getStatusLabel(isset($eurosender_shipment['status']) ? $eurosender_shipment['status'] : ''),
+					'date_modified' => !empty($eurosender_shipment['date_modified']) ? date($this->language->get('date_format_short') . ' H:i', strtotime($eurosender_shipment['date_modified'])) : ''
 				);
 			}
 

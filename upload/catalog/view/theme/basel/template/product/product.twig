@@ -125,8 +125,8 @@
         <span id="special_countdown"></span>
         {% endif %}
       </ul>
- {% if special %}
-      <p class="dryzen-lowest-price">{{ basel_text_out_of_stock == 'Sold out' ? 'Lowest price in the last 30 days:' : 'Najniža cijena u zadnjih 30 dana:' }} {{ price }}</p>
+	 {% if anchor_price %}
+      <p class="dryzen-anchor-price"><strong>{{ anchor_price_label }}</strong> <span>{{ anchor_price }}</span></p>
 {% endif %}
 
     

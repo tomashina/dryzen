@@ -13,6 +13,9 @@ $_['text_order']          = 'Order Information';
 $_['text_product']        = 'Product Information &amp; Reason for Return';
 $_['text_history']        = 'Add Return History';
 $_['text_return_items']   = 'Return Items';
+$_['text_submitted_request'] = 'Information submitted through the public form';
+$_['text_type_withdrawal'] = 'Withdrawal from the contract';
+$_['text_type_return']     = 'Product return / exchange / complaint';
 
 // Column
 $_['column_return_id']     = 'Return ID';
@@ -36,6 +39,8 @@ $_['entry_order_id']      = 'Order ID';
 $_['entry_date_ordered']  = 'Order Date';
 $_['entry_invoice_number'] = 'Invoice/Order Number';
 $_['entry_invoice_date']   = 'Invoice Date';
+$_['entry_request_type']    = 'Request Type';
+$_['entry_declaration_at']  = 'Unequivocal declaration confirmed';
 $_['entry_firstname']     = 'First Name';
 $_['entry_lastname']      = 'Last Name';
 $_['entry_email']         = 'E-Mail';

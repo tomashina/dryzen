@@ -189,6 +189,92 @@
 	  </div>
 	</div>
 	{% endif %}
+	{% if eurosender_tracking_panel %}
+	<div class="panel panel-default" id="eurosender-shipment">
+	  <div class="panel-heading">
+		<h3 class="panel-title"><i class="fa fa-truck"></i> {{ eurosender_tracking_panel.text_title }}</h3>
+	  </div>
+	  <div class="panel-body">
+		{% if not eurosender_tracking_panel.configured %}
+		<div class="alert alert-warning eurosender-alert"><i class="fa fa-key"></i> {{ eurosender_tracking_panel.text_api_missing }}</div>
+		{% endif %}
+		{% if eurosender_tracking_panel.unsafe_state %}
+		<div class="alert alert-danger eurosender-alert"><i class="fa fa-exclamation-circle"></i> {{ eurosender_tracking_panel.text_unknown_warning }}</div>
+		{% elseif eurosender_tracking_panel.creation_error and not eurosender_tracking_panel.created %}
+		<div class="alert alert-danger eurosender-alert"><i class="fa fa-exclamation-circle"></i> {{ eurosender_tracking_panel.creation_error|escape }}</div>
+		{% endif %}
+		{% if eurosender_tracking_panel.tracking_error %}
+		<div class="alert alert-warning eurosender-alert"><i class="fa fa-exclamation-triangle"></i> {{ eurosender_tracking_panel.tracking_error|escape }}</div>
+		{% endif %}
+		{% if eurosender_tracking_panel.label_error %}
+		<div class="alert alert-warning eurosender-alert"><i class="fa fa-exclamation-triangle"></i> {{ eurosender_tracking_panel.label_error|escape }}</div>
+		{% endif %}
+		{% if eurosender_tracking_panel.created %}
+		<div class="table-responsive">
+		  <table class="table table-bordered">
+			<tbody>
+			  <tr>
+				<td style="width: 25%;"><strong>{{ eurosender_tracking_panel.text_order_code }}</strong></td>
+				<td><strong>{{ eurosender_tracking_panel.order_code|escape }}</strong></td>
+			  </tr>
+			  {% if eurosender_tracking_panel.tracking_code %}
+			  <tr>
+				<td><strong>{{ eurosender_tracking_panel.text_tracking_code }}</strong></td>
+				<td>{% if eurosender_tracking_panel.tracking_url %}<a href="{{ eurosender_tracking_panel.tracking_url|escape }}" target="_blank" rel="noopener"><strong>{{ eurosender_tracking_panel.tracking_code|escape }}</strong></a>{% else %}<strong>{{ eurosender_tracking_panel.tracking_code|escape }}</strong>{% endif %}</td>
+			  </tr>
+			  {% endif %}
+			  <tr>
+				<td><strong>{{ eurosender_tracking_panel.text_status }}</strong></td>
+				<td>{{ eurosender_tracking_panel.status|escape }}</td>
+			  </tr>
+			  {% if eurosender_tracking_panel.environment %}
+			  <tr>
+				<td><strong>{{ eurosender_tracking_panel.text_environment }}</strong></td>
+				<td>{{ eurosender_tracking_panel.environment|escape }}</td>
+			  </tr>
+			  {% endif %}
+			  {% if eurosender_tracking_panel.quote_price %}
+			  <tr>
+				<td><strong>{{ eurosender_tracking_panel.text_quote_price }}</strong></td>
+				<td>{{ eurosender_tracking_panel.quote_price|escape }}</td>
+			  </tr>
+			  {% endif %}
+			  {% if eurosender_tracking_panel.booked_price %}
+			  <tr>
+				<td><strong>{{ eurosender_tracking_panel.text_booked_price }}</strong></td>
+				<td>{{ eurosender_tracking_panel.booked_price|escape }}</td>
+			  </tr>
+			  {% endif %}
+			  {% if eurosender_tracking_panel.price_difference %}
+			  <tr{% if eurosender_tracking_panel.price_increased %} class="warning"{% endif %}>
+				<td><strong>{{ eurosender_tracking_panel.text_price_difference }}</strong></td>
+				<td>{{ eurosender_tracking_panel.price_difference|escape }}</td>
+			  </tr>
+			  {% endif %}
+			  {% if eurosender_tracking_panel.date_modified %}
+			  <tr>
+				<td><strong>{{ eurosender_tracking_panel.text_updated }}</strong></td>
+				<td>{{ eurosender_tracking_panel.date_modified|escape }}</td>
+			  </tr>
+			  {% endif %}
+			</tbody>
+		  </table>
+		</div>
+		<div class="btn-group">
+		  {% if eurosender_tracking_panel.tracking_url %}<a href="{{ eurosender_tracking_panel.tracking_url|escape }}" target="_blank" rel="noopener" class="btn btn-primary"><i class="fa fa-map-marker"></i> {{ eurosender_tracking_panel.button_track }}</a>{% endif %}
+		  {% if eurosender_tracking_panel.can_label %}<a href="{{ eurosender_tracking_panel.label_url|escape }}" target="_blank" rel="noopener" class="btn btn-info"><i class="fa fa-file-pdf-o"></i> {{ eurosender_tracking_panel.button_label }}</a>{% endif %}
+		  {% if eurosender_tracking_panel.can_refresh %}<button type="button" id="button-eurosender-refresh" data-url="{{ eurosender_tracking_panel.refresh_url|escape }}" data-loading-text="{{ eurosender_tracking_panel.text_loading|escape }}" class="btn btn-default"><i class="fa fa-refresh"></i> {{ eurosender_tracking_panel.button_refresh }}</button>{% endif %}
+		</div>
+		{% else %}
+		<p>{{ eurosender_tracking_panel.text_not_created }}</p>
+		{% if eurosender_tracking_panel.can_create and eurosender_tracking_panel.configured %}
+		<div class="alert alert-warning"><i class="fa fa-exclamation-triangle"></i> {{ eurosender_tracking_panel.text_booking_warning }}</div>
+		<button type="button" id="button-eurosender-create" data-preview-url="{{ eurosender_tracking_panel.preview_url|escape }}" data-create-url="{{ eurosender_tracking_panel.create_url|escape }}" data-preview-error="{{ eurosender_tracking_panel.error_preview_response|escape }}" data-loading-text="{{ eurosender_tracking_panel.text_loading|escape }}" class="btn btn-danger"><i class="fa fa-truck"></i> {{ eurosender_tracking_panel.button_create }}</button>
+		{% endif %}
+		{% endif %}
+	  </div>
+	</div>
+	{% endif %}
 	<div class="panel panel-default">
       <div class="panel-heading">
         <h3 class="panel-title"><i class="fa fa-info-circle"></i> {{ text_order }}</h3>
@@ -465,6 +551,114 @@
 	  },
 	  error: function(xhr, ajaxOptions, thrownError) {
 		alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+	  }
+	});
+  });
+
+  function showEurosenderAlert(level, message) {
+	var icon = level === 'success' ? 'fa-check-circle' : (level === 'warning' ? 'fa-exclamation-triangle' : 'fa-exclamation-circle');
+	var alert = $('<div>', {'class': 'alert alert-' + level + ' eurosender-alert'});
+
+	$('<i>', {'class': 'fa ' + icon}).appendTo(alert);
+	alert.append(document.createTextNode(' '));
+	$('<span>').text(message).appendTo(alert);
+	alert.prependTo('#eurosender-shipment .panel-body');
+  }
+
+  $(document).delegate('#button-eurosender-refresh', 'click', function() {
+	var button = $(this);
+
+	$.ajax({
+	  url: button.data('url'),
+	  type: 'post',
+	  dataType: 'json',
+	  beforeSend: function() {
+		button.button('loading');
+	  },
+	  complete: function() {
+		button.button('reset');
+	  },
+	  success: function(json) {
+		$('#eurosender-shipment .eurosender-alert').remove();
+
+		if (json['error']) {
+		  showEurosenderAlert('danger', json['error']);
+		  return;
+		}
+
+		if (json['success']) {
+		  showEurosenderAlert('success', json['success']);
+		  window.setTimeout(function() { window.location.reload(); }, 700);
+		}
+	  },
+	  error: function(xhr, ajaxOptions, thrownError) {
+		showEurosenderAlert('danger', thrownError + "\r\n" + xhr.statusText);
+	  }
+	});
+  });
+
+  $(document).delegate('#button-eurosender-create', 'click', function() {
+	var button = $(this);
+
+	$.ajax({
+	  url: button.data('preview-url'),
+	  type: 'post',
+	  dataType: 'json',
+	  beforeSend: function() {
+		button.button('loading');
+		$('#eurosender-shipment .eurosender-alert').remove();
+	  },
+	  success: function(json) {
+		if (json['error']) {
+		  showEurosenderAlert('danger', json['error']);
+		  button.button('reset');
+		  return;
+		}
+
+		if (!json['confirmation_token'] || !json['confirmation']) {
+		  showEurosenderAlert('danger', button.data('preview-error'));
+		  button.button('reset');
+		  return;
+		}
+
+		if (!window.confirm(json['confirmation'])) {
+		  button.button('reset');
+		  return;
+		}
+
+		$.ajax({
+		  url: button.data('create-url'),
+		  type: 'post',
+		  data: {confirmation_token: json['confirmation_token']},
+		  dataType: 'json',
+		  complete: function() {
+			button.button('reset');
+		  },
+		  success: function(result) {
+			$('#eurosender-shipment .eurosender-alert').remove();
+
+			if (result['error']) {
+			  showEurosenderAlert('danger', result['error']);
+			  return;
+			}
+
+			if (result['warning']) {
+			  showEurosenderAlert('warning', result['warning']);
+			}
+
+			if (result['success']) {
+			  showEurosenderAlert('success', result['success']);
+			  window.setTimeout(function() { window.location.reload(); }, result['warning'] ? 1800 : 700);
+			}
+		  },
+		  error: function(xhr, ajaxOptions, thrownError) {
+			showEurosenderAlert('danger', thrownError + "\r\n" + xhr.statusText);
+		  }
+		});
+	  },
+	  error: function(xhr, ajaxOptions, thrownError) {
+		showEurosenderAlert('danger', thrownError + "\r\n" + xhr.statusText);
+		button.button('reset');
 	  }
 	});
   });

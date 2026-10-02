@@ -85,10 +85,19 @@ class ControllerMailOrder extends Controller {
 		$data['text_price'] = $language->get('text_price');
 		$data['text_total'] = $language->get('text_total');
 		$data['text_footer'] = $language->get('text_footer');
+		$data['text_legal_guarantee_heading'] = $language->get('text_legal_guarantee_heading');
+		$data['text_legal_guarantee_intro'] = $language->get('text_legal_guarantee_intro');
+		$data['text_legal_guarantee_more'] = $language->get('text_legal_guarantee_more');
+		$data['text_withdrawal_heading'] = $language->get('text_withdrawal_heading');
+		$data['text_withdrawal_intro'] = $language->get('text_withdrawal_intro');
 
 		$data['logo'] = $order_info['store_url'] . 'image/' . $this->config->get('config_logo');
 		$data['store_name'] = $order_info['store_name'];
 		$data['store_url'] = $order_info['store_url'];
+		$store_url = rtrim((string)$order_info['store_url'], '/') . '/';
+		$data['legal_guarantee_image'] = $store_url . 'image/catalog/legal/eu-legal-guarantee-hr.png';
+		$data['legal_guarantee_eu_url'] = 'https://europa.eu/youreurope/jamstva_hr';
+		$data['withdrawal_rights_url'] = $store_url . 'index.php?route=information/information&amp;information_id=17';
 		$data['customer_id'] = $order_info['customer_id'];
 		$data['link'] = $order_info['store_url'] . 'index.php?route=account/order/info&order_id=' . $order_info['order_id'];
 
@@ -469,6 +478,12 @@ class ControllerMailOrder extends Controller {
 		$mail->setText($this->orderHtmlToText($html));
 		$mail->setHtml($html);
 		$mail->setSinglePartHtml($single_part_html);
+
+		$legal_notice = defined('DIR_IMAGE') ? rtrim(DIR_IMAGE, '/\\') . '/catalog/legal/eu-legal-guarantee-hr.png' : '';
+
+		if ($legal_notice !== '' && is_file($legal_notice) && is_readable($legal_notice)) {
+			$mail->addAttachment($legal_notice);
+		}
 
 		return $mail;
 	}

@@ -102,6 +102,26 @@ class ModelSaleReturn extends Model {
 		return $query->rows;
 	}
 
+	public function getReturnsForExport($return_ids) {
+		$ids = array();
+
+		foreach ((array)$return_ids as $return_id) {
+			$return_id = (int)$return_id;
+
+			if ($return_id > 0) {
+				$ids[$return_id] = $return_id;
+			}
+		}
+
+		if (!$ids) {
+			return array();
+		}
+
+		$query = $this->db->query("SELECT r.*, (SELECT rr.name FROM " . DB_PREFIX . "return_reason rr WHERE rr.return_reason_id = r.return_reason_id AND rr.language_id = '" . (int)$this->config->get('config_language_id') . "') AS reason, (SELECT rs.name FROM " . DB_PREFIX . "return_status rs WHERE rs.return_status_id = r.return_status_id AND rs.language_id = '" . (int)$this->config->get('config_language_id') . "') AS return_status FROM `" . DB_PREFIX . "return` r WHERE r.return_id IN (" . implode(',', $ids) . ") ORDER BY r.return_id DESC");
+
+		return $query->rows;
+	}
+
 	public function getTotalReturns($data = array()) {
 		$sql = "SELECT COUNT(*) AS total FROM `" . DB_PREFIX . "return`r";
 

@@ -57,6 +57,9 @@
     {% endif %}
   </div>
   {% endif %}
+  {% if product.anchor_price %}
+  <p class="dryzen-anchor-price"><strong>{{ product.anchor_price_label }}</strong> <span>{{ product.anchor_price }}</span></p>
+  {% endif %}
 
   <div class="dryzen-card-purchase">
     <div class="dryzen-card-qty" aria-label="{{ dryzen_english_labels ? 'Quantity' : 'Količina' }}">
@@ -87,6 +90,10 @@
 
     
 </div>
+
+{% if product.anchor_price %}
+<p class="dryzen-anchor-price"><strong>{{ product.anchor_price_label }}</strong> <span>{{ product.anchor_price }}</span></p>
+{% endif %}
 
 
  </div>

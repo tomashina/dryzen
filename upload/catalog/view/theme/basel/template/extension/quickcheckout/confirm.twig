@@ -49,7 +49,10 @@
 		</tfoot>
 	  </table>
 	</div>
-	<p class="otp-order-rights-note">{{ text_order_rights_copy }} <a href="index.php?route=information/information&amp;information_id=17" target="_blank" rel="noopener">{{ text_order_rights_link }}</a>.</p>
+	<div class="dryzen-checkout-legal-rights">
+	  <a class="dryzen-legal-guarantee-trigger" href="{{ legal_guarantee_image }}" aria-controls="dryzen-legal-guarantee-modal"><i class="fa fa-shield" aria-hidden="true"></i> {{ text_legal_guarantee_link }}</a>
+	  <p>{{ text_withdrawal_rights_copy }} <a href="{{ withdrawal_rights_url }}" target="_blank" rel="noopener">{{ text_withdrawal_rights_link }}</a></p>
+	</div>
   {% endif %}
   {% if payment_code == 'corvuspay' %}
     {% include 'basel/template/common/payment-security.twig' %}

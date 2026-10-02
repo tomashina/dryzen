@@ -37,9 +37,9 @@
               <td class="hidden-xs hidden-sm">{{ order.products }}</td>
 			  <td class="hidden-xs hidden-sm">{{ order.status }}
 				{% if order.tracking_code %}
-				<br><small><strong>{{ text_tracking_code }}</strong> {{ order.tracking_code }}</small>
-				{% if order.tracking_status %}<br><small>{{ order.tracking_status }}</small>{% endif %}
-				{% if order.tracking_url %}<br><a href="{{ order.tracking_url }}" target="_blank" rel="noopener" class="btn btn-xs btn-default" style="margin-top: 5px;">{{ button_track_shipment }}</a>{% endif %}
+					<br><small><strong>{{ text_tracking_code }}</strong> {{ order.tracking_code|escape }}</small>
+					{% if order.tracking_status %}<br><small>{{ order.tracking_status|escape }}</small>{% endif %}
+					{% if order.tracking_url %}<br><a href="{{ order.tracking_url|escape }}" target="_blank" rel="noopener" class="btn btn-xs btn-default" style="margin-top: 5px;">{{ button_track_shipment }}</a>{% endif %}
 				{% endif %}
 			  </td>
               <td class="text-right hidden-xs hidden-sm">{{ order.total }}</td>

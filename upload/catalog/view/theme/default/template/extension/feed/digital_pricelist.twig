@@ -1,0 +1,37 @@
+{{ header }}
+<div class="container">
+  <ul class="breadcrumb">
+    {% for breadcrumb in breadcrumbs %}<li><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>{% endfor %}
+  </ul>
+  <div class="row">
+    {{ column_left }}
+    {% if column_left and column_right %}{% set class = 'col-sm-6' %}{% elseif column_left or column_right %}{% set class = 'col-sm-9' %}{% else %}{% set class = 'col-sm-12' %}{% endif %}
+    <main id="content" class="{{ class }}">
+      {{ content_top }}
+      <h1>{{ heading_title }}</h1>
+      <p class="lead">{{ text_intro }}</p>
+      {% if generated_at %}<p class="text-muted">{{ text_last_updated|format(generated_at) }}</p>{% endif %}
+      <div class="row">
+        <div class="col-sm-6"><div class="well"><h2>{{ text_xml_title }}</h2><p>{{ text_xml_copy }}</p><a class="btn btn-primary" href="{{ xml_url }}">{{ text_open }} XML</a></div></div>
+        <div class="col-sm-6"><div class="well"><h2>{{ text_csv_title }}</h2><p>{{ text_csv_copy }}</p><a class="btn btn-primary" href="{{ csv_url }}">{{ text_open }} CSV</a></div></div>
+      </div>
+      <h2>{{ text_archive_title }}</h2>
+      <p>{{ text_archive_intro }}</p>
+      {% if archive %}
+      <div class="table-responsive">
+        <table class="table table-bordered table-striped">
+          <thead><tr><th>{{ text_archive_date }}</th><th>{{ text_formats }}</th></tr></thead>
+          <tbody>
+          {% for snapshot in archive %}
+            <tr><td>{{ snapshot.generated_at }}</td><td>{% if snapshot.xml_url %}<a href="{{ snapshot.xml_url }}">XML</a>{% endif %}{% if snapshot.xml_url and snapshot.csv_url %} &middot; {% endif %}{% if snapshot.csv_url %}<a href="{{ snapshot.csv_url }}">CSV</a>{% endif %}</td></tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% else %}<p class="text-muted">{{ text_archive_empty }}</p>{% endif %}
+      {{ content_bottom }}
+    </main>
+    {{ column_right }}
+  </div>
+</div>
+{{ footer }}

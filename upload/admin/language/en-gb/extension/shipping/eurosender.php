@@ -1,0 +1,134 @@
+<?php
+// Heading
+$_['heading_title'] = 'Eurosender';
+
+// Text
+$_['text_extension']               = 'Extensions';
+$_['text_success']                 = 'Success: You have modified Eurosender shipping!';
+$_['text_edit']                    = 'Edit Eurosender Shipping';
+$_['text_enabled']                 = 'Enabled';
+$_['text_disabled']                = 'Disabled';
+$_['text_all_zones']               = 'All Zones';
+$_['text_none']                    = 'None';
+$_['text_api_settings']            = 'API connection';
+$_['text_service_settings']        = 'Services';
+$_['text_package_settings']        = 'Default parcel';
+$_['text_pricing_settings']        = 'Pricing';
+$_['text_origin_settings']         = 'Pickup address and contact';
+$_['text_general_settings']        = 'General';
+$_['text_api_key_ready']           = 'The Eurosender API key is configured securely in OC_ENV.';
+$_['text_api_key_missing']         = 'The Eurosender API key is not configured. Add OC_ENV[\'eurosender\'][\'api_key\'] to env.php before enabling live quotes.';
+$_['text_sandbox']                 = 'Sandbox';
+$_['text_production']              = 'Production';
+$_['text_service_selection']       = 'Standard (selection)';
+$_['text_service_regular_plus']    = 'Priority (regular_plus)';
+$_['text_service_express']         = 'Priority Express (express)';
+$_['text_credit']                  = 'Credit';
+$_['text_deferred']                = 'Deferred';
+$_['text_fixed']                   = 'Fixed amount (EUR)';
+$_['text_percent']                 = 'Percentage';
+$_['text_shipment_created']         = 'The Eurosender shipment was created. The API call is recorded as a chargeable booking.';
+$_['text_shipment_exists']          = 'A Eurosender shipment already exists for this order.';
+$_['text_tracking_refreshed']       = 'Eurosender tracking was refreshed.';
+$_['text_price_changed']            = 'The final booking price differs from the fresh quote by %s %s.';
+$_['text_eurosender_shipment']       = 'Eurosender shipment';
+$_['text_order_code']                = 'Eurosender order code';
+$_['text_tracking_number']           = 'Tracking number';
+$_['text_shipment_status']           = 'Status';
+$_['text_environment']               = 'Environment';
+$_['text_quote_price']               = 'Fresh quote';
+$_['text_booked_price']              = 'Booked price';
+$_['text_price_difference']          = 'Price difference';
+$_['text_updated']                   = 'Last refresh';
+$_['text_not_created']               = 'The shipment has not been booked with Eurosender yet.';
+$_['text_booking_warning']           = 'Creating a shipment sends a chargeable API request to Eurosender. Check the address, phone number and selected service before confirming.';
+$_['text_booking_price_confirmation'] = 'Eurosender %s quoted %s %s. The customer was charged %s %s for delivery (difference %s %s). Confirm booking up to the quoted amount? If the price increases, the module will stop.';
+$_['text_booking_price_only_confirmation'] = 'Eurosender %s quoted %s %s. Confirm booking up to that amount? If the price increases, the module will stop.';
+$_['text_unknown_warning']           = 'The previous request has an uncertain outcome. Do not retry until you manually check the Eurosender account; retrying could cause a duplicate charge.';
+$_['text_api_missing']               = 'The API key is not set in upload/env.php. Booking is unavailable.';
+$_['button_create_shipment']         = 'Check price and book shipment';
+$_['button_refresh_tracking']        = 'Refresh tracking';
+$_['button_label']                   = 'Open label';
+$_['button_track']                   = 'Track shipment';
+
+// Shipment statuses
+$_['status_validating']           = 'Validating data';
+$_['status_creating']             = 'Creating shipment';
+$_['status_created']              = 'Created';
+$_['status_info_received']        = 'Shipment information received';
+$_['status_in_transit']           = 'In transit';
+$_['status_out_for_delivery']     = 'Out for delivery';
+$_['status_attempt_failed']       = 'Delivery attempt failed';
+$_['status_delivered']            = 'Delivered';
+$_['status_available_for_pickup'] = 'Available for pickup';
+$_['status_exception']            = 'Delivery exception';
+$_['status_expired']              = 'Shipment expired';
+$_['status_pending']              = 'Pending';
+$_['status_order_received']       = 'Shipping order received';
+$_['status_deferred_payment']     = 'Deferred payment approved';
+$_['status_awaiting_payment']     = 'Awaiting payment';
+$_['status_awaiting_customs']     = 'Awaiting customs documentation';
+$_['status_awaiting_pickup']      = 'Awaiting pickup';
+$_['status_pickup_confirmed']     = 'Pickup confirmed';
+$_['status_collected']            = 'Collected';
+$_['status_confirmed']            = 'Shipment confirmed';
+$_['status_cancelled']            = 'Cancelled';
+$_['status_returned']             = 'Returned';
+$_['status_failed']               = 'Failed';
+$_['status_error']                = 'Error – retry is allowed';
+$_['status_unknown']              = 'Creation outcome unknown – manual check required';
+$_['status_unavailable']          = 'Status is not available yet';
+
+// Entry
+$_['entry_environment']            = 'Environment';
+$_['entry_service_types']          = 'Allowed services';
+$_['entry_payment_method']         = 'Payment method';
+$_['entry_length']                 = 'Length (cm)';
+$_['entry_width']                  = 'Width (cm)';
+$_['entry_height']                 = 'Height (cm)';
+$_['entry_packaging_weight']       = 'Packaging weight (kg)';
+$_['entry_fallback_item_weight']   = 'Fallback item weight (kg)';
+$_['entry_minimum_weight']         = 'Minimum parcel weight (kg)';
+$_['entry_content']                = 'Parcel content';
+$_['entry_markup_type']            = 'Markup type';
+$_['entry_markup_value']           = 'Markup value';
+$_['entry_fallback_rate']          = 'Fallback rate (EUR)';
+$_['entry_origin_name']            = 'Person or company name';
+$_['entry_origin_email']           = 'Email';
+$_['entry_origin_phone']           = 'Phone';
+$_['entry_origin_address_1']       = 'Address line 1';
+$_['entry_origin_address_2']       = 'Address line 2';
+$_['entry_origin_city']            = 'City';
+$_['entry_origin_postcode']        = 'Postcode';
+$_['entry_origin_country_code']    = 'Country code';
+$_['entry_tax_class']              = 'Tax class';
+$_['entry_geo_zone']               = 'Geo zone';
+$_['entry_status']                 = 'Status';
+$_['entry_sort_order']             = 'Sort order';
+
+// Help
+$_['help_environment']             = 'Use sandbox while testing. Switch to production only with a production API key.';
+$_['help_service_types']           = 'Only selected services returned by Eurosender will be shown at checkout.';
+$_['help_fallback_item_weight']    = 'Used per unit when a product does not have a positive catalog weight.';
+$_['help_minimum_weight']          = 'The calculated parcel is never sent to Eurosender below this weight.';
+$_['help_content']                 = 'Short description sent with the parcel quote request.';
+$_['help_markup']                  = 'Added to each successful Eurosender gross quote.';
+$_['help_fallback_rate']           = 'Optional gross EUR price shown if the API is unavailable. Leave blank to hide Eurosender instead.';
+$_['help_tax_class']               = 'Eurosender returns gross prices, so checkout does not apply this tax class again. The setting is retained for OpenCart configuration compatibility.';
+
+// Error
+$_['error_permission']             = 'Warning: You do not have permission to modify Eurosender shipping!';
+$_['error_environment']            = 'Please select a valid Eurosender environment.';
+$_['error_service_types']          = 'Select at least one Eurosender service.';
+$_['error_payment_method']         = 'Please select a valid payment method.';
+$_['error_markup_type']            = 'Please select a valid markup type.';
+$_['error_positive_number']        = 'Dimensions and minimum weight must be positive numbers.';
+$_['error_non_negative_number']    = 'Weights and markup must be zero or greater.';
+$_['error_fallback_rate']          = 'Fallback rate must be blank or a number equal to or greater than zero.';
+$_['error_country_code']           = 'Pickup country must be a two-letter ISO country code.';
+$_['error_origin_contact']         = 'Contact name and phone are required when Eurosender is enabled.';
+$_['error_origin_email']           = 'A valid contact email is required when Eurosender is enabled.';
+$_['error_origin_address']         = 'Pickup address, city and postcode are required when Eurosender is enabled.';
+$_['error_post_required']           = 'This Eurosender action is only allowed through a secure POST request.';
+$_['error_order_id']                = 'A valid order ID is required.';
+$_['error_preview_response']         = 'Eurosender did not return a valid price confirmation. Please try again.';

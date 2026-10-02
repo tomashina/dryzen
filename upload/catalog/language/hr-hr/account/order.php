@@ -17,6 +17,7 @@ $_['text_payment_method']   = 'Način plaćanja:';
 $_['text_comment']          = 'Komentari uz narudžbu';
 $_['text_history']          = 'Povijest narudžbe';
 $_['text_tracking_title']    = 'Praćenje BOX NOW pošiljke';
+$_['text_eurosender_tracking_title'] = 'Praćenje Eurosender pošiljke';
 $_['text_tracking_code']     = 'Broj pošiljke:';
 $_['text_tracking_status']   = 'Status pošiljke:';
 $_['text_tracking_updated']  = 'Zadnje ažuriranje:';

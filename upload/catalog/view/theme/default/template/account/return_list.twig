@@ -33,10 +33,10 @@
           {% for return in returns %}
           <tr>
             <td class="text-right">#{{ return.return_id }}</td>
-            <td class="text-left">{{ return.status }}</td>
-            <td class="text-left">{{ return.date_added }}</td>
-            <td class="text-right">{{ return.order_id }}</td>
-            <td class="text-left">{{ return.name }}</td>
+            <td class="text-left">{{ return.status|escape }}</td>
+            <td class="text-left">{{ return.date_added|escape }}</td>
+            <td class="text-right">{{ return.order_id|escape }}</td>
+            <td class="text-left">{{ return.name|escape }}</td>
             <td class="text-right"><a href="{{ return.href }}" data-toggle="tooltip" title="{{ button_view }}" class="btn btn-info"><i class="fa fa-eye"></i></a></td>
           </tr>
           {% endfor %}
@@ -57,4 +57,4 @@
       {{ content_bottom }}</div>
     {{ column_right }}</div>
 </div>
-{{ footer }} 
+{{ footer }}

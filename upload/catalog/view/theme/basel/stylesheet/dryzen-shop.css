@@ -433,3 +433,39 @@ html body .dryzen-shop-card .caption > .product-subtitle {
     transition: none;
   }
 }
+
+.dryzen-anchor-price {
+  display: block;
+  max-width: 100%;
+  margin: 7px 0 12px;
+  color: #5d6871;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+
+.dryzen-anchor-price strong {
+  color: inherit;
+  font-weight: 600;
+}
+
+.dryzen-shop-card .dryzen-anchor-price {
+  margin: -8px 0 14px;
+  text-align: left;
+}
+
+.product-info .dryzen-anchor-price,
+#product-product .dryzen-anchor-price {
+  margin-top: 8px;
+  font-size: 14px;
+}
+
+@media (max-width: 767px) {
+  .dryzen-anchor-price,
+  .product-info .dryzen-anchor-price,
+  #product-product .dryzen-anchor-price {
+    font-size: 12px;
+    line-height: 1.45;
+  }
+}

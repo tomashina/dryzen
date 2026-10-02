@@ -271,6 +271,59 @@ class ControllerCatalogProduct extends Controller {
 		$this->getList();
 	}
 
+	public function importAnchorPrices() {
+		$this->load->language('catalog/product');
+		$this->document->setTitle($this->language->get('heading_title'));
+		$this->load->model('catalog/product');
+
+		if (!$this->user->hasPermission('modify', 'catalog/product')) {
+			$this->error['warning'] = $this->language->get('error_permission');
+		} elseif ($this->request->server['REQUEST_METHOD'] !== 'POST') {
+			$this->error['warning'] = $this->language->get('error_anchor_csv_invalid_request');
+		} elseif (!isset($this->request->files['anchor_price_csv']) || (int)$this->request->files['anchor_price_csv']['error'] !== UPLOAD_ERR_OK) {
+			$this->error['warning'] = $this->language->get('error_anchor_csv_upload');
+		} elseif ((int)$this->request->files['anchor_price_csv']['size'] > 2 * 1024 * 1024) {
+			$this->error['warning'] = $this->language->get('error_anchor_csv_size');
+		} elseif (strtolower(pathinfo($this->request->files['anchor_price_csv']['name'], PATHINFO_EXTENSION)) !== 'csv') {
+			$this->error['warning'] = $this->language->get('error_anchor_csv_extension');
+		} elseif (!is_uploaded_file($this->request->files['anchor_price_csv']['tmp_name'])) {
+			$this->error['warning'] = $this->language->get('error_anchor_csv_upload');
+		} else {
+			try {
+				require_once(DIR_SYSTEM . 'library/anchor_price/csv_importer.php');
+				$importer = new DryzenAnchorPriceCsvImporter(date('Y-m-d'));
+				$rows = $importer->parse($this->request->files['anchor_price_csv']['tmp_name']);
+				$rows = $this->resolveAnchorPriceRows($rows);
+				$this->model_catalog_product->importAnchorPrices($rows);
+				$this->session->data['success'] = sprintf($this->language->get('text_anchor_csv_success'), count($rows));
+				$this->response->redirect($this->url->link('catalog/product', 'user_token=' . $this->session->data['user_token'], true));
+				return;
+			} catch (DryzenAnchorPriceCsvException $exception) {
+				$this->error['warning'] = $this->formatAnchorPriceCsvError($exception);
+			} catch (Throwable $exception) {
+				$this->log->write('Anchor price CSV import failed: ' . $exception->getMessage());
+				$this->error['warning'] = $this->language->get('error_anchor_csv_failed');
+			}
+		}
+
+		$this->getList();
+	}
+
+	public function anchorPriceTemplate() {
+		$this->load->language('catalog/product');
+
+		if (!$this->user->hasPermission('access', 'catalog/product')) {
+			$this->response->addHeader($this->request->server['SERVER_PROTOCOL'] . ' 403 Forbidden');
+			$this->response->setOutput($this->language->get('error_permission'));
+			return;
+		}
+
+		$this->response->addHeader('Content-Type: text/csv; charset=UTF-8');
+		$this->response->addHeader('Content-Disposition: attachment; filename="sidrene-cijene-predlozak.csv"');
+		$this->response->addHeader('X-Content-Type-Options: nosniff');
+		$this->response->setOutput("\xEF\xBB\xBFmodel;anchor_price;anchor_price_date\r\n");
+	}
+
 	protected function getList() {
 		if (isset($this->request->get['filter_name'])) {
 			$filter_name = $this->request->get['filter_name'];
@@ -365,6 +418,8 @@ class ControllerCatalogProduct extends Controller {
 		$data['add'] = $this->url->link('catalog/product/add', 'user_token=' . $this->session->data['user_token'] . $url, true);
 		$data['copy'] = $this->url->link('catalog/product/copy', 'user_token=' . $this->session->data['user_token'] . $url, true);
 		$data['delete'] = $this->url->link('catalog/product/delete', 'user_token=' . $this->session->data['user_token'] . $url, true);
+		$data['anchor_price_import'] = $this->url->link('catalog/product/importAnchorPrices', 'user_token=' . $this->session->data['user_token'], true);
+		$data['anchor_price_template'] = $this->url->link('catalog/product/anchorPriceTemplate', 'user_token=' . $this->session->data['user_token'], true);
 
 		$data['products'] = array();
 
@@ -560,6 +615,18 @@ class ControllerCatalogProduct extends Controller {
 			$data['error_model'] = $this->error['model'];
 		} else {
 			$data['error_model'] = '';
+		}
+
+		if (isset($this->error['anchor_price'])) {
+			$data['error_anchor_price'] = $this->error['anchor_price'];
+		} else {
+			$data['error_anchor_price'] = '';
+		}
+
+		if (isset($this->error['anchor_price_date'])) {
+			$data['error_anchor_price_date'] = $this->error['anchor_price_date'];
+		} else {
+			$data['error_anchor_price_date'] = '';
 		}
 
 		if (isset($this->error['keyword'])) {
@@ -758,6 +825,22 @@ class ControllerCatalogProduct extends Controller {
 			$data['price'] = $product_info['price'];
 		} else {
 			$data['price'] = '';
+		}
+
+		if (isset($this->request->post['anchor_price'])) {
+			$data['anchor_price'] = $this->request->post['anchor_price'];
+		} elseif (!empty($product_info) && isset($product_info['anchor_price']) && (float)$product_info['anchor_price'] > 0) {
+			$data['anchor_price'] = $product_info['anchor_price'];
+		} else {
+			$data['anchor_price'] = '';
+		}
+
+		if (isset($this->request->post['anchor_price_date'])) {
+			$data['anchor_price_date'] = $this->request->post['anchor_price_date'];
+		} elseif (!empty($product_info) && !empty($product_info['anchor_price_date']) && $product_info['anchor_price_date'] !== '0000-00-00') {
+			$data['anchor_price_date'] = $product_info['anchor_price_date'];
+		} else {
+			$data['anchor_price_date'] = '';
 		}
 
 		$this->load->model('catalog/recurring');
@@ -1251,6 +1334,30 @@ class ControllerCatalogProduct extends Controller {
 			$this->error['model'] = $this->language->get('error_model');
 		}
 
+		$anchor_price_raw = isset($this->request->post['anchor_price']) ? trim((string)$this->request->post['anchor_price']) : '';
+		$anchor_price_normalised = str_replace(',', '.', str_replace(' ', '', $anchor_price_raw));
+		$anchor_price = $anchor_price_normalised === '' ? 0 : (float)$anchor_price_normalised;
+		$anchor_date = isset($this->request->post['anchor_price_date']) ? trim((string)$this->request->post['anchor_price_date']) : '';
+
+		if ($anchor_price_normalised !== '' && !preg_match('/^(?:0|[1-9][0-9]{0,10})(?:\.[0-9]{1,4})?$/', $anchor_price_normalised)) {
+			$this->error['anchor_price'] = $this->language->get('error_anchor_price');
+		}
+
+		if ($anchor_price > 0 && $anchor_date === '') {
+			$this->error['anchor_price_date'] = $this->language->get('error_anchor_price_date_required');
+		} elseif ($anchor_price <= 0 && $anchor_date !== '') {
+			$this->error['anchor_price'] = $this->language->get('error_anchor_price_required');
+		} elseif ($anchor_date !== '') {
+			$parsed_anchor_date = DateTime::createFromFormat('!Y-m-d', $anchor_date);
+			$anchor_date_errors = DateTime::getLastErrors();
+
+			if (!$parsed_anchor_date || ($anchor_date_errors !== false && ($anchor_date_errors['warning_count'] || $anchor_date_errors['error_count'])) || $parsed_anchor_date->format('Y-m-d') !== $anchor_date) {
+				$this->error['anchor_price_date'] = $this->language->get('error_anchor_price_date');
+			} elseif ($anchor_date > date('Y-m-d')) {
+				$this->error['anchor_price_date'] = $this->language->get('error_anchor_price_date_future');
+			}
+		}
+
 		if ($this->request->post['product_seo_url']) {
 			$this->load->model('design/seo_url');
 
@@ -1280,6 +1387,60 @@ class ControllerCatalogProduct extends Controller {
 		}
 
 		return !$this->error;
+	}
+
+	private function resolveAnchorPriceRows(array $rows) {
+		$resolved_rows = array();
+		$seen_products = array();
+
+		foreach ($rows as $row) {
+			$resolved_ids = array();
+
+			foreach ($row['identifiers'] as $field => $value) {
+				$matches = $this->model_catalog_product->findProductsByAnchorIdentifier($field, $value);
+
+				if (!$matches) {
+					throw new DryzenAnchorPriceCsvException('product_not_found', array($row['line'], $field, $value));
+				}
+
+				if (count($matches) > 1) {
+					throw new DryzenAnchorPriceCsvException('ambiguous_identifier', array($row['line'], $field, $value));
+				}
+
+				$resolved_ids[] = $matches[0];
+			}
+
+			$resolved_ids = array_values(array_unique($resolved_ids));
+
+			if (count($resolved_ids) !== 1) {
+				throw new DryzenAnchorPriceCsvException('conflicting_identifiers', array($row['line']));
+			}
+
+			$product_id = $resolved_ids[0];
+
+			if (isset($seen_products[$product_id])) {
+				throw new DryzenAnchorPriceCsvException('duplicate_product', array($row['line'], $product_id));
+			}
+
+			$seen_products[$product_id] = true;
+			$row['product_id'] = $product_id;
+			$resolved_rows[] = $row;
+		}
+
+		return $resolved_rows;
+	}
+
+	private function formatAnchorPriceCsvError(DryzenAnchorPriceCsvException $exception) {
+		$key = 'error_anchor_csv_' . $exception->getErrorKey();
+		$message = $this->language->get($key);
+
+		if ($message === $key) {
+			return $this->language->get('error_anchor_csv_failed');
+		}
+
+		$parameters = $exception->getParameters();
+
+		return $parameters ? vsprintf($message, $parameters) : $message;
 	}
 
 	protected function validateDelete() {

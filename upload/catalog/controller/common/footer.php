@@ -46,6 +46,13 @@ class ControllerCommonFooter extends Controller {
 		$data['order'] = $this->url->link('account/order', '', true);
 		$data['wishlist'] = $this->url->link('account/wishlist', '', true);
 		$data['newsletter'] = $this->url->link('account/newsletter', '', true);
+		$data['footer_withdrawal_url'] = $this->url->link('account/return/add', '', true);
+		$data['footer_pricelists_url'] = $this->url->link('extension/feed/digital_pricelist/page', '', true);
+		$data['footer_guarantee_url'] = rtrim((string)($this->request->server['HTTPS'] ? $this->config->get('config_ssl') : $this->config->get('config_url')), '/') . '/image/catalog/legal/eu-legal-guarantee-hr.png';
+		$data['show_footer_pricelists'] = (bool)$this->config->get('feed_digital_pricelist_status');
+		$data['text_footer_withdrawal'] = $this->language->get('text_footer_withdrawal');
+		$data['text_footer_pricelists'] = $this->language->get('text_footer_pricelists');
+		$data['text_footer_guarantee'] = $this->language->get('text_footer_guarantee');
 		$data['text_customer_information'] = $this->language->get('text_customer_information');
 		$data['text_accepted_payment_methods'] = $this->language->get('text_accepted_payment_methods');
 		$data['text_opens_new_window'] = $this->language->get('text_opens_new_window');

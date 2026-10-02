@@ -18,14 +18,32 @@
     {% endif %}
     <div id="content" class="{{ class }}">{{ content_top }}
       <h1 id="page-title">{{ heading_title }}</h1>
-      <p class="margin-b20">{{ text_description }}</p>
+      <div class="alert alert-info return-request-intro">
+        <p><strong>{{ text_withdrawal_notice_title }}</strong></p>
+        <p>{{ text_description }}</p>
+        <p class="margin-b0"><a href="{{ policy_url }}">{{ text_policy_link }}</a></p>
+      </div>
       <form action="{{ action }}" method="post" enctype="multipart/form-data" class="form-horizontal">
+        <input type="hidden" name="return_request_token" value="{{ return_request_token|escape }}" />
+        <input type="hidden" name="order_id" value="{{ order_id|escape }}" />
         <fieldset class="margin-b15">
+          <legend>{{ text_request_type }}</legend>
+          <div class="form-group required">
+            <div class="col-sm-10 col-sm-offset-2">
+              <label class="radio-inline">
+                <input type="radio" name="request_type" value="withdrawal"{% if request_type == 'withdrawal' %} checked="checked"{% endif %} /> {{ text_type_withdrawal }}
+              </label>
+              <label class="radio-inline">
+                <input type="radio" name="request_type" value="return"{% if request_type == 'return' %} checked="checked"{% endif %} /> {{ text_type_return }}
+              </label>
+              <p class="help-block">{{ text_request_type_help }}</p>
+            </div>
+          </div>
           <legend>{{ text_order }}</legend>
           <div class="form-group required">
             <label class="col-sm-2 control-label" for="input-firstname">{{ entry_firstname }}</label>
             <div class="col-sm-10">
-              <input type="text" name="firstname" value="{{ firstname }}" placeholder="{{ entry_firstname }}" id="input-firstname" class="form-control" />
+              <input type="text" name="firstname" value="{{ firstname|escape }}" placeholder="{{ entry_firstname }}" id="input-firstname" class="form-control" />
               {% if error_firstname %}
               <div class="text-danger">{{ error_firstname }}</div>
               {% endif %}
@@ -34,7 +52,7 @@
           <div class="form-group required">
             <label class="col-sm-2 control-label" for="input-lastname">{{ entry_lastname }}</label>
             <div class="col-sm-10">
-              <input type="text" name="lastname" value="{{ lastname }}" placeholder="{{ entry_lastname }}" id="input-lastname" class="form-control" />
+              <input type="text" name="lastname" value="{{ lastname|escape }}" placeholder="{{ entry_lastname }}" id="input-lastname" class="form-control" />
               {% if error_lastname %}
               <div class="text-danger">{{ error_lastname }}</div>
               {% endif %}
@@ -43,7 +61,7 @@
           <div class="form-group required">
             <label class="col-sm-2 control-label" for="input-email">{{ entry_email }}</label>
             <div class="col-sm-10">
-              <input type="text" name="email" value="{{ email }}" placeholder="{{ entry_email }}" id="input-email" class="form-control" />
+              <input type="text" name="email" value="{{ email|escape }}" placeholder="{{ entry_email }}" id="input-email" class="form-control" />
               {% if error_email %}
               <div class="text-danger">{{ error_email }}</div>
               {% endif %}
@@ -52,7 +70,7 @@
           <div class="form-group required">
             <label class="col-sm-2 control-label" for="input-telephone">{{ entry_telephone }}</label>
             <div class="col-sm-10">
-              <input type="text" name="telephone" value="{{ telephone }}" placeholder="{{ entry_telephone }}" id="input-telephone" class="form-control" />
+              <input type="text" name="telephone" value="{{ telephone|escape }}" placeholder="{{ entry_telephone }}" id="input-telephone" class="form-control" />
               {% if error_telephone %}
               <div class="text-danger">{{ error_telephone }}</div>
               {% endif %}
@@ -61,7 +79,7 @@
           <div class="form-group required">
             <label class="col-sm-2 control-label" for="input-invoice-number">{{ entry_invoice_number }}</label>
             <div class="col-sm-10">
-              <input type="text" name="invoice_number" value="{{ invoice_number }}" placeholder="{{ entry_invoice_number }}" id="input-invoice-number" class="form-control" />
+              <input type="text" name="invoice_number" value="{{ invoice_number|escape }}" placeholder="{{ entry_invoice_number }}" id="input-invoice-number" class="form-control" />
               {% if error_order_id %}
               <div class="text-danger">{{ error_order_id }}</div>
               {% endif %}
@@ -70,7 +88,7 @@
           <div class="form-group required">
             <label class="col-sm-2 control-label" for="input-invoice-date">{{ entry_invoice_date }}</label>
             <div class="col-sm-3">
-              <div class="input-group date"><input type="date" name="invoice_date" value="{{ invoice_date }}" placeholder="{{ entry_invoice_date }}" data-date-format="YYYY-MM-DD" id="input-invoice-date" class="form-control" /><span class="input-group-btn">
+              <div class="input-group date"><input type="date" name="invoice_date" value="{{ invoice_date|escape }}" placeholder="{{ entry_invoice_date }}" data-date-format="YYYY-MM-DD" id="input-invoice-date" class="form-control" /><span class="input-group-btn">
                 <button type="button" class="btn btn-outline"><i class="fa fa-calendar"></i></button>
                 </span></div>
               {% if error_date_ordered %}
@@ -81,7 +99,6 @@
         </fieldset>
         <fieldset>
           <legend>{{ text_product }}</legend>
-          <input type="hidden" name="product_id" value="{{ product_id }}" />
           <div class="form-group required">
             <label class="col-sm-2 control-label">{{ text_return_products_title }}</label>
             <div class="col-sm-10">
@@ -89,6 +106,7 @@
                 <table id="return-product" class="table table-bordered">
                   <thead>
                     <tr>
+                      <td>{{ entry_product }}</td>
                       <td>{{ entry_product_code }}</td>
                       <td>{{ entry_quantity }}</td>
                       <td>{{ entry_price }}</td>
@@ -98,16 +116,17 @@
                   <tbody>
                     {% for product_row, return_product in return_products %}
                     <tr>
-                      <td><input type="text" name="return_products[{{ product_row }}][code]" value="{{ return_product.code }}" placeholder="{{ entry_product_code }}" class="form-control" /></td>
-                      <td><input type="text" name="return_products[{{ product_row }}][quantity]" value="{{ return_product.quantity }}" placeholder="{{ entry_quantity }}" class="form-control" /></td>
-                      <td><input type="text" name="return_products[{{ product_row }}][price]" value="{{ return_product.price }}" placeholder="{{ entry_price }}" class="form-control" /></td>
+                      <td><input type="text" name="return_products[{{ product_row }}][name]" value="{{ return_product.name|escape }}" placeholder="{{ entry_product }}" class="form-control" /></td>
+                      <td><input type="text" name="return_products[{{ product_row }}][code]" value="{{ return_product.code|escape }}" placeholder="{{ entry_product_code }}" class="form-control" /></td>
+                      <td><input type="text" name="return_products[{{ product_row }}][quantity]" value="{{ return_product.quantity|escape }}" placeholder="{{ entry_quantity }}" class="form-control" /></td>
+                      <td><input type="text" name="return_products[{{ product_row }}][price]" value="{{ return_product.price|escape }}" placeholder="{{ entry_price }}" class="form-control" /></td>
                       <td class="text-center"><button type="button" class="btn btn-outline button-remove-return-product" title="{{ button_remove }}"><i class="fa fa-minus-circle"></i></button></td>
                     </tr>
                     {% endfor %}
                   </tbody>
                   <tfoot>
                     <tr>
-                      <td colspan="3"></td>
+                      <td colspan="4"></td>
                       <td class="text-center"><button type="button" id="button-return-product" class="btn btn-outline" title="{{ button_add_product }}"><i class="fa fa-plus-circle"></i></button></td>
                     </tr>
                   </tfoot>
@@ -118,7 +137,7 @@
               {% endif %}
             </div>
           </div>
-          <div class="form-group required">
+          <div class="form-group" id="return-reason-group">
             <label class="col-sm-2 control-label">{{ entry_reason }}</label>
             <div class="col-sm-10">
               {% for return_reason in return_reasons %}
@@ -126,13 +145,13 @@
               <div class="radio">
                 <label>
                   <input type="radio" name="return_reason_id" value="{{ return_reason.return_reason_id }}" checked="checked" />
-                  {{ return_reason.name }}</label>
+                  {{ return_reason.name|escape }}</label>
               </div>
               {% else %}
               <div class="radio">
                 <label>
                   <input type="radio" name="return_reason_id" value="{{ return_reason.return_reason_id }}" />
-                  {{ return_reason.name }}</label>
+                  {{ return_reason.name|escape }}</label>
               </div>
               {% endif %}
               {% endfor %}
@@ -141,10 +160,11 @@
               {% endif %}
             </div>
           </div>
-          <div class="form-group required">
+          <div class="form-group">
             <label class="col-sm-2 control-label" for="input-refund-iban">{{ entry_refund_iban }}</label>
             <div class="col-sm-10">
-              <input type="text" name="refund_iban" value="{{ refund_iban }}" placeholder="{{ entry_refund_iban }}" id="input-refund-iban" class="form-control" />
+              <input type="text" name="refund_iban" value="{{ refund_iban|escape }}" placeholder="{{ entry_refund_iban }}" id="input-refund-iban" class="form-control" />
+              <p class="help-block">{{ help_refund_iban }}</p>
               {% if error_refund_iban %}
               <div class="text-danger">{{ error_refund_iban }}</div>
               {% endif %}
@@ -153,10 +173,21 @@
           <div class="form-group">
             <label class="col-sm-2 control-label" for="input-comment">{{ entry_fault_detail }}</label>
             <div class="col-sm-10">
-              <textarea name="comment" rows="10" placeholder="{{ entry_fault_detail }}" id="input-comment" class="form-control">{{ comment }}</textarea>
+              <textarea name="comment" rows="10" placeholder="{{ entry_fault_detail }}" id="input-comment" class="form-control">{{ comment|escape }}</textarea>
             </div>
           </div>
           {{ captcha }}
+          <div class="form-group required">
+            <div class="col-sm-10 col-sm-offset-2">
+              <label for="input-declaration">
+                <input type="checkbox" name="declaration" value="1" id="input-declaration"{% if declaration %} checked="checked"{% endif %} />
+                {{ text_declaration }}
+              </label>
+              {% if error_declaration %}
+              <div class="text-danger">{{ error_declaration }}</div>
+              {% endif %}
+            </div>
+          </div>
         </fieldset>
         {% if text_agree %}
         <div class="buttons clearfix">
@@ -167,12 +198,12 @@
             {% else %}
             <input type="checkbox" name="agree" value="1" />
             {% endif %}
-            <input type="submit" value="{{ button_submit }}" class="btn btn-primary" />
+            <input type="submit" value="{{ button_submit_request }}" class="btn btn-primary" />
           </div>
         </div>
         {% else %}
         <div class="buttons clearfix text-right">
-            <input type="submit" value="{{ button_submit }}" class="btn btn-contrast" />
+            <input type="submit" value="{{ button_submit_request }}" class="btn btn-contrast" />
         </div>
         {% endif %}
       </form>
@@ -213,6 +244,7 @@
 		var html = '';
 
 		html += '<tr>';
+		html += '  <td><input type="text" name="return_products[' + returnProductRow + '][name]" value="" placeholder="{{ entry_product|e('js') }}" class="form-control" /></td>';
 		html += '  <td><input type="text" name="return_products[' + returnProductRow + '][code]" value="" placeholder="{{ entry_product_code|e('js') }}" class="form-control" /></td>';
 		html += '  <td><input type="text" name="return_products[' + returnProductRow + '][quantity]" value="" placeholder="{{ entry_quantity|e('js') }}" class="form-control" /></td>';
 		html += '  <td><input type="text" name="return_products[' + returnProductRow + '][price]" value="" placeholder="{{ entry_price|e('js') }}" class="form-control" /></td>';
@@ -231,6 +263,21 @@
 			$(this).closest('tr').find('input').val('');
 		}
 	});
+
+	function updateReasonRequirement() {
+		$('#return-reason-group').toggleClass('required', $('input[name="request_type"]:checked').val() === 'return');
+	}
+
+	$('input[name="request_type"]').on('change', updateReasonRequirement);
+	updateReasonRequirement();
 })(jQuery);
 //--></script>
+<style>
+.return-request-intro { border-left: 4px solid #31708f; }
+#return-product input { min-width: 110px; }
+@media (max-width: 767px) {
+  .return-request-intro { margin-left: -5px; margin-right: -5px; }
+  #return-product { min-width: 680px; }
+}
+</style>
 {{ footer }}

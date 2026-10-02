@@ -36,6 +36,8 @@ $_['text_tax_included']                 = '';
 
 $_['text_rok']                 = 'Delivery time';
 $_['text_d']                 = 'days';
+$_['text_anchor_price']       = 'Reference price:';
+$_['text_anchor_price_date']  = 'Reference price on %s:';
 
 // Entry
 $_['entry_qty']                = 'Qty';

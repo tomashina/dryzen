@@ -5,6 +5,10 @@ if (PHP_SAPI !== 'cli') {
     exit('This script can only be run from the command line.');
 }
 
+if (!defined('DIR_IMAGE')) {
+    define('DIR_IMAGE', dirname(__DIR__) . '/upload/image/');
+}
+
 class Controller
 {
     public $config;
@@ -27,6 +31,7 @@ class Mail
     public $text;
     public $html;
     public $single_part_html = false;
+    public $attachments = array();
 
     public function __construct($engine)
     {
@@ -71,6 +76,11 @@ class Mail
     public function setSinglePartHtml($value)
     {
         $this->single_part_html = (bool)$value;
+    }
+
+    public function addAttachment($filename)
+    {
+        $this->attachments[] = $filename;
     }
 }
 
@@ -267,6 +277,12 @@ dryzenOrderMailAssertSame('nabava@milla.hr', $additionalMail->to, 'The additiona
 dryzenOrderMailAssertSame(false, $customerMail->single_part_html, 'The customer keeps the existing multipart mail.');
 dryzenOrderMailAssertSame(true, $adminMail->single_part_html, 'The admin receives Roundcube-compatible single-part HTML.');
 dryzenOrderMailAssertSame(true, $additionalMail->single_part_html, 'Additional recipients receive single-part HTML.');
+dryzenOrderMailAssertSame(
+    array(DIR_IMAGE . 'catalog/legal/eu-legal-guarantee-hr.png'),
+    $customerMail->attachments,
+    'The official unmodified legal-guarantee notice is attached to the customer confirmation.'
+);
+dryzenOrderMailAssertSame($customerMail->attachments, $adminMail->attachments, 'The store copy includes the same official notice attachment.');
 
 $route = '';
 $args = array();

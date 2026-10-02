@@ -225,15 +225,22 @@ class ControllerSaleOrder extends Controller {
 		$results = $this->model_sale_order->getOrders($filter_data);
 		$this->load->model('extension/shipping/boxnow');
 		$this->model_extension_shipping_boxnow->installSchema();
+		$this->load->model('extension/shipping/eurosender');
 
 		foreach ($results as $result) {
 			$boxnow_shipment = array();
+			$eurosender_shipment = array();
 
 			if ($result['shipping_code'] === 'boxnow.boxnow') {
 				$boxnow_shipment = $this->model_extension_shipping_boxnow->getShipmentByOrderId($result['order_id']);
 			}
 
+			if (strpos($result['shipping_code'], 'eurosender.') === 0) {
+				$eurosender_shipment = $this->model_extension_shipping_eurosender->getShipmentByOrderId($result['order_id']);
+			}
+
 			$boxnow_tracking_code = !empty($boxnow_shipment['parcel_id']) ? $boxnow_shipment['parcel_id'] : '';
+			$eurosender_tracking_code = !empty($eurosender_shipment['tracking_number']) ? $eurosender_shipment['tracking_number'] : (!empty($eurosender_shipment['order_code']) ? $eurosender_shipment['order_code'] : '');
 
 			$data['orders'][] = array(
 				'order_id'      => $result['order_id'],
@@ -247,6 +254,8 @@ class ControllerSaleOrder extends Controller {
 				'shipping_code' => $result['shipping_code'],
 				'boxnow_tracking_code' => $boxnow_tracking_code,
 				'boxnow_tracking_url'  => $this->model_extension_shipping_boxnow->getTrackingUrl($boxnow_tracking_code),
+				'eurosender_tracking_code' => $eurosender_tracking_code,
+				'eurosender_tracking_url'  => $this->model_extension_shipping_eurosender->getTrackingUrl($eurosender_shipment),
 				'view'          => $this->url->link('sale/order/info', 'user_token=' . $this->session->data['user_token'] . '&order_id=' . $result['order_id'] . $url, true),
 				'edit'          => $this->url->link('sale/order/edit', 'user_token=' . $this->session->data['user_token'] . '&order_id=' . $result['order_id'] . $url, true)
 			);
@@ -879,6 +888,7 @@ class ControllerSaleOrder extends Controller {
 			$data['boxnow_label'] = '';
 			$data['boxnow_shipment'] = array();
 			$data['boxnow_tracking_panel'] = array();
+			$data['eurosender_tracking_panel'] = array();
 
 			if ($order_info['shipping_code'] === 'boxnow.boxnow') {
 				$this->load->language('extension/shipping/boxnow', 'boxnow');
@@ -922,6 +932,66 @@ class ControllerSaleOrder extends Controller {
 					'button_label_email' => $label_email_sent_at !== '' ? $boxnow_language->get('button_resend_label_email') : $boxnow_language->get('button_send_label_email'),
 					'error_email'      => $boxnow_language->get('error_tracking_email_failed'),
 					'error_label_email' => $boxnow_language->get('error_label_email_failed')
+				);
+			}
+
+			if (strpos($order_info['shipping_code'], 'eurosender.') === 0) {
+				$this->load->language('extension/shipping/eurosender', 'eurosender');
+				$eurosender_language = $this->language->get('eurosender');
+				$this->load->model('extension/shipping/eurosender');
+				$shipment = $this->model_extension_shipping_eurosender->getShipmentByOrderId($order_id);
+				$state = !empty($shipment['state']) ? strtolower((string)$shipment['state']) : '';
+				$created = !empty($shipment['order_code']);
+				$currency_code = !empty($shipment['currency_code']) ? $shipment['currency_code'] : 'EUR';
+				$quote_price = isset($shipment['quote_price']) && $shipment['quote_price'] !== null && $shipment['quote_price'] !== '' ? $this->currency->format((float)$shipment['quote_price'], $currency_code) : '';
+				$booked_price = isset($shipment['booked_price']) && $shipment['booked_price'] !== null && $shipment['booked_price'] !== '' ? $this->currency->format((float)$shipment['booked_price'], $currency_code) : '';
+				$price_difference = isset($shipment['price_difference']) && $shipment['price_difference'] !== null && $shipment['price_difference'] !== '' ? (float)$shipment['price_difference'] : null;
+				$tracking_code = !empty($shipment['tracking_number']) ? $shipment['tracking_number'] : '';
+
+				$data['eurosender_tracking_panel'] = array(
+					'created'          => $created,
+					'configured'       => $this->model_extension_shipping_eurosender->isConfigured(),
+					'can_create'       => !$created && ($state === '' || ($state === 'error' && !empty($shipment['retryable']))) && $this->user->hasPermission('modify', 'sale/order') && $this->user->hasPermission('modify', 'extension/shipping/eurosender'),
+					'can_refresh'      => $created && $this->user->hasPermission('access', 'sale/order') && $this->user->hasPermission('modify', 'extension/shipping/eurosender'),
+					'can_label'        => $created && $this->user->hasPermission('access', 'sale/order') && $this->user->hasPermission('access', 'extension/shipping/eurosender'),
+					'unsafe_state'     => in_array($state, array('creating', 'unknown'), true),
+					'state'            => $state,
+					'environment'      => !empty($shipment['environment']) ? $shipment['environment'] : '',
+					'order_code'       => !empty($shipment['order_code']) ? $shipment['order_code'] : '',
+					'tracking_code'    => $tracking_code,
+					'tracking_url'     => $this->model_extension_shipping_eurosender->getTrackingUrl($shipment),
+					'status'           => $created ? $this->model_extension_shipping_eurosender->getStatusLabel(isset($shipment['status']) ? $shipment['status'] : '') : '',
+					'quote_price'      => $quote_price,
+					'booked_price'     => $booked_price,
+					'price_difference' => $price_difference !== null && abs($price_difference) >= 0.01 ? $this->currency->format($price_difference, $currency_code) : '',
+					'price_increased'  => $price_difference !== null && $price_difference >= 0.01,
+					'date_modified'    => !empty($shipment['date_modified']) ? date($this->language->get('date_format_short') . ' H:i', strtotime($shipment['date_modified'])) : '',
+					'creation_error'   => !empty($shipment['creation_error']) ? $shipment['creation_error'] : '',
+					'tracking_error'   => !empty($shipment['tracking_error']) ? $shipment['tracking_error'] : '',
+					'label_error'      => !empty($shipment['label_error']) ? $shipment['label_error'] : '',
+					'preview_url'      => str_replace('&amp;', '&', $this->url->link('extension/shipping/eurosender/previewShipment', 'user_token=' . $this->session->data['user_token'] . '&order_id=' . (int)$order_id, true)),
+					'create_url'       => str_replace('&amp;', '&', $this->url->link('extension/shipping/eurosender/createShipment', 'user_token=' . $this->session->data['user_token'] . '&order_id=' . (int)$order_id, true)),
+					'refresh_url'      => str_replace('&amp;', '&', $this->url->link('extension/shipping/eurosender/refreshTracking', 'user_token=' . $this->session->data['user_token'] . '&order_id=' . (int)$order_id, true)),
+					'label_url'        => str_replace('&amp;', '&', $this->url->link('extension/shipping/eurosender/label', 'user_token=' . $this->session->data['user_token'] . '&order_id=' . (int)$order_id, true)),
+					'text_title'       => $eurosender_language->get('text_eurosender_shipment'),
+					'text_order_code'  => $eurosender_language->get('text_order_code'),
+					'text_tracking_code'=> $eurosender_language->get('text_tracking_number'),
+					'text_status'      => $eurosender_language->get('text_shipment_status'),
+					'text_environment' => $eurosender_language->get('text_environment'),
+					'text_quote_price' => $eurosender_language->get('text_quote_price'),
+					'text_booked_price'=> $eurosender_language->get('text_booked_price'),
+					'text_price_difference' => $eurosender_language->get('text_price_difference'),
+					'text_updated'     => $eurosender_language->get('text_updated'),
+					'text_not_created' => $eurosender_language->get('text_not_created'),
+					'text_booking_warning' => $eurosender_language->get('text_booking_warning'),
+					'text_unknown_warning' => $eurosender_language->get('text_unknown_warning'),
+					'text_api_missing' => $eurosender_language->get('text_api_missing'),
+					'error_preview_response' => $eurosender_language->get('error_preview_response'),
+					'text_loading'     => $this->language->get('text_loading'),
+					'button_create'    => $eurosender_language->get('button_create_shipment'),
+					'button_refresh'   => $eurosender_language->get('button_refresh_tracking'),
+					'button_label'     => $eurosender_language->get('button_label'),
+					'button_track'     => $eurosender_language->get('button_track')
 				);
 			}
 

@@ -83,6 +83,9 @@ $_['text_payment_security_more'] = 'Više o sigurnosti plaćanja';
 $_['text_payment_currency_title'] = 'Izjava o konverziji valuta:';
 $_['text_payment_currency_copy'] = 'sva plaćanja izvršavaju se u eurima (EUR). Ako je kartica vezana uz račun u drugoj valuti, konverziju provodi kartična kuća ili banka izdavatelj prema vlastitom tečaju i uvjetima te je konačni terećeni iznos podložan njihovom obračunu.';
 $_['text_opens_new_window'] = 'otvara se u novom prozoru';
+$_['text_legal_guarantee_link'] = 'Zakonsko jamstvo – najmanje 2 godine';
+$_['text_withdrawal_rights_copy'] = 'Odvojeno od jamstva, potrošač pri kupnji na daljinu u pravilu ima pravo na jednostrani raskid ugovora u roku od 14 dana.';
+$_['text_withdrawal_rights_link'] = 'Uvjeti i postupak jednostranog raskida';
 
 // Error
 $_['error_warning']                  = 'Nastao je problem pri pokušaju obrade Vaše narudžbe! Ukoliko se problem nastavi pojavljivati, molim odaberite drugačiji način plaćanja ili kontaktirajte vlasnika web trgovine <a href="%s">kliknuvši ovdje</a>.';

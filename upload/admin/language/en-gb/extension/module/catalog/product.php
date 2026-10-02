@@ -6,6 +6,8 @@ $_['heading_title']                     = 'Products';
 $_['text_settings']                     = 'Settings';
 $_['text_search']                       = 'Search';
 $_['text_list']                         = 'Product List';
+$_['text_anchor_prices']                = 'Reference prices';
+$_['text_anchor_csv_help']              = 'Upload a comma- or semicolon-separated CSV with product_id, model, SKU or EAN plus anchor_price and anchor_price_date columns. The whole file is validated before any product is updated.';
 $_['text_items_per_page']               = 'Products per page';
 $_['text_choose_columns']               = 'Choose columns';
 $_['text_other_settings']               = 'Other settings';
@@ -223,6 +225,10 @@ $_['entry_weight']                      = 'Weight';
 $_['entry_store']                       = 'Store';
 $_['entry_keyword']                     = 'Keyword';
 $_['entry_gross_price']                 = 'Gross Price';
+
+// Buttons
+$_['button_anchor_csv_import']          = 'Import reference prices';
+$_['button_anchor_csv_template']        = 'Download CSV template';
 
 // Help
 $_['help_price_relative_to']            = 'When using relative quick edit for Specials and Discounts prices, calculate the new values relative to the selected value';

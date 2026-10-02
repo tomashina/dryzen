@@ -2,7 +2,7 @@
 class ControllerProductCategory extends Controller {
 	public function index() {
 		$this->load->language('product/category');
-		$this->document->addStyle('catalog/view/theme/basel/stylesheet/dryzen-shop.css?v=20260720c');
+		$this->document->addStyle('catalog/view/theme/basel/stylesheet/dryzen-shop.css?v=20261002a');
 		$this->document->addScript('catalog/view/theme/basel/js/dryzen-shop.js?v=20260721i');
 
 		$this->load->model('catalog/category');
@@ -185,12 +185,27 @@ class ControllerProductCategory extends Controller {
                        $priceeur = $this->currency->format($this->tax->calculate($result['price'], $result['tax_class_id'], $this->config->get('config_tax')), 'HRK');
 
                     }
-				} else {
-					$price = false;
-					 $priceeur  ='';
-				}
+					} else {
+						$price = false;
+						 $priceeur  ='';
+					}
 
-				if (!is_null($result['special']) && (float)$result['special'] >= 0) {
+					$anchor_price = false;
+					$anchor_price_date = '';
+					$anchor_price_label = '';
+
+					if (($this->customer->isLogged() || !$this->config->get('config_customer_price')) && !empty($result['anchor_price']) && (float)$result['anchor_price'] > 0) {
+						$anchor_price = $this->currency->format($this->tax->calculate($result['anchor_price'], $result['tax_class_id'], $this->config->get('config_tax')), $this->session->data['currency']);
+
+						if (!empty($result['anchor_price_date']) && $result['anchor_price_date'] !== '0000-00-00') {
+							$anchor_price_date = date($this->language->get('date_format_short'), strtotime($result['anchor_price_date']));
+							$anchor_price_label = sprintf($this->language->get('text_anchor_price_date'), $anchor_price_date);
+						} else {
+							$anchor_price_label = $this->language->get('text_anchor_price');
+						}
+					}
+
+					if (!is_null($result['special']) && (float)$result['special'] >= 0) {
 					$special = $this->currency->format($this->tax->calculate($result['special'], $result['tax_class_id'], $this->config->get('config_tax')), $this->session->data['currency']);
 					 if($this->session->data['currency']=='HRK'){
                         $specialeur = $this->currency->format($this->tax->calculate($result['special'], $result['tax_class_id'], $this->config->get('config_tax')),  'EUR');
@@ -225,8 +240,11 @@ class ControllerProductCategory extends Controller {
 					'thumb_medium' => $image_medium,
 					'name'        => $result['name'],
 					'description' => utf8_substr(trim(strip_tags(html_entity_decode($result['description'], ENT_QUOTES, 'UTF-8'))), 0, $this->config->get('theme_' . $this->config->get('config_theme') . '_product_description_length')) . '..',
-					'price'       => $price,
-					'special'     => $special,
+						'price'       => $price,
+						'special'     => $special,
+						'anchor_price' => $anchor_price,
+						'anchor_price_date' => $anchor_price_date,
+						'anchor_price_label' => $anchor_price_label,
 					   'priceeur'       => $priceeur,
                     'specialeur'     => $specialeur,
 					'tax'         => $tax,

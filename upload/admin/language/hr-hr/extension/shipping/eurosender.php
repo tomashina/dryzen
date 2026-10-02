@@ -1,0 +1,134 @@
+<?php
+// Heading
+$_['heading_title'] = 'Eurosender';
+
+// Text
+$_['text_extension']               = 'Proširenja';
+$_['text_success']                 = 'Uspješno ste izmijenili Eurosender dostavu!';
+$_['text_edit']                    = 'Uredi Eurosender dostavu';
+$_['text_enabled']                 = 'Omogućeno';
+$_['text_disabled']                = 'Onemogućeno';
+$_['text_all_zones']               = 'Sve zone';
+$_['text_none']                    = 'Nema';
+$_['text_api_settings']            = 'API veza';
+$_['text_service_settings']        = 'Usluge';
+$_['text_package_settings']        = 'Zadani paket';
+$_['text_pricing_settings']        = 'Cijene';
+$_['text_origin_settings']         = 'Adresa i kontakt za preuzimanje';
+$_['text_general_settings']        = 'Općenito';
+$_['text_api_key_ready']           = 'Eurosender API ključ sigurno je postavljen u OC_ENV.';
+$_['text_api_key_missing']         = 'Eurosender API ključ nije postavljen. Prije uključivanja ponuda dodajte OC_ENV[\'eurosender\'][\'api_key\'] u env.php.';
+$_['text_sandbox']                 = 'Testno okruženje';
+$_['text_production']              = 'Produkcija';
+$_['text_service_selection']       = 'Standard (selection)';
+$_['text_service_regular_plus']    = 'Prioritetno (regular_plus)';
+$_['text_service_express']         = 'Prioritetno Express (express)';
+$_['text_credit']                  = 'Kredit';
+$_['text_deferred']                = 'Odgođeno plaćanje';
+$_['text_fixed']                   = 'Fiksni iznos (EUR)';
+$_['text_percent']                 = 'Postotak';
+$_['text_shipment_created']         = 'Eurosender pošiljka je kreirana. API poziv je evidentiran kao naplativa rezervacija.';
+$_['text_shipment_exists']          = 'Eurosender pošiljka za ovu narudžbu već postoji.';
+$_['text_tracking_refreshed']       = 'Eurosender tracking je osvježen.';
+$_['text_price_changed']            = 'Konačna cijena rezervacije razlikuje se od svježe ponude za %s %s.';
+$_['text_eurosender_shipment']       = 'Eurosender pošiljka';
+$_['text_order_code']                = 'Eurosender broj narudžbe';
+$_['text_tracking_number']           = 'Broj za praćenje';
+$_['text_shipment_status']           = 'Status';
+$_['text_environment']               = 'Okruženje';
+$_['text_quote_price']               = 'Svježa ponuda';
+$_['text_booked_price']              = 'Rezervirana cijena';
+$_['text_price_difference']          = 'Razlika u cijeni';
+$_['text_updated']                   = 'Zadnje osvježavanje';
+$_['text_not_created']               = 'Pošiljka još nije rezervirana kod Eurosendera.';
+$_['text_booking_warning']           = 'Kreiranje pošiljke šalje naplativi API zahtjev Eurosenderu. Prije potvrde provjerite adresu, telefon i odabranu uslugu.';
+$_['text_booking_price_confirmation'] = 'Eurosender usluga %s ima cijenu %s %s. Kupcu je za dostavu naplaćeno %s %s (razlika %s %s). Potvrđujete rezervaciju do ponuđenog iznosa? Ako cijena poraste, modul će stati.';
+$_['text_booking_price_only_confirmation'] = 'Eurosender usluga %s ima cijenu %s %s. Potvrđujete rezervaciju do tog iznosa? Ako cijena poraste, modul će stati.';
+$_['text_unknown_warning']           = 'Ishod prethodnog zahtjeva nije siguran. Nemojte ponavljati rezervaciju dok ručno ne provjerite Eurosender račun; ponavljanje može uzrokovati dvostruku naplatu.';
+$_['text_api_missing']               = 'API ključ nije postavljen u upload/env.php. Rezervacija nije dostupna.';
+$_['button_create_shipment']         = 'Provjeri cijenu i rezerviraj';
+$_['button_refresh_tracking']        = 'Osvježi tracking';
+$_['button_label']                   = 'Otvori adresnicu';
+$_['button_track']                   = 'Prati pošiljku';
+
+// Statusi pošiljke
+$_['status_validating']           = 'Provjera podataka';
+$_['status_creating']             = 'Kreiranje pošiljke';
+$_['status_created']              = 'Kreirana';
+$_['status_info_received']        = 'Podaci o pošiljci su zaprimljeni';
+$_['status_in_transit']           = 'Pošiljka je u tranzitu';
+$_['status_out_for_delivery']     = 'Pošiljka je na dostavi';
+$_['status_attempt_failed']       = 'Pokušaj dostave nije uspio';
+$_['status_delivered']            = 'Dostavljeno';
+$_['status_available_for_pickup'] = 'Spremno za preuzimanje';
+$_['status_exception']            = 'Zabilježen je problem u dostavi';
+$_['status_expired']              = 'Pošiljka je istekla';
+$_['status_pending']              = 'Na čekanju';
+$_['status_order_received']       = 'Narudžba za dostavu je zaprimljena';
+$_['status_deferred_payment']     = 'Odobreno odgođeno plaćanje';
+$_['status_awaiting_payment']     = 'Čeka plaćanje';
+$_['status_awaiting_customs']     = 'Čeka carinsku dokumentaciju';
+$_['status_awaiting_pickup']      = 'Čeka preuzimanje';
+$_['status_pickup_confirmed']     = 'Preuzimanje potvrđeno';
+$_['status_collected']            = 'Preuzeta';
+$_['status_confirmed']            = 'Pošiljka je potvrđena';
+$_['status_cancelled']            = 'Otkazano';
+$_['status_returned']             = 'Vraćena';
+$_['status_failed']               = 'Neuspjela';
+$_['status_error']                = 'Pogreška – ponovni pokušaj je dopušten';
+$_['status_unknown']              = 'Ishod kreiranja nije poznat – potrebna je ručna provjera';
+$_['status_unavailable']          = 'Status još nije dostupan';
+
+// Entry
+$_['entry_environment']            = 'Okruženje';
+$_['entry_service_types']          = 'Dopuštene usluge';
+$_['entry_payment_method']         = 'Način plaćanja';
+$_['entry_length']                 = 'Duljina (cm)';
+$_['entry_width']                  = 'Širina (cm)';
+$_['entry_height']                 = 'Visina (cm)';
+$_['entry_packaging_weight']       = 'Težina ambalaže (kg)';
+$_['entry_fallback_item_weight']   = 'Zamjenska težina artikla (kg)';
+$_['entry_minimum_weight']         = 'Minimalna težina paketa (kg)';
+$_['entry_content']                = 'Sadržaj paketa';
+$_['entry_markup_type']            = 'Vrsta marže';
+$_['entry_markup_value']           = 'Vrijednost marže';
+$_['entry_fallback_rate']          = 'Rezervna cijena (EUR)';
+$_['entry_origin_name']            = 'Ime osobe ili tvrtke';
+$_['entry_origin_email']           = 'E-pošta';
+$_['entry_origin_phone']           = 'Telefon';
+$_['entry_origin_address_1']       = 'Adresa, redak 1';
+$_['entry_origin_address_2']       = 'Adresa, redak 2';
+$_['entry_origin_city']            = 'Grad';
+$_['entry_origin_postcode']        = 'Poštanski broj';
+$_['entry_origin_country_code']    = 'Oznaka države';
+$_['entry_tax_class']              = 'Porezna stopa';
+$_['entry_geo_zone']               = 'Geo zona';
+$_['entry_status']                 = 'Status';
+$_['entry_sort_order']             = 'Redoslijed sortiranja';
+
+// Help
+$_['help_environment']             = 'Tijekom testiranja koristite testno okruženje. Na produkciju prijeđite tek s produkcijskim API ključem.';
+$_['help_service_types']           = 'Na naplati će se prikazati samo odabrane usluge koje vrati Eurosender.';
+$_['help_fallback_item_weight']    = 'Koristi se po komadu ako artikl nema ispravnu pozitivnu težinu u katalogu.';
+$_['help_minimum_weight']          = 'Izračunata težina paketa nikad se ne šalje Eurosenderu ispod ove vrijednosti.';
+$_['help_content']                 = 'Kratak opis sadržaja koji se šalje u zahtjevu za ponudu.';
+$_['help_markup']                  = 'Dodaje se na svaku uspješno dohvaćenu bruto Eurosender cijenu.';
+$_['help_fallback_rate']           = 'Neobavezna bruto cijena u EUR koja se prikazuje ako API nije dostupan. Ostavite prazno kako bi se Eurosender tada sakrio.';
+$_['help_tax_class']               = 'Eurosender vraća bruto cijene pa naplata ne primjenjuje ovu stopu još jednom. Postavka je zadržana radi usklađenosti s OpenCartom.';
+
+// Error
+$_['error_permission']             = 'Upozorenje: Nemate ovlasti za izmjenu Eurosender dostave!';
+$_['error_environment']            = 'Odaberite ispravno Eurosender okruženje.';
+$_['error_service_types']          = 'Odaberite barem jednu Eurosender uslugu.';
+$_['error_payment_method']         = 'Odaberite ispravan način plaćanja.';
+$_['error_markup_type']            = 'Odaberite ispravnu vrstu marže.';
+$_['error_positive_number']        = 'Dimenzije i minimalna težina moraju biti pozitivni brojevi.';
+$_['error_non_negative_number']    = 'Težine i marža moraju biti nula ili više.';
+$_['error_fallback_rate']          = 'Rezervna cijena mora biti prazna ili broj jednak nuli ili veći.';
+$_['error_country_code']           = 'Država preuzimanja mora biti ISO oznaka od dva slova.';
+$_['error_origin_contact']         = 'Ime kontakta i telefon obvezni su kada je Eurosender uključen.';
+$_['error_origin_email']           = 'Ispravna e-adresa kontakta obvezna je kada je Eurosender uključen.';
+$_['error_origin_address']         = 'Adresa, grad i poštanski broj preuzimanja obvezni su kada je Eurosender uključen.';
+$_['error_post_required']           = 'Ova Eurosender radnja dopuštena je samo sigurnim POST zahtjevom.';
+$_['error_order_id']                = 'Nedostaje ispravan ID narudžbe.';
+$_['error_preview_response']         = 'Eurosender nije vratio valjanu potvrdu cijene. Pokušajte ponovno.';

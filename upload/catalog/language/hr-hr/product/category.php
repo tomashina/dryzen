@@ -24,3 +24,5 @@ $_['text_model_asc']    = 'Model (A -&gt; Z)';
 $_['text_model_desc']   = 'Model (Z -&gt; A)';
 $_['text_limit']        = 'Prikaži:';
 $_['text_pagination_limit']       = 'Ukupno %d ';
+$_['text_anchor_price']       = 'Sidrena cijena:';
+$_['text_anchor_price_date']  = 'Sidrena cijena na dan %s:';

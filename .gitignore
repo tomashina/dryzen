@@ -25,6 +25,7 @@
 **/error_log
 /upload/image/cache/*
 !/upload/image/cache/index.html
+/upload/catalog/view/theme/basel/stylesheet/generated/*.css
 /upload/sitemaps/*
 !/upload/sitemaps/index.html
 !/upload/sitemaps/sitemap-style.xml
@@ -39,6 +40,7 @@
 !/storagedijana/cache/index.html
 /storagedijana/download/*
 !/storagedijana/download/index.html
+/storagedijana/digital_pricelist/*
 /storagedijana/logs/*
 !/storagedijana/logs/index.html
 /storagedijana/modification/*

@@ -32,10 +32,10 @@
             {% for return in returns %}
             <tr>
               <td>#{{ return.return_id }}</td>
-              <td>{{ return.status }}</td>
-              <td class="hidden-xs hidden-sm">{{ return.date_added }}</td>
-              <td class="hidden-xs hidden-sm">{{ return.order_id }}</td>
-              <td class="hidden-xs hidden-sm">{{ return.name }}</td>
+              <td>{{ return.status|escape }}</td>
+              <td class="hidden-xs hidden-sm">{{ return.date_added|escape }}</td>
+              <td class="hidden-xs hidden-sm">{{ return.order_id|escape }}</td>
+              <td class="hidden-xs hidden-sm">{{ return.name|escape }}</td>
               <td class="text-right"><a href="{{ return.href }}" class="btn btn-primary btn-sm">{{ button_view }}</a></td>
             </tr>
             {% endfor %}

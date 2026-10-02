@@ -471,6 +471,20 @@ class ControllerExtensionQuickCheckoutConfirm extends Controller {
 		$data['button_back'] = $this->language->get('button_back');
 		$data['payment_target'] = html_entity_decode($this->config->get('quickcheckout_payment_target'), ENT_QUOTES);
 		$data['back'] = $this->url->link('extension/quickcheckout/checkout', '', true);
+
+		$this->load->language('checkout/checkout');
+
+		if (!empty($this->request->server['HTTPS'])) {
+			$server = $this->config->get('config_ssl');
+		} else {
+			$server = $this->config->get('config_url');
+		}
+
+		$data['text_legal_guarantee_link'] = $this->language->get('text_legal_guarantee_link');
+		$data['text_withdrawal_rights_copy'] = $this->language->get('text_withdrawal_rights_copy');
+		$data['text_withdrawal_rights_link'] = $this->language->get('text_withdrawal_rights_link');
+		$data['legal_guarantee_image'] = rtrim((string)$server, '/') . '/image/catalog/legal/eu-legal-guarantee-hr.png';
+		$data['withdrawal_rights_url'] = $this->url->link('information/information', 'information_id=17', true);
 		
 		$this->response->setOutput($this->load->view('extension/quickcheckout/confirm', $data));
   	}

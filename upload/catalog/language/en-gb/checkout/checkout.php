@@ -77,6 +77,9 @@ $_['text_payment_security_more'] = 'More about payment security';
 $_['text_payment_currency_title'] = 'Currency conversion statement:';
 $_['text_payment_currency_copy'] = 'all payments are made in euros (EUR). If the card is linked to an account in another currency, conversion is performed by the card scheme or issuing bank according to its own exchange rate and terms, and the final amount charged is subject to their calculation.';
 $_['text_opens_new_window'] = 'opens in a new window';
+$_['text_legal_guarantee_link'] = 'Legal guarantee – minimum 2 years';
+$_['text_withdrawal_rights_copy'] = 'Separate from the legal guarantee, consumers buying at a distance generally have a 14-day right to withdraw from the contract.';
+$_['text_withdrawal_rights_link'] = 'Withdrawal terms and procedure';
 
 // Error
 $_['error_warning']                  = 'There was a problem while trying to process your order! If the problem persists please try selecting a different payment method or you can contact the store owner by <a href="%s">clicking here</a>.';

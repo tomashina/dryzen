@@ -1,3 +1,6 @@
+<section class="dryzen-prefooter-guarantee" aria-label="{{ text_footer_guarantee }}">
+  <div class="container"><a class="dryzen-legal-guarantee-trigger" href="{{ footer_guarantee_url }}" aria-controls="dryzen-legal-guarantee-modal"><i class="fa fa-shield" aria-hidden="true"></i> <span>{{ text_footer_guarantee }}</span></a></div>
+</section>
 <footer>
   <div class="container">
     <div class="row">
@@ -39,6 +42,11 @@
       </div>
     </div>
     <hr>
+    <nav class="text-center otp-footer-compliance-links" aria-label="{{ text_customer_information }}">
+      <a href="{{ footer_withdrawal_url }}">{{ text_footer_withdrawal }}</a>
+      {% if show_footer_pricelists %} · <a href="{{ footer_pricelists_url }}">{{ text_footer_pricelists }}</a>{% endif %}
+      · <a class="dryzen-legal-guarantee-trigger" href="{{ footer_guarantee_url }}" aria-controls="dryzen-legal-guarantee-modal">{{ text_footer_guarantee }}</a>
+    </nav>
     <p>{{ powered }}</p>
   </div>
 </footer>
