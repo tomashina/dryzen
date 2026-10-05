@@ -2,9 +2,11 @@
 define('OC_ENV', [
     'env' => 'development',
     'eurosender' => [
-        // Use the sandbox key while testing. Production and sandbox keys are separate.
-        // Keep the real key in env.php only; env.php is ignored by Git.
-        'api_key' => '',
+        // Sandbox and production keys are separate and selected automatically
+        // from the environment configured in the OpenCart shipping module.
+        // Keep real keys in env.php only; env.php is ignored by Git.
+        'sandbox_api_key' => '',
+        'production_api_key' => '',
     ],
     'import' => [
         'api' => [

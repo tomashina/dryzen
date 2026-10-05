@@ -7,7 +7,11 @@ if (!defined('DB_PREFIX')) {
 }
 
 if (!defined('OC_ENV')) {
-	define('OC_ENV', array('eurosender' => array('api_key' => 'test-api-key')));
+	define('OC_ENV', array('eurosender' => array(
+		'api_key' => 'legacy-test-api-key',
+		'sandbox_api_key' => 'sandbox-test-api-key',
+		'production_api_key' => 'production-test-api-key'
+	)));
 }
 
 require_once __DIR__ . '/../upload/system/library/eurosender/client.php';
@@ -350,6 +354,20 @@ function assertEurosenderTrue($condition, $message) {
 	}
 }
 
+function eurosenderSelectedApiKey($client) {
+	$property = new \ReflectionProperty('\Eurosender\Client', 'api_key');
+	$property->setAccessible(true);
+
+	return $property->getValue($client);
+}
+
+function eurosenderSelectApiKey($client, $configuration, $environment) {
+	$method = new \ReflectionMethod('\Eurosender\Client', 'selectApiKey');
+	$method->setAccessible(true);
+
+	return $method->invoke($client, $configuration, $environment);
+}
+
 function expectEurosenderException($callback, $message_part) {
 	try {
 		call_user_func($callback);
@@ -450,7 +468,17 @@ $client_registry = new EurosenderTestRegistry(array('config' => new EurosenderTe
 $recording_client = new RecordingEurosenderClient($client_registry);
 assertEurosenderTrue($recording_client->isConfigured(), 'Client should read the API key from OC_ENV.');
 assertEurosenderSame('sandbox', $recording_client->getConnectionInfo()['environment'], 'Sandbox should be the safe default.');
+assertEurosenderSame('sandbox-test-api-key', eurosenderSelectedApiKey($recording_client), 'Sandbox must use its environment-specific API key.');
+assertEurosenderSame('legacy-key', eurosenderSelectApiKey($recording_client, array('api_key' => 'legacy-key'), 'sandbox'), 'Legacy single-key configuration must remain supported.');
+assertEurosenderSame('', eurosenderSelectApiKey($recording_client, array(), 'sandbox'), 'Missing API keys must remain unconfigured.');
 assertEurosenderTrue(!array_key_exists('api_key', $recording_client->getConnectionInfo()), 'Connection info must never expose the API key.');
+
+$production_config = eurosenderTestConfigValues();
+$production_config['shipping_eurosender_environment'] = 'production';
+$production_client = new RecordingEurosenderClient(new EurosenderTestRegistry(array('config' => new EurosenderTestConfig($production_config))));
+assertEurosenderSame('production', $production_client->getConnectionInfo()['environment'], 'Production environment should be selected explicitly.');
+assertEurosenderSame('production-test-api-key', eurosenderSelectedApiKey($production_client), 'Production must use its environment-specific API key.');
+assertEurosenderSame('sandbox-key', eurosenderSelectApiKey($recording_client, array('sandbox_api_key' => 'sandbox-key', 'api_key' => 'legacy-key'), 'sandbox'), 'Environment-specific keys must take precedence over the legacy key.');
 $recording_client->quote(array('shipment' => array()));
 $recording_client->validateOrder(array('shipment' => array()));
 $recording_client->createOrder(array('shipment' => array()));

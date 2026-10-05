@@ -69,9 +69,14 @@ cron ključ ne upisujte u Git, e-mail ili javnu dokumentaciju.
 
    ```php
    'eurosender' => [
-       'api_key' => 'STVARNI_API_KLJUC',
+       'sandbox_api_key' => 'SANDBOX_API_KLJUC',
+       'production_api_key' => 'PRODUKCIJSKI_API_KLJUC',
    ],
    ```
+
+   Modul automatski odabire odgovarajući ključ prema postavci Sandbox ili
+   Production. Postojeće instalacije s jednim poljem `api_key` ostaju podržane,
+   ali prije produkcije preporučuje se razdvojiti ključeve kao iznad.
 
 2. Otvorite **Extensions > Extensions > Shipping**, instalirajte i uključite
    **Eurosender**.

@@ -50,8 +50,8 @@ class Client {
 		$this->config = $registry->has('config') ? $registry->get('config') : null;
 
 		$this->loadEnvironment();
-		$this->api_key = $this->resolveApiKey();
 		$this->environment = $this->resolveEnvironment();
+		$this->api_key = $this->resolveApiKey();
 		$this->base_url = $this->resolveBaseUrl();
 		$this->connect_timeout = $this->positiveIntegerConfig('shipping_eurosender_connect_timeout', 10);
 		$this->timeout = $this->positiveIntegerConfig('shipping_eurosender_timeout', 30);
@@ -249,7 +249,19 @@ class Client {
 			return '';
 		}
 
-		return trim(isset(OC_ENV['eurosender']['api_key']) ? (string)OC_ENV['eurosender']['api_key'] : '');
+		return $this->selectApiKey(OC_ENV['eurosender'], $this->environment);
+	}
+
+	private function selectApiKey(array $configuration, $environment) {
+		$key = $environment === 'production' ? 'production_api_key' : 'sandbox_api_key';
+		$value = trim(isset($configuration[$key]) ? (string)$configuration[$key] : '');
+
+		if ($value !== '') {
+			return $value;
+		}
+
+		// Backwards compatibility for installations that still keep one key.
+		return trim(isset($configuration['api_key']) ? (string)$configuration['api_key'] : '');
 	}
 
 	private function resolveEnvironment() {

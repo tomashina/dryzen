@@ -354,11 +354,22 @@ class ControllerExtensionShippingEurosender extends Controller {
 	}
 
 	private function isApiKeyConfigured() {
-		return defined('OC_ENV')
-			&& is_array(OC_ENV)
-			&& isset(OC_ENV['eurosender'])
-			&& is_array(OC_ENV['eurosender'])
-			&& !empty(OC_ENV['eurosender']['api_key']);
+		if (!defined('OC_ENV') || !is_array(OC_ENV) || !isset(OC_ENV['eurosender']) || !is_array(OC_ENV['eurosender'])) {
+			return false;
+		}
+
+		$environment = isset($this->request->post['shipping_eurosender_environment'])
+			? strtolower(trim((string)$this->request->post['shipping_eurosender_environment']))
+			: strtolower(trim((string)$this->config->get('shipping_eurosender_environment')));
+		$key = $environment === 'production' ? 'production_api_key' : 'sandbox_api_key';
+		$value = trim(isset(OC_ENV['eurosender'][$key]) ? (string)OC_ENV['eurosender'][$key] : '');
+
+		if ($value !== '') {
+			return true;
+		}
+
+		// Keep the status accurate for installations using the legacy single key.
+		return trim(isset(OC_ENV['eurosender']['api_key']) ? (string)OC_ENV['eurosender']['api_key'] : '') !== '';
 	}
 
 	private function getOriginDefaults() {

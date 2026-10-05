@@ -78,9 +78,14 @@ API ključ ostaje isključivo u ignoriranoj datoteci `upload/env.php`:
 
 ```php
 'eurosender' => [
-    'api_key' => 'SANDBOX_ILI_PRODUCTION_KLJUC',
+    'sandbox_api_key' => 'SANDBOX_KLJUC',
+    'production_api_key' => 'PRODUKCIJSKI_KLJUC',
 ],
 ```
+
+Klijent automatski bira ključ prema okruženju spremljenom u postavkama modula.
+Stari oblik s jednim poljem `api_key` i dalje radi radi kompatibilnosti, ali za
+sigurno prebacivanje između okruženja preporučuju se dva odvojena polja iznad.
 
 Dok proizvodi nemaju upisane stvarne mase i dimenzije, zadana procjena paketa
 je 20 × 15 × 10 cm, 0,20 kg ambalaže i 0,10 kg po artiklu, uz minimalnu
