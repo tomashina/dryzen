@@ -138,6 +138,11 @@ class Client {
 			CURLOPT_RETURNTRANSFER => true,
 			CURLOPT_CUSTOMREQUEST  => $method,
 			CURLOPT_HTTPHEADER     => $headers,
+			// The production host's libcurl negotiates HTTP/2 with the
+			// Eurosender edge, which can terminate otherwise valid requests
+			// with PROTOCOL_ERROR. HTTP/1.1 is fully supported by the API and
+			// avoids that transport-level incompatibility.
+			CURLOPT_HTTP_VERSION   => CURL_HTTP_VERSION_1_1,
 			CURLOPT_CONNECTTIMEOUT => $this->connect_timeout,
 			CURLOPT_TIMEOUT        => $this->timeout,
 			CURLOPT_SSL_VERIFYPEER => true,
