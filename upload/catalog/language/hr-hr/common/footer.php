@@ -25,6 +25,7 @@ $_['text_compliance_privacy'] = 'Pravila privatnosti';
 $_['text_compliance_returns'] = 'Povrati i reklamacije';
 $_['text_customer_information'] = 'Informacije za kupce';
 $_['text_accepted_payment_methods'] = 'Prihvaćeni načini plaćanja';
+$_['text_shipping_partner'] = 'Dostavu omogućuje';
 $_['text_opens_new_window'] = 'otvara se u novom prozoru';
 $_['text_back_to_top'] = 'Na vrh';
 $_['text_dryzen_newsletter_title'] = 'Budite među prvima koji saznaju.';

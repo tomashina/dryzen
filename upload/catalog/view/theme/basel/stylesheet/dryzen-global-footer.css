@@ -119,6 +119,37 @@
   color: #1c7fbe;
 }
 
+#footer .cards-holder {
+  margin-bottom: 14px;
+}
+
+.dryzen-footer-logistics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 42px;
+  color: #53606c;
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.dryzen-footer-logistics a {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
+  padding: 6px;
+}
+
+.dryzen-footer-logistics img {
+  display: block;
+  width: 140px;
+  height: auto;
+  max-width: 100%;
+}
+
 @media (max-width: 767px) {
   .dryzen-global-newsletter {
     padding: 44px 0;
@@ -138,5 +169,13 @@
 
   .dryzen-global-newsletter .newsletter-submit-wrap {
     margin-top: 12px;
+  }
+
+  .dryzen-footer-logistics {
+    margin-bottom: 34px;
+  }
+
+  .dryzen-footer-logistics img {
+    width: 125px;
   }
 }

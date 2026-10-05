@@ -24,6 +24,7 @@ $_['text_compliance_privacy'] = 'Privacy Policy';
 $_['text_compliance_returns'] = 'Returns and Complaints';
 $_['text_customer_information'] = 'Customer information';
 $_['text_accepted_payment_methods'] = 'Accepted payment methods';
+$_['text_shipping_partner'] = 'Delivery powered by';
 $_['text_opens_new_window'] = 'opens in a new window';
 $_['text_back_to_top'] = 'Back to top';
 $_['text_dryzen_newsletter_title'] = 'Be among the first to know.';

@@ -55,6 +55,7 @@ class ControllerCommonFooter extends Controller {
 		$data['text_footer_guarantee'] = $this->language->get('text_footer_guarantee');
 		$data['text_customer_information'] = $this->language->get('text_customer_information');
 		$data['text_accepted_payment_methods'] = $this->language->get('text_accepted_payment_methods');
+		$data['text_shipping_partner'] = $this->language->get('text_shipping_partner');
 		$data['text_opens_new_window'] = $this->language->get('text_opens_new_window');
 		$data['text_back_to_top'] = $this->language->get('text_back_to_top');
 		$data['text_dryzen_newsletter_title'] = $this->language->get('text_dryzen_newsletter_title');
