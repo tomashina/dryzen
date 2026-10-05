@@ -459,10 +459,10 @@ class ModelExtensionShippingEurosender extends Model {
 		$allowed = $this->config->get('shipping_eurosender_service_types');
 
 		if (!is_array($allowed)) {
-			$allowed = array('selection', 'regular_plus', 'express');
+			$allowed = array('selection', 'flexi', 'regular_plus', 'express');
 		}
 
-		return array_values(array_intersect(array('selection', 'regular_plus', 'express'), $allowed));
+		return array_values(array_intersect(array('selection', 'flexi', 'regular_plus', 'express'), $allowed));
 	}
 
 	private function paymentMethod() {

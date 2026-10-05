@@ -21,6 +21,7 @@ $_['text_api_key_missing']         = 'Eurosender API ključ za odabrano okružen
 $_['text_sandbox']                 = 'Testno okruženje';
 $_['text_production']              = 'Produkcija';
 $_['text_service_selection']       = 'Standard (selection)';
+$_['text_service_flexi']           = 'Standard Flexi (flexi)';
 $_['text_service_regular_plus']    = 'Prioritetno (regular_plus)';
 $_['text_service_express']         = 'Prioritetno Express (express)';
 $_['text_credit']                  = 'Kredit';

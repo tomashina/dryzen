@@ -2,6 +2,7 @@
 $_['text_title']              = 'Eurosender delivery';
 $_['text_service_title']      = 'Eurosender – %s';
 $_['text_service_selection']  = 'Standard';
+$_['text_service_flexi']      = 'Standard Flexi';
 $_['text_service_regular_plus'] = 'Priority';
 $_['text_service_express']    = 'Priority Express';
 $_['text_estimated_delivery'] = '%s business days';

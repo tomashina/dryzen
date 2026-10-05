@@ -21,6 +21,7 @@ $_['text_api_key_missing']         = 'The Eurosender API key for the selected en
 $_['text_sandbox']                 = 'Sandbox';
 $_['text_production']              = 'Production';
 $_['text_service_selection']       = 'Standard (selection)';
+$_['text_service_flexi']           = 'Standard Flexi (flexi)';
 $_['text_service_regular_plus']    = 'Priority (regular_plus)';
 $_['text_service_express']         = 'Priority Express (express)';
 $_['text_credit']                  = 'Credit';

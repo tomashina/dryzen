@@ -804,7 +804,7 @@ class EurosenderTestSession {
 	public $data = array('currency' => 'EUR', 'user_id' => 7);
 }
 
-function makeEurosenderQuoteModel($client) {
+function makeEurosenderQuoteModel($client, $overrides = array()) {
 	$values = array_merge(eurosenderTestConfigValues(), array(
 		'shipping_eurosender_status' => 1,
 		'shipping_eurosender_geo_zone_id' => 0,
@@ -813,7 +813,7 @@ function makeEurosenderQuoteModel($client) {
 		'shipping_eurosender_markup_value' => '0',
 		'shipping_eurosender_fallback_rate' => '7.50',
 		'shipping_eurosender_sort_order' => 2
-	));
+	), $overrides);
 	$registry = new EurosenderTestRegistry(array(
 		'cart' => new EurosenderTestCart(),
 		'tax' => new EurosenderTestTax(),
@@ -860,6 +860,18 @@ $delivery_address = array(
 	'address_2' => '',
 	'zone' => 'Splitsko-dalmatinska'
 );
+$flexi_quote_client = new FakeEurosenderClient();
+$flexi_quote_client->quote_response = array('options' => array('serviceTypes' => array(
+	array(
+		'name' => 'flexi',
+		'price' => array('original' => array('currencyCode' => 'EUR', 'gross' => 6.5))
+	)
+)));
+$flexi_quote = makeEurosenderQuoteModel($flexi_quote_client, array(
+	'shipping_eurosender_service_types' => array('flexi')
+))->getQuote($delivery_address);
+assertEurosenderTrue(isset($flexi_quote['quote']['flexi']), 'Production Standard Flexi quotes must be exposed at checkout.');
+assertEurosenderSame(6.5, $flexi_quote['quote']['flexi']['cost'], 'Flexi quote price mismatch.');
 $empty_quote_client = new FakeEurosenderClient();
 $empty_quote_client->quote_response = array('options' => array('serviceTypes' => array()));
 assertEurosenderSame(array(), makeEurosenderQuoteModel($empty_quote_client)->getQuote($delivery_address), 'A successful quote with no supported service must not expose a fallback rate.');

@@ -41,7 +41,7 @@ class ControllerExtensionShippingEurosender extends Controller {
 		$origin = $this->getOriginDefaults();
 		$defaults = array(
 			'shipping_eurosender_environment'        => 'sandbox',
-			'shipping_eurosender_service_types'      => array('selection', 'regular_plus', 'express'),
+			'shipping_eurosender_service_types'      => array('selection', 'flexi', 'regular_plus', 'express'),
 			'shipping_eurosender_payment_method'     => 'credit',
 			'shipping_eurosender_length'             => '20',
 			'shipping_eurosender_width'              => '15',
@@ -82,6 +82,7 @@ class ControllerExtensionShippingEurosender extends Controller {
 
 		$data['service_types'] = array(
 			'selection'    => $this->language->get('text_service_selection'),
+			'flexi'        => $this->language->get('text_service_flexi'),
 			'regular_plus' => $this->language->get('text_service_regular_plus'),
 			'express'      => $this->language->get('text_service_express')
 		);
@@ -324,7 +325,7 @@ class ControllerExtensionShippingEurosender extends Controller {
 	}
 
 	private function sanitizeSettings($post) {
-		$allowed_services = array('selection', 'regular_plus', 'express');
+		$allowed_services = array('selection', 'flexi', 'regular_plus', 'express');
 		$services = isset($post['shipping_eurosender_service_types']) ? (array)$post['shipping_eurosender_service_types'] : array();
 		$post['shipping_eurosender_service_types'] = array_values(array_intersect($allowed_services, $services));
 
