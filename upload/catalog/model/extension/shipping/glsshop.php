@@ -33,6 +33,13 @@ class ModelExtensionShippingGlsshop extends Model {
 		);
 		$configured_cost = $this->config->get('shipping_glsshop_cost_' . strtolower($package_size));
 		$cost = ($configured_cost !== null && $configured_cost !== '' && is_numeric($configured_cost)) ? max(0, (float)$configured_cost) : $default_costs[$package_size];
+		$configured_free_total = $this->config->get('shipping_glsshop_free_total');
+		$free_total = ($configured_free_total !== null && $configured_free_total !== '' && is_numeric($configured_free_total)) ? max(0, (float)$configured_free_total) : 50.00;
+
+		if ($free_total > 0 && $this->cart->getSubTotal() >= $free_total) {
+			$cost = 0.00;
+		}
+
 		$configured_tax_class_id = $this->config->get('shipping_glsshop_tax_class_id');
 		$tax_class_id = ($configured_tax_class_id !== null && $configured_tax_class_id !== '') ? max(0, (int)$configured_tax_class_id) : 0;
 		$currency = !empty($this->session->data['currency']) ? $this->session->data['currency'] : $this->config->get('config_currency');
@@ -44,7 +51,7 @@ class ModelExtensionShippingGlsshop extends Model {
 			'title'        => sprintf($this->language->get('text_description'), $package_size),
 			'cost'         => $cost,
 			'tax_class_id' => $tax_class_id,
-			'text'         => $this->currency->format($this->tax->calculate($cost, $tax_class_id, $this->config->get('config_tax')), $currency)
+			'text'         => $cost > 0 ? $this->currency->format($this->tax->calculate($cost, $tax_class_id, $this->config->get('config_tax')), $currency) : $this->language->get('text_free')
 		);
 
 		$configured_sort_order = $this->config->get('shipping_glsshop_sort_order');

@@ -64,6 +64,13 @@
               </div>
             </div>
           </div>
+          <div class="form-group{% if error_free_total %} has-error{% endif %}">
+            <label class="col-sm-2 control-label" for="input-free-total"><span data-toggle="tooltip" title="{{ help_free_total }}">{{ entry_free_total }}</span></label>
+            <div class="col-sm-10">
+              <input type="number" min="0" step="0.01" name="shipping_glsshop_free_total" value="{{ shipping_glsshop_free_total }}" id="input-free-total" class="form-control" />
+              {% if error_free_total %}<div class="text-danger">{{ error_free_total }}</div>{% endif %}
+            </div>
+          </div>
           <div class="form-group">
             <label class="col-sm-2 control-label" for="input-tax-class"><span data-toggle="tooltip" title="{{ help_tax_class }}">{{ entry_tax_class }}</span></label>
             <div class="col-sm-10">

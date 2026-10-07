@@ -12,6 +12,7 @@ class ControllerExtensionShippingGlspaketomat extends Controller {
 			'shipping_glspaketomat_cost_m'       => '6.50',
 			'shipping_glspaketomat_cost_l'       => '8.50',
 			'shipping_glspaketomat_cost_xl'      => '10.50',
+			'shipping_glspaketomat_free_total'   => '50.00',
 			'shipping_glspaketomat_default_size' => 'S',
 			'shipping_glspaketomat_tax_class_id' => 0,
 			'shipping_glspaketomat_geo_zone_id'  => 6,
@@ -41,6 +42,10 @@ class ControllerExtensionShippingGlspaketomat extends Controller {
 				}
 			}
 
+			if (isset($this->request->post['shipping_glspaketomat_free_total'])) {
+				$this->request->post['shipping_glspaketomat_free_total'] = str_replace(',', '.', trim($this->request->post['shipping_glspaketomat_free_total']));
+			}
+
 			if ($this->validate()) {
 				$this->request->post['shipping_glspaketomat_default_size'] = strtoupper($this->request->post['shipping_glspaketomat_default_size']);
 				$this->request->post['shipping_glspaketomat_tax_class_id'] = isset($this->request->post['shipping_glspaketomat_tax_class_id']) ? max(0, (int)$this->request->post['shipping_glspaketomat_tax_class_id']) : 0;
@@ -59,6 +64,7 @@ class ControllerExtensionShippingGlspaketomat extends Controller {
 		$data['error_warning'] = isset($this->error['warning']) ? $this->error['warning'] : '';
 		$data['error_costs'] = isset($this->error['costs']) ? $this->error['costs'] : array();
 		$data['error_default_size'] = isset($this->error['default_size']) ? $this->error['default_size'] : '';
+		$data['error_free_total'] = isset($this->error['free_total']) ? $this->error['free_total'] : '';
 		$data['error_sort_order'] = isset($this->error['sort_order']) ? $this->error['sort_order'] : '';
 
 		$data['breadcrumbs'] = array();
@@ -87,6 +93,7 @@ class ControllerExtensionShippingGlspaketomat extends Controller {
 			'shipping_glspaketomat_cost_m'       => '6.50',
 			'shipping_glspaketomat_cost_l'       => '8.50',
 			'shipping_glspaketomat_cost_xl'      => '10.50',
+			'shipping_glspaketomat_free_total'   => '50.00',
 			'shipping_glspaketomat_default_size' => 'S',
 			'shipping_glspaketomat_tax_class_id' => 0,
 			'shipping_glspaketomat_geo_zone_id'  => 6,
@@ -142,6 +149,12 @@ class ControllerExtensionShippingGlspaketomat extends Controller {
 
 		if (!in_array($default_size, array('XS', 'S', 'M', 'L', 'XL'), true)) {
 			$this->error['default_size'] = $this->language->get('error_default_size');
+		}
+
+		$free_total = isset($this->request->post['shipping_glspaketomat_free_total']) ? trim((string)$this->request->post['shipping_glspaketomat_free_total']) : '';
+
+		if ($free_total === '' || !is_numeric($free_total) || (float)$free_total < 0) {
+			$this->error['free_total'] = $this->language->get('error_free_total');
 		}
 
 		$sort_order = isset($this->request->post['shipping_glspaketomat_sort_order']) ? trim((string)$this->request->post['shipping_glspaketomat_sort_order']) : '';

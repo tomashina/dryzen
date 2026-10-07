@@ -21,6 +21,7 @@ class Model
 	public $tax;
 	public $currency;
 	public $language;
+	public $cart;
 }
 
 if (!defined('DB_PREFIX')) {
@@ -36,6 +37,7 @@ class DryzenGlsTestLanguage
 		'text_gls_parcel_locker' => 'GLS paketomat',
 		'text_gls_pickup_location' => 'Mjesto preuzimanja',
 		'text_gls_pickup_id' => 'ID lokacije',
+		'text_free' => 'Besplatno',
 	);
 
 	public function get($key)
@@ -107,6 +109,21 @@ class DryzenGlsTestCurrency
 	public function format($value, $currency)
 	{
 		return number_format((float)$value, 2, '.', '') . ' ' . $currency;
+	}
+}
+
+class DryzenGlsTestCart
+{
+	private $sub_total;
+
+	public function __construct($sub_total)
+	{
+		$this->sub_total = (float)$sub_total;
+	}
+
+	public function getSubTotal()
+	{
+		return $this->sub_total;
 	}
 }
 
@@ -210,6 +227,7 @@ foreach ($quote_models as $definition) {
 		$definition['prefix'] . '_cost_m' => '6.50',
 		$definition['prefix'] . '_cost_l' => '8.50',
 		$definition['prefix'] . '_cost_xl' => '10.50',
+		$definition['prefix'] . '_free_total' => '50.00',
 		$definition['prefix'] . '_tax_class_id' => 0,
 		$definition['prefix'] . '_sort_order' => $definition['sort_order'],
 	);
@@ -223,6 +241,7 @@ foreach ($quote_models as $definition) {
 	$model->tax = new DryzenGlsTestTax();
 	$model->currency = new DryzenGlsTestCurrency();
 	$model->language = new DryzenGlsTestLanguage();
+	$model->cart = new DryzenGlsTestCart(49.99);
 
 	$quote = $model->getQuote(array('country_id' => 53, 'zone_id' => 0));
 	$line = $quote['quote'][$definition['quote']];
@@ -246,6 +265,24 @@ foreach ($quote_models as $definition) {
 		dryzenGlsAssertSame(number_format($expected_cost, 2, '.', '') . ' EUR', $tier_line['text'], 'The ' . $size . ' tier must display its final price.');
 	}
 
+	$model->config = new DryzenGlsTestConfig($config_values);
+	$model->cart = new DryzenGlsTestCart(50.00);
+	$free_quote = $model->getQuote(array('country_id' => 53, 'zone_id' => 0));
+	$free_line = $free_quote['quote'][$definition['quote']];
+	dryzenGlsAssertSame(0.0, $free_line['cost'], 'GLS shipping must become free exactly at the 50.00 EUR threshold.');
+	dryzenGlsAssertSame('Besplatno', $free_line['text'], 'A free GLS quote must be clearly labelled as free.');
+
+	$model->cart = new DryzenGlsTestCart(50.01);
+	$above_threshold_quote = $model->getQuote(array('country_id' => 53, 'zone_id' => 0));
+	dryzenGlsAssertSame(0.0, $above_threshold_quote['quote'][$definition['quote']]['cost'], 'GLS shipping must remain free above 50.00 EUR.');
+
+	$disabled_free_shipping_config = $config_values;
+	$disabled_free_shipping_config[$definition['prefix'] . '_free_total'] = '0';
+	$model->config = new DryzenGlsTestConfig($disabled_free_shipping_config);
+	$model->cart = new DryzenGlsTestCart(100.00);
+	$paid_quote = $model->getQuote(array('country_id' => 53, 'zone_id' => 0));
+	dryzenGlsAssertSame(5.5, $paid_quote['quote'][$definition['quote']]['cost'], 'A zero threshold must disable free GLS shipping.');
+
 	$model->db = new DryzenGlsTestDb(0);
 	dryzenGlsAssertSame(array(), $model->getQuote(array('country_id' => 14, 'zone_id' => 0)), 'The GLS pickup quote must be unavailable outside the configured geo zone.');
 }
@@ -260,6 +297,7 @@ $admin_order_model = dryzenGlsRead($root, 'upload/admin/model/sale/order.php');
 $admin_order_controller = dryzenGlsRead($root, 'upload/admin/controller/sale/order.php');
 $cod_model = dryzenGlsRead($root, 'upload/catalog/model/extension/payment/cod.php');
 $migration = dryzenGlsRead($root, 'database/migrations/20261007_gls_pickup_shipping.sql');
+$free_shipping_migration = dryzenGlsRead($root, 'database/migrations/20261007_gls_free_shipping.sql');
 $gls_admin_controllers = array(
 	dryzenGlsRead($root, 'upload/admin/controller/extension/shipping/glsshop.php'),
 	dryzenGlsRead($root, 'upload/admin/controller/extension/shipping/glspaketomat.php')
@@ -316,6 +354,8 @@ foreach (array('glsshop', 'glspaketomat') as $extension) {
 	dryzenGlsAssertContains($prefix . "_tax_class_id', '0'", $migration, 'GLS prices must use DryZen final-price mode without added tax.');
 	dryzenGlsAssertContains($prefix . "_geo_zone_id', '6'", $migration, 'GLS pickup must use the Croatia geo zone.');
 	dryzenGlsAssertContains($prefix . "_status', '1'", $migration, 'Both GLS pickup methods must be enabled by default.');
+	$free_total_key = preg_quote($prefix . '_free_total', '/');
+	dryzenGlsAssertMatches("/'" . $free_total_key . "'(?: AS `key`)?\\s*,\\s*'50\\.00'/", $free_shipping_migration, 'Both GLS pickup methods must become free from 50.00 EUR.');
 }
 
 dryzenGlsAssertContains('`gls_ps` text NULL', $migration, 'The migration must add oc_order.gls_ps.');
