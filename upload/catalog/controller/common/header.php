@@ -140,6 +140,19 @@ class ControllerCommonHeader extends Controller {
 		$this->response->setOutput(file_get_contents($path));
 	}
 
+	public function dryzenShopStylesheet() {
+		$path = DIR_APPLICATION . 'view/theme/basel/stylesheet/dryzen-shop.css';
+
+		if (!is_file($path) || !is_readable($path)) {
+			$this->response->addHeader('HTTP/1.1 404 Not Found');
+			return;
+		}
+
+		$this->response->addHeader('Content-Type: text/css; charset=utf-8');
+		$this->response->addHeader('Cache-Control: public, max-age=86400');
+		$this->response->setOutput(file_get_contents($path));
+	}
+
 	private function applyDryzenSeoDefaults($server) {
 		$title = trim((string) $this->document->getTitle());
 		$description = trim((string) $this->document->getDescription());

@@ -4,7 +4,7 @@ class ControllerProductProduct extends Controller {
 
 	public function index() {
 		$this->load->language('product/product');
-		$this->document->addStyle('catalog/view/theme/basel/stylesheet/dryzen-shop.css?v=20261002a');
+		$this->document->addStyle($this->url->link('common/header/dryzenShopStylesheet', 'v=20261007a', true));
 
 		$data['breadcrumbs'] = array();
 
