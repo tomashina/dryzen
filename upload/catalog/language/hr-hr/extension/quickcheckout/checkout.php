@@ -58,6 +58,10 @@ $_['text_close'] = 'Zatvori';
 $_['error_temporary_request'] = 'Došlo je do privremene greške. Vaši podaci su ostali u obrascu; pokušajte ponovno.';
 $_['text_boxnow_select'] = 'Odaberite BOX NOW paketomat';
 $_['text_boxnow_selected_placeholder'] = 'Odabrani BOX NOW paketomat';
+$_['text_gls_shop_select'] = 'Odaberite GLS ParcelShop';
+$_['text_gls_shop_selected_placeholder'] = 'Odabrani GLS ParcelShop';
+$_['text_gls_locker_select'] = 'Odaberite GLS paketomat';
+$_['text_gls_locker_selected_placeholder'] = 'Odabrani GLS paketomat';
 
 // Error
 $_['error_fax']                      = 'Faks mora imati između 3 i 32 znaka!';
@@ -72,3 +76,4 @@ $_['error_reward']                   = 'Upozorenje: Unesite broj bodova koje že
 $_['error_points']                   = 'Upozorenje: Nemate %s bodova!';
 $_['error_minimum_order']            = 'Upozorenje: Minimalna narudžba mora iznositi %s prije nego što možete nastaviti!';
 $_['error_comment']                  = 'Upozorenje: Potrebno je unijeti komentar uz narudžbu.';
+$_['error_gls_point']                 = 'Upozorenje: Odaberite GLS ParcelShop ili paketomat za odabrani način dostave.';

@@ -59,6 +59,10 @@ $_['text_close'] = 'Close';
 $_['error_temporary_request'] = 'A temporary error occurred. Your details remain in the form; please try again.';
 $_['text_boxnow_select'] = 'Choose a BOX NOW locker';
 $_['text_boxnow_selected_placeholder'] = 'Selected BOX NOW locker';
+$_['text_gls_shop_select'] = 'Choose a GLS ParcelShop';
+$_['text_gls_shop_selected_placeholder'] = 'Selected GLS ParcelShop';
+$_['text_gls_locker_select'] = 'Choose a GLS parcel locker';
+$_['text_gls_locker_selected_placeholder'] = 'Selected GLS parcel locker';
 
 // Error
 $_['error_fax']       		         = 'Fax must be between 3 and 32 characters!';
@@ -73,3 +77,4 @@ $_['error_reward']        		     = 'Warning: Please enter the amount of reward p
 $_['error_points']           		 = 'Warning: You don\'t have %s reward points!';
 $_['error_minimum_order']			 = 'Warning: You need a minimum order of %s before you can checkout.';
 $_['error_comment']					 = 'Warning: Order comment is required.';
+$_['error_gls_point']                = 'Warning: Please choose the GLS ParcelShop or parcel locker for the selected delivery method.';

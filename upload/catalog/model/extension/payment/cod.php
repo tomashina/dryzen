@@ -18,11 +18,19 @@ class ModelExtensionPaymentCOD extends Model {
 		}
 
 		$method_data = array();
+		$shipping_code = isset($this->session->data['shipping_method']['code']) ? $this->session->data['shipping_method']['code'] : '';
+		$shipping_note = '';
+
+		if ($shipping_code === 'glsshop.glsshop') {
+			$shipping_note = $this->language->get('text_gls_shop_note');
+		} elseif ($shipping_code === 'glspaketomat.glspaketomat') {
+			$shipping_note = $this->language->get('text_gls_locker_note');
+		}
 
 		if ($status) {
 			$method_data = array(
 				'code'       => 'cod',
-				'title'      => $this->language->get('text_title'),
+				'title'      => $this->language->get('text_title') . $shipping_note,
 				'terms'      => '',
 				'sort_order' => $this->config->get('payment_cod_sort_order')
 			);

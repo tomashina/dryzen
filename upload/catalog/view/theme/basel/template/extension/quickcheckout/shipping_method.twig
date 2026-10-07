@@ -48,11 +48,204 @@
     {% endfor %}
   </select><br />
 {% endif %}
+{% if gls_ps_methods %}
+<div id="gls-ps-selectors">
+  {% for gls_method in gls_ps_methods %}
+  <div class="gls-ps-selector" data-shipping-code="{{ gls_method.code|escape }}" style="margin:10px 0;{% if code != gls_method.code %}display:none;{% endif %}">
+    <button type="button" class="gls-ps-open btn btn-primary" data-dialog-id="{{ gls_method.dialog_id|escape }}" style="margin-bottom:10px;">{{ gls_method.select_text|escape }}</button>
+    <gls-dpm-dialog country="hr" id="{{ gls_method.dialog_id|escape }}" filter-type="{{ gls_method.filter_type|escape }}"></gls-dpm-dialog>
+    <input type="text"{% if code == gls_method.code %} name="gls_ps"{% endif %} class="gls-ps-value form-control" value="{% if gls_ps_shipping_code == gls_method.code %}{{ gls_ps|escape }}{% endif %}" readonly="readonly" placeholder="{{ gls_method.placeholder|escape }}"{% if code != gls_method.code %} disabled="disabled"{% endif %} />
+    <div class="gls-ps-error text-danger" style="margin-top:5px;{% if code != gls_method.code or gls_ps %}display:none;{% endif %}">{{ error_gls_point|escape }}</div>
+  </div>
+  {% endfor %}
+</div>
+{% endif %}
 <br />
 {% endif %}
 <div class="otp-shipping-notice">
   <strong>{{ text_shipping_notice_title }}</strong> {{ text_shipping_notice_copy }}
 </div>
+{% if gls_ps_methods %}
+<script type="text/javascript"><!--
+(function($) {
+	var storedShippingCode = '{{ gls_ps_shipping_code|escape('js') }}';
+
+	function selectedShippingCode() {
+		var selected = $('#shipping-method input[name=\'shipping_method\']:checked').val();
+
+		if (!selected) {
+			selected = $('#shipping-method select[name=\'shipping_method\']').val();
+		}
+
+		return selected || '';
+	}
+
+	function isGlsPointMethod(shippingCode) {
+		return shippingCode === 'glsshop.glsshop' || shippingCode === 'glspaketomat.glspaketomat';
+	}
+
+	function selectorFor(shippingCode) {
+		return $('#shipping-method .gls-ps-selector').filter(function() {
+			return $(this).attr('data-shipping-code') === shippingCode;
+		});
+	}
+
+	function openGlsDialog(dialog) {
+		if (!dialog) {
+			return;
+		}
+
+		if (typeof dialog.showModal === 'function') {
+			dialog.showModal();
+			return;
+		}
+
+		if (window.customElements && typeof window.customElements.whenDefined === 'function') {
+			window.customElements.whenDefined('gls-dpm-dialog').then(function() {
+				if (typeof dialog.showModal === 'function') {
+					dialog.showModal();
+				}
+			});
+		}
+	}
+
+	function postGlsPoint(data, success, failure) {
+		if (window.dryzenGlsPointRequest && window.dryzenGlsPointRequest.readyState !== 4) {
+			window.dryzenGlsPointRequest.abort();
+		}
+
+		window.dryzenGlsPointRequest = $.ajax({
+			url: 'index.php?route=extension/quickcheckout/shipping_method/saveGlsPoint',
+			type: 'post',
+			data: data,
+			dataType: 'json',
+			cache: false,
+			success: success,
+			error: failure
+		});
+	}
+
+	function clearGlsPoint(shippingCode, persist) {
+		$('#shipping-method .gls-ps-value').val('');
+		$('#shipping-method .gls-ps-error').hide();
+		storedShippingCode = '';
+
+		if (persist) {
+			postGlsPoint({
+				shipping_code: shippingCode,
+				clear: 1
+			});
+		}
+	}
+
+	function toggleGlsPointSelector() {
+		var shippingCode = selectedShippingCode();
+		var selectors = $('#shipping-method .gls-ps-selector');
+
+		selectors.hide();
+		selectors.find('.gls-ps-value').prop('disabled', true).removeAttr('name');
+		selectors.find('.gls-ps-error').hide();
+
+		if (isGlsPointMethod(shippingCode)) {
+			var activeSelector = selectorFor(shippingCode);
+
+			activeSelector.show();
+			activeSelector.find('.gls-ps-value').prop('disabled', false).attr('name', 'gls_ps');
+
+			if (storedShippingCode && storedShippingCode !== shippingCode) {
+				clearGlsPoint(shippingCode);
+			}
+
+			activeSelector.find('.gls-ps-error').toggle(!activeSelector.find('.gls-ps-value').val());
+		} else if (storedShippingCode || $('#shipping-method .gls-ps-value').filter(function() { return !!this.value; }).length) {
+			clearGlsPoint(shippingCode);
+		}
+	}
+
+	function cleanPointPart(value) {
+		if (typeof value !== 'string' && typeof value !== 'number') {
+			return '';
+		}
+
+		return String(value || '').replace(/[;,]+/g, ' ').replace(/\s+/g, ' ').trim();
+	}
+
+	function saveSelectedPoint(dialog, point) {
+		var selector = $(dialog).closest('.gls-ps-selector');
+		var shippingCode = selector.attr('data-shipping-code');
+		var contact = point && point.contact ? point.contact : {};
+		var pointName = cleanPointPart(point && (point.name || point.title) ? (point.name || point.title) : contact.name);
+		var pointAddress = cleanPointPart(contact.address || (point && point.address));
+		var pointCity = cleanPointPart(contact.city || (point && point.city));
+		var pointId = cleanPointPart(point && point.id);
+		var input = selector.find('.gls-ps-value');
+		var error = selector.find('.gls-ps-error');
+
+		if (selectedShippingCode() !== shippingCode || !pointName || !pointAddress || !pointCity || !pointId) {
+			input.val('');
+			clearGlsPoint(shippingCode, true);
+			error.show();
+			return;
+		}
+
+		input.val(pointName + ', ' + pointAddress + ', ' + pointCity + ';' + pointId);
+		error.hide();
+
+		postGlsPoint({
+			shipping_code: shippingCode,
+			point_name: pointName,
+			point_address: pointAddress,
+			point_city: pointCity,
+			point_id: pointId
+		}, function(json) {
+			if (json && json.success && json.gls_ps) {
+				input.val(json.gls_ps);
+				storedShippingCode = shippingCode;
+				error.hide();
+			} else {
+				input.val('');
+				storedShippingCode = '';
+				error.show();
+			}
+		}, function() {
+			input.val('');
+			storedShippingCode = '';
+			error.show();
+		});
+	}
+
+	$('#shipping-method')
+		.off('change.dryzenGlsPoint', 'input[name=\'shipping_method\'], select[name=\'shipping_method\']')
+		.on('change.dryzenGlsPoint', 'input[name=\'shipping_method\'], select[name=\'shipping_method\']', toggleGlsPointSelector)
+		.off('click.dryzenGlsPoint', '.gls-ps-open')
+		.on('click.dryzenGlsPoint', '.gls-ps-open', function() {
+			var dialog = document.getElementById($(this).attr('data-dialog-id'));
+
+			openGlsDialog(dialog);
+		});
+
+	$('#shipping-method gls-dpm-dialog').each(function() {
+		if (!this.dryzenGlsPointBound) {
+			this.addEventListener('change', function(event) {
+				saveSelectedPoint(this, event.detail);
+			});
+
+			this.dryzenGlsPointBound = true;
+		}
+	});
+
+	toggleGlsPointSelector();
+
+	if (!document.querySelector('script[data-dryzen-gls-dpm]')) {
+		var script = document.createElement('script');
+		script.type = 'module';
+		script.src = 'https://map.gls-hungary.com/widget/gls-dpm.js';
+		script.setAttribute('data-dryzen-gls-dpm', '1');
+		document.getElementsByTagName('head')[0].appendChild(script);
+	}
+})(jQuery);
+//--></script>
+{% endif %}
 {% if delivery and (not delivery_delivery_time or delivery_delivery_time == '1' or delivery_delivery_time == '3') %} 
 <div{{ delivery_required ? ' class="required"' }}>
   <label class="control-label"><strong>{{ text_delivery }}</strong></label>

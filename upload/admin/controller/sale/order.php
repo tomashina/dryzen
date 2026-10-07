@@ -884,6 +884,13 @@ class ControllerSaleOrder extends Controller {
 			// The legacy BOX NOW OCMOD may append its old inline controls here.
 			// Reset those values because tracking is now rendered by the dedicated panel below.
 			$data['shipping_method'] = isset($order_info['shipping_method']) ? (string)$order_info['shipping_method'] : '';
+			if (in_array($order_info['shipping_code'], array('glsshop.glsshop', 'glspaketomat.glspaketomat'), true)) {
+				$data['shipping_method'] = $this->formatGlsPickupMethod(
+					$data['shipping_method'],
+					$order_info['shipping_code'],
+					isset($order_info['gls_ps']) ? $order_info['gls_ps'] : ''
+				);
+			}
 			$data['boxnow_create'] = '';
 			$data['boxnow_label'] = '';
 			$data['boxnow_shipment'] = array();
@@ -2054,6 +2061,46 @@ class ControllerSaleOrder extends Controller {
 		return array(
 			'address'   => $address,
 			'locker_id' => $locker_id
+		);
+	}
+
+	private function formatGlsPickupMethod($shipping_method, $shipping_code, $value) {
+		$point = $this->parseGlsPickupPoint($value);
+
+		if ($point['location'] === '' && $point['point_id'] === '') {
+			return $shipping_method;
+		}
+
+		$title_key = $shipping_code === 'glspaketomat.glspaketomat' ? 'text_gls_parcel_locker' : 'text_gls_parcel_shop';
+		$lines = array('<strong>' . htmlspecialchars($this->language->get($title_key), ENT_QUOTES, 'UTF-8') . '</strong>');
+
+		if ($point['location'] !== '') {
+			$lines[] = '<strong>' . htmlspecialchars($this->language->get('text_gls_pickup_location'), ENT_QUOTES, 'UTF-8') . ':</strong> ' . htmlspecialchars($point['location'], ENT_QUOTES, 'UTF-8');
+		}
+
+		if ($point['point_id'] !== '') {
+			$lines[] = '<strong>' . htmlspecialchars($this->language->get('text_gls_pickup_id'), ENT_QUOTES, 'UTF-8') . ':</strong> ' . htmlspecialchars($point['point_id'], ENT_QUOTES, 'UTF-8');
+		}
+
+		return $shipping_method . '<br /><br />' . implode('<br />', $lines);
+	}
+
+	private function parseGlsPickupPoint($value) {
+		$value = trim(preg_replace('/\s+/', ' ', strip_tags(html_entity_decode((string)$value, ENT_QUOTES, 'UTF-8'))));
+
+		if ($value === '' || stripos($value, 'undefined') !== false) {
+			return array('location' => '', 'point_id' => '');
+		}
+
+		$separator = strrpos($value, ';');
+
+		if ($separator === false) {
+			return array('location' => '', 'point_id' => $value);
+		}
+
+		return array(
+			'location' => trim(substr($value, 0, $separator)),
+			'point_id' => trim(substr($value, $separator + 1))
 		);
 	}
  /**

@@ -276,3 +276,8 @@ $_['error_permission']           = 'Upozorenje: Nemate ovlasti za izmjenu narud�
 // $_['error_curl']               = 'Upozorenje: CURL greška %s(%s)!'; // postojalo u verziji OC 2.0.3.1
 $_['error_action']               = 'Upozorenje: Ne mogu završiti ovu akciju!';
 $_['error_filetype']			 = 'Neispravna vrsta/tip datoteke/file-a!';
+
+$_['text_gls_parcel_shop']     = 'GLS paket shop';
+$_['text_gls_parcel_locker']   = 'GLS paketomat';
+$_['text_gls_pickup_location'] = 'Mjesto preuzimanja';
+$_['text_gls_pickup_id']       = 'ID lokacije';

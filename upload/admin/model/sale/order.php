@@ -121,6 +121,7 @@ class ModelSaleOrder extends Model {
 				'shipping_custom_field'   => json_decode($order_query->row['shipping_custom_field'], true),
 				'shipping_method'         => $order_query->row['shipping_method'],
 				'shipping_code'           => $order_query->row['shipping_code'],
+				'gls_ps'                  => isset($order_query->row['gls_ps']) ? $order_query->row['gls_ps'] : '',
 				'comment'                 => $order_query->row['comment'],
 				'total'                   => $order_query->row['total'],
 				'reward'                  => $reward,

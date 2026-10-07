@@ -133,3 +133,8 @@ $_['error_warning']              = 'Warning: Please check the form carefully for
 $_['error_permission']           = 'Warning: You do not have permission to modify orders!';
 $_['error_action']               = 'Warning: Could not complete this action!';
 $_['error_filetype']             = 'Invalid file type!';
+
+$_['text_gls_parcel_shop']        = 'GLS ParcelShop';
+$_['text_gls_parcel_locker']      = 'GLS parcel locker';
+$_['text_gls_pickup_location']    = 'Pickup point';
+$_['text_gls_pickup_id']          = 'Location ID';

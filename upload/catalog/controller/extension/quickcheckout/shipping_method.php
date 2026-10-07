@@ -186,6 +186,55 @@ class ControllerExtensionQuickCheckoutShippingMethod extends Controller {
 		if (!$exists) {
 			$data['code'] = $stored_code;
 		}
+
+		$gls_point_method_definitions = array(
+			'glsshop.glsshop' => array(
+				'code'         => 'glsshop.glsshop',
+				'dialog_id'    => 'gls-dpm-dialog-shop',
+				'filter_type'  => 'parcel-shop',
+				'select_text'  => $this->language->get('text_gls_shop_select'),
+				'placeholder'  => $this->language->get('text_gls_shop_selected_placeholder')
+			),
+			'glspaketomat.glspaketomat' => array(
+				'code'         => 'glspaketomat.glspaketomat',
+				'dialog_id'    => 'gls-dpm-dialog-locker',
+				'filter_type'  => 'parcel-locker',
+				'select_text'  => $this->language->get('text_gls_locker_select'),
+				'placeholder'  => $this->language->get('text_gls_locker_selected_placeholder')
+			)
+		);
+		$data['gls_ps_methods'] = array();
+
+		foreach ($data['shipping_methods'] as $shipping_method) {
+			if (empty($shipping_method['quote']) || !is_array($shipping_method['quote'])) {
+				continue;
+			}
+
+			foreach ($shipping_method['quote'] as $quote) {
+				if (isset($quote['code']) && isset($gls_point_method_definitions[$quote['code']])) {
+					$data['gls_ps_methods'][$quote['code']] = $gls_point_method_definitions[$quote['code']];
+				}
+			}
+		}
+
+		$data['gls_ps'] = '';
+		$data['gls_ps_shipping_code'] = '';
+
+		if ($this->isGlsPointShippingCode($data['code']) &&
+			isset($this->session->data['gls_ps'], $this->session->data['gls_ps_shipping_code']) &&
+			$this->session->data['gls_ps_shipping_code'] === $data['code']) {
+			$gls_point = $this->sanitizeGlsPoint($this->session->data['gls_ps']);
+
+			if ($gls_point !== '') {
+				$this->session->data['gls_ps'] = $gls_point;
+				$data['gls_ps'] = $gls_point;
+				$data['gls_ps_shipping_code'] = $data['code'];
+			} else {
+				$this->clearGlsPoint();
+			}
+		} else {
+			$this->clearGlsPoint();
+		}
 		
 		if (isset($this->request->post['delivery_date'])) {
 			$data['delivery_date'] = $this->request->post['delivery_date'];
@@ -306,6 +355,20 @@ class ControllerExtensionQuickCheckoutShippingMethod extends Controller {
 		if (isset($this->request->post['delivery_time'])) {
 			$this->session->data['delivery_time'] = strip_tags($this->request->post['delivery_time']);
 		}
+
+		if (array_key_exists('shipping_method', $this->request->post)) {
+			$shipping_code = is_scalar($this->request->post['shipping_method']) ? trim((string)$this->request->post['shipping_method']) : '';
+			$stored_gls_point = isset($this->session->data['gls_ps']) ? $this->sanitizeGlsPoint($this->session->data['gls_ps']) : '';
+
+			if (!$this->isGlsPointShippingCode($shipping_code) ||
+				!isset($this->session->data['gls_ps_shipping_code']) ||
+				$this->session->data['gls_ps_shipping_code'] !== $shipping_code ||
+				$stored_gls_point === '') {
+				$this->clearGlsPoint();
+			} else {
+				$this->session->data['gls_ps'] = $stored_gls_point;
+			}
+		}
 		
 		if (isset($this->request->post['shipping_method']) && isset($this->session->data['shipping_methods'])) {
 			$shipping = explode('.', $this->request->post['shipping_method']);
@@ -314,6 +377,43 @@ class ControllerExtensionQuickCheckoutShippingMethod extends Controller {
 				$this->session->data['shipping_method'] = $this->session->data['shipping_methods'][$shipping[0]]['quote'][$shipping[1]];
 			}
 		}
+	}
+
+	public function saveGlsPoint() {
+		$this->load->language('checkout/checkout');
+		$this->load->language('extension/quickcheckout/checkout');
+
+		$json = array();
+		$shipping_code = isset($this->request->post['shipping_code']) && is_scalar($this->request->post['shipping_code']) ? trim((string)$this->request->post['shipping_code']) : '';
+
+		if (!empty($this->request->post['clear'])) {
+			$this->clearGlsPoint();
+			$json['success'] = true;
+			$json['gls_ps'] = '';
+		} elseif (!$this->isGlsPointShippingCode($shipping_code) || !$this->isShippingMethodAvailable($shipping_code)) {
+			$json['error'] = $this->language->get('error_shipping');
+		} else {
+			$gls_point = $this->buildGlsPoint(
+				isset($this->request->post['point_name']) ? $this->request->post['point_name'] : '',
+				isset($this->request->post['point_address']) ? $this->request->post['point_address'] : '',
+				isset($this->request->post['point_city']) ? $this->request->post['point_city'] : '',
+				isset($this->request->post['point_id']) ? $this->request->post['point_id'] : ''
+			);
+
+			if ($gls_point === '') {
+				$this->clearGlsPoint();
+				$json['error'] = $this->language->get('error_gls_point');
+			} else {
+				$this->session->data['gls_ps'] = $gls_point;
+				$this->session->data['gls_ps_shipping_code'] = $shipping_code;
+				$json['success'] = true;
+				$json['gls_ps'] = $gls_point;
+				$json['shipping_code'] = $shipping_code;
+			}
+		}
+
+		$this->response->addHeader('Content-Type: application/json');
+		$this->response->setOutput(json_encode($json));
 	}
 	
 	public function validate() {
@@ -384,6 +484,36 @@ class ControllerExtensionQuickCheckoutShippingMethod extends Controller {
 				$json['error']['warning'] = $this->language->get('error_shipping');
 			}
 		}
+
+		$shipping_code = isset($this->request->post['shipping_method']) && is_scalar($this->request->post['shipping_method']) ? trim((string)$this->request->post['shipping_method']) : '';
+
+		if ($this->isGlsPointShippingCode($shipping_code)) {
+			// The checkout validation can overtake the asynchronous widget save.
+			// Accept the same sanitized read-only field so a fast click does not lose the selected point.
+			$has_posted_gls_point = array_key_exists('gls_ps', $this->request->post);
+			$posted_gls_point = $has_posted_gls_point && is_scalar($this->request->post['gls_ps'])
+				? $this->sanitizeGlsPoint($this->request->post['gls_ps'])
+				: '';
+			$gls_point = $has_posted_gls_point
+				? $posted_gls_point
+				: (isset($this->session->data['gls_ps']) ? $this->sanitizeGlsPoint($this->session->data['gls_ps']) : '');
+
+			if ($posted_gls_point !== '') {
+				$this->session->data['gls_ps'] = $posted_gls_point;
+				$this->session->data['gls_ps_shipping_code'] = $shipping_code;
+			}
+
+			if ($gls_point === '' ||
+				!isset($this->session->data['gls_ps_shipping_code']) ||
+				$this->session->data['gls_ps_shipping_code'] !== $shipping_code) {
+				$this->clearGlsPoint();
+				$json['error']['warning'] = $this->language->get('error_gls_point');
+			} else {
+				$this->session->data['gls_ps'] = $gls_point;
+			}
+		} else {
+			$this->clearGlsPoint();
+		}
 		
 		if ($this->config->get('quickcheckout_delivery_required')) {
 			if (empty($this->request->post['delivery_date'])) {
@@ -407,5 +537,77 @@ class ControllerExtensionQuickCheckoutShippingMethod extends Controller {
 
 		$this->response->addHeader('Content-Type: application/json');
 		$this->response->setOutput(json_encode($json));	
+	}
+
+	private function isGlsPointShippingCode($shipping_code) {
+		return is_scalar($shipping_code) && in_array((string)$shipping_code, array('glsshop.glsshop', 'glspaketomat.glspaketomat'), true);
+	}
+
+	private function isShippingMethodAvailable($shipping_code) {
+		$shipping = explode('.', (string)$shipping_code, 2);
+
+		return isset($shipping[0], $shipping[1], $this->session->data['shipping_methods'][$shipping[0]]['quote'][$shipping[1]]['code']) &&
+			$this->session->data['shipping_methods'][$shipping[0]]['quote'][$shipping[1]]['code'] === $shipping_code;
+	}
+
+	private function buildGlsPoint($name, $address, $city, $point_id) {
+		if (!is_scalar($name) || !is_scalar($address) || !is_scalar($city) || !is_scalar($point_id)) {
+			return '';
+		}
+
+		$name = $this->sanitizeGlsPointPart($name, 100);
+		$address = $this->sanitizeGlsPointPart($address, 160);
+		$city = $this->sanitizeGlsPointPart($city, 80);
+		$point_id = $this->sanitizeGlsPointId($point_id);
+
+		if ($name === '' || $address === '' || $city === '' || $point_id === '') {
+			return '';
+		}
+
+		return $name . ', ' . $address . ', ' . $city . ';' . $point_id;
+	}
+
+	private function sanitizeGlsPoint($gls_point) {
+		if (!is_scalar($gls_point)) {
+			return '';
+		}
+
+		$gls_point = trim((string)$gls_point);
+		$separator = strrpos($gls_point, ';');
+
+		if ($separator === false) {
+			return '';
+		}
+
+		$parts = explode(',', substr($gls_point, 0, $separator), 3);
+
+		if (count($parts) !== 3) {
+			return '';
+		}
+
+		return $this->buildGlsPoint($parts[0], $parts[1], $parts[2], substr($gls_point, $separator + 1));
+	}
+
+	private function sanitizeGlsPointPart($value, $max_length) {
+		$value = html_entity_decode(strip_tags((string)$value), ENT_QUOTES, 'UTF-8');
+		$value = str_replace(array(',', ';'), ' ', $value);
+		$value = preg_replace('/[\x00-\x1F\x7F]+/', ' ', $value);
+		$value = trim(preg_replace('/\s+/', ' ', $value));
+
+		if (function_exists('mb_substr')) {
+			return mb_substr($value, 0, $max_length, 'UTF-8');
+		}
+
+		return substr($value, 0, $max_length);
+	}
+
+	private function sanitizeGlsPointId($point_id) {
+		$point_id = preg_replace('/[^A-Za-z0-9._:\/-]/', '', (string)$point_id);
+
+		return substr($point_id, 0, 128);
+	}
+
+	private function clearGlsPoint() {
+		unset($this->session->data['gls_ps'], $this->session->data['gls_ps_shipping_code']);
 	}
 }

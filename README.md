@@ -20,6 +20,43 @@ eventualne integracije te uklonite nastavak `.example` iz imena.
 Nakon uvoza baze u administraciji otvorite **Extensions > Modifications** i
 kliknite gumb za osvježavanje kako bi se ponovno generirao OCMOD cache.
 
+## GLS paket shop i paketomat
+
+DryZen ima dva odvojena GLS načina preuzimanja: **GLS PaketShop**
+(`glsshop.glsshop`) i **GLS paketomat** (`glspaketomat.glspaketomat`). Kupac na
+checkoutu bira točnu lokaciju, a naziv, adresa i GLS ID lokacije spremaju se uz
+narudžbu te prikazuju u adminu i e-mailu potvrde. Dostava na kućnu adresu ostaje
+zaseban način dostave i ne koristi GLS odabir lokacije.
+
+DryZen sve ove pošiljke predaje u GLS paketomat pa oba načina koriste službenu
+HR cijenu iz [Paket.hr cjenika](https://www.paket.hr/cjenik-usluga) umanjenu za
+1,50 EUR popusta za predaju pošiljke u paketomat. Osnovne cijene za XS/S/M/L/XL
+su 6/7/8/10/12 EUR; nakon popusta iznose
+4,50/5,50/6,50/8,50/10,50 EUR. DryZen ima isključen OpenCartov dodatni obračun
+poreza, pa se ti konačni iznosi spremaju izravno uz poreznu klasu 0.
+
+Trenutni proizvodi imaju dimenzije postavljene na nulu, zato je zadana veličina
+paketa **S** (konačna cijena 5,50 EUR). Zadanu veličinu i svaki cjenovni razred
+moguće je promijeniti u postavkama pojedinog GLS načina dostave.
+
+Nakon prijenosa datoteka pokrenite idempotentnu migraciju. Ona dodaje polje
+`oc_order.gls_ps`, registrira oba shipping extensiona i za hrvatsku geo-zonu 6
+uključuje zadane S cijene s poreznom klasom 0. Ako se moduli umjesto migracije
+instaliraju pojedinačno kroz OpenCart administraciju, njihove instalacijske
+rutine također stvaraju potrebno polje i unose iste zadane postavke:
+
+```bash
+mysql -u KORISNIK -p NAZIV_BAZE < database/migrations/20261007_gls_pickup_shipping.sql
+php scripts/refresh-ocmod.php
+```
+
+Fokusirana provjera GLS cijena, checkout persistencea i sigurnog prikaza
+odabrane lokacije pokreće se s PHP-om 7.4:
+
+```bash
+php scripts/test-gls-shipping.php
+```
+
 ## e-Računi: cijene i zaliha
 
 OpenCart modul **Extensions > Extensions > Modules > e-Računi sinkronizacija**

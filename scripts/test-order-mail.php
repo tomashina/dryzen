@@ -110,6 +110,10 @@ class DryzenOrderMailTestLanguage
         'text_boxnow_locker' => 'BOX NOW paketomat',
         'text_boxnow_address' => 'Adresa',
         'text_boxnow_locker_id' => 'ID lockera',
+		'text_gls_parcel_shop' => 'GLS paket shop',
+		'text_gls_parcel_locker' => 'GLS paketomat',
+		'text_gls_pickup_location' => 'Mjesto preuzimanja',
+		'text_gls_pickup_id' => 'ID lokacije',
     );
 
     public function get($key)
@@ -183,6 +187,32 @@ dryzenOrderMailAssertSame(
         new DryzenOrderMailTestLanguage()
     ),
     'The order email shows escaped BOX NOW address and locker ID as separate fields.'
+);
+
+$parseGlsPickupPoint = $reflection->getMethod('parseGlsPickupPoint');
+$parseGlsPickupPoint->setAccessible(true);
+
+dryzenOrderMailAssertSame(
+	array(
+		'location' => 'GLS Centar, Ilica 1 & 3, Zagreb',
+		'point_id' => 'HR-GLS-100',
+	),
+	$parseGlsPickupPoint->invoke($controller, 'GLS Centar, Ilica 1 &amp; 3, Zagreb;HR-GLS-100'),
+	'GLS pickup location and identifier are parsed from the checkout value.'
+);
+
+dryzenOrderMailAssertSame(
+	'GLS Paketomat<br /><br /><strong>GLS paketomat</strong><br /><strong>Mjesto preuzimanja:</strong> GLS Centar, Ilica 1 &amp; 3, Zagreb<br /><strong>ID lokacije:</strong> HR-GLS-100',
+	$formatShippingMethod->invoke(
+		$controller,
+		array(
+			'shipping_method' => 'GLS Paketomat',
+			'shipping_code' => 'glspaketomat.glspaketomat',
+			'gls_ps' => 'GLS Centar, Ilica 1 & 3, Zagreb;HR-GLS-100',
+		),
+		new DryzenOrderMailTestLanguage()
+	),
+	'The order email safely shows the selected GLS parcel locker and its identifier.'
 );
 
 $getRecipients = $reflection->getMethod('getOrderMailRecipients');

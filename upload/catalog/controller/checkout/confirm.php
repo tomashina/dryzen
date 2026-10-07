@@ -34,6 +34,21 @@ class ControllerCheckoutConfirm extends Controller {
 			$redirect = $this->url->link('checkout/cart');
 		}
 
+		$shipping_code = isset($this->session->data['shipping_method']['code']) ? $this->session->data['shipping_method']['code'] : '';
+
+		if ($this->isGlsPickupMethod($shipping_code)) {
+			$gls_pickup_point = $this->normalizeGlsPickupPoint(isset($this->session->data['gls_ps']) ? $this->session->data['gls_ps'] : '');
+			$gls_pickup_shipping_code = isset($this->session->data['gls_ps_shipping_code']) ? (string)$this->session->data['gls_ps_shipping_code'] : '';
+
+			if (!$this->isValidGlsPickupPoint($gls_pickup_point) || $gls_pickup_shipping_code !== $shipping_code) {
+				$redirect = $this->url->link('checkout/checkout', '', true);
+			} else {
+				$this->session->data['gls_ps'] = $gls_pickup_point;
+			}
+		} else {
+			unset($this->session->data['gls_ps'], $this->session->data['gls_ps_shipping_code']);
+		}
+
 		// Validate minimum quantity requirements.
 		$products = $this->cart->getProducts();
 
@@ -205,6 +220,12 @@ class ControllerCheckoutConfirm extends Controller {
 				$order_data['shipping_method'] = '';
 				$order_data['shipping_code'] = '';
 			}
+
+			$order_data['gls_ps'] = $this->isGlsPickupMethod($order_data['shipping_code'])
+				&& isset($this->session->data['gls_ps'], $this->session->data['gls_ps_shipping_code'])
+				&& $this->session->data['gls_ps_shipping_code'] === $order_data['shipping_code']
+				? $this->normalizeGlsPickupPoint($this->session->data['gls_ps'])
+				: '';
 
 			$order_data['products'] = array();
 
@@ -427,5 +448,35 @@ class ControllerCheckoutConfirm extends Controller {
 		$data['withdrawal_rights_url'] = $this->url->link('information/information', 'information_id=17', true);
 
 		$this->response->setOutput($this->load->view('checkout/confirm', $data));
+	}
+
+	private function isGlsPickupMethod($shipping_code) {
+		return in_array((string)$shipping_code, array('glsshop.glsshop', 'glspaketomat.glspaketomat'), true);
+	}
+
+	private function normalizeGlsPickupPoint($value) {
+		if (!is_scalar($value)) {
+			return '';
+		}
+
+		$value = html_entity_decode((string)$value, ENT_QUOTES, 'UTF-8');
+		$value = strip_tags($value);
+		$value = preg_replace('/[\x00-\x1F\x7F]+/', ' ', $value);
+		$value = preg_replace('/\s+/', ' ', $value);
+		$value = trim((string)$value);
+
+		if ($value === '' || stripos($value, 'undefined') !== false) {
+			return '';
+		}
+
+		return function_exists('utf8_substr') ? utf8_substr($value, 0, 1024) : substr($value, 0, 1024);
+	}
+
+	private function isValidGlsPickupPoint($value) {
+		$separator = strrpos((string)$value, ';');
+
+		return $separator !== false
+			&& trim(substr($value, 0, $separator)) !== ''
+			&& trim(substr($value, $separator + 1)) !== '';
 	}
 }
