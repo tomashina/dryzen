@@ -33,7 +33,7 @@ class ControllerCommonHeader extends Controller {
 		}
 
 		$this->applyDryzenSeoDefaults($server);
-		$this->document->addStyle('catalog/view/theme/basel/stylesheet/dryzen-global-footer.css?v=20261005a');
+		$this->document->addStyle('catalog/view/theme/basel/stylesheet/dryzen-global-footer.css?v=20261007a');
 		$this->document->addStyle($this->url->link('common/header/legalGuaranteeStylesheet', 'v=20261002f', true));
 
 		$data['title'] = $this->document->getTitle();

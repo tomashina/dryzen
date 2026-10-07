@@ -7,6 +7,10 @@
   margin-top: 0;
 }
 
+.checkout-cart .dryzen-cart-page {
+  padding-bottom: 36px;
+}
+
 .dryzen-global-newsletter .dryzen-newsletter {
   max-width: 900px;
   margin: 0 auto;
@@ -151,6 +155,10 @@
 }
 
 @media (max-width: 767px) {
+  .checkout-cart .dryzen-cart-page {
+    padding-bottom: 28px;
+  }
+
   .dryzen-global-newsletter {
     padding: 44px 0;
   }
