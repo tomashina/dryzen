@@ -3,58 +3,63 @@
   <div class="page-header">
     <div class="container-fluid">
       <div class="pull-right">
-        <button type="submit" form="form-marketing" data-toggle="tooltip" title="{{ button_save }}" class="btn btn-primary"><i class="fa fa-save"></i></button>
-        <a href="{{ cancel }}" data-toggle="tooltip" title="{{ button_cancel }}" class="btn btn-default"><i class="fa fa-reply"></i></a></div>
-      <h1>{{ heading_title }}</h1>
+        <button type="submit" form="form-marketing" data-toggle="tooltip" title="{{ button_save|escape('html') }}" class="btn btn-primary"><i class="fa fa-save"></i></button>
+        <a href="{{ cancel|replace({'&amp;': '&'})|escape('html') }}" data-toggle="tooltip" title="{{ button_cancel|escape('html') }}" class="btn btn-default"><i class="fa fa-reply"></i></a></div>
+      <h1>{{ heading_title|escape('html') }}</h1>
       <ul class="breadcrumb">
         {% for breadcrumb in breadcrumbs %}
-        <li><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+        <li><a href="{{ breadcrumb.href|replace({'&amp;': '&'})|escape('html') }}">{{ breadcrumb.text|escape('html') }}</a></li>
         {% endfor %}
       </ul>
     </div>
   </div>
   <div class="container-fluid">
     {% if error_warning %}
-    <div class="alert alert-danger alert-dismissible"><i class="fa fa-exclamation-circle"></i> {{ error_warning }}
+    <div class="alert alert-danger alert-dismissible"><i class="fa fa-exclamation-circle"></i> {{ error_warning|escape('html') }}
       <button type="button" class="close" data-dismiss="alert">&times;</button>
     </div>
     {% endif %}
     <div class="panel panel-default">
       <div class="panel-heading">
-        <h3 class="panel-title"><i class="fa fa-pencil"></i> {{ text_form }}</h3>
+        <h3 class="panel-title"><i class="fa fa-pencil"></i> {{ text_form|escape('html') }}</h3>
       </div>
       <div class="panel-body">
-        <form action="{{ action }}" method="post" enctype="multipart/form-data" id="form-marketing" class="form-horizontal">
+        <form action="{{ action|replace({'&amp;': '&'})|escape('html') }}" method="post" enctype="multipart/form-data" id="form-marketing" class="form-horizontal">
           <div class="form-group required">
-            <label class="col-sm-2 control-label" for="input-name">{{ entry_name }}</label>
+            <label class="col-sm-2 control-label" for="input-name">{{ entry_name|escape('html') }}</label>
             <div class="col-sm-10">
-              <input type="text" name="name" value="{{ name }}" placeholder="{{ entry_name }}" id="input-name" class="form-control" />
+              <input type="text" name="name" value="{{ name|escape('html') }}" placeholder="{{ entry_name|escape('html') }}" id="input-name" class="form-control" />
               {% if error_name %}
-              <div class="text-danger">{{ error_name }}</div>
+              <div class="text-danger">{{ error_name|escape('html') }}</div>
               {% endif %}
             </div>
           </div>
           <div class="form-group">
-            <label class="col-sm-2 control-label" for="input-description">{{ entry_description }}</label>
+            <label class="col-sm-2 control-label" for="input-description">{{ entry_description|escape('html') }}</label>
             <div class="col-sm-10">
-              <textarea name="description" rows="5" placeholder="{{ entry_description }}" id="input-description" class="form-control">{{ description }}</textarea>
+              <textarea name="description" rows="5" placeholder="{{ entry_description|escape('html') }}" id="input-description" class="form-control">{{ description|escape('html') }}</textarea>
             </div>
           </div>
           <div class="form-group required">
-            <label class="col-sm-2 control-label" for="input-code"><span data-toggle="tooltip" title="{{ help_code }}">{{ entry_code }}</span></label>
+            <label class="col-sm-2 control-label" for="input-code"><span data-toggle="tooltip" title="{{ help_code|escape('html') }}">{{ entry_code|escape('html') }}</span></label>
             <div class="col-sm-10">
-              <input type="text" name="code" value="{{ code }}" placeholder="{{ entry_code }}" id="input-code" class="form-control" />
+              <input type="text" name="code" value="{{ code|escape('html') }}" placeholder="{{ entry_code|escape('html') }}" id="input-code" maxlength="64" class="form-control"{% if code_locked %} readonly="readonly"{% else %} pattern="[A-Za-z0-9_\-]{1,64}"{% endif %} />
+              <p class="help-block">{{ (code_locked ? help_code_locked : help_code)|escape('html') }}</p>
               {% if error_code %}
-              <div class="text-danger">{{ error_code }}</div>
+              <div class="text-danger">{{ error_code|escape('html') }}</div>
               {% endif %}
             </div>
           </div>
           <div class="form-group">
-            <label class="col-sm-2 control-label" for="input-example"><span data-toggle="tooltip" title="{{ help_example }}">{{ entry_example }}</span></label>
+            <label class="col-sm-2 control-label" for="input-tracking-link">{{ entry_tracking_link|escape('html') }}</label>
             <div class="col-sm-10">
-              <input type="text" placeholder="{{ entry_example }}" id="input-example1" class="form-control" />
-              <br/>
-              <input type="text" placeholder="{{ entry_example }}" id="input-example2" class="form-control" />
+              <div class="input-group">
+                <input type="text" value="{{ tracking_url|escape('html') }}" data-store="{{ store|escape('html') }}" id="input-tracking-link" class="form-control" readonly="readonly" onclick="this.select();" />
+                <span class="input-group-btn"><button type="button" id="button-copy-link" class="btn btn-default"><i class="fa fa-copy"></i> {{ button_copy_link|escape('html') }}</button></span>
+              </div>
+              <small id="copy-feedback" aria-live="polite"></small>
+              <p class="help-block">{{ help_example|escape('html') }}</p>
+              <p class="help-block">{{ text_tracking_help|escape('html') }}</p>
             </div>
           </div>
         </form>
@@ -62,11 +67,31 @@
     </div>
   </div>
   <script type="text/javascript"><!--
-$('#input-code').on('keyup', function() {
-	$('#input-example1').val('{{ store }}?tracking=' + $('#input-code').val());
-	$('#input-example2').val('{{ store }}index.php?route=common/home&tracking=' + $('#input-code').val());
+$('#input-code').on('input', function() {
+  var input = $('#input-tracking-link');
+  input.val(input.attr('data-store') + '?tracking=' + encodeURIComponent($(this).val()));
 });
 
-$('#input-code').trigger('keyup');
+$('#button-copy-link').on('click', function() {
+  var input = $('#input-tracking-link')[0];
+  var feedback = $('#copy-feedback');
+
+  function finish(copied) {
+    feedback.toggleClass('text-success', copied).toggleClass('text-warning', !copied).text(copied ? '{{ text_link_copied|escape('js') }}' : '{{ text_copy_manually|escape('js') }}');
+  }
+
+  function fallback() {
+    input.focus();
+    input.select();
+    input.setSelectionRange(0, input.value.length);
+    try { finish(document.execCommand('copy')); } catch (error) { finish(false); }
+  }
+
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(input.value).then(function() { finish(true); }, fallback);
+  } else {
+    fallback();
+  }
+});
 //--></script></div>
 {{ footer }}

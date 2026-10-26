@@ -3,6 +3,57 @@
 
   window.gkMetaEventQueue = window.gkMetaEventQueue || [];
 
+  var capturedTrackingCode = '';
+
+  function clearReferralCookie() {
+    document.cookie = 'tracking=; Max-Age=0; Path=/; SameSite=Lax' +
+      (window.location.protocol === 'https:' ? '; Secure' : '');
+  }
+
+  function captureReferral(marketing) {
+    if (!marketing) {
+      capturedTrackingCode = '';
+      clearReferralCookie();
+      return;
+    }
+
+    if (!window.fetch || !window.URL || !window.URLSearchParams) return;
+
+    var parameters = new URLSearchParams(window.location.search);
+    var codes = parameters.getAll('tracking');
+    var code = codes.length ? codes[codes.length - 1] : '';
+    var hasArrayValue = false;
+
+    parameters.forEach(function (value, key) {
+      if (key.indexOf('tracking[') === 0) hasArrayValue = true;
+    });
+
+    if (hasArrayValue || !/^[A-Za-z0-9._~-]{1,64}$/.test(code) || capturedTrackingCode === code) return;
+
+    var existing = document.cookie.match(/(?:^|;\s*)tracking=([^;]*)/);
+
+    // Startup already handled visitors who had consent before this GET.
+    if (existing && existing[1] === code) return;
+
+    capturedTrackingCode = code;
+    var endpoint = new URL('index.php', document.baseURI);
+    endpoint.searchParams.set('route', 'extension/module/marketing_tracking/capture');
+
+    window.fetch(endpoint.toString(), {
+      method: 'POST',
+      credentials: 'same-origin',
+      cache: 'no-store',
+      headers: {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'},
+      body: 'tracking=' + encodeURIComponent(code)
+    }).then(function () {
+      // A choice can change while capture is in flight. Clear any cookie
+      // received by that earlier request if marketing has been withdrawn.
+      if (!CookieConsent.acceptedCategory('marketing')) clearReferralCookie();
+    }).catch(function () {
+      // Referral measurement must not interrupt shopping on network failure.
+    });
+  }
+
   function readAjaxResponse(xhr) {
     var response = xhr && xhr.responseJSON ? xhr.responseJSON : null;
 
@@ -76,6 +127,7 @@
     var marketing = CookieConsent.acceptedCategory('marketing');
 
     window.gkMarketingConsentGranted = marketing;
+    captureReferral(marketing);
 
     if (typeof window.gkSetGoogleConsent === 'function') {
       window.gkSetGoogleConsent(analytics, marketing);
@@ -114,7 +166,7 @@
         },
         marketing: {
           enabled: false,
-          autoClear: {cookies: [{name: '_fbp'}, {name: '_fbc'}, {name: /^_gcl/}]}
+          autoClear: {cookies: [{name: '_fbp'}, {name: '_fbc'}, {name: /^_gcl/}, {name: 'tracking'}]}
         }
       },
       onFirstConsent: applyConsent,
@@ -148,7 +200,7 @@
                 {title: 'O vašem izboru', description: 'Izbor možete promijeniti u bilo kojem trenutku poveznicom „Postavke kolačića” u podnožju.'},
                 {title: 'Nužni kolačići', description: 'Omogućuju košaricu, prijavu, jezik, valutu, sigurnost i pamćenje vašeg izbora. Ne mogu se isključiti.', linkedCategory: 'necessary'},
                 {title: 'Analitika', description: 'Google Analytics pomaže nam razumjeti korištenje trgovine i poboljšati sadržaj. Učitava se tek nakon pristanka.', linkedCategory: 'analytics'},
-                {title: 'Marketing', description: 'Meta Pixel mjeri učinak oglasa i događaje PageView, AddToCart i Purchase. Učitava se tek nakon pristanka.', linkedCategory: 'marketing'}
+                {title: 'Marketing', description: 'Meta Pixel mjeri učinak oglasa i događaje PageView, AddToCart i Purchase. Kolačić tracking povezuje kupnju s poveznicom influencera ili partnera tijekom 30 dana. Koriste se tek nakon pristanka.', linkedCategory: 'marketing'}
               ]
             }
           },
@@ -170,7 +222,7 @@
                 {title: 'About your choice', description: 'You can change your choice at any time using the “Cookie settings” link in the footer.'},
                 {title: 'Necessary cookies', description: 'Required for the cart, login, language, currency, security and saving your choice.', linkedCategory: 'necessary'},
                 {title: 'Analytics', description: 'Google Analytics helps us understand and improve the shop. It loads only after consent.', linkedCategory: 'analytics'},
-                {title: 'Marketing', description: 'Meta Pixel measures advertising and the PageView, AddToCart and Purchase events. It loads only after consent.', linkedCategory: 'marketing'}
+                {title: 'Marketing', description: 'Meta Pixel measures advertising and the PageView, AddToCart and Purchase events. The tracking cookie links purchases to an influencer or partner link for 30 days. These are used only after consent.', linkedCategory: 'marketing'}
               ]
             }
           }

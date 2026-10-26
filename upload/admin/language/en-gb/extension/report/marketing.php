@@ -7,7 +7,7 @@ $_['text_extension']   = 'Extensions';
 $_['text_edit']        = 'Edit Marketing Report';
 $_['text_success']     = 'Success: You have modified marketing report!';
 $_['text_filter']      = 'Filter';
-$_['text_all_status']  = 'All Statuses';
+$_['text_all_status']  = 'Counted orders (store completion statuses)';
 
 // Column
 $_['column_campaign']  = 'Campaign Name';

@@ -1,12 +1,14 @@
 <?php
 class ModelExtensionReportMarketing extends Model {
 	public function getMarketing($data = array()) {
+		$statuses = array_filter(array_unique(array_map('intval', (array)$this->config->get('config_complete_status'))), function($status) { return $status > 0; });
+		$status_list = $statuses ? implode(',', $statuses) : '0';
 		$sql = "SELECT m.marketing_id, m.name AS campaign, m.code, m.clicks AS clicks, (SELECT COUNT(DISTINCT order_id) FROM `" . DB_PREFIX . "order` o1 WHERE o1.marketing_id = m.marketing_id";
 
 		if (!empty($data['filter_order_status_id'])) {
 			$sql .= " AND o1.order_status_id = '" . (int)$data['filter_order_status_id'] . "'";
 		} else {
-			$sql .= " AND o1.order_status_id > '0'";
+			$sql .= " AND o1.order_status_id > 0 AND o1.order_status_id IN (" . $status_list . ")";
 		}
 
 		if (!empty($data['filter_date_start'])) {
@@ -22,7 +24,7 @@ class ModelExtensionReportMarketing extends Model {
 		if (!empty($data['filter_order_status_id'])) {
 			$sql .= " AND o2.order_status_id = '" . (int)$data['filter_order_status_id'] . "'";
 		} else {
-			$sql .= " AND o2.order_status_id > '0'";
+			$sql .= " AND o2.order_status_id > 0 AND o2.order_status_id IN (" . $status_list . ")";
 		}
 
 		if (!empty($data['filter_date_start'])) {

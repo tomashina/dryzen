@@ -5,7 +5,7 @@ $_['heading_title']    = 'Oglašavanje/marketing - Izvještaj';
 
 // Text
 $_['text_list']        = 'Popis/lista oglašavanja/marketinga';
-$_['text_all_status']  = 'Svi statusi';
+$_['text_all_status']  = 'Priznate narudžbe (statusi dovršetka trgovine)';
 
 // Column
 $_['column_campaign']  = 'Naziv kampanje';

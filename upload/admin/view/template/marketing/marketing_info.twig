@@ -1,0 +1,62 @@
+{{ header }}{{ column_left }}
+<div id="content">
+  <div class="page-header">
+    <div class="container-fluid">
+      <div class="pull-right">
+        <a href="{{ edit|replace({'&amp;': '&'})|escape('html') }}" class="btn btn-primary" data-toggle="tooltip" title="{{ button_edit|escape('html') }}"><i class="fa fa-pencil"></i></a>
+        <a href="{{ cancel|replace({'&amp;': '&'})|escape('html') }}" class="btn btn-default" data-toggle="tooltip" title="{{ button_cancel|escape('html') }}"><i class="fa fa-reply"></i></a>
+      </div>
+      <h1>{{ heading_title|escape('html') }}</h1>
+      <ul class="breadcrumb">
+        {% for breadcrumb in breadcrumbs %}
+        <li><a href="{{ breadcrumb.href|replace({'&amp;': '&'})|escape('html') }}">{{ breadcrumb.text|escape('html') }}</a></li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+  <div class="container-fluid">
+    <div class="alert alert-info"><i class="fa fa-info-circle"></i> {{ text_tracking_help|escape('html') }}</div>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title"><i class="fa fa-list"></i> {{ name|escape('html') }} — {{ text_orders|escape('html') }}</h3>
+      </div>
+      <div class="panel-body">
+        <p>{{ text_orders_help|escape('html') }}</p>
+        <p><strong>{{ entry_tracking_link|escape('html') }}:</strong> <a href="{{ tracking_url|escape('html') }}" target="_blank" rel="noopener noreferrer">{{ tracking_url|escape('html') }}</a></p>
+        <div class="table-responsive">
+          <table class="table table-bordered table-hover">
+            <thead>
+              <tr>
+                <td class="text-right">{{ column_order_id|escape('html') }}</td>
+                <td class="text-left">{{ column_customer|escape('html') }}</td>
+                <td class="text-left">{{ column_status|escape('html') }}</td>
+                <td class="text-right">{{ column_total|escape('html') }}</td>
+                <td class="text-left">{{ column_date_added|escape('html') }}</td>
+                <td class="text-right">{{ column_action|escape('html') }}</td>
+              </tr>
+            </thead>
+            <tbody>
+              {% for order in orders %}
+              <tr>
+                <td class="text-right">{{ order.order_id|escape('html') }}</td>
+                <td class="text-left">{{ order.customer|escape('html') }}</td>
+                <td class="text-left">{{ order.status|escape('html') }}</td>
+                <td class="text-right">{{ order.total|escape('html') }}</td>
+                <td class="text-left">{{ order.date_added|escape('html') }}</td>
+                <td class="text-right">{% if order.view %}<a href="{{ order.view|replace({'&amp;': '&'})|escape('html') }}" class="btn btn-info" data-toggle="tooltip" title="{{ button_view|escape('html') }}"><i class="fa fa-eye"></i></a>{% endif %}</td>
+              </tr>
+              {% else %}
+              <tr><td class="text-center" colspan="6">{{ text_no_results|escape('html') }}</td></tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        <div class="row">
+          <div class="col-sm-6 text-left">{{ pagination }}</div>
+          <div class="col-sm-6 text-right">{{ results|escape('html') }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{{ footer }}

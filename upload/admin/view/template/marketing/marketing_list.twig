@@ -3,25 +3,25 @@
   <div class="page-header">
     <div class="container-fluid">
       <div class="pull-right">
-        <button type="button" data-toggle="tooltip" title="{{ button_filter }}" onclick="$('#filter-marketing').toggleClass('hidden-sm hidden-xs');" class="btn btn-default hidden-md hidden-lg"><i class="fa fa-filter"></i></button>
-        <a href="{{ add }}" data-toggle="tooltip" title="{{ button_add }}" class="btn btn-primary"><i class="fa fa-plus"></i></a>
-        <button type="button" data-toggle="tooltip" title="{{ button_delete }}" class="btn btn-danger" onclick="confirm('{{ text_confirm }}') ? $('#form-marketing').submit() : false;"><i class="fa fa-trash-o"></i></button>
+        <button type="button" data-toggle="tooltip" title="{{ button_filter|escape('html') }}" onclick="$('#filter-marketing').toggleClass('hidden-sm hidden-xs');" class="btn btn-default hidden-md hidden-lg"><i class="fa fa-filter"></i></button>
+        <a href="{{ add|replace({'&amp;': '&'})|escape('html') }}" data-toggle="tooltip" title="{{ button_add|escape('html') }}" class="btn btn-primary"><i class="fa fa-plus"></i></a>
+        <button type="button" data-toggle="tooltip" title="{{ button_delete|escape('html') }}" class="btn btn-danger" onclick="confirm('{{ text_confirm|escape('js') }}') ? $('#form-marketing').submit() : false;"><i class="fa fa-trash-o"></i></button>
       </div>
-      <h1>{{ heading_title }}</h1>
+      <h1>{{ heading_title|escape('html') }}</h1>
       <ul class="breadcrumb">
         {% for breadcrumb in breadcrumbs %}
-        <li><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+        <li><a href="{{ breadcrumb.href|replace({'&amp;': '&'})|escape('html') }}">{{ breadcrumb.text|escape('html') }}</a></li>
         {% endfor %}
       </ul>
     </div>
   </div>
   <div class="container-fluid">{% if error_warning %}
-    <div class="alert alert-danger alert-dismissible"><i class="fa fa-exclamation-circle"></i> {{ error_warning }}
+    <div class="alert alert-danger alert-dismissible"><i class="fa fa-exclamation-circle"></i> {{ error_warning|escape('html') }}
       <button type="button" class="close" data-dismiss="alert">&times;</button>
     </div>
     {% endif %}
     {% if success %}
-    <div class="alert alert-success alert-dismissible"><i class="fa fa-check-circle"></i> {{ success }}
+    <div class="alert alert-success alert-dismissible"><i class="fa fa-check-circle"></i> {{ success|escape('html') }}
       <button type="button" class="close" data-dismiss="alert">&times;</button>
     </div>
     {% endif %}
@@ -29,27 +29,27 @@
       <div id="filter-marketing" class="col-md-3 col-md-push-9 col-sm-12 hidden-sm hidden-xs">
         <div class="panel panel-default">
           <div class="panel-heading">
-            <h3 class="panel-title"><i class="fa fa-filter"></i> {{ text_filter }}</h3>
+            <h3 class="panel-title"><i class="fa fa-filter"></i> {{ text_filter|escape('html') }}</h3>
           </div>
           <div class="panel-body">
             <div class="form-group">
-              <label class="control-label" for="input-name">{{ entry_name }}</label>
-              <input type="text" name="filter_name" value="{{ filter_name }}" placeholder="{{ entry_name }}" id="input-name" class="form-control" />
+              <label class="control-label" for="input-name">{{ entry_name|escape('html') }}</label>
+              <input type="text" name="filter_name" value="{{ filter_name|escape('html') }}" placeholder="{{ entry_name|escape('html') }}" id="input-name" class="form-control" />
             </div>
             <div class="form-group">
-              <label class="control-label" for="input-code">{{ entry_code }}</label>
-              <input type="text" name="filter_code" value="{{ filter_code }}" placeholder="{{ entry_code }}" id="input-code" class="form-control" />
+              <label class="control-label" for="input-code">{{ entry_code|escape('html') }}</label>
+              <input type="text" name="filter_code" value="{{ filter_code|escape('html') }}" placeholder="{{ entry_code|escape('html') }}" id="input-code" class="form-control" />
             </div>
             <div class="form-group">
-              <label class="control-label" for="input-date-added">{{ entry_date_added }}</label>
+              <label class="control-label" for="input-date-added">{{ entry_date_added|escape('html') }}</label>
               <div class="input-group date">
-                <input type="text" name="filter_date_added" value="{{ filter_date_added }}" placeholder="{{ entry_date_added }}" data-date-format="YYYY-MM-DD" class="form-control" />
+                <input type="text" name="filter_date_added" value="{{ filter_date_added|escape('html') }}" placeholder="{{ entry_date_added|escape('html') }}" data-date-format="YYYY-MM-DD" class="form-control" />
                 <span class="input-group-btn">
                 <button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
                 </span></div>
             </div>
             <div class="form-group text-right">
-              <button type="button" id="button-filter" class="btn btn-default"><i class="fa fa-filter"></i> {{ button_filter }}</button>
+              <button type="button" id="button-filter" class="btn btn-default"><i class="fa fa-filter"></i> {{ button_filter|escape('html') }}</button>
             </div>
           </div>
         </div>
@@ -57,21 +57,24 @@
       <div class="col-md-9 col-md-pull-3 col-sm-12">
         <div class="panel panel-default">
           <div class="panel-heading">
-            <h3 class="panel-title"><i class="fa fa-list"></i> {{ text_list }}</h3>
+            <h3 class="panel-title"><i class="fa fa-list"></i> {{ text_list|escape('html') }}</h3>
           </div>
           <div class="panel-body">
-            <form action="{{ delete }}" method="post" enctype="multipart/form-data" id="form-marketing">
+            <div class="alert alert-info"><i class="fa fa-info-circle"></i> {{ text_tracking_help|escape('html') }}</div>
+            <form action="{{ delete|replace({'&amp;': '&'})|escape('html') }}" method="post" enctype="multipart/form-data" id="form-marketing">
               <div class="table-responsive">
                 <table class="table table-bordered table-hover">
                   <thead>
                     <tr>
                       <td style="width: 1px;" class="text-center"><input type="checkbox" onclick="$('input[name*=\'selected\']').prop('checked', this.checked);" /></td>
-                      <td class="text-left">{% if sort == 'm.name' %} <a href="{{ sort_name }}" class="{{ order|lower }}">{{ column_name }}</a> {% else %} <a href="{{ sort_name }}">{{ column_name }}</a> {% endif %}</td>
-                      <td class="text-left">{% if sort == 'm.code' %} <a href="{{ sort_code }}" class="{{ order|lower }}">{{ column_code }}</a> {% else %} <a href="{{ sort_code }}">{{ column_code }}</a> {% endif %}</td>
-                      <td class="text-right">{{ column_clicks }}</td>
-                      <td class="text-right">{{ column_orders }}</td>
-                      <td class="text-left">{% if sort == 'm.date_added' %} <a href="{{ sort_date_added }}" class="{{ order|lower }}">{{ column_date_added }}</a> {% else %} <a href="{{ sort_date_added }}">{{ column_date_added }}</a> {% endif %}</td>
-                      <td class="text-right">{{ column_action }}</td>
+                      <td class="text-left">{% if sort == 'm.name' %} <a href="{{ sort_name|replace({'&amp;': '&'})|escape('html') }}" class="{{ order|lower|escape('html') }}">{{ column_name|escape('html') }}</a> {% else %} <a href="{{ sort_name|replace({'&amp;': '&'})|escape('html') }}">{{ column_name|escape('html') }}</a> {% endif %}</td>
+                      <td class="text-left">{% if sort == 'm.code' %} <a href="{{ sort_code|replace({'&amp;': '&'})|escape('html') }}" class="{{ order|lower|escape('html') }}">{{ column_code|escape('html') }}</a> {% else %} <a href="{{ sort_code|replace({'&amp;': '&'})|escape('html') }}">{{ column_code|escape('html') }}</a> {% endif %}</td>
+                      <td class="text-right">{{ column_clicks|escape('html') }}</td>
+                      <td class="text-right">{{ column_orders|escape('html') }}</td>
+                      <td class="text-right">{{ column_revenue|escape('html') }}</td>
+                      <td class="text-right">{{ column_conversion|escape('html') }}</td>
+                      <td class="text-left">{% if sort == 'm.date_added' %} <a href="{{ sort_date_added|replace({'&amp;': '&'})|escape('html') }}" class="{{ order|lower|escape('html') }}">{{ column_date_added|escape('html') }}</a> {% else %} <a href="{{ sort_date_added|replace({'&amp;': '&'})|escape('html') }}">{{ column_date_added|escape('html') }}</a> {% endif %}</td>
+                      <td class="text-right">{{ column_action|escape('html') }}</td>
                     </tr>
                   </thead>
                   <tbody>
@@ -80,21 +83,30 @@
                   {% for marketing in marketings %}
                   <tr>
                     <td class="text-center">{% if marketing.marketing_id in selected %}
-                      <input type="checkbox" name="selected[]" value="{{ marketing.marketing_id }}" checked="checked" />
+                      <input type="checkbox" name="selected[]" value="{{ marketing.marketing_id|escape('html') }}" checked="checked" />
                       {% else %}
-                      <input type="checkbox" name="selected[]" value="{{ marketing.marketing_id }}" />
+                      <input type="checkbox" name="selected[]" value="{{ marketing.marketing_id|escape('html') }}" />
                       {% endif %}</td>
-                    <td class="text-left">{{ marketing.name }}</td>
-                    <td class="text-left">{{ marketing.code }}</td>
-                    <td class="text-right">{{ marketing.clicks }}</td>
-                    <td class="text-right">{{ marketing.orders }}</td>
-                    <td class="text-left">{{ marketing.date_added }}</td>
-                    <td class="text-right"><a href="{{ marketing.edit }}" data-toggle="tooltip" title="{{ button_edit }}" class="btn btn-primary"><i class="fa fa-pencil"></i></a></td>
+                    <td class="text-left">{{ marketing.name|escape('html') }}</td>
+                    <td class="text-left" style="min-width: 280px;">
+                      <code>{{ marketing.code|escape('html') }}</code>
+                      <div class="input-group">
+                        <input type="text" value="{{ marketing.tracking_url|escape('html') }}" class="form-control input-sm" readonly="readonly" aria-label="{{ entry_tracking_link|escape('html') }}" onclick="this.select();" />
+                        <span class="input-group-btn"><button type="button" class="btn btn-default btn-sm button-copy-link" title="{{ button_copy_link|escape('html') }}" aria-label="{{ button_copy_link|escape('html') }}"><i class="fa fa-copy"></i></button></span>
+                      </div>
+                      <small class="copy-feedback" aria-live="polite"></small>
+                    </td>
+                    <td class="text-right">{{ marketing.clicks|escape('html') }}</td>
+                    <td class="text-right"><a href="{{ marketing.info|replace({'&amp;': '&'})|escape('html') }}" title="{{ button_view_orders|escape('html') }}">{{ marketing.orders|escape('html') }}</a></td>
+                    <td class="text-right text-nowrap">{{ marketing.revenue|escape('html') }}</td>
+                    <td class="text-right">{{ marketing.conversion|escape('html') }}</td>
+                    <td class="text-left">{{ marketing.date_added|escape('html') }}</td>
+                    <td class="text-right"><a href="{{ marketing.edit|replace({'&amp;': '&'})|escape('html') }}" data-toggle="tooltip" title="{{ button_edit|escape('html') }}" class="btn btn-primary"><i class="fa fa-pencil"></i></a></td>
                   </tr>
                   {% endfor %}
                   {% else %}
                   <tr>
-                    <td class="text-center" colspan="8">{{ text_no_results }}</td>
+                    <td class="text-center" colspan="9">{{ text_no_results|escape('html') }}</td>
                   </tr>
                   {% endif %}
                     </tbody>
@@ -104,7 +116,7 @@
             </form>
             <div class="row">
               <div class="col-sm-6 text-left">{{ pagination }}</div>
-              <div class="col-sm-6 text-right">{{ results }}</div>
+              <div class="col-sm-6 text-right">{{ results|escape('html') }}</div>
             </div>
           </div>
         </div>
@@ -112,8 +124,30 @@
     </div>
   </div>
   <script type="text/javascript"><!--
+$('.button-copy-link').on('click', function() {
+  var input = $(this).closest('.input-group').find('input')[0];
+  var feedback = $(this).closest('td').find('.copy-feedback');
+
+  function finish(copied) {
+    feedback.toggleClass('text-success', copied).toggleClass('text-warning', !copied).text(copied ? '{{ text_link_copied|escape('js') }}' : '{{ text_copy_manually|escape('js') }}');
+  }
+
+  function fallback() {
+    input.focus();
+    input.select();
+    input.setSelectionRange(0, input.value.length);
+    try { finish(document.execCommand('copy')); } catch (error) { finish(false); }
+  }
+
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(input.value).then(function() { finish(true); }, fallback);
+  } else {
+    fallback();
+  }
+});
+
 $('#button-filter').on('click', function() {
-	url = 'index.php?route=marketing/marketing&user_token={{ user_token }}';
+	var url = 'index.php?route=marketing/marketing&user_token={{ user_token|escape('js') }}';
 	
 	var filter_name = $('input[name=\'filter_name\']').val();
 	
@@ -138,7 +172,7 @@ $('#button-filter').on('click', function() {
 //--></script> 
   <script type="text/javascript"><!--
 $('.date').datetimepicker({
-	language: '{{ datepicker }}',
+	language: '{{ datepicker|escape('js') }}',
 	pickTime: false
 });
 //--></script> 

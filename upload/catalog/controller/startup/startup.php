@@ -116,12 +116,9 @@ class ControllerStartupStartup extends Controller {
 			$this->config->set('config_customer_group_id', $this->config->get('config_customer_group_id'));
 		}
 		
-		// Tracking Code
-		if (isset($this->request->get['tracking'])) {
-			setcookie('tracking', $this->request->get['tracking'], time() + 3600 * 24 * 1000, '/');
-		
-			$this->db->query("UPDATE `" . DB_PREFIX . "marketing` SET clicks = (clicks + 1) WHERE code = '" . $this->db->escape($this->request->get['tracking']) . "'");
-		}		
+		// Keep referral attribution consistent across every checkout extension.
+		$marketing_tracking = new MarketingTracking($this->registry);
+		$marketing_tracking->processRequest();
 		
 		// Currency
 		$code = '';

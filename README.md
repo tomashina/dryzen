@@ -253,6 +253,48 @@ modulu treba ostaviti prazno kako bi se izbjeglo dvostruko bilježenje događaja
 Detaljne upute nalaze se u
 [`docs/google-analytics-tag-manager.md`](docs/google-analytics-tag-manager.md).
 
+## Influenceri i affiliate linkovi
+
+U administraciji otvorite **Influenceri i kampanje** u postojećem marketinškom
+izborniku. Za svakog influencera dodajte zaseban zapis i kopirajte njegov
+affiliate link. Koristi se postojeći OpenCart `?tracking=KOD` sustav i postojeća
+polja na narudžbi; nova baza ili registracija influencera kao kupca nisu potrebne.
+Isti parametar možete dodati i na URL određenog proizvoda (`&tracking=KOD` ako
+URL već sadrži upitnik).
+
+Pregled prikazuje klikove, priznate narudžbe, njihov ukupan iznos u osnovnoj
+valuti trgovine i konverziju (priznate narudžbe / klikovi × 100). Klikovi su
+otvaranja linka, uključujući ponovljena otvaranja, a ne jedinstveni posjetitelji.
+Podaci su kumulativni. Klik na pregled narudžbi otvara povezane narudžbe i njihove
+statuse, uključujući otkazane narudžbe koje nisu uključene u konverziju.
+
+Statusi za priznate narudžbe preuzimaju se iz postojećih postavki trgovine
+`config_complete_status` i ispisani su uz pregled. Provjerite ih prije tumačenja
+rezultata: ako je u tim postavkama odabran **Pending**, i takva će se narudžba
+računati. Iznos je ukupna vrijednost tih narudžbi, uključujući dostavu i poreze,
+a ne neto zarada influencera. Postojeći marketing izvještaj koristi isto pravilo
+kad nije ručno odabran konkretan status.
+
+Pripisivanje kupnje koristi posljednji valjani affiliate link, do 30 dana od
+njegova otvaranja, uz prihvaćene marketinške kolačiće. Bez te privole bilježi se
+samo anonimni klik; kupnja se ne pripisuje influenceru. Ako posjetitelj prihvati
+privolu na odredišnoj stranici, link se aktivira odmah. Povlačenje privole briše
+affiliate kolačić. Praćenje vrijedi u istom pregledniku; ne povezuje kupnje na
+drugim uređajima.
+
+Kod spremljenog zapisa ostaje nepromjenjiv kako podijeljeni linkovi ne bi prestali
+raditi. Zapisi s klikovima ili povezanim narudžbama ne mogu se izbrisati. Postojeći
+korisnički affiliate računi i obračun provizije nastavljaju koristiti isti tracking
+parametar; kodovi novih kampanja ne smiju se poklapati s njihovim kodovima.
+
+Nakon prijenosa datoteka osvježite OCMOD; SQL migracija nije potrebna:
+
+```bash
+php scripts/refresh-ocmod.php
+php scripts/test-influencer-tracking.php
+node scripts/test-influencer-consent.cjs
+```
+
 ## Git remote
 
 Nakon izrade praznog udaljenog repozitorija:
